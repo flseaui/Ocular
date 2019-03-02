@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Schema;
 using UnityEngine;
 
 public class Waypoint : MonoBehaviour
@@ -31,17 +32,24 @@ public class Waypoint : MonoBehaviour
 
         if (parentTag == "Stairs")
         {
+            RaycastHit[] hits;
+            
             for (var i = 0; i < 2; i++)
             {
-                if (Physics.Raycast(transform.position, new Vector3(i == 0 ? 1 : -1, i == 0 ? -1 : 0, 0), out hit, 1))
+                hits = Physics.RaycastAll(transform.position, new Vector3(i == 0 ? 1 : -1, i == 0 ? -1 : 0, 0), 1);
+                
+                for (int b = 0; b < hits.Length; b++)
                 {
-                    if (hit.transform.parent.childCount > 0)
+                    if (hits[b].transform.gameObject != transform.parent.gameObject)
                     {
-                        var waypoint = hit.transform.parent.Find("Waypoint");
-                        if (waypoint != null)
-                            Neighbors.Add(waypoint.GetComponent<Waypoint>());
-                        
-                        waypoint.GetComponent<Waypoint>().Neighbors.Add(this);
+                        if (hits[b].transform.parent.childCount > 0)
+                        {
+                            var waypoint = hits[b].transform.parent.Find("Waypoint");
+                            if (waypoint != null)
+                                Neighbors.Add(waypoint.GetComponent<Waypoint>());
+
+                            waypoint.GetComponent<Waypoint>().Neighbors.Add(this);
+                        }
                     }
                 }
             }
