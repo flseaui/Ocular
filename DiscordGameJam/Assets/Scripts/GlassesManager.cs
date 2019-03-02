@@ -4,52 +4,34 @@ using UnityEngine;
 
 public class GlassesManager : Singleton<GlassesManager>
 {
-    public enum Glasses
-    {
-        Red,
-        Green,
-        Blue
-    }
-
-    public Action OnGlassesSwapped;
-
-    [SerializeField]
-    private TextMeshProUGUI _currentGlassesText;
+    public Action<bool> OnRedToggled;
+    public Action<bool> OnBlueToggled;
+    public Action<bool> OnGreenToggled;
 
     [SerializeField] private PostProcessing _glassesFilter;
 
     public bool RedGlasses;
     public bool GreenGlasses;
     public bool BlueGlasses;
-    
-    private Glasses _currentGlasses;
-    public Glasses CurrentGlasses
+
+    public void RedToggle(bool state)
     {
-        get => _currentGlasses;
-        set
-        {
-            _currentGlasses = value;
-            OnGlassesSwapped?.Invoke();
-        }
+        RedGlasses = state;
+        _glassesFilter.SetRedFilter(state);
+        OnRedToggled?.Invoke(state);
     }
 
-    public void SwapGlasses()
+    public void GreenToggle(bool state)
     {
-        if (CurrentGlasses == Glasses.Red)
-        {
-            CurrentGlasses = Glasses.Green;
-        }
-        else if (CurrentGlasses == Glasses.Green)
-        {
-            CurrentGlasses = Glasses.Blue;
-        }
-        else
-        {
-            CurrentGlasses = Glasses.Red;
-        }
-
-        _glassesFilter.SetRGB(CurrentGlasses);
-        _currentGlassesText.text = $"Current Glasses: {CurrentGlasses}";
+        GreenGlasses = state;
+        _glassesFilter.SetGreenFilter(state);
+        OnGreenToggled?.Invoke(state);
     }
     
+    public void BlueToggle(bool state)
+    {
+        BlueGlasses = state;
+        _glassesFilter.SetBlueFilter(state);
+        OnBlueToggled?.Invoke(state);
+    }
 }

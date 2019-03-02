@@ -3,32 +3,20 @@ using UnityEngine;
 
 public class PostProcessing : MonoBehaviour {
 
-	[SerializeField]
-	Material material;
+	[SerializeField] private Material _material;
 
-	public void SetRGB(GlassesManager.Glasses glasses)
+	private void Start()
 	{
-		switch (glasses)
-		{
-			case GlassesManager.Glasses.Red:
-				material.SetFloat("_RedFilter", 1);
-				material.SetFloat("_GreenFilter", 0);
-				material.SetFloat("_BlueFilter", 0);
-				break;
-			case GlassesManager.Glasses.Green:
-				material.SetFloat("_RedFilter", 0);
-				material.SetFloat("_GreenFilter", 1);
-				material.SetFloat("_BlueFilter", 0);
-				break;
-			case GlassesManager.Glasses.Blue:
-				material.SetFloat("_RedFilter", 0);
-				material.SetFloat("_GreenFilter", 0);
-				material.SetFloat("_BlueFilter", 1);
-				break;
-		}
+		SetRedFilter(true);
+		SetGreenFilter(true);
+		SetBlueFilter(true);
 	}
 	
+	public void SetRedFilter(bool state) => _material.SetFloat("_RedFilter", state ? 1 : 0);
+	public void SetBlueFilter(bool state) => _material.SetFloat("_BlueFilter", state ? 1 : 0);
+	public void SetGreenFilter(bool state) => _material.SetFloat("_GreenFilter", state ? 1 : 0);
+
 	private void OnRenderImage(RenderTexture source, RenderTexture destination) {
-		Graphics.Blit(source, destination, material);
+		Graphics.Blit(source, destination, _material);
 	}
 }

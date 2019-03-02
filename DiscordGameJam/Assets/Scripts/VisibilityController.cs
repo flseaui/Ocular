@@ -19,39 +19,44 @@ public class VisibilityController : MonoBehaviour
     public GlassesColor Color;
 
     [SerializeField] private GameObject _floor;
-    
-    void Start()
+
+    private void Start()
     {
-        GlassesManager.Instance.OnGlassesSwapped += () =>
+        GlassesManager.Instance.OnRedToggled += state =>
         {
             if (Color == GlassesColor.White) return;
-            switch (GlassesManager.Instance.CurrentGlasses)
+            
+            if (state)
             {
-                case GlassesManager.Glasses.Red:
-                    if (Color == GlassesColor.Red || Color == GlassesColor.Yellow || Color == GlassesColor.Magenta)
-                        _floor.SetActive(true);
-                    else
-                        _floor.SetActive(false);
-                    break;
-                case GlassesManager.Glasses.Green:
-                    if (Color == GlassesColor.Green || Color == GlassesColor.Yellow)
-                        _floor.SetActive(true);
-                    else
-                        _floor.SetActive(false);
-                    break;
-                case GlassesManager.Glasses.Blue:
-                    if (Color == GlassesColor.Blue || Color == GlassesColor.Cyan)
-                        _floor.SetActive(true);
-                    else
-                        _floor.SetActive(false);
-                    break;
+                if (Color == GlassesColor.Red || Color == GlassesColor.Yellow || Color == GlassesColor.Magenta)
+                    _floor.SetActive(true);
+                else
+                    _floor.SetActive(false);
             }
         };
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GlassesManager.Instance.OnGreenToggled += state =>
+        {
+            if (Color == GlassesColor.White) return;
+            
+            if (state)
+            {
+                if (Color == GlassesColor.Green || Color == GlassesColor.Yellow)
+                    _floor.SetActive(true);
+                else
+                    _floor.SetActive(false);
+            }
+        };
+        GlassesManager.Instance.OnBlueToggled += state =>
+        {
+            if (Color == GlassesColor.White) return;
+            
+            if (state)
+            {
+                if (Color == GlassesColor.Blue || Color == GlassesColor.Cyan)
+                    _floor.SetActive(true);
+                else
+                    _floor.SetActive(false);
+            }
+        };
     }
 }
