@@ -11,15 +11,12 @@ public class Waypoint : MonoBehaviour
     
     public float Distance { get; set; }
 
-    public bool Enabled { get; set; }
+    public bool Enabled;
     
     private void Start()
     {
-
-        string parentTag = transform.parent.tag;
-        Debug.Log("YEAH " + parentTag);
-        
-        
+        var parentTag = transform.parent.tag;
+           
         Enabled = true;
         if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var hit, 10))
         {
@@ -30,7 +27,7 @@ public class Waypoint : MonoBehaviour
 
         if (parentTag == "Stairs")
         {
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
                 if (Physics.Raycast(transform.position, new Vector3(i == 0 ? 1 : -1, i == 0 ? -1 : 0, 0), out hit, 1))
                 {
@@ -75,8 +72,10 @@ public class Waypoint : MonoBehaviour
         if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
+            Debug.Log("hit " + hit.transform.tag);
             if (tags.Contains(hit.transform.tag))
             {
+                Debug.Log("OH YEAH");
                 hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = true;
             }
         }

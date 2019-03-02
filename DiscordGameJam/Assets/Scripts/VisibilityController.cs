@@ -32,7 +32,7 @@ public class VisibilityController : MonoBehaviour
                     _floor.SetActive(true);
                 else
                 {
-                    _floor.GetComponent<Waypoint>().CheckBelow();
+                    transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow();
                     _floor.SetActive(false);
                 }
             }
@@ -47,7 +47,7 @@ public class VisibilityController : MonoBehaviour
                     _floor.SetActive(true);
                 else
                 {
-                    _floor.GetComponent<Waypoint>().CheckBelow();
+                    transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow();
                     _floor.SetActive(false);
                 }
             }
@@ -62,7 +62,7 @@ public class VisibilityController : MonoBehaviour
                     _floor.SetActive(true);
                 else
                 {
-                    _floor.GetComponent<Waypoint>().CheckBelow();
+                    transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow();
                     _floor.SetActive(false);
                 }
             }
