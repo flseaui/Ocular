@@ -15,12 +15,17 @@ public class Waypoint : MonoBehaviour
         
         for (int x = -1; x <= 1; x += 2)
         {
-            for (int y = -1; y <= 1; y += 2)
+            for (int z = -1; z <= 1; z += 2)
             {
-                if (Physics.Raycast(transform.position, new Vector3(x, y, 0), out hit, 10))
+                if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 10))
                 {
-                    if(hit.transform.tag == "Waypoint")
-                        Neighbors.Add(hit.transform.gameObject.GetComponent<Waypoint>());
+                    Debug.Log("hit " + hit.transform.name);
+                    if (hit.transform.childCount > 0)
+                    {
+                        var waypoint = hit.transform.GetChild(0);
+                        if (waypoint.CompareTag("Waypoint"))
+                            Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                    }
                 }
             }
         }
