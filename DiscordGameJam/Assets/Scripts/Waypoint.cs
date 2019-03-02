@@ -55,7 +55,6 @@ public class Waypoint : MonoBehaviour
                     {
                         if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 1))
                         {
-                            Debug.Log(hit.transform.name);
                             if (hit.transform.parent.childCount > 0)
                             {
                                 var waypoint = hit.transform.parent.Find("Waypoint");
