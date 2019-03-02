@@ -11,21 +11,22 @@ public class Waypoint : MonoBehaviour
     
     public float Distance { get; set; }
 
+    public bool Enabled { get; set; }
+    
     private void Start()
     {
 
         string parentTag = transform.parent.tag;
         Debug.Log("YEAH " + parentTag);
         
-        RaycastHit hit;
         
-        if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out hit, 10))
+        Enabled = true;
+        if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
-            Debug.Log(hit.transform.tag);
             if (tags.Contains(hit.transform.tag))
             {
-                Destroy(gameObject);
+                Enabled = false;
             }
         }
 
@@ -70,13 +71,28 @@ public class Waypoint : MonoBehaviour
         transform.Translate(0, 1.5f, 0);
     }
 
+    public void CheckBelow()
+    {
+        if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out var hit, 10))
+        {
+            string[] tags = {"Stairs", "Floor", "Goal"};
+            if (tags.Contains(hit.transform.tag))
+            {
+                hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = true;
+            }
+        }
+    }
+    
     private void OnDrawGizmos()
     {
+        if (!Enabled)
+            return;
         if (Neighbors == null)
             return;
         Gizmos.color = new Color(0f, 0f, 0f);
         foreach (var neighbor in Neighbors)
         {
+            if (!neighbor.Enabled) continue;
             if (neighbor != null)
                 Gizmos.DrawLine(transform.position, neighbor.transform.position);
         }

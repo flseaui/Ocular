@@ -31,7 +31,10 @@ public class VisibilityController : MonoBehaviour
                 if (Color == GlassesColor.Red || Color == GlassesColor.Yellow || Color == GlassesColor.Magenta)
                     _floor.SetActive(true);
                 else
+                {
+                    _floor.GetComponent<Waypoint>().CheckBelow();
                     _floor.SetActive(false);
+                }
             }
         };
         GlassesManager.Instance.OnGreenToggled += state =>
@@ -43,7 +46,10 @@ public class VisibilityController : MonoBehaviour
                 if (Color == GlassesColor.Green || Color == GlassesColor.Yellow)
                     _floor.SetActive(true);
                 else
+                {
+                    _floor.GetComponent<Waypoint>().CheckBelow();
                     _floor.SetActive(false);
+                }
             }
         };
         GlassesManager.Instance.OnBlueToggled += state =>
@@ -55,7 +61,10 @@ public class VisibilityController : MonoBehaviour
                 if (Color == GlassesColor.Blue || Color == GlassesColor.Cyan)
                     _floor.SetActive(true);
                 else
+                {
+                    _floor.GetComponent<Waypoint>().CheckBelow();
                     _floor.SetActive(false);
+                }
             }
         };
     }
