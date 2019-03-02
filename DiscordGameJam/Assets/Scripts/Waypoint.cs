@@ -30,12 +30,13 @@ public class Waypoint : MonoBehaviour
             {
                 if (Mathf.Abs(x) != Mathf.Abs(z))
                 {
-                    if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 1))
+                    if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 10))
                     {
-                        if (hit.transform.childCount > 0)
+                        Debug.Log(hit.transform.name);
+                        if (hit.transform.parent.childCount > 0)
                         {
-                            var waypoint = hit.transform.GetChild(0);
-                            if (waypoint.CompareTag("Waypoint"))
+                            var waypoint = hit.transform.parent.Find("Waypoint");
+                            if (waypoint != null)
                                 Neighbors.Add(waypoint.GetComponent<Waypoint>());
                         }
                     }
