@@ -15,6 +15,12 @@ public class GlassesManager : Singleton<GlassesManager>
 
     [SerializeField]
     private TextMeshProUGUI _currentGlassesText;
+
+    [SerializeField] private PostProcessing _glassesFilter;
+
+    public bool RedGlasses;
+    public bool GreenGlasses;
+    public bool BlueGlasses;
     
     private Glasses _currentGlasses;
     public Glasses CurrentGlasses
@@ -30,12 +36,19 @@ public class GlassesManager : Singleton<GlassesManager>
     public void SwapGlasses()
     {
         if (CurrentGlasses == Glasses.Red)
+        {
             CurrentGlasses = Glasses.Green;
+        }
         else if (CurrentGlasses == Glasses.Green)
+        {
             CurrentGlasses = Glasses.Blue;
+        }
         else
+        {
             CurrentGlasses = Glasses.Red;
+        }
 
+        _glassesFilter.SetRGB(CurrentGlasses);
         _currentGlassesText.text = $"Current Glasses: {CurrentGlasses}";
     }
     
