@@ -25,9 +25,7 @@ public class Waypoint : MonoBehaviour
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
             if (tags.Contains(hit.transform.tag))
-            {
                 Enabled = false;
-            }
         }
 
         if (parentTag == "Stairs")
@@ -41,6 +39,8 @@ public class Waypoint : MonoBehaviour
                         var waypoint = hit.transform.parent.Find("Waypoint");
                         if (waypoint != null)
                             Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                        
+                        waypoint.GetComponent<Waypoint>().Neighbors.Add(this);
                     }
                 }
             }
