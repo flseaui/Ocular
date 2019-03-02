@@ -9,6 +9,23 @@ public class Waypoint : MonoBehaviour
     
     public float Distance { get; set; }
 
+    private void Start()
+    {
+        RaycastHit hit;
+        
+        for (int x = -1; x <= 1; x += 2)
+        {
+            for (int y = -1; y <= 1; y += 2)
+            {
+                if (Physics.Raycast(transform.position, new Vector3(x, y, 0), out hit, 10))
+                {
+                    if(hit.transform.tag == "Waypoint")
+                        Neighbors.Add(hit.transform.gameObject.GetComponent<Waypoint>());
+                }
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (Neighbors == null)
