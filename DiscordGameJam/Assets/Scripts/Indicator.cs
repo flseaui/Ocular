@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Experimental.UIElements;
+﻿using UnityEngine;
 
 public class Indicator : MonoBehaviour
 {
     [SerializeField]
     private GameObject _player;
 
-    [SerializeField] 
-    private SpriteRenderer _spriteRenderer;
-    
     void Update()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -21,7 +14,8 @@ public class Indicator : MonoBehaviour
             transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .5f, hit.transform.position.z);
             if (Input.GetMouseButtonDown(0))
             {
-                _player.GetComponent<PathManager>().NavigateTo(hit.transform.position);
+                
+                _player.GetComponent<PathManager>().NavigateTo(hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>());
             }
         }
     }
