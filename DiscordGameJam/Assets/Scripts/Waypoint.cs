@@ -20,9 +20,13 @@ public class Waypoint : MonoBehaviour
         Enabled = true;
         if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var hit, 10))
         {
-            string[] tags = {"Stairs", "Floor", "Goal"};
-            if (tags.Contains(hit.transform.tag))
-                Enabled = false;
+            if (hit.transform.parent != null)
+            {
+                string[] tags = {"Stairs", "Floor", "Goal"};
+
+                if (tags.Contains(hit.transform.parent.tag))
+                    Enabled = false;
+            }
         }
 
         if (parentTag == "Stairs")
@@ -92,7 +96,7 @@ public class Waypoint : MonoBehaviour
         {
             if (!neighbor.Enabled) continue;
             if (neighbor != null)
-                Gizmos.DrawLine(transform.position, neighbor.transform.position);
+                Gizmos.DrawLine(transform.position + Vector3.up, neighbor.transform.position + Vector3.up);
         }
     }
 }

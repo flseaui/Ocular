@@ -16,6 +16,9 @@ public class PathManager : MonoBehaviour
         _currentPath = new Stack<Vector3>();
         var currentNode = FindClosestWaypoint(transform.position);
         var endNode = FindClosestWaypoint(destination);
+        Debug.Log("destination: " + destination);
+        Debug.Log("currentNode: " + currentNode.transform.parent.name);
+        Debug.Log("endNode: " + endNode.transform.parent.name);
         if (currentNode == null || endNode == null || currentNode == endNode)
             return;
         Navigating = true;
@@ -76,8 +79,7 @@ public class PathManager : MonoBehaviour
                 _moveTimeCurrent += Time.deltaTime;
                 if (_moveTimeCurrent > _moveTimeTotal)
                     _moveTimeCurrent = _moveTimeTotal;
-                transform.position = Vector3.Lerp(_currentWaypointPosition, _currentPath.Peek(),
-                    _moveTimeCurrent / _moveTimeTotal);
+                transform.position = Vector3.Lerp(_currentWaypointPosition, _currentPath.Peek(), _moveTimeCurrent / _moveTimeTotal);
             }
             else
             {
