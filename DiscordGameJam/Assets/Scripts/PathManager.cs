@@ -11,6 +11,8 @@ public class PathManager : MonoBehaviour
     public float WalkSpeed = 5.0f;
     public bool Navigating;
 
+    private Vector3 lastNodePos;
+    
     public void NavigateToClosest(Vector3 destination)
     {
         NavigateTo(FindClosestWaypoint(destination));
@@ -18,7 +20,12 @@ public class PathManager : MonoBehaviour
     
     public void NavigateTo(Waypoint endNode)
     {
-        if (Navigating) return;
+        if (endNode.transform.position == lastNodePos)
+            return;
+        
+        lastNodePos = endNode.transform.position;
+        
+        //if (Navigating) return;
         _currentPath = new Stack<Vector3>();
         var currentNode = FindClosestWaypoint(transform.position);
         Debug.Log("currentNode: " + currentNode.transform.parent.name);
