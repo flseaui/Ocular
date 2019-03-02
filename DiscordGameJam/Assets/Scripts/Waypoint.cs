@@ -13,18 +13,22 @@ public class Waypoint : MonoBehaviour
     {
         RaycastHit hit;
         
-        for (int x = -1; x <= 1; x += 2)
+        for (int x = -1; x <= 1; x++)
         {
-            for (int z = -1; z <= 1; z += 2)
+            for (int z = -1; z <= 1; z++)
             {
-                if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 10))
+                if (Mathf.Abs(x) != Mathf.Abs(z))
                 {
-                    Debug.Log("hit " + hit.transform.name);
-                    if (hit.transform.childCount > 0)
+
+                    if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 10))
                     {
-                        var waypoint = hit.transform.GetChild(0);
-                        if (waypoint.CompareTag("Waypoint"))
-                            Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                        Debug.Log("hit " + hit.transform.name);
+                        if (hit.transform.childCount > 0)
+                        {
+                            var waypoint = hit.transform.GetChild(0);
+                            if (waypoint.CompareTag("Waypoint"))
+                                Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                        }
                     }
                 }
             }
