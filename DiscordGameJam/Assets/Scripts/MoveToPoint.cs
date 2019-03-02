@@ -11,6 +11,6 @@ public class MoveToPoint : MonoBehaviour
 
     void Update()
     {
-        
+       
     }
 }
