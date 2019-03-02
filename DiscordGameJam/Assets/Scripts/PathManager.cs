@@ -34,9 +34,9 @@ public class PathManager : MonoBehaviour
             foreach (var neighbor in currentNode.Neighbors)
             {
                 if (neighbor == null)
-                {
                     continue;
-                }
+                if (!neighbor.Enabled)
+                    continue;
                 if (closedList.Contains(neighbor) || openList.ContainsValue(neighbor))
                     continue;
                 neighbor.Previous = currentNode;
@@ -101,6 +101,7 @@ public class PathManager : MonoBehaviour
         var closestDist = Mathf.Infinity;
         foreach (var waypoint in GameObject.FindGameObjectsWithTag("Waypoint"))
         {
+            if (!waypoint.GetComponent<Waypoint>().Enabled) continue;
             var dist = (waypoint.transform.position - target).magnitude;
             if (dist < closestDist)
             {

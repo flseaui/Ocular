@@ -6,21 +6,17 @@ using UnityEngine.Experimental.UIElements;
 
 public class Indicator : MonoBehaviour
 {
-    public GameObject player;
-    // Start is called before the first frame update
+    public GameObject Player;
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out var hit))
             {
-                player.GetComponent<PathManager>().NavigateTo(hit.transform.position);
+                Player.GetComponent<PathManager>().NavigateTo(hit.transform.position);
             }
         }
     }
