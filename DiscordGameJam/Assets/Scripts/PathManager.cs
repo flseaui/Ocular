@@ -33,6 +33,10 @@ public class PathManager : MonoBehaviour
             if (currentNode == endNode) break;
             foreach (var neighbor in currentNode.Neighbors)
             {
+                if (neighbor == null)
+                {
+                    continue;
+                }
                 if (closedList.Contains(neighbor) || openList.ContainsValue(neighbor))
                     continue;
                 neighbor.Previous = currentNode;

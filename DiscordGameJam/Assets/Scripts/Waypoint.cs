@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Waypoint : MonoBehaviour
@@ -13,16 +14,24 @@ public class Waypoint : MonoBehaviour
     {
         RaycastHit hit;
         
-        for (int x = -1; x <= 1; x++)
+        if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out hit, 10))
         {
-            for (int z = -1; z <= 1; z++)
+            string[] tags = {"Stairs", "Floor", "Goal"};
+            Debug.Log(hit.transform.tag);
+            if (tags.Contains(hit.transform.tag))
+            {
+                Destroy(gameObject);
+            }
+        }
+     
+        for (var x = -1; x <= 1; x++)
+        {
+            for (var z = -1; z <= 1; z++)
             {
                 if (Mathf.Abs(x) != Mathf.Abs(z))
                 {
-
-                    if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 10))
+                    if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 1))
                     {
-                        Debug.Log("hit " + hit.transform.name);
                         if (hit.transform.childCount > 0)
                         {
                             var waypoint = hit.transform.GetChild(0);
@@ -34,13 +43,7 @@ public class Waypoint : MonoBehaviour
             }
         }
 
-        if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out hit, 10))
-        {
-            Debug.Log(hit.transform.name);
-            Destroy(gameObject);
-        }
-        
-        transform.Translate(0, 1, 0);
+        transform.Translate(0, 1.5f, 0);
     }
 
     private void OnDrawGizmos()
