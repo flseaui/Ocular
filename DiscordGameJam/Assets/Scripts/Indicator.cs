@@ -19,11 +19,10 @@ public class Indicator : MonoBehaviour
         if (Physics.Raycast(ray, out var hit))
         {
             transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .5f, hit.transform.position.z);
-        }
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            _player.GetComponent<PathManager>().NavigateTo(hit.transform.position);
+            if (Input.GetMouseButtonDown(0))
+            {
+                _player.GetComponent<PathManager>().NavigateTo(hit.transform.position);
+            }
         }
     }
 }
