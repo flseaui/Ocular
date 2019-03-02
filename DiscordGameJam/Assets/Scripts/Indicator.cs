@@ -8,10 +8,6 @@ public class Indicator : MonoBehaviour
 {
     public GameObject player;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -21,9 +17,11 @@ public class Indicator : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit;
-            
-            if (Physics.Raycast(ray, out hit))            
+
+            if (Physics.Raycast(ray, out hit))
+            {
                 player.GetComponent<PathManager>().NavigateTo(hit.transform.position);
+            }
         }
     }
 }
