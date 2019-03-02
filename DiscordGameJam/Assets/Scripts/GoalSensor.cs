@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GoalSensor : MonoBehaviour
 {
@@ -8,7 +6,7 @@ public class GoalSensor : MonoBehaviour
     {
         if (other.CompareTag("Goal"))
         {
-            Debug.Log("Goal!");
+            Debug.Log("GOAL!");
         }
     }
 }
