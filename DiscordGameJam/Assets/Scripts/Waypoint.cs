@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,6 +13,10 @@ public class Waypoint : MonoBehaviour
 
     private void Start()
     {
+
+        string parentTag = transform.parent.tag;
+        Debug.Log("YEAH " + parentTag);
+        
         RaycastHit hit;
         
         if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out hit, 10))
@@ -23,21 +28,39 @@ public class Waypoint : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-     
-        for (var x = -1; x <= 1; x++)
+
+        if (parentTag == "Stairs")
         {
-            for (var z = -1; z <= 1; z++)
+            for (int i = 0; i < 2; i++)
             {
-                if (Mathf.Abs(x) != Mathf.Abs(z))
+                if (Physics.Raycast(transform.position, new Vector3(i == 0 ? 1 : -1, i == 0 ? -1 : 0, 0), out hit, 1))
                 {
-                    if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 10))
+                    if (hit.transform.parent.childCount > 0)
                     {
-                        Debug.Log(hit.transform.name);
-                        if (hit.transform.parent.childCount > 0)
+                        var waypoint = hit.transform.parent.Find("Waypoint");
+                        if (waypoint != null)
+                            Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (var x = -1; x <= 1; x++)
+            {
+                for (var z = -1; z <= 1; z++)
+                {
+                    if (Mathf.Abs(x) != Mathf.Abs(z))
+                    {
+                        if (Physics.Raycast(transform.position, new Vector3(x, 0, z), out hit, 1))
                         {
-                            var waypoint = hit.transform.parent.Find("Waypoint");
-                            if (waypoint != null)
-                                Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                            Debug.Log(hit.transform.name);
+                            if (hit.transform.parent.childCount > 0)
+                            {
+                                var waypoint = hit.transform.parent.Find("Waypoint");
+                                if (waypoint != null)
+                                    Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                            }
                         }
                     }
                 }
