@@ -28,7 +28,8 @@ public class LevelManager : Singleton<LevelManager>
         _level = Instantiate(_levelPrefabs[index]);
         var spawnPos = _level.GetComponent<LevelDetails>().PlayerSpawnPosition.position;
         _player = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
-        _selector = Instantiate(_indicatorPrefab).GetComponent<Indicator>().Player = _player;
+        _selector = Instantiate(_indicatorPrefab);
+        _selector.GetComponent<Indicator>().Player = _player;
         GlassesManager.Instance.Player = _player;
         GlassesManager.Instance.Reload();
     }

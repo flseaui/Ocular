@@ -51,14 +51,15 @@ public class GlassesManager : Singleton<GlassesManager>
     public void Reload()
     {
         _glassesFilter.Reset();
+        GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, .25f);
+        BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, .25f);
+        RedIndicator.GetComponent<Image>().color = new Color(255, 0, 0, 1);
         OnGlassesSwitched?.Invoke(CalculateColor());   
     }
     
     private void Start()
     {
         Reload();
-        GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, .25f);
-        BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, .25f);
     }
 
     private void Update()

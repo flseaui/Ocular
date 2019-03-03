@@ -81,19 +81,22 @@ public class Waypoint : MonoBehaviour
 
     public void CheckBelow(bool state, bool secretSauce)
     {
+        /*
         if(secretSauce)
             GlassesManager.Instance.CheckDead(transform.position);
-        
+        */
+
         if (Physics.Raycast(transform.parent.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
-            if (tags.Contains(hit.transform.parent.tag))
-            {
-                if (secretSauce)
-                    GlassesManager.Instance.CheckDead(hit.transform.parent.Find("Waypoint").position);
-  
-                hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = state;
-            }
+            if (hit.transform.parent != null)
+                if (tags.Contains(hit.transform.parent.tag))
+                {
+                    if (secretSauce)
+                        GlassesManager.Instance.CheckDead(hit.transform.parent.Find("Waypoint").position);
+      
+                    hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = state;
+                }
         }
     }
 
@@ -121,7 +124,7 @@ public class Waypoint : MonoBehaviour
             return;
         if (Neighbors == null)
             return;
-        Gizmos.color = new Color(0f, 0f, 0f);
+        Gizmos.color = Color.white;
         foreach (var neighbor in Neighbors)
         {
             if (!neighbor.Enabled) continue;
