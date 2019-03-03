@@ -5,7 +5,7 @@ using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-public class Button : MonoBehaviour
+public class RecolorButton : MonoBehaviour
 {
     public enum ButtonType
     {
@@ -22,6 +22,11 @@ public class Button : MonoBehaviour
     
     public ButtonType Type;
 
+    [SerializeField]
+    private GameObject[] TargetBlocks;
+
+    public VisibilityController.BlockColor OffColor, OnColor;
+    
     private void Start()
     {
         _initialY = _buttonModel.transform.position.y;
@@ -44,15 +49,29 @@ public class Button : MonoBehaviour
     public void Press()
     {
         if (Type == ButtonType.Hold)
+        {
             State = true;
+            foreach (var block in TargetBlocks)
+            {
+                block.GetComponent<VisibilityController>().SetColor(OnColor);
+            }
+        }
         else
+        {
             State = !State;
+        }
     }
 
     public void Release()
     {
         if (Type == ButtonType.Hold)
+        {
             State = false;
+            foreach (var block in TargetBlocks)
+            {
+                block.GetComponent<VisibilityController>().SetColor(OffColor);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)

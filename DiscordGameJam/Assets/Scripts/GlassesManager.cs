@@ -18,6 +18,8 @@ public class GlassesManager : Singleton<GlassesManager>
     
     public Action<GlassesColor> OnGlassesSwitched;
 
+    public GlassesColor Color;
+    
     [SerializeField] private PostProcessing _glassesFilter;
 
     [NonSerialized]
