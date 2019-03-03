@@ -13,17 +13,26 @@ public class Indicator : MonoBehaviour
 
         if (Physics.Raycast(ray, out var hit))
         {
-            if (hit.transform.parent != null)
+            if (hit.transform.parent != null){
                 if (tags.Contains(hit.transform.parent.tag))
                 {
                     transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .5f,
                         hit.transform.position.z);
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Player.GetComponent<PathManager>()
-                            .NavigateTo(hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>());
+                        if (Player != null)
+                        {
+                            Player.GetComponent<PathManager>()
+                                .NavigateTo(hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>());
+                        }
                     }
                 }
+            }
+        }
+        else
+        {
+            transform.position = new Vector3(-100,-100,
+                -100);
         }
     }
 }

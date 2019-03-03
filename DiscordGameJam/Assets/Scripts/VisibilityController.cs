@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class VisibilityController : MonoBehaviour
 {
@@ -28,6 +24,11 @@ public class VisibilityController : MonoBehaviour
         UpdateBlockState();
     }
 
+    private void OnDestroy()
+    {
+        GlassesManager.Instance.OnGlassesSwitched -= UpdateBlockState;
+    }
+
     private void UpdateBlockState()
     {
         UpdateBlockState(GlassesManager.Instance.Color);
@@ -39,17 +40,23 @@ public class VisibilityController : MonoBehaviour
         {
             if (Color == BlockColor.White) return;
             if (transform.Find("Waypoint") != null)
+            {
                 transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(true, false);
-            
-           _floor.SetActive(false);
+                transform.Find("Waypoint").GetComponent<Waypoint>().Enabled = false;
+            }
+
+            _floor.SetActive(false);
         }
        
         void EnableFloor()
         {
             if (Color == BlockColor.White) return;
             if (transform.Find("Waypoint") != null)
+            {
                 transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(false, true);
-            
+                transform.Find("Waypoint").GetComponent<Waypoint>().Enabled = true;
+            }
+
             _floor.SetActive(true);
         }
         

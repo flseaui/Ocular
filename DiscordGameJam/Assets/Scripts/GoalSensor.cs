@@ -13,4 +13,12 @@ public class GoalSensor : MonoBehaviour
                 break;
         }
     }
+
+    private void Update()
+    {
+        if (transform.position.y < -20)
+        {
+            LevelManager.Instance.RestartLevel();
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +12,17 @@ public class LevelManager : Singleton<LevelManager>
 
     private GameObject _level, _player, _selector;
     
-    public int CurrentLevel;
+    [NonSerialized]
+    public int CurrentLevel = -1;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (CurrentLevel > -1)
+                RestartLevel();
+        }
+    }
     
     public void LoadNextLevel()
     {
@@ -28,11 +39,20 @@ public class LevelManager : Singleton<LevelManager>
         _level = Instantiate(_levelPrefabs[index]);
         var spawnPos = _level.GetComponent<LevelDetails>().PlayerSpawnPosition.position;
         _player = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
-        _selector = Instantiate(_indicatorPrefab).GetComponent<Indicator>().Player = _player;
+        _selector = Instantiate(_indicatorPrefab);
+        _selector.GetComponent<Indicator>().Player = _player;
         GlassesManager.Instance.Player = _player;
         GlassesManager.Instance.Reload();
     }
 
+    public void RestartLevel()
+    {
+        Destroy(_selector);  
+        Destroy(_player);
+        Destroy(_level);
+        LoadLevel(CurrentLevel);
+    }
+    
     public void StartGame()
     {
         CurrentLevel = 1;
