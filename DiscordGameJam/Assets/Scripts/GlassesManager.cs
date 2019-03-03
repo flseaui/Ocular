@@ -20,7 +20,7 @@ public class GlassesManager : Singleton<GlassesManager>
 
     private int _numOfGlasses;
 
-    [SerializeField] private GameObject _player;
+    public GameObject Player;
 
     [NonSerialized] public bool BlueGlasses;
 
@@ -48,10 +48,14 @@ public class GlassesManager : Singleton<GlassesManager>
         return GlassesColor.Black;
     }
 
+    public void Reload()
+    {
+        OnGlassesSwitched?.Invoke(CalculateColor());   
+    }
+    
     private void Start()
     {
-        OnGlassesSwitched?.Invoke(CalculateColor());
-
+        Reload();
         GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, .25f);
         BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, .25f);
     }
@@ -73,7 +77,7 @@ public class GlassesManager : Singleton<GlassesManager>
 
     public void CheckDead(Vector3 pos)
     {
-        if (pos == _player.GetComponent<PathManager>().FindClosestWaypoint(_player.transform.position).transform
+        if (pos == Player.GetComponent<PathManager>().FindClosestWaypoint(Player.transform.position).transform
                 .position)
             Debug.Log("DEAD");
     }
