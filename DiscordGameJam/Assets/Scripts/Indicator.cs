@@ -16,7 +16,7 @@ public class Indicator : MonoBehaviour
             if (hit.transform.parent != null){
                 if (tags.Contains(hit.transform.parent.tag))
                 {
-                    transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .5f,
+                    transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .55f,
                         hit.transform.position.z);
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -31,8 +31,7 @@ public class Indicator : MonoBehaviour
         }
         else
         {
-            transform.position = new Vector3(-100,-100,
-                -100);
+            transform.position = new Vector3(-100, -100, -100);
         }
     }
 }

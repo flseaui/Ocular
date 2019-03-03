@@ -39,7 +39,6 @@ public class VisibilityController : MonoBehaviour
         void DisableFloor()
         {
             if (Color == BlockColor.White) return;
-            Debug.Log("After the return " + transform.name);
             if (transform.Find("Waypoint") != null)
             {
                 transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(true, false);
@@ -64,37 +63,37 @@ public class VisibilityController : MonoBehaviour
         switch (glassesColor)
         {
             case GlassesManager.GlassesColor.Red:
-                if (Color == BlockColor.Red || Color == BlockColor.Yellow || Color == BlockColor.Magenta)
+                if (Color == BlockColor.Red)
                     EnableFloor();
                 else
                     DisableFloor();
                 break;
             case GlassesManager.GlassesColor.Green:
-                if (Color == BlockColor.Yellow || Color == BlockColor.Green || Color == BlockColor.Cyan)
-                    EnableFloor();
-                else
-                    DisableFloor();
-                break;
-            case GlassesManager.GlassesColor.Blue:
-                if (Color == BlockColor.Blue || Color == BlockColor.Magenta || Color == BlockColor.Cyan)
-                    EnableFloor();
-                else
-                    DisableFloor();
-                break;
-            case GlassesManager.GlassesColor.Yellow:
                 if (Color == BlockColor.Yellow)
                     EnableFloor();
                 else
                     DisableFloor();
                 break;
+            case GlassesManager.GlassesColor.Blue:
+                if (Color == BlockColor.Blue)
+                    EnableFloor();
+                else
+                    DisableFloor();
+                break;
+            case GlassesManager.GlassesColor.Yellow:
+                if (Color == BlockColor.Yellow || Color == BlockColor.Red || Color == BlockColor.Green)
+                    EnableFloor();
+                else
+                    DisableFloor();
+                break;
             case GlassesManager.GlassesColor.Magenta:
-                if (Color == BlockColor.Magenta)
+                if (Color == BlockColor.Magenta || Color == BlockColor.Red || Color == BlockColor.Blue)
                     EnableFloor();
                 else
                     DisableFloor();
                 break;
             case GlassesManager.GlassesColor.Cyan:
-                if (Color == BlockColor.Cyan)
+                if (Color == BlockColor.Cyan || Color == BlockColor.Green || Color == BlockColor.Blue)
                     EnableFloor();
                 else
                     DisableFloor();

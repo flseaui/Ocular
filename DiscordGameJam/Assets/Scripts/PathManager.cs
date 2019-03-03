@@ -80,7 +80,6 @@ public class PathManager : MonoBehaviour
 		{
 			if (_previous != null)
 				_previous.GetPath(path);
-			Debug.Log(_waypoint.transform.position);
 			path.Enqueue(_waypoint.transform.position);
 		}
 	}
