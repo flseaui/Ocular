@@ -5,7 +5,7 @@ public class GoalSensor : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        switch(other.tag)
+        switch(other.transform.parent.tag)
         {
             case "Goal":
                 Debug.Log("GOAL!");
