@@ -62,7 +62,7 @@ public class PathManager : MonoBehaviour
                     openList.Add(neighbor.Distance + distanceToTarget, neighbor);
             }
         }
-
+        
         if (currentNode == endNode)
         {
             while (currentNode.Previous != null)
