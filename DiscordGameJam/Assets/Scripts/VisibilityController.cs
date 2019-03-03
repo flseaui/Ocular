@@ -39,6 +39,7 @@ public class VisibilityController : MonoBehaviour
         void DisableFloor()
         {
             if (Color == BlockColor.White) return;
+            Debug.Log("After the return " + transform.name);
             if (transform.Find("Waypoint") != null)
             {
                 transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(true, false);
