@@ -2,6 +2,8 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class GlassesManager : Singleton<GlassesManager>
 {
@@ -36,6 +38,10 @@ public class GlassesManager : Singleton<GlassesManager>
 
     private int _numOfGlasses;
 
+    public UnityEngine.UI.Image RedIndicator,
+        GreenIndicator,
+        BlueIndicator;
+
     private GlassesColor CalculateColor()
     {
         if (RedGlasses && GreenGlasses && BlueGlasses) return GlassesColor.White;
@@ -51,6 +57,10 @@ public class GlassesManager : Singleton<GlassesManager>
     private void Start()
     {
         OnGlassesSwitched.Invoke(CalculateColor());
+
+        GreenIndicator.GetComponent<Image>().color = new Color(0,255,0,25);
+        
+        BlueIndicator.GetComponent<Image>().color = new Color(0,0,255,25);
     }
 
     private void Update()
@@ -75,6 +85,7 @@ public class GlassesManager : Singleton<GlassesManager>
             RedGlasses = !RedGlasses;
             _glassesFilter.SetRedFilter(RedGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
+            RedIndicator.GetComponent<Image>().color = new Color(255,0,0,RedGlasses ? 100 : 25);
         }
     }
     public void GreenToggle()
@@ -84,6 +95,7 @@ public class GlassesManager : Singleton<GlassesManager>
             GreenGlasses = !GreenGlasses;
             _glassesFilter.SetGreenFilter(GreenGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
+            GreenIndicator.GetComponent<Image>().color = new Color(0,255,0, GreenGlasses ? 100 : 25);
         }
     }
 
@@ -94,6 +106,7 @@ public class GlassesManager : Singleton<GlassesManager>
             BlueGlasses = !BlueGlasses;
             _glassesFilter.SetBlueFilter(BlueGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
+            BlueIndicator.GetComponent<Image>().color = new Color(0,255,0, BlueGlasses ? 100 : 25);
         }
     }
 }
