@@ -27,6 +27,8 @@ public class GlassesManager : Singleton<GlassesManager>
     [NonSerialized]
     public bool BlueGlasses = true;
 
+    private int _numOfGlasses;
+
     private GlassesColor CalculateColor()
     {
         if (RedGlasses && GreenGlasses && BlueGlasses) return GlassesColor.White;
@@ -38,25 +40,49 @@ public class GlassesManager : Singleton<GlassesManager>
         if (RedGlasses) return GlassesColor.Red;
         return GlassesColor.Black;
     }
-    
-    public void RedToggle(bool state)
+
+    private void Update()
     {
-        RedGlasses = state;
-        _glassesFilter.SetRedFilter(state);
-        OnGlassesSwitched?.Invoke(CalculateColor());
+        _numOfGlasses = 
+            (RedGlasses ? 1 : 0) +
+            (BlueGlasses ? 1 : 0) +
+            (GreenGlasses ? 1 : 0);
+        
+       if(Input.GetKeyDown(KeyCode.Q))
+           RedToggle();
+       if(Input.GetKeyDown(KeyCode.W))
+           GreenToggle();
+       if(Input.GetKeyDown(KeyCode.E))
+           BlueToggle();
     }
 
-    public void GreenToggle(bool state)
+    public void RedToggle()
     {
-        GreenGlasses = state;
-        _glassesFilter.SetGreenFilter(state);
-        OnGlassesSwitched?.Invoke(CalculateColor());
+        if (!(RedGlasses && _numOfGlasses == 1 || !RedGlasses && _numOfGlasses == 2))
+        {
+            RedGlasses = !RedGlasses;
+            _glassesFilter.SetRedFilter(RedGlasses);
+            OnGlassesSwitched?.Invoke(CalculateColor());
+        }
     }
-    
-    public void BlueToggle(bool state)
+
+    public void GreenToggle()
     {
-        BlueGlasses = state;
-        _glassesFilter.SetBlueFilter(state);
-        OnGlassesSwitched?.Invoke(CalculateColor());
+        if (!(GreenGlasses && _numOfGlasses == 1 || !GreenGlasses && _numOfGlasses == 2))
+        {
+            GreenGlasses = !GreenGlasses;
+            _glassesFilter.SetGreenFilter(GreenGlasses);
+            OnGlassesSwitched?.Invoke(CalculateColor());
+        }
+    }
+
+    public void BlueToggle()
+    {
+        if (!(BlueGlasses && _numOfGlasses == 1 || !BlueGlasses && _numOfGlasses == 2))
+        {
+            BlueGlasses = !BlueGlasses;
+            _glassesFilter.SetBlueFilter(BlueGlasses);
+            OnGlassesSwitched?.Invoke(CalculateColor());
+        }
     }
 }
