@@ -18,6 +18,8 @@ public class GlassesManager : Singleton<GlassesManager>
     
     public Action<GlassesColor> OnGlassesSwitched;
 
+    public GlassesColor Color;
+    
     [SerializeField] private PostProcessing _glassesFilter;
 
     [NonSerialized]
@@ -43,20 +45,23 @@ public class GlassesManager : Singleton<GlassesManager>
     {
         RedGlasses = state;
         _glassesFilter.SetRedFilter(state);
-        OnGlassesSwitched?.Invoke(CalculateColor());
+        Color = CalculateColor();
+        OnGlassesSwitched?.Invoke(Color);
     }
 
     public void GreenToggle(bool state)
     {
         GreenGlasses = state;
         _glassesFilter.SetGreenFilter(state);
-        OnGlassesSwitched?.Invoke(CalculateColor());
+        Color = CalculateColor();
+        OnGlassesSwitched?.Invoke(Color);
     }
     
     public void BlueToggle(bool state)
     {
         BlueGlasses = state;
         _glassesFilter.SetBlueFilter(state);
-        OnGlassesSwitched?.Invoke(CalculateColor());
+        Color = CalculateColor();
+        OnGlassesSwitched?.Invoke(Color);
     }
 }
