@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PathManager : MonoBehaviour
@@ -11,7 +10,7 @@ public class PathManager : MonoBehaviour
     public float WalkSpeed = 5.0f;
     public bool Navigating;
 
-    private Vector3 lastNodePos;
+    private Vector3 _lastNodePos;
     
     public void NavigateToClosest(Vector3 destination)
     {
@@ -20,10 +19,10 @@ public class PathManager : MonoBehaviour
     
     public void NavigateTo(Waypoint endNode)
     {
-        if (endNode.transform.position == lastNodePos)
+        if (endNode.transform.position == _lastNodePos)
             return;
         
-        lastNodePos = endNode.transform.position;
+        _lastNodePos = endNode.transform.position;
         
         //if (Navigating) return;
         _currentPath = new Stack<Vector3>();
@@ -114,7 +113,7 @@ public class PathManager : MonoBehaviour
         }
     }
 
-    private Waypoint FindClosestWaypoint(Vector3 target)
+    public Waypoint FindClosestWaypoint(Vector3 target)
     {
         GameObject closest = null;
         var closestDist = Mathf.Infinity;

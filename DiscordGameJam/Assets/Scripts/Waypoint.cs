@@ -38,7 +38,7 @@ public class Waypoint : MonoBehaviour
             {
                 hits = Physics.RaycastAll(transform.position, new Vector3(i == 0 ? 1 : -1, i == 0 ? -1 : 0, 0), 1);
                 
-                for (int b = 0; b < hits.Length; b++)
+                for (var b = 0; b < hits.Length; b++)
                 {
                     if (hits[b].transform.gameObject != transform.parent.gameObject)
                     {
@@ -84,7 +84,6 @@ public class Waypoint : MonoBehaviour
         if (Physics.Raycast(transform.parent.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
-            Debug.Log("hit " + hit.transform.parent.tag);
             if (tags.Contains(hit.transform.parent.tag))
             {
                 hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = state;

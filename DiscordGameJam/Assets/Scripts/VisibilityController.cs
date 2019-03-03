@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VisibilityController : MonoBehaviour
 {
@@ -36,15 +37,13 @@ public class VisibilityController : MonoBehaviour
         {
             if (Color == BlockColor.White) return;
             transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(true);
-            
-            _floor.SetActive(false);
+           _floor.SetActive(false);
         }
        
         void EnableFloor()
         {
             if (Color == BlockColor.White) return;
             transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(false);
-            
             _floor.SetActive(true);
         }
         

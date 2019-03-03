@@ -516,6 +516,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419389161}
   m_CullTransparentMesh: 0
+--- !u!1 &426551416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5769762725971796056, guid: fec085fd2aebba346b01f55d9b7ff3e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 510381235}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &510381235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -537,6 +543,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Map
+      objectReference: {fileID: 0}
+    - target: {fileID: 1410161829901575126, guid: fec085fd2aebba346b01f55d9b7ff3e4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1410161829901575125, guid: fec085fd2aebba346b01f55d9b7ff3e4,
         type: 3}
@@ -1136,6 +1147,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45, y: -45, z: 0}
+--- !u!1 &885841912 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2687149164529192611, guid: fec085fd2aebba346b01f55d9b7ff3e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 510381235}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &895427307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,7 +1682,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _persistent: 0
+  Color: 0
   _glassesFilter: {fileID: 519420030}
+  _player: {fileID: 0}
 --- !u!4 &1278494847
 Transform:
   m_ObjectHideFlags: 0
@@ -1946,6 +1965,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1619490558}
   m_CullTransparentMesh: 0
+--- !u!1 &1854395117 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5981810613118634626, guid: fec085fd2aebba346b01f55d9b7ff3e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 510381235}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1864181893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 559079286633841419, guid: fec085fd2aebba346b01f55d9b7ff3e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 510381235}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1873630125
 GameObject:
   m_ObjectHideFlags: 0
@@ -2178,6 +2209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b5cb2254e943a45bedfa34171b127b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InBlock: 0
 --- !u!1 &1969272758
 GameObject:
   m_ObjectHideFlags: 0
@@ -2406,7 +2438,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buttonModel: {fileID: 4226241936486266194}
   State: 0
-  Type: 0
+  Type: 1
+  TargetBlocks:
+  - {fileID: 1864181893}
+  - {fileID: 1854395117}
+  - {fileID: 426551416}
+  - {fileID: 885841912}
+  OffColor: 2
+  OnColor: 4
 --- !u!33 &4226241936487131478
 MeshFilter:
   m_ObjectHideFlags: 0

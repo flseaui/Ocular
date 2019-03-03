@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -22,6 +23,8 @@ public class GlassesManager : Singleton<GlassesManager>
     
     [SerializeField] private PostProcessing _glassesFilter;
 
+    [SerializeField] private GameObject _player;
+    
     [NonSerialized]
     public bool RedGlasses = true;
 
@@ -74,7 +77,6 @@ public class GlassesManager : Singleton<GlassesManager>
             OnGlassesSwitched?.Invoke(CalculateColor());
         }
     }
-
     public void GreenToggle()
     {
         if (!(GreenGlasses && _numOfGlasses == 1 || !GreenGlasses && _numOfGlasses == 2))

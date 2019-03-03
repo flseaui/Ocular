@@ -8,8 +8,8 @@ public class PostProcessing : MonoBehaviour {
 	private void Start()
 	{
 		SetRedFilter(true);
-		SetGreenFilter(true);
-		SetBlueFilter(true);
+		SetGreenFilter(false);
+		SetBlueFilter(false);
 	}
 	
 	public void SetRedFilter(bool state) => _material.SetFloat("_RedFilter", state ? 1 : 0);
