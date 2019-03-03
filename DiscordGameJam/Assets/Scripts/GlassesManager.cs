@@ -24,10 +24,12 @@ public class GlassesManager : Singleton<GlassesManager>
 
     [NonSerialized]
     public bool RedGlasses = true;
+
+    [NonSerialized] 
+    public bool GreenGlasses;
+    
     [NonSerialized]
-    public bool GreenGlasses = true;
-    [NonSerialized]
-    public bool BlueGlasses = true;
+    public bool BlueGlasses;
 
     private int _numOfGlasses;
 
@@ -41,6 +43,11 @@ public class GlassesManager : Singleton<GlassesManager>
         if (BlueGlasses) return GlassesColor.Blue;
         if (RedGlasses) return GlassesColor.Red;
         return GlassesColor.Black;
+    }
+
+    private void Start()
+    {
+        OnGlassesSwitched.Invoke(CalculateColor());
     }
 
     private void Update()
