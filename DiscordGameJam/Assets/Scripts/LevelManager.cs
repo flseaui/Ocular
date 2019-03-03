@@ -15,7 +15,12 @@ public class LevelManager : Singleton<LevelManager>
     [NonSerialized]
     public int CurrentLevel = -1;
 
-    public Camera Camera;
+    public int TotalWaypoints;
+    public int FinishedWaypoints;
+
+    public int NeighboredWaypoints;
+    
+    public Action CheckNeighbors, MoveUp;
     
     private void Update()
     {
@@ -31,29 +36,58 @@ public class LevelManager : Singleton<LevelManager>
         Destroy(_selector);  
         Destroy(_player);
         Destroy(_level);
-        
+
+        StartCoroutine(nameof(IsDefDead));
+    }
+
+    private IEnumerator IsDefDead()
+    {
+        if (_selector != null || _player != null || _level != null)
+            yield return null;
+                
         ++CurrentLevel;
         LoadLevel(CurrentLevel);
     }
-
+    
     public void LoadLevel(int index)
     {
+        TotalWaypoints = 0;
+        FinishedWaypoints = 0;
+        NeighboredWaypoints = 0;
         _level = Instantiate(_levelPrefabs[index]);
         var spawnPos = _level.GetComponent<LevelDetails>().PlayerSpawnPosition.position;
         _player = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
         _selector = Instantiate(_indicatorPrefab);
         _selector.GetComponent<Indicator>().Player = _player;
+       // StartCoroutine(nameof(WaitForWaypoints));
         GlassesManager.Instance.Player = _player;
         GlassesManager.Instance.Reload();
         GameObject.Find("CameraTarget").transform.GetChild(0).transform.localPosition = _level.GetComponent<LevelDetails>().CameraPos;
     }
 
+    private IEnumerator WaitForWaypoints()
+    {
+        if (FinishedWaypoints < TotalWaypoints)
+            yield return null;
+        CheckNeighbors?.Invoke();
+        StartCoroutine(nameof(WaitForNeighbors));
+    }
+
+    private IEnumerator WaitForNeighbors()
+    {
+        if (NeighboredWaypoints < TotalWaypoints)
+            yield return null;
+        MoveUp?.Invoke();
+
+    }
+    
     public void RestartLevel()
     {
+
         Destroy(_selector);  
         Destroy(_player);
         Destroy(_level);
-        LoadLevel(CurrentLevel);
+        StartCoroutine(LoadNewScene("Game"));
     }
     
     public void StartGame()

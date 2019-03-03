@@ -13,8 +13,28 @@ public class Waypoint : MonoBehaviour
     public float Distance { get; set; }
 
     public bool Enabled = true;
-    
+
+    private void Awake()
+    {
+        LevelManager.Instance.TotalWaypoints++;
+        LevelManager.Instance.CheckNeighbors += CheckNeighbors;
+        LevelManager.Instance.MoveUp += MoveUp;
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.Instance.CheckNeighbors -= CheckNeighbors;
+        LevelManager.Instance.MoveUp -= MoveUp;
+    }
+
     private void Start()
+    {
+        LevelManager.Instance.FinishedWaypoints++;   
+        CheckNeighbors();
+        MoveUp();
+    }
+    
+    private void CheckNeighbors()
     {
         var parentTag = transform.parent.tag;
            
@@ -70,6 +90,12 @@ public class Waypoint : MonoBehaviour
                                 var waypoint = hit.transform.parent.Find("Waypoint");
                                 if (waypoint != null)
                                     Neighbors.Add(waypoint.GetComponent<Waypoint>());
+                                else
+                                {
+                                    Debug.Log("SCREEEEEEEEEEEEEEEEEEEEEEEEEE");
+                                }
+                                
+                                waypoint.GetComponent<Waypoint>().Neighbors.Add(this);
                             }
                         }
                     }
@@ -77,9 +103,14 @@ public class Waypoint : MonoBehaviour
             }
         }
 
-        transform.Translate(0, 0.6393391f, 0);
+        LevelManager.Instance.NeighboredWaypoints++;
     }
 
+    private void MoveUp()
+    {
+        transform.Translate(0, 0.6393391f, 0);
+    }
+    
     public void CheckBelow(bool state, bool secretSauce)
     {     
         if (Physics.Raycast(transform.parent.position, new Vector3(0, -1, 0), out var hit, 10))
