@@ -163,8 +163,15 @@ public class PathManager : MonoBehaviour
 
 	private void Update()
 	{
+		transform.LookAt(_waypointTo, Vector3.up);
+		
+		/*var lookPos = _waypointTo - transform.position;
+		lookPos.y = 0;
+		var rotation = Quaternion.LookRotation(lookPos);
+		transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1); */
+		
 		if (Navigating)
-		{
+		{	
 			if (_moveTimeCurrent < _moveTimeTotal)
 			{
 				_moveTimeCurrent += Time.deltaTime;
