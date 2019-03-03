@@ -9,6 +9,7 @@ public class GoalSensor : MonoBehaviour
         {
             case "Goal":
                 Debug.Log("GOAL!");
+                LevelManager.Instance.LoadNextLevel();
                 break;
         }
     }

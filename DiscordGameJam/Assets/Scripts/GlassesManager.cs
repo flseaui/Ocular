@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
-using Image = UnityEngine.UI.Image;
+using UnityEngine.UI;
 
 public class GlassesManager : Singleton<GlassesManager>
 {
@@ -18,25 +15,22 @@ public class GlassesManager : Singleton<GlassesManager>
         White,
         Black
     }
-    
-    public Action<GlassesColor> OnGlassesSwitched;
 
-    public GlassesColor Color;
-    
     [SerializeField] private PostProcessing _glassesFilter;
 
-    [SerializeField] private GameObject _player;
-    
-    [NonSerialized]
-    public bool RedGlasses = true;
-
-    [NonSerialized] 
-    public bool GreenGlasses;
-    
-    [NonSerialized]
-    public bool BlueGlasses;
-
     private int _numOfGlasses;
+
+    [SerializeField] private GameObject _player;
+
+    [NonSerialized] public bool BlueGlasses;
+
+    public GlassesColor Color;
+
+    [NonSerialized] public bool GreenGlasses;
+
+    public Action<GlassesColor> OnGlassesSwitched;
+
+    [NonSerialized] public bool RedGlasses = true;
 
     public Image RedIndicator,
         GreenIndicator,
@@ -56,34 +50,34 @@ public class GlassesManager : Singleton<GlassesManager>
 
     private void Start()
     {
-        OnGlassesSwitched.Invoke(CalculateColor());
+        OnGlassesSwitched?.Invoke(CalculateColor());
 
-        GreenIndicator.GetComponent<Image>().color = new Color(0,255,0,.25f);
-        
-        BlueIndicator.GetComponent<Image>().color = new Color(0,0,255,.25f);
+        GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, .25f);
+        BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, .25f);
     }
 
     private void Update()
     {
-        _numOfGlasses = 
+        _numOfGlasses =
             (RedGlasses ? 1 : 0) +
             (BlueGlasses ? 1 : 0) +
             (GreenGlasses ? 1 : 0);
-        
-       if(Input.GetKeyDown(KeyCode.Q))
-           RedToggle();
-       if(Input.GetKeyDown(KeyCode.W))
-           GreenToggle();
-       if(Input.GetKeyDown(KeyCode.E))
-           BlueToggle();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            RedToggle();
+        if (Input.GetKeyDown(KeyCode.W))
+            GreenToggle();
+        if (Input.GetKeyDown(KeyCode.E))
+            BlueToggle();
     }
-    
+
     public void CheckDead(Vector3 pos)
-    {                      
-        if (pos == _player.GetComponent<PathManager>().FindClosestWaypoint(_player.transform.position).transform.position)
+    {
+        if (pos == _player.GetComponent<PathManager>().FindClosestWaypoint(_player.transform.position).transform
+                .position)
             Debug.Log("DEAD");
     }
-    
+
 
     public void RedToggle()
     {
@@ -92,9 +86,10 @@ public class GlassesManager : Singleton<GlassesManager>
             RedGlasses = !RedGlasses;
             _glassesFilter.SetRedFilter(RedGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
-            RedIndicator.GetComponent<Image>().color = new Color(255,0,0,RedGlasses ? 1 : .25f);
+            RedIndicator.GetComponent<Image>().color = new Color(255, 0, 0, RedGlasses ? 1 : .25f);
         }
     }
+
     public void GreenToggle()
     {
         if (!(GreenGlasses && _numOfGlasses == 1 || !GreenGlasses && _numOfGlasses == 2))
@@ -102,7 +97,7 @@ public class GlassesManager : Singleton<GlassesManager>
             GreenGlasses = !GreenGlasses;
             _glassesFilter.SetGreenFilter(GreenGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
-            GreenIndicator.GetComponent<Image>().color = new Color(0,255,0, GreenGlasses ? 1 : .25f);
+            GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, GreenGlasses ? 1 : .25f);
         }
     }
 
@@ -113,7 +108,7 @@ public class GlassesManager : Singleton<GlassesManager>
             BlueGlasses = !BlueGlasses;
             _glassesFilter.SetBlueFilter(BlueGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
-            BlueIndicator.GetComponent<Image>().color = new Color(0,0,255, BlueGlasses ? 1 : .25f);
+            BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, BlueGlasses ? 1 : .25f);
         }
     }
 }

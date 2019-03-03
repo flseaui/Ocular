@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class Indicator : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _player;
+    public GameObject Player;
+    
     string[] tags = {"Stairs", "Floor", "Goal"};
-    void Update()
+
+    private void Update()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -19,7 +20,7 @@ public class Indicator : MonoBehaviour
                         hit.transform.position.z);
                     if (Input.GetMouseButtonDown(0))
                     {
-                        _player.GetComponent<PathManager>()
+                        Player.GetComponent<PathManager>()
                             .NavigateTo(hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>());
                     }
                 }
