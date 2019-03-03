@@ -58,9 +58,9 @@ public class GlassesManager : Singleton<GlassesManager>
     {
         OnGlassesSwitched.Invoke(CalculateColor());
 
-        GreenIndicator.GetComponent<Image>().color = new Color(0,255,0,25);
+        GreenIndicator.GetComponent<Image>().color = new Color(0,255,0,.25f);
         
-        BlueIndicator.GetComponent<Image>().color = new Color(0,0,255,25);
+        BlueIndicator.GetComponent<Image>().color = new Color(0,0,255,.25f);
     }
 
     private void Update()
@@ -85,7 +85,7 @@ public class GlassesManager : Singleton<GlassesManager>
             RedGlasses = !RedGlasses;
             _glassesFilter.SetRedFilter(RedGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
-            RedIndicator.GetComponent<Image>().color = new Color(255,0,0,RedGlasses ? 100 : 25);
+            RedIndicator.GetComponent<Image>().color = new Color(255,0,0,RedGlasses ? 1 : .25f);
         }
     }
     public void GreenToggle()
@@ -95,7 +95,7 @@ public class GlassesManager : Singleton<GlassesManager>
             GreenGlasses = !GreenGlasses;
             _glassesFilter.SetGreenFilter(GreenGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
-            GreenIndicator.GetComponent<Image>().color = new Color(0,255,0, GreenGlasses ? 100 : 25);
+            GreenIndicator.GetComponent<Image>().color = new Color(0,255,0, GreenGlasses ? 1 : .25f);
         }
     }
 
@@ -106,7 +106,7 @@ public class GlassesManager : Singleton<GlassesManager>
             BlueGlasses = !BlueGlasses;
             _glassesFilter.SetBlueFilter(BlueGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
-            BlueIndicator.GetComponent<Image>().color = new Color(0,255,0, BlueGlasses ? 100 : 25);
+            BlueIndicator.GetComponent<Image>().color = new Color(0,0,255, BlueGlasses ? 1 : .25f);
         }
     }
 }
