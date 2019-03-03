@@ -84,8 +84,8 @@ public class Waypoint : MonoBehaviour
         if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
-            Debug.Log("hit " + hit.transform.tag);
-            if (tags.Contains(hit.transform.tag))
+            Debug.Log("hit " + hit.transform.parent.tag);
+            if (tags.Contains(hit.transform.parent.tag))
             {
                 Debug.Log("OH YEAH");
                 hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = true;
