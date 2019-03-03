@@ -26,6 +26,11 @@ public class Box : MonoBehaviour
         }
         else
             moveTimeCurrent = 0;
+        
+        if(!Physics.Raycast(transform.position, new Vector3(0, -1, 0), 1))
+            destination = new Vector3(transform.position.x, transform.position.y - 1,
+                transform.position.z);
+        
     }
 
     private void OnCollisionEnter(Collision col)
