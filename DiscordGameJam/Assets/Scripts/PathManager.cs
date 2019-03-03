@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class PathManager : MonoBehaviour
@@ -14,6 +15,9 @@ public class PathManager : MonoBehaviour
 
 	private Vector3 lastNodePos;
 
+	[SerializeField]
+	private Animator _animController;
+	
 	private class WaypointNode
 	{
 		public Waypoint _waypoint;
@@ -88,56 +92,6 @@ public class PathManager : MonoBehaviour
 
 	public void NavigateTo(Waypoint endNode)
 	{
-		/*
-		Debug.Log("currentNode: " + currentNode.transform.parent.name);
-        Debug.Log("endNode: " + endNode.transform.parent.name);
-        if (currentNode == null || endNode == null || currentNode == endNode)
-            return;
-        Navigating = true;
-        var openList = new SortedList<float, Waypoint>();
-        var closedList = new List<Waypoint>();
-        openList.Add(0, currentNode);
-        currentNode.Previous = null;
-        currentNode.Distance = 0f;
-        while (openList.Count > 0)
-        {
-            currentNode = openList.Values[0];
-            openList.RemoveAt(0);
-            var dist = currentNode.Distance;
-            closedList.Add(currentNode);
-            if (currentNode == endNode) break;
-            foreach (var neighbor in currentNode.Neighbors)
-            {
-                if (neighbor == null)
-                    continue;
-                if (!neighbor.Enabled)
-                    continue;
-                if (closedList.Contains(neighbor) || openList.ContainsValue(neighbor))
-                    continue;
-                neighbor.Previous = currentNode;
-                neighbor.Distance = dist + (neighbor.transform.position - currentNode.transform.position).magnitude;
-                var distanceToTarget = (neighbor.transform.position - endNode.transform.position).magnitude;
-                if (!openList.ContainsKey(neighbor.Distance + distanceToTarget))
-                    openList.Add(neighbor.Distance + distanceToTarget, neighbor);
-            }
-        }
-
-        if (currentNode == endNode)
-        {
-            while (currentNode.Previous != null)
-            {
-                _currentPath.Push(currentNode.transform.position);
-                currentNode = currentNode.Previous;
-            }
-
-            _currentPath.Push(transform.position);
-        }
-        else
-        {
-            Navigating = false;
-        }
-		*/
-
 		Waypoint currentWaypoint;
 		if (Navigating)
 		{
@@ -177,7 +131,7 @@ public class PathManager : MonoBehaviour
 						neighbor.UpdatePrevious(currentNode);
 						waypoints.Remove(neighbor);
 						int i = -1;
-						while (!waypoints[++i].CompareLength(neighbor) && i < waypoints.Count) ;
+						while (++i < waypoints.Count && !waypoints[i].CompareLength(neighbor)) ;
 						waypoints.Insert(i, neighbor);
 					}
 				}
@@ -194,12 +148,14 @@ public class PathManager : MonoBehaviour
 				_moveTimeTotal = (_waypointFrom - _waypointTo).magnitude / WalkSpeed;
 			}
 			Navigating = true;
+			_animController.SetBool("Walking", true);
 		}
 	}
 
 	public void Stop()
 	{
 		Navigating = false;
+		_animController.SetBool("Walking", false);
 		_currentPath.Clear();
 		_moveTimeTotal = 0;
 		_moveTimeCurrent = 0;

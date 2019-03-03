@@ -15,6 +15,8 @@ public class LevelManager : Singleton<LevelManager>
     [NonSerialized]
     public int CurrentLevel = -1;
 
+    public Camera Camera;
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -43,6 +45,7 @@ public class LevelManager : Singleton<LevelManager>
         _selector.GetComponent<Indicator>().Player = _player;
         GlassesManager.Instance.Player = _player;
         GlassesManager.Instance.Reload();
+        GameObject.Find("CameraTarget").transform.GetChild(0).transform.localPosition = _level.GetComponent<LevelDetails>().CameraPos;
     }
 
     public void RestartLevel()
@@ -55,7 +58,7 @@ public class LevelManager : Singleton<LevelManager>
     
     public void StartGame()
     {
-        CurrentLevel = 1;
+        CurrentLevel = 0;
         StartCoroutine(LoadNewScene("Game"));
         SceneManager.sceneLoaded += (scene, mode) =>
         {
