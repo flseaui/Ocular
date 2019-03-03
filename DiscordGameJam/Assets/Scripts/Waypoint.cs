@@ -81,6 +81,9 @@ public class Waypoint : MonoBehaviour
 
     public void CheckBelow(bool state, bool secretSauce)
     {
+        if(secretSauce)
+            GlassesManager.Instance.CheckDead(transform.position);
+        
         if (Physics.Raycast(transform.parent.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
