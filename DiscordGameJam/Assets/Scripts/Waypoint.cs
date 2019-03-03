@@ -106,7 +106,6 @@ public class Waypoint : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Cool");
             Enabled = true;
         }
     }

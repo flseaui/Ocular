@@ -1,37 +1,73 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
-public class NewBehaviourScript : MonoBehaviour
+public class Button : MonoBehaviour
 {
-    enum buttonType
+    public enum ButtonType
     {
         Toggle,
         Hold
     }
 
-    public bool state;
+    [SerializeField]
+    private GameObject _buttonModel;
 
-    private buttonType type;
+    private float _initialY;
+    
+    public bool State;
+    
+    public ButtonType Type;
 
-    private void OnCollisionEnter(Collision col)
+    private void Start()
     {
-        if (col.transform.tag == "Player" || col.transform.tag == "Box")
+        _initialY = _buttonModel.transform.position.y;
+    }
+
+    private void Update()
+    {
+        if (State)
         {
-            if (type == buttonType.Hold)
-                state = true;
-            else
-                state = !state;
+            _buttonModel.transform.position = new Vector3(_buttonModel.transform.position.x, _initialY - .1f,
+                _buttonModel.transform.position.z);
+        }
+        else
+        {
+            _buttonModel.transform.position = new Vector3(_buttonModel.transform.position.x, _initialY,
+                _buttonModel.transform.position.z);
+        }
+    }
+    
+    public void Press()
+    {
+        if (Type == ButtonType.Hold)
+            State = true;
+        else
+            State = !State;
+    }
+
+    public void Release()
+    {
+        if (Type == ButtonType.Hold)
+            State = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.CompareTag("Player") || other.transform.CompareTag("Box"))
+        {
+            Press();
         }
     }
 
-    private void OnCollisionExit(Collision col)
+    private void OnTriggerExit(Collider other)
     {
-        if (col.transform.tag == "Player" || col.transform.tag == "Box")
+        if (other.transform.CompareTag("Player") || other.transform.CompareTag("Box"))
         {
-            if (type == buttonType.Hold)
-                state = false;
+            Release();
         }
     }
 }

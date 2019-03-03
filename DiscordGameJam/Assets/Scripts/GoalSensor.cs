@@ -4,9 +4,11 @@ public class GoalSensor : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Goal"))
+        switch(other.tag)
         {
-            Debug.Log("GOAL!");
+            case "Goal":
+                Debug.Log("GOAL!");
+                break;
         }
     }
 }
