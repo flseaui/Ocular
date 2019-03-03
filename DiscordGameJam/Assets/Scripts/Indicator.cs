@@ -20,8 +20,11 @@ public class Indicator : MonoBehaviour
                         hit.transform.position.z);
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Player.GetComponent<PathManager>()
-                            .NavigateTo(hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>());
+                        if (Player != null)
+                        {
+                            Player.GetComponent<PathManager>()
+                                .NavigateTo(hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>());
+                        }
                     }
                 }
         }

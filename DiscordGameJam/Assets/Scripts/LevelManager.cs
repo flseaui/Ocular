@@ -33,6 +33,14 @@ public class LevelManager : Singleton<LevelManager>
         GlassesManager.Instance.Reload();
     }
 
+    public void RestartLevel()
+    {
+        Destroy(_selector);  
+        Destroy(_player);
+        Destroy(_level);
+        LoadLevel(CurrentLevel);
+    }
+    
     public void StartGame()
     {
         CurrentLevel = 0;

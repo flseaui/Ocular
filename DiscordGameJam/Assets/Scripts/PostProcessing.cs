@@ -7,6 +7,11 @@ public class PostProcessing : MonoBehaviour {
 
 	private void Start()
 	{
+		Reset();
+	}
+
+	public void Reset()
+	{
 		SetRedFilter(true);
 		SetGreenFilter(false);
 		SetBlueFilter(false);

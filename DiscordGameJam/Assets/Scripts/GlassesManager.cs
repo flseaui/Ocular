@@ -50,6 +50,7 @@ public class GlassesManager : Singleton<GlassesManager>
 
     public void Reload()
     {
+        _glassesFilter.Reset();
         OnGlassesSwitched?.Invoke(CalculateColor());   
     }
     
@@ -79,7 +80,7 @@ public class GlassesManager : Singleton<GlassesManager>
     {
         if (pos == Player.GetComponent<PathManager>().FindClosestWaypoint(Player.transform.position).transform
                 .position)
-            Debug.Log("DEAD");
+            LevelManager.Instance.RestartLevel();
     }
 
 
