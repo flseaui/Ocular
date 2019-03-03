@@ -79,13 +79,16 @@ public class Waypoint : MonoBehaviour
         transform.Translate(0, 1.5f, 0);
     }
 
-    public void CheckBelow(bool state)
+    public void CheckBelow(bool state, bool secretSauce)
     {
         if (Physics.Raycast(transform.parent.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
             if (tags.Contains(hit.transform.parent.tag))
             {
+                if (secretSauce)
+                    GlassesManager.Instance.CheckDead(hit.transform.parent.Find("Waypoint").position);
+  
                 hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = state;
             }
         }

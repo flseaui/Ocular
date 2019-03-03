@@ -38,7 +38,7 @@ public class GlassesManager : Singleton<GlassesManager>
 
     private int _numOfGlasses;
 
-    public UnityEngine.UI.Image RedIndicator,
+    public Image RedIndicator,
         GreenIndicator,
         BlueIndicator;
 
@@ -77,6 +77,13 @@ public class GlassesManager : Singleton<GlassesManager>
        if(Input.GetKeyDown(KeyCode.E))
            BlueToggle();
     }
+    
+    public void CheckDead(Vector3 pos)
+    {                      
+        if (pos == _player.GetComponent<PathManager>().FindClosestWaypoint(_player.transform.position).transform.position)
+            Debug.Log("DEAD");
+    }
+    
 
     public void RedToggle()
     {
