@@ -76,7 +76,7 @@ public class Waypoint : MonoBehaviour
             }
         }
 
-        transform.Translate(0, 1.5f, 0);
+        transform.Translate(0, 0.6393391f, 0);
     }
 
     public void CheckBelow(bool state, bool secretSauce)
