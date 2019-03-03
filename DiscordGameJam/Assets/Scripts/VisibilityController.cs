@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class VisibilityController : MonoBehaviour
 {
-    public enum GlassesColor
+    public enum BlockColor
     {
         White,
         Red,
@@ -16,7 +16,7 @@ public class VisibilityController : MonoBehaviour
         Magenta
     }
 
-    public GlassesColor Color;
+    public BlockColor Color;
 
     [SerializeField] private GameObject _floor;
 
@@ -24,54 +24,62 @@ public class VisibilityController : MonoBehaviour
     {
         void DisableFloor()
         {
-            transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow();
+            if (Color == BlockColor.White) return;
+            transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(true);
+            
             _floor.SetActive(false);
+        }
+       
+        void EnableFloor()
+        {
+            if (Color == BlockColor.White) return;
+            transform.Find("Waypoint").GetComponent<Waypoint>().CheckBelow(false);
+            
+            _floor.SetActive(true);
         }
         
         GlassesManager.Instance.OnGlassesSwitched += glassesColor =>
         {
-            if (Color == GlassesColor.White) return;
-
             switch (glassesColor)
             {
                 case GlassesManager.GlassesColor.Red:
-                    if (Color == GlassesColor.Red || Color == GlassesColor.Yellow || Color == GlassesColor.Magenta)
-                        _floor.SetActive(true);
+                    if (Color == BlockColor.Red || Color == BlockColor.Yellow || Color == BlockColor.Magenta)
+                        EnableFloor();
                     else
                         DisableFloor();
                     break;
                 case GlassesManager.GlassesColor.Green:
-                    if (Color == GlassesColor.Yellow || Color == GlassesColor.Green || Color == GlassesColor.Cyan)
-                        _floor.SetActive(true);
+                    if (Color == BlockColor.Yellow || Color == BlockColor.Green || Color == BlockColor.Cyan)
+                        EnableFloor();
                     else
                         DisableFloor();
                     break;
                 case GlassesManager.GlassesColor.Blue:
-                    if (Color == GlassesColor.Blue || Color == GlassesColor.Magenta || Color == GlassesColor.Cyan)
-                        _floor.SetActive(true);
+                    if (Color == BlockColor.Blue || Color == BlockColor.Magenta || Color == BlockColor.Cyan)
+                        EnableFloor();
                     else
                         DisableFloor();
                     break;
                 case GlassesManager.GlassesColor.Yellow:
-                    if (Color == GlassesColor.Yellow)
-                        _floor.SetActive(true);
+                    if (Color == BlockColor.Yellow)
+                        EnableFloor();
                     else
                         DisableFloor();
                     break;
                 case GlassesManager.GlassesColor.Magenta:
-                    if (Color == GlassesColor.Magenta)
-                        _floor.SetActive(true);
+                    if (Color == BlockColor.Magenta)
+                        EnableFloor();
                     else
                         DisableFloor();
                     break;
                 case GlassesManager.GlassesColor.Cyan:
-                    if (Color == GlassesColor.Cyan)
-                        _floor.SetActive(true);
+                    if (Color == BlockColor.Cyan)
+                        EnableFloor();
                     else
                         DisableFloor();
                     break;
                 case GlassesManager.GlassesColor.White:
-                        _floor.SetActive(true);
+                    EnableFloor();
                     break;
                 case GlassesManager.GlassesColor.Black:
                         DisableFloor();

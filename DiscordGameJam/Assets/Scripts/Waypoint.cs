@@ -79,17 +79,35 @@ public class Waypoint : MonoBehaviour
         transform.Translate(0, 1.5f, 0);
     }
 
-    public void CheckBelow()
+    public void CheckBelow(bool state)
     {
-        if (Physics.Raycast(transform.position, new Vector3(0, -1, 0), out var hit, 10))
+        if (Physics.Raycast(transform.parent.position, new Vector3(0, -1, 0), out var hit, 10))
         {
             string[] tags = {"Stairs", "Floor", "Goal"};
             Debug.Log("hit " + hit.transform.parent.tag);
             if (tags.Contains(hit.transform.parent.tag))
             {
-                Debug.Log("OH YEAH");
-                hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = true;
+                hit.transform.parent.Find("Waypoint").GetComponent<Waypoint>().Enabled = state;
             }
+        }
+    }
+
+    public void CheckAbove()
+    {
+        if (Physics.Raycast(transform.parent.position, new Vector3(0, 1, 0), out var hit, 10))
+        {
+            string[] tags = {"Stairs", "Floor"};
+            if (hit.transform.parent != null)
+                if (tags.Contains(hit.transform.parent.tag))
+                {
+                    Debug.Log("Not Cool " + hit.transform.parent.GetComponent<VisibilityController>().Color);
+                    Enabled = false;
+                }
+        }
+        else
+        {
+            //Debug.Log("Cool");
+            Enabled = true;
         }
     }
     
