@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +12,17 @@ public class LevelManager : Singleton<LevelManager>
 
     private GameObject _level, _player, _selector;
     
-    public int CurrentLevel;
+    [NonSerialized]
+    public int CurrentLevel = -1;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (CurrentLevel > -1)
+                RestartLevel();
+        }
+    }
     
     public void LoadNextLevel()
     {
