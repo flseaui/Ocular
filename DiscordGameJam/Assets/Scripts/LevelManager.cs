@@ -35,7 +35,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void StartGame()
     {
-        CurrentLevel = 0;
+        CurrentLevel = 1;
         StartCoroutine(LoadNewScene("Game"));
         SceneManager.sceneLoaded += (scene, mode) =>
         {
