@@ -50,7 +50,7 @@ public class GlassesManager : Singleton<GlassesManager>
 
     public void Reload()
     {
-        _glassesFilter.Reset();
+      //  _glassesFilter.Reset();
         RedGlasses = true;
         GreenGlasses = false;
         BlueGlasses = false;
