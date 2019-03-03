@@ -52,8 +52,8 @@ public class GlassesManager : Singleton<GlassesManager>
     {
         _glassesFilter.Reset();
         RedGlasses = true;
-        GreenGlasses = true;
-        BlueGlasses = true;
+        GreenGlasses = false;
+        BlueGlasses = false;
         GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, .25f);
         BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, .25f);
         RedIndicator.GetComponent<Image>().color = new Color(255, 0, 0, 1);
