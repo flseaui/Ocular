@@ -6,22 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : Singleton<LevelManager>
 {
-    [SerializeField] private GameObject[] _levelPrefabs;
-    [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _indicatorPrefab;
-
-    private GameObject _level, _player, _selector;
-    
-    [NonSerialized]
     public int CurrentLevel;
-
-    public int TotalWaypoints;
-    public int FinishedWaypoints;
-
-    public int NeighboredWaypoints;
     
-    public Action CheckNeighbors, MoveUp;
-
     private void Start()
     {
         CurrentLevel = 1;
@@ -39,8 +25,9 @@ public class LevelManager : Singleton<LevelManager>
     public void LoadNextLevel()
     {
         CurrentLevel++;
-        Debug.Log($"Loading Level {SceneManager.GetActiveScene().buildIndex + 1}");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+        SceneManager.LoadScene(CurrentLevel);
+       
+       // StartCoroutine(LoadNewScene(CurrentLevel.ToString()));
     }
 
     /*private IEnumerator IsDefDead()
@@ -92,14 +79,15 @@ public class LevelManager : Singleton<LevelManager>
     public void StartGame()
     {
         CurrentLevel = 1;
-        StartCoroutine(LoadNewScene("1"));
+        SceneManager.LoadScene("1");
+        //StartCoroutine(LoadNewScene("1"));
     }
     
-    private IEnumerator LoadNewScene(string scene)
+/*    private IEnumerator LoadNewScene(string scene)
     {
-        var async = SceneManager.LoadSceneAsync(scene);
+        //var async =(scene);
 
-        while (!async.isDone) yield return null;
-    }
+       // while (!async.isDone) yield return null;
+    }*/
     
 }
