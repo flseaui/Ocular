@@ -24,11 +24,6 @@ public class VisibilityController : MonoBehaviour
         UpdateBlockState();
     }
 
-    private void OnDestroy()
-    {
-        GlassesManager.Instance.OnGlassesSwitched -= UpdateBlockState;
-    }
-
     private void UpdateBlockState()
     {
         UpdateBlockState(GlassesManager.Instance.Color);

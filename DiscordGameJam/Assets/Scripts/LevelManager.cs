@@ -13,7 +13,7 @@ public class LevelManager : Singleton<LevelManager>
     private GameObject _level, _player, _selector;
     
     [NonSerialized]
-    public int CurrentLevel = -1;
+    public int CurrentLevel;
 
     public int TotalWaypoints;
     public int FinishedWaypoints;
@@ -21,6 +21,11 @@ public class LevelManager : Singleton<LevelManager>
     public int NeighboredWaypoints;
     
     public Action CheckNeighbors, MoveUp;
+
+    private void Start()
+    {
+        CurrentLevel = 1;
+    }
     
     private void Update()
     {
@@ -34,7 +39,8 @@ public class LevelManager : Singleton<LevelManager>
     public void LoadNextLevel()
     {
         CurrentLevel++;
-        StartCoroutine(LoadNewScene($"Level{CurrentLevel}Real"));
+        Debug.Log($"Loading Level {SceneManager.GetActiveScene().buildIndex + 1}");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
     }
 
     /*private IEnumerator IsDefDead()
@@ -86,11 +92,7 @@ public class LevelManager : Singleton<LevelManager>
     public void StartGame()
     {
         CurrentLevel = 1;
-        StartCoroutine(LoadNewScene("Level1Real"));
-        SceneManager.sceneLoaded += (scene, mode) =>
-        {
-            //LoadLevel(CurrentLevel);
-        };
+        StartCoroutine(LoadNewScene("1"));
     }
     
     private IEnumerator LoadNewScene(string scene)
