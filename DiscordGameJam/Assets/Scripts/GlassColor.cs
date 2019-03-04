@@ -10,11 +10,6 @@ public class GlassColor : MonoBehaviour
         GlassesManager.Instance.OnGlassesSwitched += ChangeGlassesColor;
     }
 
-    private void OnDestroy()
-    {
-        GlassesManager.Instance.OnGlassesSwitched -= ChangeGlassesColor;
-    }
-
     private void ChangeGlassesColor(GlassesManager.GlassesColor color)
     {
         var matColor = UnityEngine.Color.black;

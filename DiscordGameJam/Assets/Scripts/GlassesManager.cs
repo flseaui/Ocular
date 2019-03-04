@@ -16,7 +16,10 @@ public class GlassesManager : Singleton<GlassesManager>
         Black
     }
 
-    [SerializeField] private PostProcessing _glassesFilter;
+    public Image RedIndicator,
+        GreenIndicator,
+        BlueIndicator;
+    
 
     private int _numOfGlasses;
 
@@ -31,10 +34,6 @@ public class GlassesManager : Singleton<GlassesManager>
     public Action<GlassesColor> OnGlassesSwitched;
 
     [NonSerialized] public bool RedGlasses = true;
-
-    public Image RedIndicator,
-        GreenIndicator,
-        BlueIndicator;
 
     private GlassesColor CalculateColor()
     {
@@ -57,7 +56,7 @@ public class GlassesManager : Singleton<GlassesManager>
         GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, .25f);
         BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, .25f);
         RedIndicator.GetComponent<Image>().color = new Color(255, 0, 0, 1);
-        OnGlassesSwitched?.Invoke(CalculateColor());   
+        OnGlassesSwitched?.Invoke(CalculateColor());
     }
     
     private void Start()
@@ -67,6 +66,8 @@ public class GlassesManager : Singleton<GlassesManager>
 
     private void Update()
     {
+        
+        
         _numOfGlasses =
             (RedGlasses ? 1 : 0) +
             (BlueGlasses ? 1 : 0) +
@@ -93,7 +94,7 @@ public class GlassesManager : Singleton<GlassesManager>
         if (!(RedGlasses && _numOfGlasses == 1 || !RedGlasses && _numOfGlasses == 2))
         {
             RedGlasses = !RedGlasses;
-            _glassesFilter.SetRedFilter(RedGlasses);
+           // _glassesFilter.SetRedFilter(RedGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
             RedIndicator.GetComponent<Image>().color = new Color(255, 0, 0, RedGlasses ? 1 : .25f);
         }
@@ -104,7 +105,7 @@ public class GlassesManager : Singleton<GlassesManager>
         if (!(GreenGlasses && _numOfGlasses == 1 || !GreenGlasses && _numOfGlasses == 2))
         {
             GreenGlasses = !GreenGlasses;
-            _glassesFilter.SetGreenFilter(GreenGlasses);
+           // _glassesFilter.SetGreenFilter(GreenGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
             GreenIndicator.GetComponent<Image>().color = new Color(0, 255, 0, GreenGlasses ? 1 : .25f);
         }
@@ -115,7 +116,7 @@ public class GlassesManager : Singleton<GlassesManager>
         if (!(BlueGlasses && _numOfGlasses == 1 || !BlueGlasses && _numOfGlasses == 2))
         {
             BlueGlasses = !BlueGlasses;
-            _glassesFilter.SetBlueFilter(BlueGlasses);
+            //_glassesFilter.SetBlueFilter(BlueGlasses);
             OnGlassesSwitched?.Invoke(CalculateColor());
             BlueIndicator.GetComponent<Image>().color = new Color(0, 0, 255, BlueGlasses ? 1 : .25f);
         }

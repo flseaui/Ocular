@@ -33,23 +33,20 @@ public class LevelManager : Singleton<LevelManager>
     
     public void LoadNextLevel()
     {
-        Destroy(_selector);  
-        Destroy(_player);
-        Destroy(_level);
-
-        StartCoroutine(nameof(IsDefDead));
+        CurrentLevel++;
+        StartCoroutine(LoadNewScene($"Level{CurrentLevel}Real"));
     }
 
-    private IEnumerator IsDefDead()
+    /*private IEnumerator IsDefDead()
     {
         if (_selector != null || _player != null || _level != null)
             yield return null;
                 
         ++CurrentLevel;
         LoadLevel(CurrentLevel);
-    }
+    }*/
     
-    public void LoadLevel(int index)
+/*    public void LoadLevel(int index)
     {
         TotalWaypoints = 0;
         FinishedWaypoints = 0;
@@ -63,9 +60,9 @@ public class LevelManager : Singleton<LevelManager>
         GlassesManager.Instance.Player = _player;
         GlassesManager.Instance.Reload();
         GameObject.Find("CameraTarget").transform.GetChild(0).transform.localPosition = _level.GetComponent<LevelDetails>().CameraPos;
-    }
+    }*/
 
-    private IEnumerator WaitForWaypoints()
+    /*private IEnumerator WaitForWaypoints()
     {
         if (FinishedWaypoints < TotalWaypoints)
             yield return null;
@@ -79,24 +76,20 @@ public class LevelManager : Singleton<LevelManager>
             yield return null;
         MoveUp?.Invoke();
 
-    }
+    }*/
     
     public void RestartLevel()
     {
-
-        Destroy(_selector);  
-        Destroy(_player);
-        Destroy(_level);
-        StartCoroutine(LoadNewScene("Game"));
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
     public void StartGame()
     {
-        CurrentLevel = 0;
-        StartCoroutine(LoadNewScene("Game"));
+        CurrentLevel = 1;
+        StartCoroutine(LoadNewScene("Level1Real"));
         SceneManager.sceneLoaded += (scene, mode) =>
         {
-            LoadLevel(CurrentLevel);
+            //LoadLevel(CurrentLevel);
         };
     }
     

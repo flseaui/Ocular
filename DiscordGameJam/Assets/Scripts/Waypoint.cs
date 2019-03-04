@@ -16,20 +16,17 @@ public class Waypoint : MonoBehaviour
 
     private void Awake()
     {
-        LevelManager.Instance.TotalWaypoints++;
-        LevelManager.Instance.CheckNeighbors += CheckNeighbors;
-        LevelManager.Instance.MoveUp += MoveUp;
+
     }
 
     private void OnDestroy()
     {
-        LevelManager.Instance.CheckNeighbors -= CheckNeighbors;
-        LevelManager.Instance.MoveUp -= MoveUp;
+
     }
 
     private void Start()
     {
-        LevelManager.Instance.FinishedWaypoints++;   
+        
         CheckNeighbors();
         MoveUp();
     }
@@ -103,7 +100,6 @@ public class Waypoint : MonoBehaviour
             }
         }
 
-        LevelManager.Instance.NeighboredWaypoints++;
     }
 
     private void MoveUp()
