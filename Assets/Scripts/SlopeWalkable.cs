@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class SlopeWalkable : Walkable
 {
-
     private enum Direction
     {
         Forward, Back, Left, Right
@@ -89,12 +88,13 @@ public class SlopeWalkable : Walkable
             }
         }
 
-        // Down
-        if (Physics.Raycast(transform.localPosition + RelativeBack + new Vector3(0, .2f, 0), new Vector3(0, -1, 0), out hit, 1.2f))
+        // Back & Down
+        if (Physics.Raycast(transform.localPosition + RelativeBack, new Vector3(0, -1, 0), out hit, 1f))
         {
             if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
             {
-                Neighbors.Add(walkable);
+                AddNeighbor(walkable);
+                walkable.AddNeighbor(this);
             }
         }
         
@@ -105,25 +105,27 @@ public class SlopeWalkable : Walkable
             {
                 if (slope._direction == OppositeDirection)
                 {
-                    Neighbors.Add(slope);
+                    AddNeighbor(slope);
                 }
             }
             else if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
             {
                 if (hit.transform.parent.CompareTag("Walkable"))
-                    Neighbors.Add(walkable);
+                    AddNeighbor(walkable);
             }
         }
+        
         // Back
         if (Physics.Raycast(transform.localPosition, RelativeBack, out hit, 1))
         {
             // TODO Stairs facing eachother
-            /*if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
+            if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
             {
-                if (walkable._direction == _direction)
-                Neighbors.Add(walkable);
-            }*/
+                if (walkable._direction == OppositeDirection)
+                AddNeighbor(walkable);
+            }
         }
+        
         // Left
         if (Physics.Raycast(transform.localPosition, RelativeLeft, out hit, 1))
         {
@@ -131,9 +133,10 @@ public class SlopeWalkable : Walkable
             {
                 if (walkable._direction == _direction)
                     if (walkable._orientation == _orientation)
-                        Neighbors.Add(walkable);
+                        AddNeighbor(walkable);
             }
         }
+        
         // Right
         if (Physics.Raycast(transform.localPosition, RelativeRight, out hit, 1))
         {
@@ -141,7 +144,7 @@ public class SlopeWalkable : Walkable
             {
                 if (walkable._direction == _direction)
                     if (walkable._orientation == _orientation)
-                        Neighbors.Add(walkable);
+                        AddNeighbor(walkable);
             }
         }
     }
@@ -166,7 +169,7 @@ public class SlopeWalkable : Walkable
         Gizmos.DrawRay(transform.localPosition, RelativeBack);
         Gizmos.DrawRay(transform.localPosition, RelativeLeft);
         Gizmos.DrawRay(transform.localPosition, RelativeRight);
-        Gizmos.DrawRay(transform.localPosition + RelativeBack + new Vector3(0, .2f, 0), new Vector3(0, -1, 0));
+        Gizmos.DrawRay(transform.localPosition + RelativeBack, new Vector3(0, -1, 0));
         Gizmos.DrawRay(transform.localPosition, new Vector3(0, 1, 0));*/
     }
 #endif

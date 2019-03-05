@@ -13,6 +13,12 @@ public class Walkable : MonoBehaviour
     {
         Enabled = true;
     }
+
+    public void AddNeighbor(Walkable neighbor)
+    {
+        if (neighbor != this)
+            Neighbors.Add(neighbor);
+    }
     
     public virtual void CheckForNeighbors()
     {
@@ -35,7 +41,7 @@ public class Walkable : MonoBehaviour
                 
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
                 {
-                    Neighbors.Add(walkable);
+                    AddNeighbor(walkable);
                 }
             }
         }
