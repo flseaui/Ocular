@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorController : MonoBehaviour
+public class GlassesManager : MonoBehaviour
 {
-    public Color Color;
+    public List<Glasses> ActiveGlasses;
 }

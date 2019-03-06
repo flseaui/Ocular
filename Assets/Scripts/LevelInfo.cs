@@ -1,14 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
-public class LevelInfo : MonoBehaviour
+public class LevelInfo : SerializedMonoBehaviour
 {
-    public struct BlockColor
-    {
-        public Color Color;
-        public string Name;
-    }
-
-    public BlockColor[] LevelColors;
+    public List<Glasses> LevelGlasses;
 }
