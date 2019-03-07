@@ -24,6 +24,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3419922269534916831}
   - component: {fileID: 2281383999225131961}
+  - component: {fileID: 4192003448335184892}
   m_Layer: 0
   m_Name: Stairs
   m_TagString: Untagged
@@ -62,6 +63,27 @@ MonoBehaviour:
   Enabled: 0
   _direction: 0
   _orientation: 0
+--- !u!114 &4192003448335184892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3419922269534916828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea35a031af863f045a99a59fc0d6ef7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
 --- !u!1001 &3419922268474039123
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71,7 +93,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
       propertyPath: m_Name
-      value: Stairs
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -121,6 +143,10 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cfa304f6aae437a47b2099f7474cfdf7, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
 --- !u!1 &3419922268473941491 stripped

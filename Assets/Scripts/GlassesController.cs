@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlassesManager : MonoBehaviour
+public class GlassesController : MonoBehaviour
 {
     public List<Glasses> ActiveGlasses;
+
+    public void Start()
+    {
+        
+    }
+    
 }
