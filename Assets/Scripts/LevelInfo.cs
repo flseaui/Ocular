@@ -7,10 +7,43 @@ using UnityEngine;
 
 public class LevelInfo : SerializedMonoBehaviour
 {
-    [OnValueChanged(nameof(CalcBlockColors))]
+    public enum ColorSet
+    {
+        RGB,
+        Custom
+    }
+
+    public int NumConcurrentGlasses;
+    
+    [OnValueChanged(nameof(ApplyColorPreset))]
+    public ColorSet ColorPreset;
+
+    private void ApplyColorPreset()
+    {
+        if (ColorPreset == ColorSet.RGB)
+        {
+            LevelGlasses = new List<Glasses>
+            {
+                new Glasses(Color.red, KeyCode.Q),
+                new Glasses(Color.green, KeyCode.W), 
+                new Glasses(Color.blue, KeyCode.E)
+            };
+            BlockColors = new List<ColorData>
+            {
+                new ColorData(Color.red,     new List<Color> {Color.red,   Color.magenta, Color.yellow}),
+                new ColorData(Color.green,   new List<Color> {Color.green, Color.cyan,    Color.yellow}),
+                new ColorData(Color.blue,    new List<Color> {Color.blue,  Color.cyan,    Color.magenta}),
+                new ColorData(Color.cyan,    new List<Color> {Color.cyan}),
+                new ColorData(Color.magenta, new List<Color> {Color.magenta}),
+                new ColorData(Color.yellow,  new List<Color> {Color.yellow}),
+            };
+        }
+    }
+    
+    //[OnValueChanged(nameof(CalcBlockColors))]
     public List<Glasses> LevelGlasses;
 
-    private void CalcBlockColors()
+    /*private void CalcBlockColors()
     {
         BlockColors.Clear();
         foreach (var glassesX in LevelGlasses)
@@ -25,7 +58,20 @@ public class LevelInfo : SerializedMonoBehaviour
                     BlockColors.Add(color);
             }
         }
+    }    */
+
+    [Serializable]
+    public class ColorData
+    {
+        public Color Color;
+        public List<Color> Requirements;
+
+        public ColorData(Color color, List<Color> requirements)
+        {
+            Color = color;
+            Requirements = requirements;
+        }
     }
     
-    public List<Color> BlockColors;
+    public List<ColorData> BlockColors;
 }

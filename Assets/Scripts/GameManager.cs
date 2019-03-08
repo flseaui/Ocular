@@ -14,5 +14,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _levelController.LoadLevel(0);
+        _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
     }
 }

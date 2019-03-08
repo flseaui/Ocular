@@ -7,6 +7,8 @@ public class LevelController : MonoBehaviour
 
     private GameObject _loadedLevel;
     private int _loadedLevelNumber;
+
+    public LevelInfo CurrentLevelInfo;
     
     public void LoadNextLevel()
     {
@@ -18,6 +20,7 @@ public class LevelController : MonoBehaviour
         if (_loadedLevel != null)
             UnloadLevel();
         _loadedLevel = Instantiate(_levels[levelNumber]);
+        CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
         _loadedLevelNumber = levelNumber;
     }
     
