@@ -76,4 +76,6 @@ public class LevelInfo : SerializedMonoBehaviour
     }
     
     public List<ColorData> BlockColors;
+
+    public Transform PlayerSpawnPoint;
 }
