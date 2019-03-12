@@ -20,6 +20,7 @@ public class LevelController : MonoBehaviour
         if (_loadedLevel != null)
             UnloadLevel();
         _loadedLevel = Instantiate(_levels[levelNumber]);
+        _loadedLevel.GetComponent<MapGenerator>().FindNeighbors();
         CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
         _loadedLevelNumber = levelNumber;
     }

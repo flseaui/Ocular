@@ -28,14 +28,16 @@ public class LevelInfo : SerializedMonoBehaviour
                 new Glasses(Color.green, KeyCode.W), 
                 new Glasses(Color.blue, KeyCode.E)
             };
+
+            var yellow = new Color(1, 1, 0, 1);
             BlockColors = new List<ColorData>
             {
-                new ColorData(Color.red,     new List<Color> {Color.red,   Color.magenta, Color.yellow}),
-                new ColorData(Color.green,   new List<Color> {Color.green, Color.cyan,    Color.yellow}),
+                new ColorData(Color.red,     new List<Color> {Color.red,   Color.magenta, yellow}),
+                new ColorData(Color.green,   new List<Color> {Color.green, Color.cyan,    yellow}),
                 new ColorData(Color.blue,    new List<Color> {Color.blue,  Color.cyan,    Color.magenta}),
                 new ColorData(Color.cyan,    new List<Color> {Color.cyan}),
                 new ColorData(Color.magenta, new List<Color> {Color.magenta}),
-                new ColorData(Color.yellow,  new List<Color> {Color.yellow}),
+                new ColorData(yellow,        new List<Color> {yellow})
             };
         }
     }

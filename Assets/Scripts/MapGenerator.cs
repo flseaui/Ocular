@@ -2,19 +2,15 @@
 
 public class MapGenerator : MonoBehaviour
 {
-    private Walkable[] _walkables;
-
-    private void Start()
+    public void FindNeighbors()
     {
-        _walkables = transform.GetComponentsInChildren<Walkable>();
-        FindNeighbors();
-    }
-
-    private void FindNeighbors()
-    {
-        foreach (var walkable in _walkables)
+        foreach (var walkable in transform.GetComponentsInChildren<Walkable>())
         {
             walkable.CheckForNeighbors();
+        }
+        foreach (var colorable in transform.GetComponentsInChildren<Colorable>())
+        {
+            colorable.Initialize();
         }
     }
 }

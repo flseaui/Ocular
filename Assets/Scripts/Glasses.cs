@@ -15,7 +15,7 @@ public class Glasses : IEquatable<Glasses>
     {
         Color = color;
         Keybind = keybind;
-        Enabled = true;
+        Enabled = false;
     }
     
     public bool Equals(Glasses other)

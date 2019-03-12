@@ -50,25 +50,27 @@ public class GlassesController : MonoBehaviour
     
     public void ResetGlasses(List<Glasses> glasses)
     {
-        glasses.ForEach(x => x.Enabled = true);
+        glasses.ForEach(x => x.Enabled = false);
         ActiveGlasses = glasses;
         for (var i = 0; i < _glassesContainer.transform.childCount; ++i)
             Destroy(_glassesContainer.transform.GetChild(i));
 
         foreach (var activeGlasses in ActiveGlasses)
             CreateGlassesIndicator(activeGlasses);
+
+       // ToggleGlasses(ActiveGlasses[0], true);
     }
 
     public void AddGlasses(Glasses glasses)
     {
-        glasses.Enabled = true;
+        glasses.Enabled = false;
         ActiveGlasses.Add(glasses);
         CreateGlassesIndicator(glasses);
     }
 
     public void AddGlasses(List<Glasses> glasses)
     {
-        glasses.ForEach(x => x.Enabled = true);
+        glasses.ForEach(x => x.Enabled = false);
         ActiveGlasses.AddRange(glasses);
         foreach (var activeGlasses in glasses)
             CreateGlassesIndicator(activeGlasses);
@@ -77,22 +79,26 @@ public class GlassesController : MonoBehaviour
     private void CreateGlassesIndicator(Glasses glasses)
     {
         var indicator = Instantiate(_colorIndicator, _glassesContainer.transform);
-        indicator.GetComponent<Image>().color = glasses.Color;
+        indicator.GetComponent<Image>().color = glasses.Enabled ? glasses.Color : glasses.Color / 2;
         _colorIndicators.Add(glasses.Color, indicator.GetComponent<Image>());
     }
     
-    public void ToggleGlasses(Glasses glasses)
+    public void ToggleGlasses(Glasses glasses, bool bypassLimit = false)
     {
         if (ActiveGlasses.Contains(glasses))
         {
-            var index = ActiveGlasses.IndexOf(glasses);
-            if (ActiveGlasses[index].Enabled)
-                _colorIndicators[glasses.Color].color /= 2;
-            else
-                _colorIndicators[glasses.Color].color = glasses.Color;
+            if (bypassLimit || glasses.Enabled || ActiveGlasses.Count(x => x.Enabled) < 2)
+            {
+                var index = ActiveGlasses.IndexOf(glasses);
+                if (ActiveGlasses[index].Enabled)
+                    _colorIndicators[glasses.Color].color /= 2;
+                else
+                    _colorIndicators[glasses.Color].color = glasses.Color;
 
-            ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
-            OnGlassesToggled?.Invoke(CombinedColor);
+                ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
+                
+                OnGlassesToggled?.Invoke(CombinedColor);
+            }
         }
     }
 

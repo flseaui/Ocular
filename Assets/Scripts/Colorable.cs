@@ -13,6 +13,7 @@ public class Colorable : MonoBehaviour
     private MaterialPropertyBlock _propBlock;
     private Renderer _renderer;
     private LevelInfo _levelInfo;
+    
     private GameObject _model;
 
     private void OnEnable()
@@ -22,22 +23,41 @@ public class Colorable : MonoBehaviour
         _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
         _propBlock = new MaterialPropertyBlock();
         Color = Color;
+        _model.SetActive(true);
     }
 
+    public void Initialize()
+    {
+        if (Color == Color.white) return;
+        _model.SetActive(false);
+        if (transform.HasComponent<Walkable>(out var walkable))
+        {
+            walkable.CheckBelow(walkable.Enabled);
+            walkable.Enabled = false;
+        }
+    }
+    
     private void Awake()
     {
+        if (!Application.isPlaying) return;
+        
         GlassesController.OnGlassesToggled += color =>
         {
-            if (_levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements.Contains(color) == true)
-            {
-                if (transform.HasComponent<Walkable>(out var walkable))
-                {
-                    walkable.CheckBelow(_model.activeSelf);
-                    walkable.Enabled = !walkable.Enabled;
-                }
+            if (Color == Color.white) return;
+            
+            var visibile =
+                _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements.Contains(color) == true;
 
-                _model.SetActive(!_model.activeSelf);
+            if (_model.activeSelf == visibile) return;
+            
+            if (transform.HasComponent<Walkable>(out var walkable))
+            {
+                walkable.CheckBelow(!visibile);
+                walkable.Enabled = visibile;
             }
+        
+            _model.SetActive(visibile);
+
         };
     }
     
