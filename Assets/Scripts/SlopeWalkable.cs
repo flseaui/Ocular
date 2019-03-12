@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SlopeWalkable : Walkable
 {
-    private enum Direction
+    public enum Direction
     {
         Forward, Left, Back, Right
     }
@@ -13,7 +13,7 @@ public class SlopeWalkable : Walkable
         Up, Down
     }
 
-    private Direction[] _directionsClockwise =
+    private readonly Direction[] _directionsClockwise =
     {
         Direction.Forward,
         Direction.Left,
@@ -21,7 +21,7 @@ public class SlopeWalkable : Walkable
         Direction.Right
     };
     
-    private Vector3[] _directionsVector =
+    private readonly Vector3[] _directionsVector =
     {
         Vector3.forward,
         Vector3.left,
@@ -29,14 +29,14 @@ public class SlopeWalkable : Walkable
         Vector3.right
     };
     
-    [SerializeField] private Direction _direction;
+    [SerializeField] public Direction DirectionFacing;
     [SerializeField] private Orientation _orientation;
 
-    private Direction OppositeDirection => _directionsClockwise[((int) _direction + 2) % 4];
+    private Direction OppositeDirection => _directionsClockwise[((int) DirectionFacing + 2) % 4];
 
-    private Vector3 RelativeForward => _directionsVector[(int) _direction];
+    private Vector3 RelativeForward => _directionsVector[(int) DirectionFacing];
     private Vector3 RelativeBack => RelativeForward * -1;
-    private Vector3 RelativeLeft => _directionsVector[((int) _direction + 1) % 4];
+    private Vector3 RelativeLeft => _directionsVector[((int) DirectionFacing + 1) % 4];
     private Vector3 RelativeRight => RelativeLeft * -1;
     
     public override void CheckForNeighbors()
@@ -65,7 +65,7 @@ public class SlopeWalkable : Walkable
         {
             if (hit.transform.ParentHasComponent<SlopeWalkable>(out var slope))
             {
-                if (slope._direction == OppositeDirection)
+                if (slope.DirectionFacing == OppositeDirection)
                 {
                     AddNeighbor(slope);
                 }
@@ -83,7 +83,7 @@ public class SlopeWalkable : Walkable
             // TODO Stairs facing eachother
             if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
             {
-                if (walkable._direction == OppositeDirection)
+                if (walkable.DirectionFacing == OppositeDirection)
                 AddNeighbor(walkable);
             }
         }
@@ -93,7 +93,7 @@ public class SlopeWalkable : Walkable
         {
             if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
             {
-                if (walkable._direction == _direction)
+                if (walkable.DirectionFacing == DirectionFacing)
                     if (walkable._orientation == _orientation)
                         AddNeighbor(walkable);
             }
@@ -104,20 +104,20 @@ public class SlopeWalkable : Walkable
         {
             if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
             {
-                if (walkable._direction == _direction)
+                if (walkable.DirectionFacing == DirectionFacing)
                     if (walkable._orientation == _orientation)
                         AddNeighbor(walkable);
             }
         }
     }
-
+    
 #if  UNITY_EDITOR
     private void OnValidate()
     {
-        if (_direction == Direction.Right) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0, 0);
-        else if (_direction == Direction.Left) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
-        else if (_direction == Direction.Forward) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
-        else if (_direction == Direction.Back) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90, 0);
+        if (DirectionFacing == Direction.Right) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0, 0);
+        else if (DirectionFacing == Direction.Left) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
+        else if (DirectionFacing == Direction.Forward) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
+        else if (DirectionFacing == Direction.Back) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90, 0);
         
         if (_orientation == Orientation.Up) transform.localRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
         if (_orientation == Orientation.Down) transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
