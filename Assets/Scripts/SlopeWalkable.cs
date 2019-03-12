@@ -5,76 +5,38 @@ public class SlopeWalkable : Walkable
 {
     private enum Direction
     {
-        Forward, Back, Left, Right
+        Forward, Left, Back, Right
     }
 
     private enum Orientation
     {
         Up, Down
     }
+
+    private Direction[] _directionsClockwise =
+    {
+        Direction.Forward,
+        Direction.Left,
+        Direction.Back,
+        Direction.Right
+    };
+    
+    private Vector3[] _directionsVector =
+    {
+        Vector3.forward,
+        Vector3.left,
+        Vector3.back, 
+        Vector3.right
+    };
     
     [SerializeField] private Direction _direction;
     [SerializeField] private Orientation _orientation;
 
-    private Direction OppositeDirection
-    {
-        get
-        {
-            switch (_direction)
-            {
-                case Direction.Forward:
-                    return Direction.Back;
-                case Direction.Back:
-                    return Direction.Forward;
-                case Direction.Left:
-                    return Direction.Right;
-                case Direction.Right:
-                    return Direction.Left;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-    }
+    private Direction OppositeDirection => _directionsClockwise[((int) _direction + 2) % 4];
 
-    private Vector3 RelativeForward
-    {
-        get
-        {
-            switch (_direction)
-            {
-                case Direction.Forward:
-                    return Vector3.forward;
-                case Direction.Back:
-                    return Vector3.back;
-                case Direction.Left:
-                    return Vector3.left;
-                case Direction.Right:
-                    return Vector3.right;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-    }
+    private Vector3 RelativeForward => _directionsVector[(int) _direction];
     private Vector3 RelativeBack => RelativeForward * -1;
-    private Vector3 RelativeLeft
-    {
-        get
-        {
-            switch (_direction)
-            {
-                case Direction.Forward:
-                    return Vector3.left;
-                case Direction.Back:
-                    return Vector3.right;
-                case Direction.Left:
-                    return Vector3.back;
-                case Direction.Right:
-                    return Vector3.forward;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-    }
+    private Vector3 RelativeLeft => _directionsVector[((int) _direction + 1) % 4];
     private Vector3 RelativeRight => RelativeLeft * -1;
     
     public override void CheckForNeighbors()
