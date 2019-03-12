@@ -46,6 +46,17 @@ public class Walkable : MonoBehaviour
             }
         }
     }
+
+    public void CheckBelow(bool state)
+    {
+        if (Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 1))
+        {
+            if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
+            {
+                walkable.Enabled = state;
+            }
+        }
+    }
     
 #if  UNITY_EDITOR
     protected void OnDrawGizmos()

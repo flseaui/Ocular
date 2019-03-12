@@ -29,7 +29,15 @@ public class Colorable : MonoBehaviour
         GlassesController.OnGlassesToggled += color =>
         {
             if (_levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements.Contains(color) == true)
+            {
+                if (transform.HasComponent<Walkable>(out var walkable))
+                {
+                    walkable.CheckBelow(_model.activeSelf);
+                    walkable.Enabled = !walkable.Enabled;
+                }
+
                 _model.SetActive(!_model.activeSelf);
+            }
         };
     }
     
