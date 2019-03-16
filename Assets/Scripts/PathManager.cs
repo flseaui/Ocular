@@ -162,7 +162,7 @@ public class PathManager : MonoBehaviour
 	private void Update()
 	{
 		if (Navigating)
-		{	
+		{
 			transform.LookAt(_waypointTo, Vector3.up);
 			if (_moveTimeCurrent < _moveTimeTotal)
 			{

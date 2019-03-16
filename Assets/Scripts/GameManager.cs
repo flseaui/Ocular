@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     {
         _levelController.LoadLevel(0);
         _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
-        _indicator.GetComponent<Indicator>().Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position, Quaternion.identity);
+        Instantiate(_indicator);
+        Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position, Quaternion.identity);
     }
 }
