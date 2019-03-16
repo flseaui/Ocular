@@ -15,40 +15,44 @@ public class Waypoint : IEquatable<Waypoint>
 }
 
 public class Pathfinder : MonoBehaviour
-{
-    [SerializeField] private Walkable _currentPosition;
+{ 
+    public Walkable SetDestination { get; set; }
+    
+    private Walkable _currentPosition;
+    private Walkable _currentDesition;
+    private Queue<Walkable> _currentPath;
 
+    private bool _currentlyMoving;
+    
     private Queue<Walkable> GeneratePath(Walkable destination)
     {
         Queue<Walkable> path = new Queue<Walkable>();
         Queue<Waypoint> queuedWaypoints = new Queue<Waypoint>();
         Queue<Waypoint> tempQueue = new Queue<Waypoint>();
-            
+                    
+        bool pathFinished = false;
+        int counter = 0;
+        
+        Walkable last = destination;
+        
         queuedWaypoints.Enqueue(new Waypoint {walkable = destination, counter = 0});
         
-        bool _pathFinished = false;
-
-        int _counter = 0;
-        
-        Walkable _last = destination;
-        
-        //First run through and give each waypoint a rating for how many waypoints it is away from the destination
-        while (!_pathFinished)
+        while (!pathFinished)
         {
-            ++_counter;
+            ++counter;
             foreach (var neighbor in queuedWaypoints.Dequeue().walkable.Neighbors)
             {
                 if (neighbor.Equals(_currentPosition))
                 {
-                    queuedWaypoints.Enqueue(new Waypoint {walkable = neighbor, counter = _counter});
+                    queuedWaypoints.Enqueue(new Waypoint {walkable = neighbor, counter = counter});
                     path.Enqueue(neighbor);
-                    _last = neighbor;
-                    _pathFinished = true;
+                    last = neighbor;
+                    pathFinished = true;
                     break;
                 }
         
-                if (queuedWaypoints.FirstOrDefault(x => x.walkable == neighbor).Equals(null))
-                    tempQueue.Enqueue(new Waypoint {walkable = neighbor, counter = _counter});
+                if (ReferenceEquals(queuedWaypoints.FirstOrDefault(x => x.walkable == neighbor), null))
+                    tempQueue.Enqueue(new Waypoint {walkable = neighbor, counter = counter});
             }
 
             int size = tempQueue.Count;
@@ -58,32 +62,47 @@ public class Pathfinder : MonoBehaviour
             }
         }
 
-        
-
-        for (int i = _counter; i == 0; i--)
+        for (int i = counter; i == 0; i--)
         {
-            foreach (var neighbor in _last.Neighbors)
+            foreach (var neighbor in last.Neighbors)
             {
-                if (queuedWaypoints.FirstOrDefault(x => x.walkable == neighbor).counter < _counter)
+                if (queuedWaypoints.FirstOrDefault(x => x.walkable == neighbor).counter < counter)
                 {
                     path.Enqueue(neighbor);
-                    _last = neighbor;
+                    last = neighbor;
                     break;
                 }
             }          
         }
-
         return path;
     }
-    
-    // Start is called before the first frame update
-    void Start()
+
+    private Walkable GetCurrentWalkable()
     {
+        if (Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 1))
+            return hit.transform.parent.GetComponent<Walkable>();
+        return null;
     }
 
-    // Update is called once per frame
+    private void CheckForNewDestination()
+    {
+        if (!ReferenceEquals(_currentDesition, SetDestination))
+        {
+            _currentDesition = SetDestination;
+            _currentPath = GeneratePath(SetDestination);
+        }
+    }
+    
+   
     void Update()
     {
-        
+        _currentPosition = GetCurrentWalkable();
+
+        if (_currentlyMoving)
+        {
+            //Lerp player, and if at waypoint check for new desitination
+        }
+        else      
+            CheckForNewDestination();
     }
 }

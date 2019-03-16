@@ -5,8 +5,9 @@ public class GameManager : MonoBehaviour
     private LevelController _levelController;
     private GlassesController _glassesController;
 
-    [SerializeField]
-    private GameObject _playerPrefab;
+    [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private GameObject _indicator; 
+    
 
     private void Awake()
     {
@@ -18,6 +19,6 @@ public class GameManager : MonoBehaviour
     {
         _levelController.LoadLevel(0);
         _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
-        Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position, Quaternion.identity);
+        _indicator.GetComponent<Indicator>().Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position, Quaternion.identity);
     }
 }

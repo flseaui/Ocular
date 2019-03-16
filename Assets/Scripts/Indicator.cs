@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Indicator : MonoBehaviour
 {
+    public GameObject Player { get; set; }
+    
     private readonly int[] _slopeAngles = 
     {
         0, 270, 180, 90
@@ -29,7 +31,8 @@ public class Indicator : MonoBehaviour
                 
                 if (Input.GetMouseButtonDown(0))
                 {
-
+                    Player.GetComponent<Pathfinder>().SetDestination = hit.transform.parent.GetComponent<Walkable>();
+                    Debug.Log(Player.GetComponent<Pathfinder>().SetDestination);
                 }
             }
         }
