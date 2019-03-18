@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LevelController : MonoBehaviour
@@ -8,11 +9,21 @@ public class LevelController : MonoBehaviour
     private GameObject _loadedLevel;
     private int _loadedLevelNumber;
 
+    private int LevelCount => _levels.Count;
+    
+    [ValueDropdown("_levels")]
+    public GameObject StartingLevel;
+    
     public LevelInfo CurrentLevelInfo;
     
     public void LoadNextLevel()
     {
         LoadLevel(_loadedLevelNumber + 1);
+    }
+
+    public void LoadLevel()
+    {
+        LoadLevel(_levels.IndexOf(StartingLevel));
     }
     
     public void LoadLevel(int levelNumber)

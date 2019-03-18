@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _levelController.LoadLevel(0);
+        _levelController.LoadLevel();
         _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
         Instantiate(_indicator);
         Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position, Quaternion.identity);

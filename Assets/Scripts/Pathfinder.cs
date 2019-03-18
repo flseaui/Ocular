@@ -116,7 +116,6 @@ public class Pathfinder : MonoBehaviour
         }
     }
     
-   
     void Update()
     {
         _currentPosition = GetCurrentWalkable();
@@ -129,7 +128,9 @@ public class Pathfinder : MonoBehaviour
                 _moveTimeCurrent += Time.deltaTime;
                 if (_moveTimeCurrent > _moveTimeTotal)
                     _moveTimeCurrent = _moveTimeTotal;
-                transform.localPosition = Vector3.Lerp(_waypointFrom, _waypointTo, _moveTimeCurrent / _moveTimeTotal);
+                var lerp = Vector3.Lerp(_waypointFrom, _waypointTo, _moveTimeCurrent / _moveTimeTotal);
+                lerp.y = transform.localPosition.y;
+                transform.localPosition = lerp;
             }
             else
             {
