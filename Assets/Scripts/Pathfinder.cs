@@ -16,17 +16,30 @@ public class Waypoint : IEquatable<Waypoint>
 
 public class Pathfinder : MonoBehaviour
 {
-    private Walkable _destination;
-    
+    private Walkable _queuedDestination;
     private Walkable _currentPosition;
     private Walkable _currentDesition;
     private Queue<Walkable> _currentPath;
-
+    private Vector3 _waypointFrom;
+    private Vector3 _waypointTo;
+    private float _moveTimeCurrent;
+    private float _moveTimeTotal;
+    public float WalkSpeed = 5.0f;
     private bool _currentlyMoving;
 
     private void Awake()
     {
-        Indicator.OnWalkableClicked += walkable => _destination = walkable;
+        Indicator.OnWalkableClicked += NavigateTo;
+    }
+
+    private void NavigateTo(Walkable destination)
+    {
+        _queuedDestination = destination;
+        _waypointTo = destination.transform.position;
+        _waypointFrom = GetCurrentWalkable().transform.position;
+        _moveTimeTotal = (_waypointFrom - _waypointTo).magnitude / WalkSpeed;
+        _moveTimeCurrent = 0;
+        _currentlyMoving = true;
     }
     
     private Queue<Walkable> GeneratePath(Walkable destination)
@@ -91,10 +104,15 @@ public class Pathfinder : MonoBehaviour
 
     private void CheckForNewDestination()
     {
-        if (!ReferenceEquals(_currentDesition, _destination))
+        if (_currentDesition.transform.localPosition != _queuedDestination.transform.localPosition)
         {
-            _currentDesition = _destination;
-            _currentPath = GeneratePath(_destination);
+            _currentDesition = _queuedDestination;
+            _currentPath = GeneratePath(_currentDesition);
+
+            foreach (var item in _currentPath)
+            {
+                Debug.Log(item.transform.position);
+            }
         }
     }
     
@@ -106,6 +124,30 @@ public class Pathfinder : MonoBehaviour
         if (_currentlyMoving)
         {
             //Lerp player, and if at waypoint check for new desitination
+            if (_moveTimeCurrent < _moveTimeTotal)
+            {
+                _moveTimeCurrent += Time.deltaTime;
+                if (_moveTimeCurrent > _moveTimeTotal)
+                    _moveTimeCurrent = _moveTimeTotal;
+                transform.localPosition = Vector3.Lerp(_waypointFrom, _waypointTo, _moveTimeCurrent / _moveTimeTotal);
+            }
+            else
+            {
+                _waypointFrom = _waypointTo;
+                if (_currentPath.Count > 0)
+                {
+                    _waypointTo = _currentPath.Dequeue().transform.position;
+                    _moveTimeCurrent = 0;
+                    _moveTimeTotal = (_waypointFrom - _waypointTo).magnitude / WalkSpeed;
+                }
+                else
+                {
+                    _currentlyMoving = false;
+                    _currentPath.Clear();
+                    _moveTimeTotal = 0;
+                    _moveTimeCurrent = 0;
+                }
+            }
         }
         else      
             CheckForNewDestination();
