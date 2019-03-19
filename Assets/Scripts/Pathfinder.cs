@@ -16,8 +16,8 @@ public class Waypoint : IEquatable<Waypoint>
 
 public class Pathfinder : MonoBehaviour
 {
+    private Walkable CurrentPosition => GetCurrentWalkable();
     private Walkable _queuedDestination;
-    private Walkable _currentPosition;
     private Walkable _currentDesition;
     private Queue<Walkable> _currentPath;
     private Vector3 _waypointFrom;
@@ -25,7 +25,7 @@ public class Pathfinder : MonoBehaviour
     private float _moveTimeCurrent;
     private float _moveTimeTotal;
     public float WalkSpeed = 5.0f;
-    private bool _currentlyMoving;
+    public bool _currentlyMoving;
 
     private void Awake()
     {
@@ -36,10 +36,9 @@ public class Pathfinder : MonoBehaviour
     {
         _queuedDestination = destination;
         _waypointTo = destination.transform.position;
-        _waypointFrom = GetCurrentWalkable().transform.position;
-        _moveTimeTotal = (_waypointFrom - _waypointTo).magnitude / WalkSpeed;
+        _waypointFrom = CurrentPosition.transform.position;
         _moveTimeCurrent = 0;
-        _currentlyMoving = true;
+        //_currentlyMoving = true;
     }
     
     private Queue<Walkable> GeneratePath(Walkable destination)
@@ -60,7 +59,7 @@ public class Pathfinder : MonoBehaviour
             ++counter;
             foreach (var neighbor in queuedWaypoints.Dequeue().Walkable.Neighbors)
             {
-                if (neighbor.Equals(_currentPosition))
+                if (neighbor.Equals(CurrentPosition))
                 {
                     queuedWaypoints.Enqueue(new Waypoint {Walkable = neighbor, Counter = counter});
                     path.Enqueue(neighbor);
@@ -97,31 +96,30 @@ public class Pathfinder : MonoBehaviour
 
     private Walkable GetCurrentWalkable()
     {
-        if (Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 1))
-            return hit.transform.parent.GetComponent<Walkable>();
-        return null;
+        return Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 1) 
+        ? hit.transform.parent.GetComponent<Walkable>() : null;
     }
 
     private void CheckForNewDestination()
     {
-        if (_currentDesition.transform.localPosition != _queuedDestination.transform.localPosition)
-        {
-            _currentDesition = _queuedDestination;
-            _currentPath = GeneratePath(_currentDesition);
+        if (ReferenceEquals(_queuedDestination, _currentDesition)) return;
+        
+        _currentDesition = _queuedDestination;
+        _currentPath = GeneratePath(_currentDesition);
+        _waypointTo = _currentPath.Dequeue().transform.position;
+        _moveTimeTotal = (_waypointFrom - _waypointTo).magnitude / WalkSpeed;
+        _currentlyMoving = true;
 
-            foreach (var item in _currentPath)
-            {
-                Debug.Log(item.transform.position);
-            }
+        foreach (var item in _currentPath)
+        {
+            Debug.Log(item.transform.position);
         }
     }
     
     void Update()
     {
-        _currentPosition = GetCurrentWalkable();
-
         if (_currentlyMoving)
-        {
+        {                        
             //Lerp player, and if at waypoint check for new desitination
             if (_moveTimeCurrent < _moveTimeTotal)
             {
@@ -134,6 +132,7 @@ public class Pathfinder : MonoBehaviour
             }
             else
             {
+                Debug.Log("yo");
                 _waypointFrom = _waypointTo;
                 if (_currentPath.Count > 0)
                 {
@@ -144,13 +143,14 @@ public class Pathfinder : MonoBehaviour
                 else
                 {
                     _currentlyMoving = false;
+                    _queuedDestination = null;
                     _currentPath.Clear();
                     _moveTimeTotal = 0;
                     _moveTimeCurrent = 0;
                 }
             }
         }
-        else      
+        else if(!ReferenceEquals(_queuedDestination, null))     
             CheckForNewDestination();
     }
 }
