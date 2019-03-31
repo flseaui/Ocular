@@ -7,10 +7,9 @@ using UnityEngine;
 
 public class BetterPathfinder : MonoBehaviour
 {   
-    private Walkable CurrentPosition => GetCurrentWalkable();
-    private Walkable _queuedDestination;
-    private Walkable _currentDesition;
-    private List<Walkable> _currentPath;
+    private Queue<Walkable> _currentPath;
+    private Walkable _currentEnd;
+    private Walkable _currentStart;
     public float WalkSpeed = 5.0f;
     public bool Navigating;
 
@@ -21,10 +20,15 @@ public class BetterPathfinder : MonoBehaviour
 
     private void NavigateTo(Walkable destination)
     {
-        _currentPath = GeneratePath(GetCurrentWalkable(), destination);
+        var path = GeneratePath(GetCurrentWalkable(), destination);
+        if (path == null)
+            return;
+        _currentPath = new Queue<Walkable>(path);
+        _currentEnd = _currentPath.Dequeue();
+        Navigating = true;
     }
 
-    private List<Walkable> GeneratePath(Walkable start, Walkable destination)
+    private IEnumerable<Walkable> GeneratePath(Walkable start, Walkable destination)
     {
         float Heuristic(Vector3 a, Vector3 b)
         {
@@ -35,9 +39,12 @@ public class BetterPathfinder : MonoBehaviour
         {
             return 1;
         }
+
+        if (start == destination)
+            return null;
         
         var goalNode = destination.Node;
-        var path = new List<Walkable>();
+        var path = new Queue<Walkable>();
         var frontier = new FastPriorityQueue<Node>(MapGenerator.NUM_WALKABLES);
         var cameFrom = new Dictionary<int, Node>();
         var costSoFar = new Dictionary<int, float>();
@@ -69,17 +76,17 @@ public class BetterPathfinder : MonoBehaviour
         current = goalNode;
         while (current.Walkable.UniqueId != start.UniqueId)
         {
-            path.Add(current.Walkable);
+            path.Enqueue(current.Walkable);
             current = cameFrom[current.Walkable.UniqueId];
         }
 
-        path.Reverse();
-        return path;
+
+        return path.Reverse();
     }
 
     private Walkable GetCurrentWalkable()
     {
-        return Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 1) 
+        return Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 2) 
         ? hit.transform.parent.GetComponent<Walkable>() : null;
     }
     
@@ -87,7 +94,24 @@ public class BetterPathfinder : MonoBehaviour
     {
         if (Navigating)
         {
-            
+            if (transform.position != _currentEnd.transform.position)
+            {
+                var vec = new Vector3(_currentEnd.transform.position.x, _currentEnd.transform.position.y + 0.5f + transform.GetComponent<CapsuleCollider>().height / 2,
+                    _currentEnd.transform.position.z);
+                
+                transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
+                
+                if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
+                {
+                    transform.position = vec;
+                    if (_currentPath.Count > 0)
+                        _currentEnd = _currentPath.Dequeue();
+                    else
+                    {
+                        Navigating = false;
+                    }
+                }
+            }
         }
     }
 
