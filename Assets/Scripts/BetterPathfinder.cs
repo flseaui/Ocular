@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
+using Priority_Queue;
 using UnityEngine;
 
 public class BetterPathfinder : MonoBehaviour
-{
+{   
     private Walkable CurrentPosition => GetCurrentWalkable();
     private Walkable _queuedDestination;
     private Walkable _currentDesition;
@@ -22,43 +23,54 @@ public class BetterPathfinder : MonoBehaviour
     {
         _currentPath = GeneratePath(GetCurrentWalkable(), destination);
     }
-    
+
     private List<Walkable> GeneratePath(Walkable start, Walkable destination)
     {
-        var path = new List<Walkable>();
-        var frontier = new Queue<Walkable>();
-        var cameFrom = new Dictionary<int, Walkable>();
-        var pathFinished = false;
+        float Heuristic(Vector3 a, Vector3 b)
+        {
+            return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
+        }
 
-        frontier.Enqueue(start);
+        float MovementCost(Node a, Node b)
+        {
+            return 1;
+        }
         
-        Walkable current;
+        var goalNode = destination.Node;
+        var path = new List<Walkable>();
+        var frontier = new FastPriorityQueue<Node>(MapGenerator.NUM_WALKABLES);
+        var cameFrom = new Dictionary<int, Node>();
+        var costSoFar = new Dictionary<int, float>();
+        costSoFar.Add(start.UniqueId, 0);
+        frontier.Enqueue(start.Node, 0);
+        
+        Node current;
         while (frontier.Count > 0)
         {
             current = frontier.Dequeue();
 
-            if (current == destination)
+            if (current == goalNode)
                 break;
             
-            foreach (var neighbor in current.Neighbors)
+            foreach (var neighbor in current.Neighbors.Where(x => x.Enabled))
             {
-                if (!neighbor.Enabled)
-                    continue;
+                var newCost = costSoFar[current.Walkable.UniqueId] + MovementCost(current, neighbor);
                 
-                if (!cameFrom.ContainsKey(neighbor.UniqueId))
+                if (!costSoFar.ContainsKey(neighbor.Walkable.UniqueId) || newCost < costSoFar[neighbor.Walkable.UniqueId])
                 {
-                    frontier.Enqueue(neighbor);
-                    cameFrom.Add(neighbor.UniqueId, current);
+                    costSoFar[neighbor.Walkable.UniqueId] = newCost;
+                    frontier.Enqueue(neighbor, newCost + Heuristic(goalNode.Walkable.transform.localPosition, neighbor.Walkable.transform.localPosition));
+                    cameFrom.Add(neighbor.Walkable.UniqueId, current);
                 }
             }
         }
         
         // retrace path
-        current = destination;
-        while (current.UniqueId != start.UniqueId)
+        current = goalNode;
+        while (current.Walkable.UniqueId != start.UniqueId)
         {
-            path.Add(current);
-            current = cameFrom[current.UniqueId];
+            path.Add(current.Walkable);
+            current = cameFrom[current.Walkable.UniqueId];
         }
 
         path.Reverse();

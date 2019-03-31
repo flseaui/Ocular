@@ -1,30 +1,31 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
 public class Walkable : MonoBehaviour, IEquatable<Walkable>
 {
-    public List<Walkable> Neighbors;
+    public Node Node;
 
-    public bool Enabled;
-
+    public bool Enabled
+    {
+        get => Node.Enabled;
+        set => Node.Enabled = value;
+    }
+    
     [ShowInInspector]
     [ReadOnly]
     public int UniqueId { get; private set; }
     
     public void Awake()
     {
-        Enabled = true;
+        Node = new Node(this);
         UniqueId = GetInstanceID();
     }
 
     public void AddNeighbor(Walkable neighbor)
     {
         if (neighbor != this)
-            Neighbors.Add(neighbor);
+            Node.Neighbors.Add(neighbor.Node);
     }
     
     public virtual void CheckForNeighbors()
@@ -95,14 +96,14 @@ public class Walkable : MonoBehaviour, IEquatable<Walkable>
 #if  UNITY_EDITOR
     protected void OnDrawGizmos()
     {        
-        if (!Enabled || Neighbors == null)
+        if (!Enabled || Node.Neighbors == null)
             return;
         Gizmos.color = Color.black;
-        foreach (var neighbor in Neighbors)
+        foreach (var neighbor in Node.Neighbors)
         {
-            if (!neighbor.Enabled) continue;
+            if (!neighbor.Walkable.Enabled) continue;
             if (neighbor != null)
-                Gizmos.DrawLine(transform.position + new Vector3(0, 1.5f, 0), neighbor.transform.position + new Vector3(0, 1.5f, 0));
+                Gizmos.DrawLine(transform.position + new Vector3(0, 1.5f, 0), neighbor.Walkable.transform.position + new Vector3(0, 1.5f, 0));
         }
     }
 #endif
