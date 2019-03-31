@@ -61,7 +61,7 @@ public class SlopeWalkable : Walkable
         }
         
         // Forward
-        if (Physics.Raycast(transform.localPosition, RelativeForward, out hit, 1))
+        if (Physics.Raycast(transform.localPosition + RelativeForward / 4, RelativeForward, out hit, 1))
         {
             if (hit.transform.ParentHasComponent<SlopeWalkable>(out var slope))
             {
@@ -72,8 +72,7 @@ public class SlopeWalkable : Walkable
             }
             else if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
             {
-                if (hit.transform.parent.CompareTag("Walkable"))
-                    AddNeighbor(walkable);
+                AddNeighbor(walkable);
             }
         }
         
@@ -123,16 +122,16 @@ public class SlopeWalkable : Walkable
         if (_orientation == Orientation.Down) transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
     }
 
-    private new void OnDrawGizmos()
+    /*private new void OnDrawGizmos()
     {
         base.OnDrawGizmos();
-        /*Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.localPosition, RelativeForward);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.localPosition + RelativeForward / 4, RelativeForward);
         Gizmos.DrawRay(transform.localPosition, RelativeBack);
         Gizmos.DrawRay(transform.localPosition, RelativeLeft);
         Gizmos.DrawRay(transform.localPosition, RelativeRight);
         Gizmos.DrawRay(transform.localPosition + RelativeBack, new Vector3(0, -1, 0));
-        Gizmos.DrawRay(transform.localPosition, new Vector3(0, 1, 0));*/
-    }
+        Gizmos.DrawRay(transform.localPosition, new Vector3(0, 1, 0));
+    }*/
 #endif
 }
