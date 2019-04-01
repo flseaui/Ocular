@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Priority_Queue;
+using Sirenix.OdinInspector;
 
 public class Node : FastPriorityQueueNode, IEquatable<Node>
 {

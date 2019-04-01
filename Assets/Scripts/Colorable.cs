@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -11,25 +12,31 @@ public class Colorable : MonoBehaviour
     [HideInInspector]
     private Color _color;
     private MaterialPropertyBlock _propBlock;
-    private Renderer _renderer;
+    private Renderer[] _renderers;
     private LevelInfo _levelInfo;
     
-    private GameObject _model;
+    private GameObject[] _models;
 
     private void OnEnable()
     {
-        _model = transform.Find("Model").gameObject;
-        _renderer = _model.GetComponent<Renderer>();
+        var temp = new List<GameObject>();
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Colorable"))
+                temp.Add(child.gameObject);
+        }
+        _models = temp.ToArray();
+        _renderers = _models.Select(m => m.GetComponent<Renderer>()).ToArray();
         _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
         _propBlock = new MaterialPropertyBlock();
         Color = Color;
-        _model.SetActive(true);
+        SetModelsState(true);
     }
 
     public void Initialize()
     {
         if (Color == Color.white) return;
-        _model.SetActive(false);
+        SetModelsState(false);
         if (transform.HasComponent<Walkable>(out var walkable))
         {
             walkable.CheckBelow(walkable.Enabled);
@@ -48,17 +55,22 @@ public class Colorable : MonoBehaviour
             var visibile =
                 _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements.Contains(color) == true;
 
-            if (_model.activeSelf == visibile) return;
+            if (_models[0].activeSelf == visibile) return;
             
             if (transform.HasComponent<Walkable>(out var walkable))
             {
                 walkable.CheckBelow(!visibile);
                 walkable.Enabled = visibile;
             }
-        
-            _model.SetActive(visibile);
+
+            SetModelsState(visibile);
 
         };
+    }
+
+    private void SetModelsState(bool state)
+    {
+        _models.ForEach(m => m.SetActive(state));
     }
     
     [ColorPalette("RGB")]
@@ -69,9 +81,9 @@ public class Colorable : MonoBehaviour
         set
         {
             _color = value;
-            _renderer.GetPropertyBlock(_propBlock);
+            _renderers.ForEach(r => r.GetPropertyBlock(_propBlock));
             _propBlock.SetColor("_Color", value);
-            _renderer.SetPropertyBlock(_propBlock);
+            _renderers.ForEach(r => r.SetPropertyBlock(_propBlock));
         }
     }
 }

@@ -59,9 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18540b8861540e45b003c7e6f015539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Neighbors: []
-  Enabled: 0
-  _direction: 0
+  DirectionFacing: 0
   _orientation: 0
 --- !u!114 &2181742307742716617
 MonoBehaviour:
@@ -86,6 +84,14 @@ PrefabInstance:
     - target: {fileID: 100000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
       propertyPath: m_Name
       value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
+      propertyPath: m_TagString
+      value: Colorable
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
       propertyPath: m_LocalPosition.x

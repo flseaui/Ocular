@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,13 +10,24 @@ public class Walkable : MonoBehaviour, IEquatable<Walkable>
 
     public bool Enabled
     {
-        get => Node.Enabled;
-        set => Node.Enabled = value;
+        get => Node != null && Node.Enabled;
+        set
+        {
+            if (Node != null)
+                Node.Enabled = value;
+        }
     }
     
     [ShowInInspector]
     [ReadOnly]
     public int UniqueId { get; private set; }
+
+#if UNITY_EDITOR
+    [ShowInInspector]
+    [HideInEditorMode]
+    private List<Walkable> Neighbors =>
+        Application.isPlaying ? Node.Neighbors.Select(n => n.Walkable).ToList() : new List<Walkable>(); 
+#endif
     
     public void Awake()
     {

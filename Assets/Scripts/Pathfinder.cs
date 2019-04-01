@@ -5,7 +5,7 @@ using Sirenix.Utilities;
 using Priority_Queue;
 using UnityEngine;
 
-public class BetterPathfinder : MonoBehaviour
+public class Pathfinder : MonoBehaviour
 {   
     private Queue<Walkable> _currentPath;
     private Walkable _currentEnd;
@@ -79,7 +79,6 @@ public class BetterPathfinder : MonoBehaviour
             path.Enqueue(current.Walkable);
             current = cameFrom[current.Walkable.UniqueId];
         }
-
 
         return path.Reverse();
     }

@@ -18,21 +18,26 @@ public class Indicator : MonoBehaviour
 
         if (Physics.Raycast(ray, out var hit))
         {
-            if (hit.transform.ParentHasComponent<SlopeWalkable>(out var slope))
+            if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
             {
-                transform.localRotation = Quaternion.Euler(45, _slopeAngles[(int) slope.DirectionFacing], 0);
-                transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y,
-                    hit.transform.position.z);
-
-                if (Input.GetMouseButtonDown(0))
-                    OnWalkableClicked?.Invoke(slope);
-            }
-            else if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
-            {
-                transform.localRotation = Quaternion.Euler(90, 0, 0);
-                transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .55f,
-                    hit.transform.position.z);
-
+                switch (walkable)
+                {
+                    case SlopeWalkable slope:
+                        transform.localRotation = Quaternion.Euler(45, _slopeAngles[(int) slope.DirectionFacing], 0);
+                        transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y,
+                            hit.transform.position.z);
+                        break;
+                    case ButtonWalkable button:
+                        transform.localRotation = Quaternion.Euler(90, 0, 0);
+                        transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .11f,
+                            hit.transform.position.z);
+                        break;
+                    default:
+                        transform.localRotation = Quaternion.Euler(90, 0, 0);
+                        transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + .55f,
+                            hit.transform.position.z);
+                        break;
+                 }
                 if (Input.GetMouseButtonDown(0))
                     OnWalkableClicked?.Invoke(walkable);
             }
