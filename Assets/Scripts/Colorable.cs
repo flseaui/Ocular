@@ -14,9 +14,55 @@ public class Colorable : MonoBehaviour
     private MaterialPropertyBlock _propBlock;
     private Renderer[] _renderers;
     private LevelInfo _levelInfo;
+
+    [SerializeField]
+    private Material _outlineMat;
+
+    [SerializeField] 
+    private Material _blockMat;
     
     private GameObject[] _models;
 
+    private Color _initialColor;
+
+    private bool _outlined;
+    
+    [ShowInInspector]
+    public bool Outlined
+    {
+        get => _outlined;
+        set
+        {
+            _outlined = value;
+            if (value) _renderers.ForEach(r => r.material = _outlineMat);
+            else _renderers.ForEach(r => r.material = _blockMat);
+        }
+    }
+    
+    public void ChangeColorWithOutline(Color color)
+    {
+        Color = color;
+        
+        if (Color == Color.white) return;
+
+        var visible =
+            _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
+                .Contains(GlassesController.CurrentGlassesColor) ?? false;
+            
+        if (transform.HasComponent<Walkable>(out var walkable))
+        {
+            walkable.CheckBelow(!visible);
+            walkable.Enabled = visible;
+        }
+
+        Outlined = !visible;
+    }
+    
+    public void ResetColorFromOutline()
+    {
+        ChangeColorWithOutline(_initialColor);
+    }
+    
     private void OnEnable()
     {
         var temp = new List<GameObject>();
@@ -52,22 +98,27 @@ public class Colorable : MonoBehaviour
         {
             if (Color == Color.white) return;
             
-            var visibile =
-                _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements.Contains(color) == true;
+            var visible =
+                _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
+                    .Contains(color) ?? false;
 
-            if (_models[0].activeSelf == visibile) return;
+            if (_models[0].activeSelf == visible) return;
             
             if (transform.HasComponent<Walkable>(out var walkable))
             {
-                walkable.CheckBelow(!visibile);
-                walkable.Enabled = visibile;
+                walkable.CheckBelow(!visible);
+                walkable.Enabled = visible;
             }
 
-            SetModelsState(visibile);
-
+            SetModelsState(visible);
         };
     }
-
+    
+    private void Start()
+    {
+        _initialColor = Color;
+    }
+    
     private void SetModelsState(bool state)
     {
         _models.ForEach(m => m.SetActive(state));

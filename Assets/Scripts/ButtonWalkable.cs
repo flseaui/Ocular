@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,20 +10,29 @@ public class ButtonWalkable : Walkable
 
     private Vector3 _initialPosition;
 
+    [SerializeField] private List<Colorable> _targetBlocks;
+
+    [SerializeField, ColorPalette("RGB")] private Color _color;
+    
     private void Start()
     {
-        _initialPosition = _buttonModel.transform.localPosition;
-    }
+        if (_buttonModel == null)
+            transform.Find("ButtonModel").gameObject.AddComponent<Button>();
 
-    private void Update()
-    {
-        if (_buttonModel.State)
+        _initialPosition = _buttonModel.transform.localPosition;
+
+        _buttonModel.OnStateChanged += () =>
         {
-            _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
-        }
-        else
-        {
-            _buttonModel.transform.localPosition = _initialPosition;
-        }
+            if (_buttonModel.State)
+            {
+                _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
+                _targetBlocks.ForEach(t => t.ChangeColorWithOutline(_color));
+            }
+            else
+            {
+                _buttonModel.transform.localPosition = _initialPosition;
+                _targetBlocks.ForEach(t => t.ResetColorFromOutline());
+            }
+        };
     }
 }

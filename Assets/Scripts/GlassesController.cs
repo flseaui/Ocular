@@ -21,9 +21,12 @@ public class GlassesController : MonoBehaviour
                 temp.g += x.Color.g;
                 temp.b += x.Color.b;
             });
+            CurrentGlassesColor = temp;
             return temp;
         }
     }
+
+    public static Color CurrentGlassesColor;
     
     [SerializeField] private GameObject _glassesContainer;
     [SerializeField] private GameObject _colorIndicator;
@@ -96,7 +99,7 @@ public class GlassesController : MonoBehaviour
                     _colorIndicators[glasses.Color].color = glasses.Color;
 
                 ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
-                
+
                 OnGlassesToggled?.Invoke(CombinedColor);
             }
         }
