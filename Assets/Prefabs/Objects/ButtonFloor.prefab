@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6298222928061107834}
   - component: {fileID: 3853218989573948473}
   - component: {fileID: 1339178674660885918}
+  - component: {fileID: 4783811433349521643}
   m_Layer: 0
   m_Name: ButtonModel
   m_TagString: Colorable
@@ -50,7 +51,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2355572426243933794}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -86,11 +87,24 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2355572426243933794}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1.0000001}
   m_Center: {x: 0.00000005960464, y: 0, z: -0.00000008940696}
+--- !u!114 &4783811433349521643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2355572426243933794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f2141c0994841b18b71594b3870519f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  State: 0
 --- !u!1 &3327680575265314836
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,6 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069af48a64a8b634298e41703024a048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonModel: {fileID: 4783811433349521643}
 --- !u!114 &8788491135060777320
 MonoBehaviour:
   m_ObjectHideFlags: 0
