@@ -2,7 +2,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Level {
+namespace Level.Objects {
     public class Button : MonoBehaviour
     {
         public Action OnStateChanged;

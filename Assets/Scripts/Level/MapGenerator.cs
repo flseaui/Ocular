@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Level.Objects;
+using UnityEngine;
 
 namespace Level {
     public class MapGenerator : MonoBehaviour
@@ -7,6 +8,7 @@ namespace Level {
 
         public void FindNeighbors()
         {
+            NUM_WALKABLES = 0;
             foreach (var walkable in transform.GetComponentsInChildren<Walkable>())
             {
                 ++NUM_WALKABLES;

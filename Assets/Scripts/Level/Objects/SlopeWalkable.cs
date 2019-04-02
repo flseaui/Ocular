@@ -1,7 +1,7 @@
 ﻿using Misc;
 using UnityEngine;
 
-namespace Level {
+namespace Level.Objects {
     public class SlopeWalkable : Walkable
     {
         public enum Direction

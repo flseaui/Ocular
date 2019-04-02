@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Level;
+using Level.Objects;
 using Priority_Queue;
 using UI;
 using UnityEngine;
@@ -18,6 +19,11 @@ namespace Player {
         private void Awake()
         {
             Indicator.OnWalkableClicked += NavigateTo;
+        }
+
+        private void OnDestroy()
+        {
+            Indicator.OnWalkableClicked -= NavigateTo;
         }
 
         private void NavigateTo(Walkable destination)
@@ -40,6 +46,8 @@ namespace Player {
                 return null;
 
             var goalNode = destination.Node;
+            Debug.Log(goalNode.Enabled);
+            Debug.Log(goalNode.Walkable.UniqueId);
             var path = new Queue<Walkable>();
             var frontier = new FastPriorityQueue<Node>(MapGenerator.NUM_WALKABLES);
             var cameFrom = new Dictionary<int, Node>();
@@ -111,11 +119,12 @@ namespace Player {
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.green;
-            if (_currentPath != null)
-                foreach (var walkable in _currentPath)
-                    Gizmos.DrawCube(walkable.transform.position + Vector3.up / 2, new Vector3(.5f, .5f, .5f));
+        {                      
+            Gizmos.color = Color.cyan;
+            if (_currentPath == null) return;
+            
+            foreach (var walkable in _currentPath)
+                Gizmos.DrawSphere(walkable.transform.position + Vector3.up / 2, .2f);
         }
 #endif
     }

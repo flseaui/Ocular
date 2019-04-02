@@ -6,7 +6,7 @@ using Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Level {
+namespace Level.Objects {
     public class Walkable : MonoBehaviour, IEquatable<Walkable>
     {
         public Node Node;
@@ -107,9 +107,8 @@ namespace Level {
             foreach (var neighbor in Node.Neighbors)
             {
                 if (!neighbor.Walkable.Enabled) continue;
-                if (neighbor != null)
-                    Gizmos.DrawLine(transform.position + new Vector3(0, 1.5f, 0),
-                        neighbor.Walkable.transform.position + new Vector3(0, 1.5f, 0));
+                Gizmos.DrawLine(transform.position + new Vector3(0, 1.5f, 0),
+                    neighbor.Walkable.transform.position + new Vector3(0, 1.5f, 0));
             }
         }
 #endif

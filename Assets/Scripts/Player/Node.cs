@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Level;
+using Level.Objects;
 using Priority_Queue;
 
 namespace Player {

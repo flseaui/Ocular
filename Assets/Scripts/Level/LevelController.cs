@@ -10,6 +10,7 @@ namespace Level {
         private GameObject _loadedLevel;
         private int _loadedLevelNumber;
 
+        [HideInInspector]
         public LevelInfo CurrentLevelInfo;
 
         [ValueDropdown("_levels")] public GameObject StartingLevel;

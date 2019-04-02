@@ -50,8 +50,9 @@ namespace Game {
         {
             glasses.ForEach(x => x.Enabled = false);
             ActiveGlasses = glasses;
+            _colorIndicators.Clear();
             for (var i = 0; i < _glassesContainer.transform.childCount; ++i)
-                Destroy(_glassesContainer.transform.GetChild(i));
+                Destroy(_glassesContainer.transform.GetChild(i).gameObject);
 
             foreach (var activeGlasses in ActiveGlasses)
                 CreateGlassesIndicator(activeGlasses);

@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Level {
+namespace Level.Objects {
     public class ButtonWalkable : Walkable
     {
         [SerializeField] private Button _buttonModel;

@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace Level {
+namespace Level.Objects {
     [ExecuteInEditMode]
     public class Colorable : MonoBehaviour
     {
@@ -105,29 +105,36 @@ namespace Level {
         {
             if (!Application.isPlaying) return;
 
-            GlassesController.OnGlassesToggled += color =>
-            {
-                if (Color == Color.white) return;
-
-                var visible =
-                    _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
-                        .Contains(color) ?? false;
-
-                if (_models[0].activeSelf == visible) return;
-
-                if (transform.HasComponent<Walkable>(out var walkable))
-                {
-                    walkable.CheckBelow(!visible);
-                    walkable.Enabled = visible;
-                }
-
-                SetModelsState(visible);
-            };
+            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 
+        private void InternalOnGlassesToggled(Color color)
+        {
+            if (Color == Color.white) return;
+
+            var visible =
+                _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
+                    .Contains(color) ?? false;
+
+            if (_models[0].activeSelf == visible) return;
+
+            if (transform.HasComponent<Walkable>(out var walkable))
+            {
+                walkable.CheckBelow(!visible);
+                walkable.Enabled = visible;
+            }
+
+            SetModelsState(visible);
+        }
+        
         private void Start()
         {
             _initialColor = Color;
+        }
+
+        private void OnDestroy()
+        {
+            GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
         }
 
         private void SetModelsState(bool state)
