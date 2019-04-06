@@ -5,7 +5,7 @@ namespace Game {
     [Serializable]
     public class Glasses : IEquatable<Glasses>
     {
-        public readonly Color Color;
+        public Color Color;
 
         [NonSerialized] public bool Enabled;
 

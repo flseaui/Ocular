@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlTypes;
 using Level;
 using Level.Objects;
 using Misc;
@@ -19,31 +18,39 @@ namespace UI {
             if (Physics.Raycast(ray, out var hit))
             {
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
-                {              
-                    SetRotation(walkable, hit);
+                {
+                    switch (walkable)
+                    {
+                        case SlopeWalkable slope:
+                           SetTransform(0, () => transform.localRotation = Quaternion.Euler(45, _slopeAngles[(int) slope.DirectionFacing], 0));
+                            break;
+                        case ButtonWalkable _:
+                            SetTransform(0.11f);
+                            break;
+                        default:
+                            SetTransform(0.55f);
+                            break;
+                    }
 
                     if (Input.GetMouseButtonDown(0))
                         OnWalkableClicked?.Invoke(walkable);
                 }
             }
             else
-                transform.position = new Vector3(-100, -100, -100);
-        }
-
-        private void SetRotation(Walkable walkable, RaycastHit hit, float yShift = .55f)
-        {
-            switch (walkable)
             {
-                case SlopeWalkable _:
-                    yShift = 0;  break;
-                case ButtonWalkable _:
-                    yShift = .11f; break;
+                transform.position = new Vector3(-100, -100, -100);
             }
-            
-            transform.localRotation = Quaternion.Euler(walkable.GetType() == typeof(SlopeWalkable) ? 
-                new Vector3(45, _slopeAngles[(int) ((SlopeWalkable) walkable).DirectionFacing], 0) : new Vector3(90, 0, 0));
-            var hitPos = hit.transform.position;
-            transform.position = new Vector3(hitPos.x, hitPos.y + yShift, hitPos.z);
-        }        
+
+            void SetTransform(float yShift, Action rotation = null)
+            {
+                if (rotation is null)
+                    transform.localRotation = Quaternion.Euler(90, 0, 0);
+                else
+                    rotation();
+                
+                var hitPos = hit.transform.position;
+                transform.position = new Vector3(hitPos.x, hitPos.y + yShift, hitPos.z);
+            }
+        }
     }
 }
