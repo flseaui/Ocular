@@ -28,11 +28,8 @@ namespace Player {
         
         private void OnTriggerEnter(Collider other)
         {
-            // Death
             if (other.CompareTag("Harmful"))
-            {
                 transform.position = _spawnPos;
-            }
         }
     }
 }

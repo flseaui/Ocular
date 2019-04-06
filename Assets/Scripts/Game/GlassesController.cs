@@ -9,14 +9,13 @@ namespace Game {
     public class GlassesController : MonoBehaviour
     {
         public static Color CurrentGlassesColor;
-
         public static Action<Color> OnGlassesToggled;
-        [SerializeField] private GameObject _colorIndicator;
-
-        private Dictionary<Color, Image> _colorIndicators;
-
-        [SerializeField] private GameObject _glassesContainer;
+        
         public List<Glasses> ActiveGlasses;
+        
+        private Dictionary<Color, Image> _colorIndicators;
+        [SerializeField] private GameObject _colorIndicator;
+        [SerializeField] private GameObject _glassesContainer;
 
         private Color CombinedColor
         {
@@ -85,18 +84,20 @@ namespace Game {
         public void ToggleGlasses(Glasses glasses, bool bypassLimit = false)
         {
             if (ActiveGlasses.Contains(glasses))
+            {
                 if (bypassLimit || glasses.Enabled || ActiveGlasses.Count(x => x.Enabled) < 2)
                 {
                     var index = ActiveGlasses.IndexOf(glasses);
-                    if (ActiveGlasses[index].Enabled)
-                        _colorIndicators[glasses.Color].color /= 2;
-                    else
-                        _colorIndicators[glasses.Color].color = glasses.Color;
+                    
+                    _colorIndicators[glasses.Color].color = ActiveGlasses[index].Enabled
+                        ? _colorIndicators[glasses.Color].color / 2
+                        : glasses.Color;
 
                     ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
 
                     OnGlassesToggled?.Invoke(CombinedColor);
                 }
+            }
         }
     }
 }

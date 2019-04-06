@@ -6,9 +6,8 @@ namespace Game {
     public class GameManager : MonoBehaviour
     {
         private GlassesController _glassesController;
-        [SerializeField] private GameObject _indicator;
         private LevelController _levelController;
-
+        [SerializeField] private GameObject _indicator;
         [SerializeField] private GameObject _playerPrefab;
 
         public static Action OnLevelLoad;

@@ -13,8 +13,8 @@ namespace Player {
         private Walkable _currentEnd;
         private Queue<Walkable> _currentPath;
         private Walkable _currentStart;
-        public bool Navigating;
-        public float WalkSpeed = 5.0f;
+        [SerializeField] private bool Navigating;
+        [SerializeField] private float WalkSpeed = 5.0f;
 
         private void Awake()
         {
@@ -37,13 +37,12 @@ namespace Player {
         }
 
         private IEnumerable<Walkable> GeneratePath(Walkable start, Walkable destination)
-        {
+        {       
+            if (start == destination) return null;
+            
             float Heuristic(Vector3 a, Vector3 b) => Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
 
             float MovementCost(Node a, Node b) => 1;
-
-            if (start == destination)
-                return null;
 
             var goalNode = destination.Node;
             Debug.Log(goalNode.Enabled);
@@ -51,17 +50,16 @@ namespace Player {
             var path = new Queue<Walkable>();
             var frontier = new FastPriorityQueue<Node>(MapGenerator.NUM_WALKABLES);
             var cameFrom = new Dictionary<int, Node>();
-            var costSoFar = new Dictionary<int, float>();
-            costSoFar.Add(start.UniqueId, 0);
+            var costSoFar = new Dictionary<int, float> {{start.UniqueId, 0}};
             frontier.Enqueue(start.Node, 0);
 
             Node current;
-            while (frontier.Count > 0)
+            
+            do
             {
                 current = frontier.Dequeue();
 
-                if (current == goalNode)
-                    break;
+                if (current == goalNode) break;
 
                 foreach (var neighbor in current.Neighbors.Where(x => x.Enabled))
                 {
@@ -77,7 +75,7 @@ namespace Player {
                         cameFrom.Add(neighbor.Walkable.UniqueId, current);
                     }
                 }
-            }
+            } while (frontier.Count > 0);
 
             // retrace path
             current = goalNode;
