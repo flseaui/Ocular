@@ -5,6 +5,7 @@ using Misc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements.StyleEnums;
 
 namespace Level.Objects {
     [ExecuteInEditMode]
@@ -25,7 +26,23 @@ namespace Level.Objects {
 
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
+        private bool _isTarget;
+        private Color _altColor;
+        private bool _tempColor;
+        private List<bool> _controllers;
 
+        public int RegisterController()
+        {
+            _controllers.Add(new bool());
+            return _controllers.Count;
+        }
+        
+        public void MarkAsTarget(Color color)
+        {
+            _isTarget = true;
+            _altColor = color;
+        }
+        
         [ShowInInspector]
         public bool Outlined
         {
@@ -51,10 +68,21 @@ namespace Level.Objects {
             }
         }
 
-        public void ChangeColorWithOutline(Color color)
+        private void SetTempColor(Color color)
         {
-            Color = color;
+            _tempColor = true;
+            _renderers.ForEach(r => r.GetPropertyBlock(_propBlock));
+            _propBlock.SetColor("_Color", color);
+            _renderers.ForEach(r => r.SetPropertyBlock(_propBlock));
+        }
+        
+        public void ToggleColor()
+        {
+            if (!_isTarget)
+                return;
 
+            Color = Color == _altColor ? _initialColor : _altColor;
+            
             if (Color == Color.white) return;
 
             var visible =
@@ -67,14 +95,35 @@ namespace Level.Objects {
                 walkable.Enabled = visible;
             }
 
-            Outlined = !visible;
+            UpdateOutline(visible);
         }
 
-        public void ResetColorFromOutline()
+        private void UpdateOutline(bool visibility)
         {
-            ChangeColorWithOutline(_initialColor);
+            if (!visibility)
+            {
+                if (Color == _initialColor)
+                {
+                    SetTempColor(_altColor);
+                    Outlined = true;
+                }
+                else if (Color == _altColor)
+                {
+                    SetTempColor(_initialColor);
+                    Outlined = true;
+                }
+            }
+            else
+            {
+                Outlined = false;
+                if (_tempColor)
+                {
+                    _tempColor = false;
+                    Color = Color;
+                }
+            }
         }
-
+        
         private void OnEnable()
         {
             var temp = new List<GameObject>();
@@ -105,7 +154,9 @@ namespace Level.Objects {
         {
             if (!Application.isPlaying) return;
 
-            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
+           GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
+            _controllers = new List<bool>();
+            _isTarget = false;
         }
 
         private void InternalOnGlassesToggled(Color color)
@@ -117,21 +168,37 @@ namespace Level.Objects {
                     .Contains(color) ?? false;
 
             if (_models[0].activeSelf == visible) return;
-
+            
             if (transform.HasComponent<Walkable>(out var walkable))
             {
+                //put custom disable behavior here
+                switch (walkable) 
+                {
+                    case ButtonWalkable button:
+                        if (!visible)
+                        {
+                            button.State = false;
+                        }
+
+                        break;
+                }
+                    
                 walkable.CheckBelow(!visible);
                 walkable.Enabled = visible;
             }
-
-            SetModelsState(visible);
+            
+            if (_isTarget)
+                UpdateOutline(visible);
+            
+            if (!Outlined)
+                SetModelsState(visible);
         }
         
         private void Start()
         {
             _initialColor = Color;
         }
-
+        
         private void OnDestroy()
         {
             GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;

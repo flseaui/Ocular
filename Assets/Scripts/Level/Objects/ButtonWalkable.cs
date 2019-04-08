@@ -2,7 +2,8 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Level.Objects {
+namespace Level.Objects 
+{
     public class ButtonWalkable : Walkable
     {
         [SerializeField] private Button _buttonModel;
@@ -13,6 +14,12 @@ namespace Level.Objects {
 
         [SerializeField] private List<Colorable> _targetBlocks;
 
+        public bool State
+        {
+            get => _buttonModel.State;
+            set => _buttonModel.State = value;
+        }
+        
         private void Start()
         {
             if (_buttonModel == null)
@@ -20,17 +27,19 @@ namespace Level.Objects {
 
             _initialPosition = _buttonModel.transform.localPosition;
 
+            _targetBlocks.ForEach(x => x.MarkAsTarget(_color));
+            
             _buttonModel.OnStateChanged += () =>
             {
                 if (_buttonModel.State)
                 {
                     _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
-                    _targetBlocks.ForEach(t => t.ChangeColorWithOutline(_color));
+                    _targetBlocks.ForEach(t => t.ToggleColor());
                 }
                 else
                 {
                     _buttonModel.transform.localPosition = _initialPosition;
-                    _targetBlocks.ForEach(t => t.ResetColorFromOutline());
+                    _targetBlocks.ForEach(t => t.ToggleColor());
                 }
             };
         }

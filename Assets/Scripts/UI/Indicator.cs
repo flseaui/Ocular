@@ -17,7 +17,7 @@ namespace UI {
 
             if (Physics.Raycast(ray, out var hit))
             {
-                if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
+                if (hit.transform.ParentHasComponent<Walkable>(out var walkable) && walkable.Enabled)
                 {
                     switch (walkable)
                     {
@@ -40,7 +40,7 @@ namespace UI {
             {
                 transform.position = new Vector3(-100, -100, -100);
             }
-
+            
             void SetTransform(float yShift, Action rotation = null)
             {
                 if (rotation is null)
