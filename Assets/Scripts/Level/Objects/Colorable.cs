@@ -1,127 +1,161 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game;
 using Misc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements.StyleEnums;
 
-namespace Level.Objects {
+namespace Level.Objects
+{
     [ExecuteInEditMode]
     public class Colorable : MonoBehaviour
     {
-        [SerializeField] private Material _blockMat;
-
+        public enum BlockState
+        {
+            Visible,
+            Invisible,
+            Outlined
+        }
+        
         [SerializeField, HideInInspector] private Color _color;
-
-        private Color _initialColor;
-        private LevelInfo _levelInfo;
-
-        private GameObject[] _models;
-
-        private bool _outlined;
-
+        [SerializeField] private Material _blockMat;
         [SerializeField] private Material _outlineMat;
-
+        
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
-        private bool _isTarget;
-        private Color _altColor;
-        private bool _tempColor;
-        private List<bool> _controllers;
+        private GameObject[] _models;
+        private LevelInfo _levelInfo;
+        private Color _initialColor;
+        private BlockState _blockState;
 
-        public int RegisterController()
-        {
-            _controllers.Add(new bool());
-            return _controllers.Count;
-        }
+        private List<IController> _controllers;
         
-        public void MarkAsTarget(Color color)
-        {
-            _isTarget = true;
-            _altColor = color;
-        }
-        
-        [ShowInInspector]
-        public bool Outlined
-        {
-            get => _outlined;
-            set
-            {
-                _outlined = value;
-                if (value) _renderers.ForEach(r => r.material = _outlineMat);
-                else _renderers.ForEach(r => r.material = _blockMat);
-            }
-        }
-
         [ColorPalette("RGB"), ShowInInspector]
         public Color Color
         {
             get => _color;
             set
             {
-                _color = value;
-                _renderers.ForEach(r => r.GetPropertyBlock(_propBlock));
-                _propBlock.SetColor("_Color", value);
-                _renderers.ForEach(r => r.SetPropertyBlock(_propBlock));
+                _color = value == Color.clear ? _initialColor : value;
+
+                foreach (var r in _renderers)
+                {
+                    r.GetPropertyBlock(_propBlock);
+                    _propBlock.SetColor("_Color", _color);
+                    r.SetPropertyBlock(_propBlock);
+                }
             }
         }
 
-        private void SetTempColor(Color color)
+        public BlockState State
         {
-            _tempColor = true;
-            _renderers.ForEach(r => r.GetPropertyBlock(_propBlock));
-            _propBlock.SetColor("_Color", color);
-            _renderers.ForEach(r => r.SetPropertyBlock(_propBlock));
+            get => _blockState;
+            set
+            {
+                if (_blockState == value)
+                    return;
+                switch (value)
+                {
+                    case BlockState.Invisible:
+                        SetModelsState(false);
+                        break;
+                    case BlockState.Visible:
+                        if (_blockState == BlockState.Outlined)
+                            _renderers.ForEach(r => r.material = _blockMat);
+                        SetModelsState(true);
+                        break;
+                    case BlockState.Outlined:
+                        _renderers.ForEach(r => r.material = _outlineMat);
+                        SetModelsState(true);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+                _blockState = value;
+            }
+        }
+
+        public void Initialize()
+        {
+            if (Color == Color.white) return;
+            State = BlockState.Invisible;
+            if (transform.HasComponent<Walkable>(out var walkable))
+            {
+                walkable.CheckBelow(walkable.Enabled);
+                walkable.Enabled = false;
+            }
+        }
+
+        public void RegisterController(IController controller)
+        {
+            _controllers.Add(controller);
         }
         
-        public void ToggleColor()
+        /// <summary>
+        /// Calculates the color and visibility of the <c>Colorable</c> based on its properties and environment.
+        /// </summary>
+        /// <returns>
+        /// A tuple containing the color and state of a colorable.
+        /// </returns>
+        private (Color color, BlockState state) CalculateVisibility()
         {
-            if (!_isTarget)
-                return;
-
-            Color = Color == _altColor ? _initialColor : _altColor;
+            if (Color == Color.white) 
+                return (Color.white, BlockState.Visible);
             
-            if (Color == Color.white) return;
-
             var visible =
                 _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
                     .Contains(GlassesController.CurrentGlassesColor) ?? false;
 
+            // ATM This code assumes controller is button bc thats the only implemented controller
+            // TODO Come up with better controller solution
+
+            if (!_controllers.Any(c => ((MonoBehaviour) c).gameObject.activeSelf))
+                return visible ? (Color, BlockState.Visible) : (Color, BlockState.Invisible);
+            
+            if (visible)
+                return Color == _initialColor ? (Color, BlockState.Visible) : (_initialColor, BlockState.Outlined);
+            
+            return Color == _initialColor ? (Color, BlockState.Outlined) : (Color, BlockState.Visible);
+
+        }
+        
+        private void InternalOnGlassesToggled()
+        {            
+            (Color, State) = CalculateVisibility();
+            Debug.Log($"({Color}, {State})");
             if (transform.HasComponent<Walkable>(out var walkable))
             {
+                var visible = _blockState == BlockState.Visible;
+                
+                //if custom disable behavior gets overly complex, move into child classes
+                switch (walkable) 
+                {
+                    case ButtonWalkable button:
+                        if (!visible)
+                        {
+                            button.State = false;
+                        }
+
+                        break;
+                }
+                    
                 walkable.CheckBelow(!visible);
                 walkable.Enabled = visible;
             }
-
-            UpdateOutline(visible);
         }
-
-        private void UpdateOutline(bool visibility)
+        
+        private void SetModelsState(bool state)
         {
-            if (!visibility)
-            {
-                if (Color == _initialColor)
-                {
-                    SetTempColor(_altColor);
-                    Outlined = true;
-                }
-                else if (Color == _altColor)
-                {
-                    SetTempColor(_initialColor);
-                    Outlined = true;
-                }
-            }
-            else
-            {
-                Outlined = false;
-                if (_tempColor)
-                {
-                    _tempColor = false;
-                    Color = Color;
-                }
-            }
+            foreach (var model in _models)
+                model.SetActive(state);
+        }
+        
+        private void Start()
+        {
+            _initialColor = Color;
         }
         
         private void OnEnable()
@@ -139,74 +173,18 @@ namespace Level.Objects {
             SetModelsState(true);
         }
 
-        public void Initialize()
-        {
-            if (Color == Color.white) return;
-            SetModelsState(false);
-            if (transform.HasComponent<Walkable>(out var walkable))
-            {
-                walkable.CheckBelow(walkable.Enabled);
-                walkable.Enabled = false;
-            }
-        }
-
         private void Awake()
         {
             if (!Application.isPlaying) return;
 
-           GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
-            _controllers = new List<bool>();
-            _isTarget = false;
-        }
-
-        private void InternalOnGlassesToggled(Color color)
-        {
-            if (Color == Color.white) return;
-
-            var visible =
-                _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
-                    .Contains(color) ?? false;
-
-            if (_models[0].activeSelf == visible) return;
+            _controllers = new List<IController>();
             
-            if (transform.HasComponent<Walkable>(out var walkable))
-            {
-                //put custom disable behavior here
-                switch (walkable) 
-                {
-                    case ButtonWalkable button:
-                        if (!visible)
-                        {
-                            button.State = false;
-                        }
-
-                        break;
-                }
-                    
-                walkable.CheckBelow(!visible);
-                walkable.Enabled = visible;
-            }
-            
-            if (_isTarget)
-                UpdateOutline(visible);
-            
-            if (!Outlined)
-                SetModelsState(visible);
-        }
-        
-        private void Start()
-        {
-            _initialColor = Color;
+            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
         
         private void OnDestroy()
         {
             GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
-        }
-
-        private void SetModelsState(bool state)
-        {
-            _models.ForEach(m => m.SetActive(state));
         }
     }
 }

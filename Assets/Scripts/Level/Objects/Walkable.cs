@@ -41,7 +41,10 @@ namespace Level.Objects {
         {
             Node = new Node(this);
             UniqueId = GetInstanceID();
+            OnAwake();
         }
+
+        protected virtual void OnAwake() { }
 
         public void AddNeighbor(Walkable neighbor)
         {

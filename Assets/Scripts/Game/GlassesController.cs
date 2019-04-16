@@ -9,7 +9,7 @@ namespace Game {
     public class GlassesController : MonoBehaviour
     {
         public static Color CurrentGlassesColor;
-        public static Action<Color> OnGlassesToggled;
+        public static Action OnGlassesToggled;
         
         public List<Glasses> ActiveGlasses;
         
@@ -95,7 +95,7 @@ namespace Game {
 
                     ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
 
-                    OnGlassesToggled?.Invoke(CombinedColor);
+                    OnGlassesToggled?.Invoke();
                 }
             }
         }

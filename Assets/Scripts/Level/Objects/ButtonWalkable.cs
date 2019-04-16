@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Misc;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level.Objects 
 {
-    public class ButtonWalkable : Walkable
+    public class ButtonWalkable : Walkable, IController
     {
         [SerializeField] private Button _buttonModel;
 
@@ -13,13 +15,12 @@ namespace Level.Objects
         private Vector3 _initialPosition;
 
         [SerializeField] private List<Colorable> _targetBlocks;
-
         public bool State
         {
             get => _buttonModel.State;
             set => _buttonModel.State = value;
         }
-        
+
         private void Start()
         {
             if (_buttonModel == null)
@@ -27,19 +28,20 @@ namespace Level.Objects
 
             _initialPosition = _buttonModel.transform.localPosition;
 
-            _targetBlocks.ForEach(x => x.MarkAsTarget(_color));
-            
+            _targetBlocks.ForEach(t => t.RegisterController(this));
+           
+
             _buttonModel.OnStateChanged += () =>
             {
                 if (_buttonModel.State)
                 {
                     _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
-                    _targetBlocks.ForEach(t => t.ToggleColor());
+                    _targetBlocks.ForEach(t => t.Color = _color);
                 }
                 else
                 {
                     _buttonModel.transform.localPosition = _initialPosition;
-                    _targetBlocks.ForEach(t => t.ToggleColor());
+                    _targetBlocks.ForEach(t => t.Color = Color.clear);
                 }
             };
         }

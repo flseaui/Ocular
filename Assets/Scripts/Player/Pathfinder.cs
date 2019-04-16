@@ -45,8 +45,6 @@ namespace Player {
             float MovementCost(Node a, Node b) => 1;
 
             var goalNode = destination.Node;
-            Debug.Log(goalNode.Enabled);
-            Debug.Log(goalNode.Walkable.UniqueId);
             var path = new Queue<Walkable>();
             var frontier = new FastPriorityQueue<Node>(MapGenerator.NUM_WALKABLES);
             var cameFrom = new Dictionary<int, Node>();
@@ -98,9 +96,10 @@ namespace Player {
             if (Navigating)
                 if (transform.position != _currentEnd.transform.position)
                 {
-                    var vec = new Vector3(_currentEnd.transform.position.x,
-                        _currentEnd.transform.position.y + 0.5f + transform.GetComponent<CapsuleCollider>().height / 2,
-                        _currentEnd.transform.position.z);
+                    var position = _currentEnd.transform.position;
+                    var vec = new Vector3(position.x,
+                        position.y + 0.5f + transform.GetComponent<CapsuleCollider>().height / 2,
+                        position.z);
 
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
 
