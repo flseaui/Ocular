@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Level;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,18 @@ namespace Game {
         [SerializeField] private GameObject _colorIndicator;
         [SerializeField] private GameObject _glassesContainer;
 
+        private MapController _mapController;
+        private MapController MapController
+        {
+            get
+            {
+                if (_mapController == null)
+                    _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
+                return _mapController;
+            }
+        }
+
+        
         private Color CombinedColor
         {
             get
@@ -94,7 +107,9 @@ namespace Game {
                         : glasses.Color;
 
                     ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
-
+                    // TODO CHANGE THIS BAD
+                    var dumb = CombinedColor;
+                    MapController.UpdateColorables();
                     OnGlassesToggled?.Invoke();
                 }
             }

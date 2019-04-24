@@ -46,7 +46,7 @@ namespace Player {
 
             var goalNode = destination.Node;
             var path = new Queue<Walkable>();
-            var frontier = new FastPriorityQueue<Node>(MapGenerator.NUM_WALKABLES);
+            var frontier = new FastPriorityQueue<Node>(MapController.NUM_WALKABLES);
             var cameFrom = new Dictionary<int, Node>();
             var costSoFar = new Dictionary<int, float> {{start.UniqueId, 0}};
             frontier.Enqueue(start.Node, 0);

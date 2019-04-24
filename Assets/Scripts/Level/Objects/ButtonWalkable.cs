@@ -10,7 +10,7 @@ namespace Level.Objects
     {
         [SerializeField] private Button _buttonModel;
 
-        [SerializeField, ColorPalette("RGB")] private Color _color;
+        [SerializeField, ColorPalette("RGB")] public Color Color;
 
         private Vector3 _initialPosition;
 
@@ -36,12 +36,20 @@ namespace Level.Objects
                 if (_buttonModel.State)
                 {
                     _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
-                    _targetBlocks.ForEach(t => t.Color = _color);
+                    _targetBlocks.ForEach(t =>
+                    {
+                        t.Color = Color;
+                        t.UpdateState();
+                    });
                 }
                 else
                 {
                     _buttonModel.transform.localPosition = _initialPosition;
-                    _targetBlocks.ForEach(t => t.Color = Color.clear);
+                    _targetBlocks.ForEach(t =>
+                    {
+                        t.Color = Color.clear;
+                        t.UpdateState();
+                    });
                 }
             };
         }

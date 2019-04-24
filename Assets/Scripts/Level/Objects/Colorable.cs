@@ -62,8 +62,7 @@ namespace Level.Objects
                         SetModelsState(false);
                         break;
                     case BlockState.Visible:
-                        if (_blockState == BlockState.Outlined)
-                            _renderers.ForEach(r => r.material = _blockMat);
+                        _renderers.ForEach(r => r.material = _blockMat);
                         SetModelsState(true);
                         break;
                     case BlockState.Outlined:
@@ -93,6 +92,8 @@ namespace Level.Objects
         {
             _controllers.Add(controller);
         }
+
+        public void UpdateState() => InternalOnGlassesToggled();
         
         /// <summary>
         /// Calculates the color and visibility of the <c>Colorable</c> based on its properties and environment.
@@ -100,32 +101,51 @@ namespace Level.Objects
         /// <returns>
         /// A tuple containing the color and state of a colorable.
         /// </returns>
+        // TODO Only calculate once per color then update all colorables, continue using custom logic for controlled blocks
         private (Color color, BlockState state) CalculateVisibility()
         {
             if (Color == Color.white) 
                 return (Color.white, BlockState.Visible);
-            
-            var visible =
-                _levelInfo.BlockColors.FirstOrDefault(x => x.Color == Color)?.Requirements
-                    .Contains(GlassesController.CurrentGlassesColor) ?? false;
+
+            var visible = IsColorVisible(Color);
 
             // ATM This code assumes controller is button bc thats the only implemented controller
             // TODO Come up with better controller solution
 
-            if (!_controllers.Any(c => ((MonoBehaviour) c).gameObject.activeSelf))
+            if (_controllers.All(c => ((MonoBehaviour) c).GetComponent<Colorable>().State != BlockState.Visible))
                 return visible ? (Color, BlockState.Visible) : (Color, BlockState.Invisible);
             
             if (visible)
-                return Color == _initialColor ? (Color, BlockState.Visible) : (_initialColor, BlockState.Outlined);
-            
-            return Color == _initialColor ? (Color, BlockState.Outlined) : (Color, BlockState.Visible);
+                return  (Color, BlockState.Visible);
 
+            if (Color == _initialColor)
+            {
+                if (IsColorVisible(((ButtonWalkable) _controllers[0]).Color))
+                    return (((ButtonWalkable) _controllers[0]).Color, BlockState.Outlined);
+                return (Color, BlockState.Invisible);
+            }
+
+            return (Color, BlockState.Invisible);
         }
         
         private void InternalOnGlassesToggled()
         {            
-            (Color, State) = CalculateVisibility();
-            Debug.Log($"({Color}, {State})");
+            var (color, state) = CalculateVisibility();
+    
+            State = state;
+            if (state == BlockState.Outlined)
+            {
+                // Set temp color for outline
+                foreach (var r in _renderers)
+                {
+                    r.GetPropertyBlock(_propBlock);
+                    _propBlock.SetColor("_Color", color);
+                    r.SetPropertyBlock(_propBlock);
+                }
+            }
+            else
+                Color = color;
+
             if (transform.HasComponent<Walkable>(out var walkable))
             {
                 var visible = _blockState == BlockState.Visible;
@@ -145,6 +165,12 @@ namespace Level.Objects
                 walkable.CheckBelow(!visible);
                 walkable.Enabled = visible;
             }
+        }
+
+        private bool IsColorVisible(Color color)
+        {
+            return _levelInfo.BlockColors.FirstOrDefault(x => x.Color == color)?.Requirements
+                        .Contains(GlassesController.CurrentGlassesColor) ?? false;
         }
         
         private void SetModelsState(bool state)

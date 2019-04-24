@@ -32,7 +32,7 @@ namespace Level {
             if (_loadedLevel != null)
                 UnloadLevel();
             _loadedLevel = Instantiate(_levels[levelNumber]);
-            _loadedLevel.GetComponent<MapGenerator>().FindNeighbors();
+            _loadedLevel.GetComponent<MapController>().FindNeighbors();
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = levelNumber;
         }
