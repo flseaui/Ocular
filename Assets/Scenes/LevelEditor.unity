@@ -130,8 +130,8 @@ GameObject:
   m_Component:
   - component: {fileID: 65968875}
   - component: {fileID: 65968874}
-  - component: {fileID: 65968873}
   - component: {fileID: 65968876}
+  - component: {fileID: 65968873}
   m_Layer: 0
   m_Name: Placer
   m_TagString: Untagged
@@ -148,7 +148,7 @@ MeshRenderer:
   m_GameObject: {fileID: 65968872}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -156,7 +156,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e9abef7d7d3617c4a8bf44c5b4f10a73, type: 2}
+  - {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -197,7 +197,7 @@ Transform:
   m_GameObject: {fileID: 65968872}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -209,7 +209,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65968872}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: d53891b48a9e55446b656c0831ee75c9, type: 3}
 --- !u!1 &106100493
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 144102143}
   - component: {fileID: 144102145}
   m_Layer: 5
-  m_Name: ColorPallette
+  m_Name: ColorPalette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1223,7 +1223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dff9ad786d3cff43a8abfd979f784eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Color: {r: 0, g: 0, b: 0, a: 0}
+  Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1550982813
 GameObject:
   m_ObjectHideFlags: 0

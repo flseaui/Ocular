@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class ColorSwatch : MonoBehaviour, IPointerDownHandler 
 {
-    private ColorPallette _pallette;
+    private ColorPalette _palette;
     private Sprite _selectedSprite;
     [OnValueChanged(nameof(ColorChanged)), ColorPalette]
     public Color Color;
@@ -25,13 +25,19 @@ public class ColorSwatch : MonoBehaviour, IPointerDownHandler
     
     private void Awake()
     {
-        _pallette = GetComponentInParent<ColorPallette>();
+        _palette = GetComponentInParent<ColorPalette>();
         Addressables.LoadAsset<Sprite>("color_swatch_selected").Completed += handle => _selectedSprite = handle.Result;
     }
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        GetComponent<Image>().sprite = _selectedSprite;
-        _pallette.SetColor(Color);
+        Select();
     }
+
+    public void Select()
+    {
+        GetComponent<Image>().sprite = _selectedSprite;
+        _palette.SetColor(Color);
+    }
+    
 }

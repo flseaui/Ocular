@@ -119,7 +119,7 @@ namespace Level.Objects {
     }*/
 #endif
 
-        private enum Orientation
+        public enum Orientation
         {
             Up,
             Down

@@ -4,15 +4,16 @@ using System.Linq;
 using Sirenix.Utilities;
 using UnityEngine;
 
-public class ColorPallette : MonoBehaviour
+public class ColorPalette : MonoBehaviour
 {
-    public Color SelectedColor = Color.white;
+    public Color SelectedColor;
 
     private ColorSwatch[] _colorSwatches;
 
     private void Awake()
     {
         _colorSwatches = GetComponentsInChildren<ColorSwatch>();
+        _colorSwatches[0].Select();
     }
 
     public void SetColor(Color color)

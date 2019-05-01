@@ -1,3 +1,4 @@
+using Level.Objects;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -7,6 +8,13 @@ namespace LevelEditor
     {
         [SerializeField] GameObject _currentObject;
         private GameObject _level;
+        private ColorPalette _colorPalette;
+
+        private void Awake()
+        {
+            _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
+        }
+        
         private void Start()
         {
             CreateLevel();
@@ -21,9 +29,10 @@ namespace LevelEditor
             };
         }
 
-        public void PlaceObject(Vector3 position)
+        public void PlaceObject(Vector3 position, Quaternion rotation)
         {
-            Instantiate(_currentObject, position, Quaternion.identity, _level.transform);
+            var @object = Instantiate(_currentObject, position, rotation, _level.transform);
+            @object.GetComponent<Colorable>().Color = _colorPalette.SelectedColor;
         }
     }
 }
