@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LevelEditor;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -8,11 +9,13 @@ public class ColorPalette : MonoBehaviour
 {
     public Color SelectedColor;
 
+    private ObjectPlacer _placer;
     private ColorSwatch[] _colorSwatches;
 
     private void Awake()
     {
         _colorSwatches = GetComponentsInChildren<ColorSwatch>();
+        _placer = GameObject.Find("Placer").GetComponent<ObjectPlacer>();
     }
 
     private void Start()
@@ -24,5 +27,6 @@ public class ColorPalette : MonoBehaviour
     {
         SelectedColor = color;
         _colorSwatches.Where(x => x.Color != color).ForEach(x => x.Deselect());
+        _placer.SetSelectedObjectsColor(color);
     }
 }
