@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using cakeslice;
 using Level.Objects;
+using Misc;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -30,7 +31,11 @@ namespace LevelEditor
             _selectedObjects = new List<GameObject>();
             ObjectDrawer.OnObjectSelectionChanged += @object =>
             {
-                GetComponent<MeshFilter>().mesh = @object.transform.Find("Model").GetComponent<MeshFilter>().sharedMesh;
+                var filter = GetComponent<MeshFilter>();
+                if (@object.transform.GetComponent<MeshFilter>() != null)
+                    filter.mesh = @object.transform.GetComponent<MeshFilter>().sharedMesh;
+                else
+                    filter.mesh = @object.transform.GetComponentsInChildren<MeshFilter>()[0].sharedMesh;
             };
         }
         
