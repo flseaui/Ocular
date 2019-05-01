@@ -17,6 +17,7 @@ namespace LevelEditor
             Addressables.LoadAsset<GameObject>("blank_level").Completed += handle =>
             {
                 _level = Instantiate(handle.Result).transform.Find("MainFloor").gameObject;
+                GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             };
         }
 

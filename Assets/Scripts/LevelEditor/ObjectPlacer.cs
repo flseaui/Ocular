@@ -23,8 +23,9 @@ namespace LevelEditor
                 var hitPoint = hit.point;
                 var normal = hit.normal;
                 trans.rotation = Quaternion.FromToRotation(trans.forward, normal) * trans.rotation;
-                trans.position = new Vector3(Mathf.RoundToInt(hitPoint.x), Mathf.RoundToInt(hitPoint.y), Mathf.RoundToInt(hitPoint.z));
-                trans.position += normal;
+                trans.position = hit.collider.gameObject.transform.position + normal;
+     
+                
                 if (Input.GetMouseButtonDown(0))
                 {
                     _levelEditor.PlaceObject(trans.position);
