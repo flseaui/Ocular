@@ -1,15 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ColorSwatch : MonoBehaviour, IPointerDownHandler 
 {
     private ColorPalette _palette;
-    private Sprite _selectedSprite;
+    [SerializeField] private Sprite _selectedSprite;
     [OnValueChanged(nameof(ColorChanged)), ColorPalette]
     public Color Color;
 
@@ -26,7 +23,6 @@ public class ColorSwatch : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         _palette = GetComponentInParent<ColorPalette>();
-        Addressables.LoadAsset<Sprite>("color_swatch_selected").Completed += handle => _selectedSprite = handle.Result;
     }
     
     public void OnPointerDown(PointerEventData eventData)

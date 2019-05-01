@@ -6,13 +6,14 @@ namespace LevelEditor
 {
     public class LevelEditor : MonoBehaviour
     {
-        [SerializeField] GameObject _currentObject;
+        private GameObject _currentObject;
         private GameObject _level;
         private ColorPalette _colorPalette;
 
         private void Awake()
         {
             _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
+            ObjectDrawer.OnObjectSelectionChanged += @object => { _currentObject = @object; };
         }
         
         private void Start()

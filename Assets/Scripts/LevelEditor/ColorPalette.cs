@@ -13,9 +13,13 @@ public class ColorPalette : MonoBehaviour
     private void Awake()
     {
         _colorSwatches = GetComponentsInChildren<ColorSwatch>();
-        _colorSwatches[0].Select();
     }
 
+    private void Start()
+    {
+        _colorSwatches[0].Select();
+    }
+    
     public void SetColor(Color color)
     {
         SelectedColor = color;

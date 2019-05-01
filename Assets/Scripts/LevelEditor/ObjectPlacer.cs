@@ -9,9 +9,16 @@ namespace LevelEditor
     {
 
         private LevelEditor _levelEditor;
-
         private SlopeWalkable.Direction _directionFacing;
         private SlopeWalkable.Orientation _orientation;
+
+        private void Awake()
+        {
+            ObjectDrawer.OnObjectSelectionChanged += @object =>
+            {
+                GetComponent<MeshFilter>().mesh = @object.transform.Find("Model").GetComponent<MeshFilter>().sharedMesh;
+            };
+        }
         
         private void Start()
         {
