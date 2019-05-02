@@ -19,6 +19,8 @@ namespace LevelEditor
 
         private List<GameObject> _selectedObjects;
 
+        [SerializeField] private Texture2D _brushCursor, gearCursor;
+        
         public void SetSelectedObjectsColor(Color color)
         {
             if (_selectedObjects.Count < 1) return;
@@ -49,12 +51,24 @@ namespace LevelEditor
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
+            }
+            else if (Input.GetKey(KeyCode.LeftAlt))
+            {
+                Cursor.SetCursor(gearCursor, new Vector2(gearCursor.width / 2, gearCursor.height / 2), CursorMode.ForceSoftware);
+            }
+            else
+            {
+                Cursor.SetCursor(_brushCursor, new Vector2(_brushCursor.width / 2, _brushCursor.height / 2), CursorMode.ForceSoftware);
+            }
+            
             if (Physics.Raycast(ray, out var hit))
             {
                 var trans = transform;
                 var hitPoint = hit.point;
                 var normal = hit.normal;
-                //trans.rotation = Quaternion.FromToRotation(trans.forward, normal) * trans.rotation;
                 if (_directionFacing == SlopeWalkable.Direction.Right)
                     transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0, 0);
                 else if (_directionFacing == SlopeWalkable.Direction.Left) 
@@ -91,6 +105,10 @@ namespace LevelEditor
                         }
 
                     }
+                }
+                else if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    
                 }
                 else
                 {
