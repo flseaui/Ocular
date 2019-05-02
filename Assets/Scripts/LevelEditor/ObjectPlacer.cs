@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using cakeslice;
 using Level.Objects;
 using Misc;
+using Sirenix.Utilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -78,12 +79,14 @@ namespace LevelEditor
                         var outline = hit.collider.gameObject.GetComponent<Outline>();
                         if (outline.enabled)
                         {
-                            outline.enabled = false;
+                            hit.collider.transform.parent.GetComponentsInChildren<Outline>()
+                                .ForEach(x => x.enabled = false);
                             _selectedObjects.Remove(outline.gameObject);
                         }
                         else
                         {
-                            outline.enabled = true;
+                            hit.collider.transform.parent.GetComponentsInChildren<Outline>()
+                                .ForEach(x => x.enabled = true);
                             _selectedObjects.Add(hit.collider.gameObject);
                         }
 
@@ -100,7 +103,8 @@ namespace LevelEditor
                     }
                     else if (Input.GetMouseButtonDown(1))
                     {
-                        Destroy(hit.collider.gameObject);
+                        foreach (Transform child in hit.collider.transform.parent)
+                            Destroy(child.gameObject);
                     }
                 }
             }
