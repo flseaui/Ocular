@@ -4,14 +4,6 @@ using UnityEngine;
 namespace Level.Objects {
     public class SlopeWalkable : Walkable
     {
-        public enum Direction
-        {
-            Forward,
-            Left,
-            Back,
-            Right
-        }
-
         private readonly Direction[] _directionsClockwise =
         {
             Direction.Forward,
@@ -118,11 +110,6 @@ namespace Level.Objects {
         Gizmos.DrawRay(transform.localPosition, new Vector3(0, 1, 0));
     }*/
 #endif
-
-        public enum Orientation
-        {
-            Up,
-            Down
-        }
+        
     }
 }

@@ -1,33 +1,33 @@
-using System;
 using System.Collections.Generic;
 using cakeslice;
 using Level.Objects;
 using Misc;
 using Sirenix.Utilities;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace LevelEditor
 {
     public class ObjectPlacer : MonoBehaviour
     {
+        [SerializeField] private Texture2D _brushCursor, gearCursor;
+        private ButtonWalkable _currentButton;
+        private Direction _directionFacing;
 
         private LevelEditor _levelEditor;
-        private SlopeWalkable.Direction _directionFacing;
-        private SlopeWalkable.Orientation _orientation;
+        private Orientation _orientation;
         private MeshRenderer _renderer;
 
         private List<GameObject> _selectedObjects;
 
-        [SerializeField] private Texture2D _brushCursor, gearCursor;
-        
+        private bool _selectTargetsMode;
+
         public void SetSelectedObjectsColor(Color color)
         {
             if (_selectedObjects.Count < 1) return;
-            
+
             _selectedObjects.ForEach(x => x.transform.parent.GetComponent<Colorable>().Color = color);
         }
-        
+
         private void Awake()
         {
             _renderer = GetComponent<MeshRenderer>();
@@ -41,53 +41,73 @@ namespace LevelEditor
                     filter.mesh = @object.transform.GetComponentsInChildren<MeshFilter>()[0].sharedMesh;
             };
         }
-        
+
         private void Start()
         {
             _levelEditor = GameObject.Find("LevelEditor").GetComponent<LevelEditor>();
         }
-        
+
         private void Update()
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Input.GetKey(KeyCode.LeftControl))
-            {
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
-            }
             else if (Input.GetKey(KeyCode.LeftAlt))
-            {
-                Cursor.SetCursor(gearCursor, new Vector2(gearCursor.width / 2, gearCursor.height / 2), CursorMode.ForceSoftware);
-            }
+                Cursor.SetCursor(gearCursor, new Vector2(gearCursor.width / 2, gearCursor.height / 2),
+                    CursorMode.ForceSoftware);
             else
-            {
-                Cursor.SetCursor(_brushCursor, new Vector2(_brushCursor.width / 2, _brushCursor.height / 2), CursorMode.ForceSoftware);
-            }
-            
+                Cursor.SetCursor(_brushCursor, new Vector2(_brushCursor.width / 2, _brushCursor.height / 2),
+                    CursorMode.ForceSoftware);
+
             if (Physics.Raycast(ray, out var hit))
             {
                 var trans = transform;
                 var hitPoint = hit.point;
                 var normal = hit.normal;
-                if (_directionFacing == SlopeWalkable.Direction.Right)
+                if (_directionFacing == Direction.Right)
                     transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0, 0);
-                else if (_directionFacing == SlopeWalkable.Direction.Left) 
+                else if (_directionFacing == Direction.Left)
                     transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
-                else if (_directionFacing == SlopeWalkable.Direction.Forward)
+                else if (_directionFacing == Direction.Forward)
                     transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
-                else if (_directionFacing == SlopeWalkable.Direction.Back)
+                else if (_directionFacing == Direction.Back)
                     transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90, 0);
 
-                if (_orientation == SlopeWalkable.Orientation.Up)
+                if (_orientation == Orientation.Up)
                     transform.localRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
-                if (_orientation == SlopeWalkable.Orientation.Down)
+                if (_orientation == Orientation.Down)
                     transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
                 trans.position = hit.collider.gameObject.transform.position + normal;
 
 
+                if (_selectTargetsMode)
+                    if (Input.GetMouseButtonDown(0))
+                        if (hit.transform.parent.gameObject != _currentButton.gameObject)
+                        {
+                            var outline = hit.collider.gameObject.GetComponent<Outline>();
+                            if (outline.enabled)
+                            {
+                                hit.collider.transform.parent.GetComponentsInChildren<Outline>()
+                                    .ForEach(x => x.enabled = false);
+                                _selectedObjects.Remove(outline.gameObject);
+                                if (outline.transform.ParentHasComponent<Colorable>(out var colorable))
+                                    _currentButton.TargetBlocks.Remove(colorable);
+                            }
+                            else
+                            {
+                                hit.collider.transform.parent.GetComponentsInChildren<Outline>()
+                                    .ForEach(x => x.enabled = true);
+                                _selectedObjects.Add(hit.collider.gameObject);
+                                if (hit.collider.transform.ParentHasComponent<Colorable>(out var colorable))
+                                    _currentButton.TargetBlocks.Add(colorable);
+                            }
+                        }
+
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
                     _renderer.enabled = false;
+                    _selectTargetsMode = false;
                     if (Input.GetMouseButtonDown(0))
                     {
                         var outline = hit.collider.gameObject.GetComponent<Outline>();
@@ -103,15 +123,20 @@ namespace LevelEditor
                                 .ForEach(x => x.enabled = true);
                             _selectedObjects.Add(hit.collider.gameObject);
                         }
-
                     }
                 }
                 else if (Input.GetKey(KeyCode.LeftAlt))
                 {
-                    
+                    if (hit.transform.ParentHasComponent<ButtonWalkable>(out var button))
+                    {
+                        _renderer.enabled = false;
+                        _selectTargetsMode = true;
+                        _currentButton = button;
+                    }
                 }
                 else
                 {
+                    _selectTargetsMode = false;
                     _renderer.enabled = true;
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -141,16 +166,16 @@ namespace LevelEditor
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    _orientation = _orientation == SlopeWalkable.Orientation.Down
-                        ? SlopeWalkable.Orientation.Up
-                        : SlopeWalkable.Orientation.Down;
+                    _orientation = _orientation == Orientation.Down
+                        ? Orientation.Up
+                        : Orientation.Down;
                 }
                 else
                 {
                     var dir = (int) _directionFacing;
                     if (dir++ > 2)
                         dir = 0;
-                    _directionFacing = (SlopeWalkable.Direction) dir;
+                    _directionFacing = (Direction) dir;
                 }
             }
         }

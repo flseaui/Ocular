@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -68,6 +69,14 @@ namespace Misc
                     temp.Add(tr.GetComponent<T>());
 
             return temp;
+        }
+
+        public static void ForEachChild(this Transform transform, Action<Transform> action)
+        {
+            foreach (Transform child in transform)
+            {
+                action.Invoke(child);
+            }
         }
     }
 }

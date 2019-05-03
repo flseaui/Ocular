@@ -14,7 +14,7 @@ namespace Level.Objects
 
         private Vector3 _initialPosition;
 
-        [SerializeField] private List<Colorable> _targetBlocks;
+        public List<Colorable> TargetBlocks;
         public bool State
         {
             get => _buttonModel.State;
@@ -28,7 +28,7 @@ namespace Level.Objects
 
             _initialPosition = _buttonModel.transform.localPosition;
 
-            _targetBlocks.ForEach(t => t.RegisterController(this));
+            TargetBlocks.ForEach(t => t.RegisterController(this));
            
 
             _buttonModel.OnStateChanged += () =>
@@ -36,7 +36,7 @@ namespace Level.Objects
                 if (_buttonModel.State)
                 {
                     _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
-                    _targetBlocks.ForEach(t =>
+                    TargetBlocks.ForEach(t =>
                     {
                         t.Color = Color;
                         t.UpdateState();
@@ -45,7 +45,7 @@ namespace Level.Objects
                 else
                 {
                     _buttonModel.transform.localPosition = _initialPosition;
-                    _targetBlocks.ForEach(t =>
+                    TargetBlocks.ForEach(t =>
                     {
                         t.Color = Color.clear;
                         t.UpdateState();
