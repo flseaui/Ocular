@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using cakeslice;
+using System.Linq;
+using JetBrains.Annotations;
 using Level.Objects;
 using Misc;
 using Sirenix.Utilities;
@@ -9,17 +10,39 @@ namespace LevelEditor
 {
     public class ObjectPlacer : MonoBehaviour
     {
-        [SerializeField] private Texture2D _brushCursor, gearCursor;
-        private ButtonWalkable _currentButton;
-        private Direction _directionFacing;
+        /// <summary>
+        /// Placing mode of the Level Editor placer.
+        /// </summary>
+        private enum PlacingMode
+        {
+            Place,
+            Select,
+            Customize
+        }
 
-        private LevelEditor _levelEditor;
+        /// <summary>
+        /// This placers current placing mode.
+        /// </summary>
+        private PlacingMode _mode;
+        /// <summary>
+        /// If true the placing mode was changed last frame.
+        /// </summary>
+        private bool _changedMode = true;
+
         private Orientation _orientation;
-        private MeshRenderer _renderer;
-
+        private Direction _direction;
+        
+        private GameObject _meshes;
         private List<GameObject> _selectedObjects;
 
-        private bool _selectTargetsMode;
+        private LevelEditor _levelEditor;
+        
+        [SerializeField] private Texture2D 
+            _selectCursor,
+            _brushCursor,
+            _gearCursor;
+
+        [SerializeField] private Material _placerMat;
 
         public void SetSelectedObjectsColor(Color color)
         {
@@ -27,157 +50,156 @@ namespace LevelEditor
 
             _selectedObjects.ForEach(x => x.transform.parent.GetComponent<Colorable>().Color = color);
         }
-
-        private void Awake()
-        {
-            _renderer = GetComponent<MeshRenderer>();
-            _selectedObjects = new List<GameObject>();
-            ObjectDrawer.OnObjectSelectionChanged += @object =>
-            {
-                var filter = GetComponent<MeshFilter>();
-                if (@object.transform.GetComponent<MeshFilter>() != null)
-                    filter.mesh = @object.transform.GetComponent<MeshFilter>().sharedMesh;
-                else
-                    filter.mesh = @object.transform.GetComponentsInChildren<MeshFilter>()[0].sharedMesh;
-            };
-        }
-
-        private void Start()
-        {
-            _levelEditor = GameObject.Find("LevelEditor").GetComponent<LevelEditor>();
-        }
-
+        
         private void Update()
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var shift = Input.GetKey(KeyCode.LeftShift);
+            var ctrl = Input.GetKey(KeyCode.LeftControl);
+            var alt = Input.GetKey(KeyCode.LeftAlt);
 
-            if (Input.GetKey(KeyCode.LeftControl))
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
-            else if (Input.GetKey(KeyCode.LeftAlt))
-                Cursor.SetCursor(gearCursor, new Vector2(gearCursor.width / 2, gearCursor.height / 2),
-                    CursorMode.ForceSoftware);
-            else
-                Cursor.SetCursor(_brushCursor, new Vector2(_brushCursor.width / 2, _brushCursor.height / 2),
-                    CursorMode.ForceSoftware);
-
-            if (Physics.Raycast(ray, out var hit))
+            var left = Input.GetMouseButtonDown(0);
+            var right = Input.GetMouseButtonDown(1);
+            
+            var hObj = GetHighlightedObject(out var normal);
+            if (hObj != null)
             {
-                var trans = transform;
-                var hitPoint = hit.point;
-                var normal = hit.normal;
-                if (_directionFacing == Direction.Right)
-                    transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0, 0);
-                else if (_directionFacing == Direction.Left)
-                    transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
-                else if (_directionFacing == Direction.Forward)
-                    transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
-                else if (_directionFacing == Direction.Back)
-                    transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90, 0);
-
-                if (_orientation == Orientation.Up)
-                    transform.localRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
-                if (_orientation == Orientation.Down)
-                    transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
-                trans.position = hit.collider.gameObject.transform.position + normal;
-
-
-                if (_selectTargetsMode)
-                    if (Input.GetMouseButtonDown(0))
-                        if (hit.transform.parent.gameObject != _currentButton.gameObject)
-                        {
-                            var outline = hit.collider.gameObject.GetComponent<Outline>();
-                            if (outline.enabled)
-                            {
-                                hit.collider.transform.parent.GetComponentsInChildren<Outline>()
-                                    .ForEach(x => x.enabled = false);
-                                _selectedObjects.Remove(outline.gameObject);
-                                if (outline.transform.ParentHasComponent<Colorable>(out var colorable))
-                                    _currentButton.TargetBlocks.Remove(colorable);
-                            }
-                            else
-                            {
-                                hit.collider.transform.parent.GetComponentsInChildren<Outline>()
-                                    .ForEach(x => x.enabled = true);
-                                _selectedObjects.Add(hit.collider.gameObject);
-                                if (hit.collider.transform.ParentHasComponent<Colorable>(out var colorable))
-                                    _currentButton.TargetBlocks.Add(colorable);
-                            }
-                        }
-
-                if (Input.GetKey(KeyCode.LeftControl))
-                {
-                    _renderer.enabled = false;
-                    _selectTargetsMode = false;
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        var outline = hit.collider.gameObject.GetComponent<Outline>();
-                        if (outline.enabled)
-                        {
-                            hit.collider.transform.parent.GetComponentsInChildren<Outline>()
-                                .ForEach(x => x.enabled = false);
-                            _selectedObjects.Remove(outline.gameObject);
-                        }
-                        else
-                        {
-                            hit.collider.transform.parent.GetComponentsInChildren<Outline>()
-                                .ForEach(x => x.enabled = true);
-                            _selectedObjects.Add(hit.collider.gameObject);
-                        }
-                    }
-                }
-                else if (Input.GetKey(KeyCode.LeftAlt))
-                {
-                    if (hit.transform.ParentHasComponent<ButtonWalkable>(out var button))
-                    {
-                        _renderer.enabled = false;
-                        _selectTargetsMode = true;
-                        _currentButton = button;
-                    }
-                }
-                else
-                {
-                    _selectTargetsMode = false;
-                    _renderer.enabled = true;
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        _selectedObjects.ForEach(x => x.GetComponent<Outline>().enabled = false);
-                        _selectedObjects.Clear();
-                        _levelEditor.PlaceObject(trans.position, trans.localRotation);
-                    }
-                    else if (Input.GetMouseButtonDown(1))
-                    {
-                        foreach (Transform child in hit.collider.transform.parent)
-                            Destroy(child.gameObject);
-                    }
-                }
+                transform.position = hObj.transform.position + normal; 
+                
+                if      (_direction == Direction.Right   ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0  , 0);
+                else if (_direction == Direction.Left    ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
+                else if (_direction == Direction.Forward ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
+                else if (_direction == Direction.Back    ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90 , 0);
+                if      (_orientation == Orientation.Up  ) transform.localRotation = Quaternion.Euler(0  , transform.localEulerAngles.y, 0);
+                else if (_orientation == Orientation.Down) transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
             }
             else
             {
-                if (Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftControl))
-                {
-                    _selectedObjects.ForEach(x => x.GetComponent<Outline>().enabled = false);
-                    _selectedObjects.Clear();
-                }
-
                 transform.position = new Vector3(1000, 1000, 1000);
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            var currentMode = _mode;
+            
+            switch (_mode)
             {
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    _orientation = _orientation == Orientation.Down
-                        ? Orientation.Up
-                        : Orientation.Down;
-                }
-                else
-                {
-                    var dir = (int) _directionFacing;
-                    if (dir++ > 2)
-                        dir = 0;
-                    _directionFacing = (Direction) dir;
-                }
+                case PlacingMode.Place:
+                    if (_changedMode)
+                    {
+                        SetVisibility(true);
+                        CustomCursor.SetCursor(_brushCursor);
+                    }
+
+                    if (left)
+                    {
+                        _levelEditor.PlaceObject(transform.position, transform.rotation);
+                    }
+
+                    if (right)
+                    {
+                        Destroy(hObj);
+                    }
+                    
+                    if (ctrl)
+                        _mode = PlacingMode.Select;
+                    else if (alt)
+                        _mode = PlacingMode.Customize;
+                    break;
+
+                case PlacingMode.Select:
+                    if (_changedMode)
+                    {
+                        SetVisibility(false);
+                        CustomCursor.SetCursor(_selectCursor);
+                    }
+                    
+                    if (!ctrl)
+                        _mode = PlacingMode.Place;
+                    break;
+                
+                case PlacingMode.Customize:
+                    if (_changedMode)
+                    {
+                        SetVisibility(false);
+                        CustomCursor.SetCursor(_gearCursor);
+                    }
+                    
+                    if (!alt)
+                        _mode = PlacingMode.Place;
+                    break;
             }
+
+            if (currentMode != _mode)
+                _changedMode = true;
+        }
+        
+        /// /// <summary>
+        /// Gets the object highlighted by the placer.
+        /// </summary>
+        /// <param name="normal">
+        /// The normal of the raycast hit between the placer and the object.</param>
+        /// <returns>
+        /// The currently highlighted GameObject.
+        /// </returns>
+        [CanBeNull]
+        private GameObject GetHighlightedObject(out Vector3 normal)
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit))
+            {
+                normal = hit.normal;
+                return hit.collider.gameObject;
+            }
+            
+            normal = Vector3.zero;
+            return null;
+        }
+        
+        /// <summary>
+        /// Set visibility of selected block shadow.
+        /// </summary>
+        /// <param name="visibility"></param>
+        private void SetVisibility(bool visibility)
+        {
+            _meshes.SetActive(visibility);
+        }
+        
+        private void Awake()
+        {
+            ObjectDrawer.OnObjectSelectionChanged += OnObjectChanged;
+            
+            _selectedObjects = new List<GameObject>();
+
+            _meshes = transform.GetChild(0).gameObject;
+            _levelEditor = GameObject.Find("LevelEditor").GetComponent<LevelEditor>();
+        }
+
+        /// <summary>
+        /// Updates the placer mesh to reflect the selected object.
+        /// </summary>
+        /// <param name="object">
+        /// The newly selected object.
+        /// </param>
+        private void OnObjectChanged(GameObject @object)
+        {
+            _meshes.transform.ForEachChild(x => Destroy(x.gameObject));
+
+            void CreateMesh(GameObject mesh)
+            {
+                var obj = new GameObject("Mesh");
+                obj.transform.parent = _meshes.transform;
+                obj.transform.localPosition = mesh.transform.localPosition;
+                obj.transform.localScale = mesh.transform.localScale;
+                obj.transform.localRotation = mesh.transform.localRotation;
+                var filter = obj.AddComponent<MeshFilter>();
+                filter.mesh = mesh.GetComponent<MeshFilter>().sharedMesh;
+                var renderer = obj.AddComponent<MeshRenderer>();
+                renderer.material = _placerMat;
+            }
+            
+            // If mesh is directly on object
+            if (@object.transform.GetComponent<MeshFilter>() != null)
+                CreateMesh(@object);
+            else
+                @object.transform.ForEachChild(x => CreateMesh(x.gameObject));
         }
     }
 }
