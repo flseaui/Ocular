@@ -1,10 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using JetBrains.Annotations;
 using Level.Objects;
 using Misc;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Outline = cakeslice.Outline;
 
 namespace LevelEditor
 {
@@ -17,7 +21,8 @@ namespace LevelEditor
         {
             Place,
             Select,
-            Customize
+            Customize,
+            SelectButtonTargets
         }
 
         /// <summary>
@@ -34,8 +39,13 @@ namespace LevelEditor
         
         private GameObject _meshes;
         private List<GameObject> _selectedObjects;
+        private List<Outline> _tempOutlines;
 
+        private GameObject _customizingObject;
+        
         private LevelEditor _levelEditor;
+        private GraphicRaycaster _graphicRaycaster;
+        private PointerEventData _pointer;
         
         [SerializeField] private Texture2D 
             _selectCursor,
@@ -43,7 +53,16 @@ namespace LevelEditor
             _gearCursor;
 
         [SerializeField] private Material _placerMat;
+        [SerializeField] private GameObject _buttonColorPopupPrefab;
 
+        private GameObject _popup;
+        
+        /// <summary>
+        /// Colors all currently selected objects.
+        /// </summary>
+        /// <param name="color">
+        /// The color the objects will be colored.
+        /// </param>
         public void SetSelectedObjectsColor(Color color)
         {
             if (_selectedObjects.Count < 1) return;
@@ -59,9 +78,14 @@ namespace LevelEditor
 
             var left = Input.GetMouseButtonDown(0);
             var right = Input.GetMouseButtonDown(1);
+
+            _pointer.position = Input.mousePosition;
             
             var hObj = GetHighlightedObject(out var normal);
-            if (hObj != null)
+            var hUI = GetUIUnderMouse();
+            var validObject = hObj != null;
+            var isUI = hUI != null;
+            if (validObject)
             {
                 transform.position = hObj.transform.position + normal; 
                 
@@ -87,17 +111,47 @@ namespace LevelEditor
                         SetVisibility(true);
                         CustomCursor.SetCursor(_brushCursor);
                     }
-
+                    
+                    _tempOutlines.ForEach(x => x.enabled = false);
+                    
                     if (left)
                     {
-                        _levelEditor.PlaceObject(transform.position, transform.rotation);
-                    }
-
-                    if (right)
-                    {
-                        Destroy(hObj);
+                        _selectedObjects.ForEach(x => x.GetComponent<Outline>().enabled = false);
+                        _selectedObjects.Clear();
+                        if (_popup != null)
+                            Destroy(_popup.gameObject);
                     }
                     
+                    if (validObject)
+                    {
+                        if (Input.GetKeyDown(KeyCode.R))
+                        {
+                            if (shift)
+                            {
+                                _orientation = _orientation == Orientation.Down
+                                    ? Orientation.Up
+                                    : Orientation.Down;
+                            }
+                            else
+                            {
+                                var dir = (int) _direction;
+                                if (dir++ > 2)
+                                    dir = 0;
+                                _direction = (Direction) dir;
+                            }
+                        }
+                        
+                        if (left)
+                        {
+                            _levelEditor.PlaceObject(transform.position, transform.rotation);
+                        }
+
+                        if (right)
+                        {
+                            hObj.transform.parent.ForEachChild(x => Destroy(x.gameObject));
+                        }
+                    }
+
                     if (ctrl)
                         _mode = PlacingMode.Select;
                     else if (alt)
@@ -110,7 +164,25 @@ namespace LevelEditor
                         SetVisibility(false);
                         CustomCursor.SetCursor(_selectCursor);
                     }
+
+                    _tempOutlines.ForEach(x => x.enabled = false);
                     
+                    if (validObject)
+                    {
+                        if (left)
+                        {
+                            var outline = hObj.GetComponent<Outline>();
+                            
+                            if (outline.enabled)
+                                _selectedObjects.Remove(outline.gameObject);
+                            else
+                                _selectedObjects.Add(hObj);
+                            
+                            hObj.transform.parent.GetComponentsInChildren<Outline>()
+                                .ForEach(x => x.enabled = !outline.enabled);
+                        }
+                    }
+
                     if (!ctrl)
                         _mode = PlacingMode.Place;
                     break;
@@ -121,9 +193,87 @@ namespace LevelEditor
                         SetVisibility(false);
                         CustomCursor.SetCursor(_gearCursor);
                     }
+
+                    _tempOutlines.ForEach(x => x.enabled = false);
+                    
+                    if (validObject)
+                    {
+                        if (hObj.transform.ParentHasComponent<ButtonWalkable>(out var button))
+                        {
+                            button.TargetBlocks.ForEach(x => x.gameObject.GetComponentsInChildren<Outline>().ForEach(o =>
+                            {
+                                o.enabled = true;
+                                _tempOutlines.Add(o);
+                            }));
+                        }
+                        if (left)
+                        {
+                            if (_popup != null)
+                            {
+                                Destroy(_popup.gameObject);
+                            }
+
+                            if (hObj.transform.ParentHasComponent(out button))
+                            {
+                                _popup = Instantiate(_buttonColorPopupPrefab, hObj.transform.parent.position,
+                                    Quaternion.identity, GameObject.Find("Canvas").transform);
+                                var popup = _popup.GetComponent<ButtonColorPopup>();
+                                popup.Target = hObj.transform.parent;
+                                popup.GetComponent<ColorPalette>().OnColorChanged = color =>
+                                {
+                                    button.Color = color;
+                                };
+
+                                _customizingObject = button.gameObject;
+                                _mode = PlacingMode.SelectButtonTargets;
+                                break;
+                            }
+                        }
+                    }
                     
                     if (!alt)
                         _mode = PlacingMode.Place;
+                    break;
+                case PlacingMode.SelectButtonTargets:
+                    if (_changedMode)
+                    {
+                        SetVisibility(false);
+                        CustomCursor.SetCursor(_selectCursor);
+                    }
+                    
+                    if (validObject)
+                    {
+                        if (left)
+                        {
+                            var button = _customizingObject.GetComponent<ButtonWalkable>();
+                            var outline = hObj.GetComponent<Outline>();
+                            
+                            if (outline.enabled)
+                                button.TargetBlocks.Remove(outline.gameObject.GetComponent<Colorable>());
+                            else
+                                button.TargetBlocks.Add(hObj.GetComponentInParent<Colorable>());
+                            
+                            hObj.transform.parent.GetComponentsInChildren<Outline>()
+                                .ForEach(x => x.enabled = !outline.enabled);
+                        }
+                    }
+                    else
+                    {
+                        if (left && !isUI)
+                        {
+                            _mode = PlacingMode.Place;
+
+                            _customizingObject.GetComponent<ButtonWalkable>().TargetBlocks
+                                .ForEach(x => x.GetComponentsInChildren<Outline>()
+                                    .ForEach(o => o.enabled = false));
+                            
+                            if (_popup != null)
+                            {
+                                Destroy(_popup.gameObject);
+                            }
+                        }
+                    }
+                    
                     break;
             }
 
@@ -152,6 +302,15 @@ namespace LevelEditor
             normal = Vector3.zero;
             return null;
         }
+
+        [CanBeNull]
+        private GameObject GetUIUnderMouse()
+        {
+            var results = new List<RaycastResult>();
+            _graphicRaycaster.Raycast(_pointer, results);
+
+            return results.Count > 0 ? results[0].gameObject : null;
+        }
         
         /// <summary>
         /// Set visibility of selected block shadow.
@@ -167,9 +326,13 @@ namespace LevelEditor
             ObjectDrawer.OnObjectSelectionChanged += OnObjectChanged;
             
             _selectedObjects = new List<GameObject>();
-
+            _tempOutlines = new List<Outline>();
+            
             _meshes = transform.GetChild(0).gameObject;
             _levelEditor = GameObject.Find("LevelEditor").GetComponent<LevelEditor>();
+            var canvas = GameObject.Find("Canvas");
+            _pointer = new PointerEventData(canvas.GetComponent<EventSystem>());
+            _graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
         }
 
         /// <summary>

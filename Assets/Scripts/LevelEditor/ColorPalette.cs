@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LevelEditor;
@@ -12,6 +13,8 @@ public class ColorPalette : MonoBehaviour
     private ObjectPlacer _placer;
     private ColorSwatch[] _colorSwatches;
 
+    public Action<Color> OnColorChanged;
+    
     private void Awake()
     {
         _colorSwatches = GetComponentsInChildren<ColorSwatch>();
@@ -28,5 +31,6 @@ public class ColorPalette : MonoBehaviour
         SelectedColor = color;
         _colorSwatches.Where(x => x.Color != color).ForEach(x => x.Deselect());
         _placer.SetSelectedObjectsColor(color);
+        OnColorChanged?.Invoke(SelectedColor);
     }
 }
