@@ -89,12 +89,12 @@ namespace LevelEditor
             {
                 transform.position = hObj.transform.position + normal; 
                 
-                if      (_direction == Direction.Right   ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0  , 0);
-                else if (_direction == Direction.Left    ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
-                else if (_direction == Direction.Forward ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
-                else if (_direction == Direction.Back    ) transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90 , 0);
-                if      (_orientation == Orientation.Up  ) transform.localRotation = Quaternion.Euler(0  , transform.localEulerAngles.y, 0);
-                else if (_orientation == Orientation.Down) transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
+                if      (_direction == Direction.Right   ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 0  , 0);
+                else if (_direction == Direction.Left    ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
+                else if (_direction == Direction.Forward ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
+                else if (_direction == Direction.Back    ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 90 , 0);
+                if      (_orientation == Orientation.Up  ) transform.rotation = Quaternion.Euler(0  , transform.localEulerAngles.y, 0);
+                else if (_orientation == Orientation.Down) transform.rotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
             }
             else
             {

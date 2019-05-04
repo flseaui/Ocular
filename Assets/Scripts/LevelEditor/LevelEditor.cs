@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Level.Objects;
 using Misc;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -36,6 +38,12 @@ namespace LevelEditor
             };
         }
 
+        public void SaveLevel()
+        {
+            var levelName = $"Assets/Prefabs/Levels/Level{Directory.EnumerateFiles("Assets/Prefabs/Levels/").Count() / 2 + 1}.prefab";
+            PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, levelName);
+        }
+        
         public void PlaceObject(Vector3 position, Quaternion rotation)
         {
             var @object = Instantiate(_currentObject, position, rotation, _level.transform);
