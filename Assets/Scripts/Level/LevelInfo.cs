@@ -25,6 +25,8 @@ namespace Level {
 
         public Transform PlayerSpawnPoint;
 
+        public string Name;
+        
         private void ApplyColorPreset()
         {
             if (ColorPreset == ColorSet.RGB)

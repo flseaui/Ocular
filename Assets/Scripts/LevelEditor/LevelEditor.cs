@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Level;
 using Level.Objects;
 using Misc;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 namespace LevelEditor
 {
@@ -22,26 +25,54 @@ namespace LevelEditor
             _limitedObjects = new List<GameObject>();
             _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
             ObjectDrawer.OnObjectSelectionChanged += @object => { _currentObject = @object; };
+            
         }
 
         private void Start()
         {
-            CreateLevel();
+            var level = PlayerPrefs.GetString("LevelToLoad");
+            if (level == "New")
+            {
+                NewLevel();
+            }
+            else
+            {
+                var levelGameObject = (GameObject) AssetDatabase.LoadAssetAtPath(level, typeof(GameObject));
+                LoadLevel(levelGameObject);
+            }
         }
 
-        public void CreateLevel()
+        public void LoadLevel(GameObject level)
+        {
+            _level = Instantiate(level).transform.Find("MainFloor").gameObject;
+            GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
+        }
+
+        public void NewLevel()
         {
             Addressables.LoadAsset<GameObject>("blank_level").Completed += handle =>
             {
                 _level = Instantiate(handle.Result).transform.Find("MainFloor").gameObject;
+                _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
                 GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             };
         }
-
+        
         public void SaveLevel()
         {
-            var levelName = $"Assets/Prefabs/Levels/Level{Directory.EnumerateFiles("Assets/Prefabs/Levels/").Count() / 2 + 1}.prefab";
-            PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, levelName);
+            if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
+            {
+                var levelName =
+                    $"Assets/Prefabs/Levels/Level{Directory.EnumerateFiles("Assets/Prefabs/Levels/").Count() / 2 + 1}.prefab";
+                _level.transform.parent.GetComponent<LevelInfo>().Name = levelName;
+                PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, levelName);
+            }
+            else
+            {
+                PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, _level.transform.parent.GetComponent<LevelInfo>().Name);
+            }
+
+            SceneManager.LoadSceneAsync("EditorMenu");
         }
         
         public void PlaceObject(Vector3 position, Quaternion rotation)

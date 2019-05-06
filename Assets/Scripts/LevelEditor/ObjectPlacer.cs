@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -12,6 +13,9 @@ using Outline = cakeslice.Outline;
 
 namespace LevelEditor
 {
+    /// <summary>
+    /// Used to place and interact with objects in the level editor, works on a state based system.
+    /// </summary>
     public class ObjectPlacer : MonoBehaviour
     {
         /// <summary>
@@ -333,6 +337,12 @@ namespace LevelEditor
             var canvas = GameObject.Find("Canvas");
             _pointer = new PointerEventData(canvas.GetComponent<EventSystem>());
             _graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
+        }
+
+        private void OnDestroy()
+        {
+            ObjectDrawer.OnObjectSelectionChanged -= OnObjectChanged;
+            CustomCursor.SetCursor(null);
         }
 
         /// <summary>
