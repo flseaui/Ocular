@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Game;
 using Level;
 using Level.Objects;
 using Misc;
@@ -16,15 +17,23 @@ namespace LevelEditor
     public class LevelEditor : MonoBehaviour
     {
         private ColorPalette _colorPalette;
+        private ObjectDrawer _objectDrawer;
         private GameObject _currentObject;
         private GameObject _level;
 
+        [SerializeField] GameManager _gameManager;
+        [SerializeField] GameObject _glassesContainer;
+        
         private List<GameObject> _limitedObjects;
+        private static readonly int OnScreen = Animator.StringToHash("OnScreen");
 
+        public static Action<bool> OnLevelPlayToggle;
+        
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
             _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
+            _objectDrawer = GameObject.Find("ObjectDrawer").GetComponent<ObjectDrawer>();
             ObjectDrawer.OnObjectSelectionChanged += @object => { _currentObject = @object; };
             
         }
@@ -57,6 +66,22 @@ namespace LevelEditor
                 _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
                 GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             };
+        }
+
+        public void TestLevel()
+        {
+            OnLevelPlayToggle?.Invoke(!_glassesContainer.activeSelf);
+            //TODO Refactor the rest of these into their own scripts invoked by OnLevelPlayToggle
+            _colorPalette.GetComponent<Animator>().SetBool(OnScreen, !_colorPalette.GetComponent<Animator>().GetBool(OnScreen));
+            _objectDrawer.GetComponent<Animator>().SetBool(OnScreen, !_objectDrawer.GetComponent<Animator>().GetBool(OnScreen));
+            PlayerPrefs.SetInt("PlayFromEditor", 1);
+            _gameManager.gameObject.SetActive(!_gameManager.gameObject.activeSelf);
+            _glassesContainer.SetActive(!_glassesContainer.activeSelf);
+            if (!_glassesContainer.activeSelf)
+                _gameManager.StopPlaying();
+            else
+                _gameManager.PlayLevel(_level.transform.parent.gameObject);
+
         }
         
         public void SaveLevel()

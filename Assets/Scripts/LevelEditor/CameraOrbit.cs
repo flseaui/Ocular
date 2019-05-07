@@ -9,16 +9,47 @@ namespace LevelEditor
         
         [SerializeField] private float _rotateSpeed;
 
-        void LateUpdate()
+        private bool _canRotate;
+        
+        private void Awake()
         {
-            if (Input.GetKey(KeyCode.E))
+            LevelEditor.OnLevelPlayToggle += ToggleControl;
+        }
+
+        private void OnDestroy()
+        {
+            LevelEditor.OnLevelPlayToggle -= ToggleControl;
+        }
+
+        private void Start()
+        {
+            _canRotate = true;
+        }
+        
+        private void ToggleControl(bool state)
+        {
+            if (state)
             {
-                transform.RotateAround(Target.position, Vector3.up, _rotateSpeed * Time.deltaTime);
+                transform.localRotation = Quaternion.Euler(Vector3.zero);
+                transform.localPosition = new Vector3(0, 0, -10);
             }
 
-            if (Input.GetKey(KeyCode.Q))
+            _canRotate = !state;
+        }
+        
+        void LateUpdate()
+        {
+            if (_canRotate)
             {
-                transform.RotateAround(Target.position, -Vector3.up, _rotateSpeed * Time.deltaTime);
+                if (Input.GetKey(KeyCode.E))
+                {
+                    transform.RotateAround(Target.position, Vector3.up, _rotateSpeed * Time.deltaTime);
+                }
+
+                if (Input.GetKey(KeyCode.Q))
+                {
+                    transform.RotateAround(Target.position, -Vector3.up, _rotateSpeed * Time.deltaTime);
+                }
             }
         }
     }

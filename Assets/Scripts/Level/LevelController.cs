@@ -27,6 +27,15 @@ namespace Level {
             LoadLevel(_levels.IndexOf(StartingLevel));
         }
 
+        public void LoadLevel(GameObject level)
+        {
+            if (_loadedLevel != null)
+                UnloadLevel();
+            _loadedLevel = Instantiate(level);
+            _loadedLevel.GetComponent<MapController>().FindNeighbors();
+            CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
+        }
+        
         public void LoadLevel(int levelNumber)
         {
             if (_loadedLevel != null)

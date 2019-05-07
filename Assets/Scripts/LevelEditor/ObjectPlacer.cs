@@ -328,6 +328,7 @@ namespace LevelEditor
         private void Awake()
         {
             ObjectDrawer.OnObjectSelectionChanged += OnObjectChanged;
+            LevelEditor.OnLevelPlayToggle += OnLevelPlayToggle;
             
             _selectedObjects = new List<GameObject>();
             _tempOutlines = new List<Outline>();
@@ -342,9 +343,16 @@ namespace LevelEditor
         private void OnDestroy()
         {
             ObjectDrawer.OnObjectSelectionChanged -= OnObjectChanged;
+            LevelEditor.OnLevelPlayToggle -= OnLevelPlayToggle;
+            
             CustomCursor.SetCursor(null);
         }
 
+        private void OnLevelPlayToggle(bool state)
+        {
+            gameObject.SetActive(!state);
+        }
+        
         /// <summary>
         /// Updates the placer mesh to reflect the selected object.
         /// </summary>
