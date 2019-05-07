@@ -46,7 +46,7 @@ namespace Level {
             _loadedLevelNumber = levelNumber;
         }
 
-        private void UnloadLevel()
+        public void UnloadLevel()
         {
             Destroy(_loadedLevel);
         }

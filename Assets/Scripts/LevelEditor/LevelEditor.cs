@@ -81,6 +81,7 @@ namespace LevelEditor
                 _gameManager.StopPlaying();
             else
                 _gameManager.PlayLevel(_level.transform.parent.gameObject);
+            _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
 
         }
         

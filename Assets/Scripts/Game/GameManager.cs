@@ -21,6 +21,7 @@ namespace Game {
         {
             Destroy(_player.gameObject);
             Destroy(_indicator.gameObject);
+            _levelController.UnloadLevel();
         }
         
         public void PlayLevel(GameObject level)
