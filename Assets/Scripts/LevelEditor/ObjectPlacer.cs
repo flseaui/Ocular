@@ -147,12 +147,13 @@ namespace LevelEditor
                         
                         if (left)
                         {
-                            _levelEditor.PlaceObject(transform.position, transform.rotation);
+                            _levelEditor.PlaceObject(transform.position, _orientation, _direction);
                         }
 
                         if (right)
                         {
                             hObj.transform.parent.ForEachChild(x => Destroy(x.gameObject));
+                            Destroy(hObj.transform.parent.gameObject);
                         }
                     }
 

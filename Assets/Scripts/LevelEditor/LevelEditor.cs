@@ -102,9 +102,14 @@ namespace LevelEditor
             SceneManager.LoadSceneAsync("EditorMenu");
         }
         
-        public void PlaceObject(Vector3 position, Quaternion rotation)
+        public void PlaceObject(Vector3 position, Orientation orientation, Direction direction)
         {
-            var @object = Instantiate(_currentObject, position, rotation, _level.transform);
+            var @object = Instantiate(_currentObject, position, Quaternion.identity, _level.transform);
+            if (@object.transform.HasComponent<SlopeWalkable>(out var slope))
+            {
+                slope.MatchRotation(orientation, direction);
+            }
+            
             if (@object.transform.HasComponent<MaxCount>(out var max))
             {
                 var objects = _limitedObjects.Count > 0

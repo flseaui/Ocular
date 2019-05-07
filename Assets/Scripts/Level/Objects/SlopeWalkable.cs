@@ -20,7 +20,7 @@ namespace Level.Objects {
             Vector3.right
         };
 
-        [SerializeField] private Orientation _orientation;
+        [SerializeField] public Orientation Orientation;
 
         [SerializeField] public Direction DirectionFacing;
 
@@ -31,6 +31,13 @@ namespace Level.Objects {
         private Vector3 RelativeLeft => _directionsVector[((int) DirectionFacing + 1) % 4];
         private Vector3 RelativeRight => RelativeLeft * -1;
 
+        public void MatchRotation(Orientation orientation, Direction direction)
+        {
+            Orientation = orientation;
+            DirectionFacing = direction;
+            UpdateRotation();
+        }
+        
         public override void CheckForNeighbors()
         {
             // Up
@@ -69,19 +76,18 @@ namespace Level.Objects {
             if (Physics.Raycast(transform.localPosition, RelativeLeft, out hit, 1))
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
                     if (walkable.DirectionFacing == DirectionFacing)
-                        if (walkable._orientation == _orientation)
+                        if (walkable.Orientation == Orientation)
                             AddNeighbor(walkable);
 
             // Right
             if (Physics.Raycast(transform.localPosition, RelativeRight, out hit, 1))
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
                     if (walkable.DirectionFacing == DirectionFacing)
-                        if (walkable._orientation == _orientation)
+                        if (walkable.Orientation == Orientation)
                             AddNeighbor(walkable);
         }
 
-#if UNITY_EDITOR
-        private void OnValidate()
+        private void UpdateRotation()
         {
             if (DirectionFacing == Direction.Right)
                 transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 0, 0);
@@ -92,10 +98,16 @@ namespace Level.Objects {
             else if (DirectionFacing == Direction.Back)
                 transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, 90, 0);
 
-            if (_orientation == Orientation.Up)
+            if (Orientation == Orientation.Up)
                 transform.localRotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
-            if (_orientation == Orientation.Down)
+            if (Orientation == Orientation.Down)
                 transform.localRotation = Quaternion.Euler(180, transform.localEulerAngles.y, 0);
+        }
+        
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            UpdateRotation();
         }
 
         /*private new void OnDrawGizmos()
