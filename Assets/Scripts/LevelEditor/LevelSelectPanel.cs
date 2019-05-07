@@ -35,8 +35,10 @@ namespace LevelEditor
                 });
                 banner.transform.Find("DeleteButton").GetComponent<Button>().onClick.AddListener(() =>
                 {
+                    if (File.Exists($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png"))
+                        File.Delete($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
+                    
                     AssetDatabase.DeleteAsset(assetPath);
-                    Debug.Log(assetPath);
                     Destroy(banner);
                 });
                 banner.transform.Find("EditButton").GetComponent<Button>().onClick.AddListener(() =>
@@ -54,6 +56,15 @@ namespace LevelEditor
                         Destroy(panel.gameObject);
                     });
                 });
+                var img = banner.transform.Find("LevelPreview").GetComponent<Image>();
+                Texture2D tex = null;
+                if (File.Exists($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png") )
+                {
+                    var fileData = File.ReadAllBytes($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
+                    tex = new Texture2D(2, 2);
+                    tex.LoadImage(fileData);
+                }
+                img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
             }
         }
 
