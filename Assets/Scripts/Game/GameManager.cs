@@ -17,6 +17,9 @@ namespace Game {
 
         public static Action OnLevelLoad;
 
+        /// <summary>
+        /// Stops the current game, unloading the level and destroying entities.
+        /// </summary>
         public void StopPlaying()
         {
             Destroy(_player.gameObject);
@@ -24,6 +27,12 @@ namespace Game {
             _levelController.UnloadLevel();
         }
         
+        /// <summary>
+        /// Loads a specific level.
+        /// </summary>
+        /// <param name="level">
+        /// The level to be loaded.
+        /// </param>
         public void PlayLevel(GameObject level)
         {
             _levelController.LoadLevel(level);

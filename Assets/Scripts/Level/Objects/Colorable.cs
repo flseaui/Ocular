@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace Level.Objects
 {
+    /// <summary>
+    /// Represents the color of an object, can be modified in editor and at runtime.
+    /// </summary>
     [ExecuteInEditMode]
     public class Colorable : MonoBehaviour
     {

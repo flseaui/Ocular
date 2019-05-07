@@ -4,13 +4,22 @@ using UnityEngine;
 
 namespace Level.Objects 
 {
+    /// <summary>
+    /// A button that gets pressed when collided with.
+    /// </summary>
     public class Button : MonoBehaviour
     {
+        /// <summary>
+        /// <c>OnStateChanged</c> is invoked when the buttons state changes.
+        /// </summary>
         public Action OnStateChanged;
 
         private bool _oldState;
 
         private bool _state;
+        /// <summary>
+        /// The state of the button (true - pressed, false - unpressed).
+        /// </summary>
         [ShowInInspector, ReadOnly]
         public bool State
         {

@@ -36,6 +36,7 @@ namespace LevelEditor
                 banner.transform.Find("DeleteButton").GetComponent<Button>().onClick.AddListener(() =>
                 {
                     AssetDatabase.DeleteAsset(assetPath);
+                    Debug.Log(assetPath);
                     Destroy(banner);
                 });
                 banner.transform.Find("EditButton").GetComponent<Button>().onClick.AddListener(() =>
@@ -43,9 +44,9 @@ namespace LevelEditor
                     var panel = Instantiate(_levelNamePanelPrefab, GameObject.Find("Canvas").transform);
                     panel.transform.Find("NameInputField").GetComponent<TMP_InputField>().onEndEdit.AddListener(text =>
                     {
-                        source.GetComponent<LevelInfo>().Name = text;
                         source.name = text;
                         AssetDatabase.RenameAsset(assetPath, text);
+                        source.GetComponent<LevelInfo>().Name = assetPath = AssetDatabase.GetAssetPath(source);
                         banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = text;
                     });
                     panel.transform.Find("CloseButton").GetComponent<Button>().onClick.AddListener(() =>
