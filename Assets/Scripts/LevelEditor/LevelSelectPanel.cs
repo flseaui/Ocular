@@ -14,6 +14,7 @@ namespace LevelEditor
         [SerializeField] private GameObject _content;
 
         [SerializeField] private GameObject _levelBannerPrefab;
+        [SerializeField] private GameObject _levelNamePanelPrefab;
         
         private void Start()
         {
@@ -31,6 +32,26 @@ namespace LevelEditor
                     {
                         PlayerPrefs.SetString("LevelToLoad", assetPath);
                     };
+                });
+                banner.transform.Find("DeleteButton").GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    AssetDatabase.DeleteAsset(assetPath);
+                    Destroy(banner);
+                });
+                banner.transform.Find("EditButton").GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    var panel = Instantiate(_levelNamePanelPrefab, GameObject.Find("Canvas").transform);
+                    panel.transform.Find("NameInputField").GetComponent<TMP_InputField>().onEndEdit.AddListener(text =>
+                    {
+                        source.GetComponent<LevelInfo>().Name = text;
+                        source.name = text;
+                        AssetDatabase.RenameAsset(assetPath, text);
+                        banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = text;
+                    });
+                    panel.transform.Find("CloseButton").GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        Destroy(panel.gameObject);
+                    });
                 });
             }
         }

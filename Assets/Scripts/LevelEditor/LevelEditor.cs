@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
+using Random = System.Random;
 
 namespace LevelEditor
 {
@@ -63,7 +64,7 @@ namespace LevelEditor
             if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
             {
                 var levelName =
-                    $"Assets/Prefabs/Levels/Level{Directory.EnumerateFiles("Assets/Prefabs/Levels/").Count() / 2 + 1}.prefab";
+                    $"Assets/Prefabs/Levels/Level{_level.GetHashCode()}.prefab";
                 _level.transform.parent.GetComponent<LevelInfo>().Name = levelName;
                 PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, levelName);
             }
