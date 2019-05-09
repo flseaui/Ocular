@@ -38,6 +38,8 @@ namespace LevelEditor
                     if (File.Exists($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png"))
                         File.Delete($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
                     
+                    AssetDatabase.Refresh();
+                    
                     AssetDatabase.DeleteAsset(assetPath);
                     Destroy(banner);
                 });
@@ -46,10 +48,15 @@ namespace LevelEditor
                     var panel = Instantiate(_levelNamePanelPrefab, GameObject.Find("Canvas").transform);
                     panel.transform.Find("NameInputField").GetComponent<TMP_InputField>().onEndEdit.AddListener(text =>
                     {
+                        var oldFile = $"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png";
                         source.name = text;
                         AssetDatabase.RenameAsset(assetPath, text);
                         source.GetComponent<LevelInfo>().Name = assetPath = AssetDatabase.GetAssetPath(source);
                         banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = text;
+                        if (File.Exists(oldFile))
+                            File.Move(oldFile, $"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
+                        
+                        AssetDatabase.Refresh();
                     });
                     panel.transform.Find("CloseButton").GetComponent<Button>().onClick.AddListener(() =>
                     {

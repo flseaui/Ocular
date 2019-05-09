@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace LevelEditor
@@ -14,7 +15,7 @@ namespace LevelEditor
         
         public static string ScreenShotName(int width, int height) {
             return
-                $"{Application.dataPath}/Prefabs/Levels/Thumbnails/thumb_{_name}.png";
+                $"Assets/Prefabs/Levels/Thumbnails/thumb_{_name}.png";
         }
  
         public static void TakeHiResShot(string name)
@@ -46,6 +47,7 @@ namespace LevelEditor
                     bw.Flush();
                     bw.Close();
                 }
+                AssetDatabase.Refresh();
                 //System.IO.File.WriteAllBytes(filename, bytes);
                 Debug.Log($"Took screenshot to: {filename}");
                 _takeHiResShot = false;
