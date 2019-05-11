@@ -41,6 +41,7 @@ namespace Level {
             if (_loadedLevel != null)
                 UnloadLevel();
             _loadedLevel = Instantiate(_levels[levelNumber]);
+            _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = levelNumber;
