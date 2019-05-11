@@ -19,7 +19,7 @@ namespace LevelEditor
         private void Start()
         {
             CustomCursor.SetCursor(null);
-            var prefabs = Directory.GetFiles("Assets/Prefabs/Levels", "*.prefab", SearchOption.AllDirectories);
+            var prefabs = Directory.GetFiles("Assets/_Prefabs/Levels", "*.prefab", SearchOption.AllDirectories);
             foreach(var file in prefabs)
             {
                 var assetPath = file.Replace(Application.dataPath, "").Replace('\\', '/');
@@ -35,8 +35,8 @@ namespace LevelEditor
                 });
                 banner.transform.Find("DeleteButton").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    if (File.Exists($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png"))
-                        File.Delete($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
+                    if (File.Exists($"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png"))
+                        File.Delete($"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
                     
                     AssetDatabase.Refresh();
                     
@@ -48,13 +48,13 @@ namespace LevelEditor
                     var panel = Instantiate(_levelNamePanelPrefab, GameObject.Find("Canvas").transform);
                     panel.transform.Find("NameInputField").GetComponent<TMP_InputField>().onEndEdit.AddListener(text =>
                     {
-                        var oldFile = $"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png";
+                        var oldFile = $"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png";
                         source.name = text;
                         AssetDatabase.RenameAsset(assetPath, text);
                         source.GetComponent<LevelInfo>().Name = assetPath = AssetDatabase.GetAssetPath(source);
                         banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = text;
                         if (File.Exists(oldFile))
-                            File.Move(oldFile, $"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
+                            File.Move(oldFile, $"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
                         
                         AssetDatabase.Refresh();
                     });
@@ -65,9 +65,9 @@ namespace LevelEditor
                 });
                 var img = banner.transform.Find("LevelPreview").GetComponent<Image>();
                 Texture2D tex = null;
-                if (File.Exists($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png") )
+                if (File.Exists($"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png") )
                 {
-                    var fileData = File.ReadAllBytes($"Assets/Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
+                    var fileData = File.ReadAllBytes($"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
                     tex = new Texture2D(2, 2);
                     tex.LoadImage(fileData);
                 }

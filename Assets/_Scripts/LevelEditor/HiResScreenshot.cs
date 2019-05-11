@@ -15,7 +15,7 @@ namespace LevelEditor
         
         public static string ScreenShotName(int width, int height) {
             return
-                $"Assets/Prefabs/Levels/Thumbnails/thumb_{_name}.png";
+                $"Assets/_Prefabs/Levels/Thumbnails/thumb_{_name}.png";
         }
  
         public static void TakeHiResShot(string name)
