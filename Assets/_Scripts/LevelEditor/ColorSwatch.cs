@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using Game;
+using Level.Objects;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,12 +9,12 @@ public class ColorSwatch : MonoBehaviour, IPointerDownHandler
 {
     private ColorPalette _palette;
     [SerializeField] private Sprite _selectedSprite;
-    [OnValueChanged(nameof(ColorChanged)), ColorPalette]
-    public Color Color;
+    [OnValueChanged(nameof(ColorChanged))]
+    public OcularState Color;
 
     private void ColorChanged()
     {
-        GetComponent<Image>().color = Color;
+        GetComponent<Image>().color = Colorable.StateToColor(Color);
     }
     
     public void Deselect()

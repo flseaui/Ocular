@@ -2,6 +2,13 @@ using System;
 using UnityEngine;
 
 namespace Game {
+    public enum GlassesType
+    {
+        One,
+        Two,
+        Three
+    }
+    
     
     /// <summary>
     /// A pair of colored glasses and their info.
@@ -15,6 +22,11 @@ namespace Game {
         public Color Color;
 
         /// <summary>
+        /// The type of glasses.
+        /// </summary>
+        public GlassesType GlassesType;
+
+        /// <summary>
         /// Whether or not the glasses are worn.
         /// </summary>
         [NonSerialized] public bool Enabled;
@@ -24,9 +36,10 @@ namespace Game {
         /// </summary>
         [SerializeField] public KeyCode Keybind;
 
-        public Glasses(Color color, KeyCode keybind)
+        public Glasses(Color color, GlassesType type, KeyCode keybind)
         {
             Color = color;
+            GlassesType = type;
             Keybind = keybind;
             Enabled = false;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using Game;
 using JetBrains.Annotations;
 using Level.Objects;
 using Misc;
@@ -67,11 +68,11 @@ namespace LevelEditor
         /// <param name="color">
         /// The color the objects will be colored.
         /// </param>
-        public void SetSelectedObjectsColor(Color color)
+        public void SetSelectedObjectsColor(OcularState color)
         {
             if (_selectedObjects.Count < 1) return;
 
-            _selectedObjects.ForEach(x => x.transform.parent.GetComponent<Colorable>().Color = color);
+            _selectedObjects.ForEach(x => x.transform.parent.GetComponent<Colorable>().OcularState = color);
         }
         
         private void Update()

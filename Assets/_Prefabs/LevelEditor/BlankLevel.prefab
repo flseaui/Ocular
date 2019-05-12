@@ -55,40 +55,27 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   BlockColors:
-  - Color: {r: 1, g: 0, b: 0, a: 1}
-    Requirements:
-    - {r: 1, g: 0, b: 0, a: 1}
-    - {r: 1, g: 0, b: 1, a: 1}
-    - {r: 1, g: 1, b: 0, a: 1}
-  - Color: {r: 0, g: 1, b: 0, a: 1}
-    Requirements:
-    - {r: 0, g: 1, b: 0, a: 1}
-    - {r: 0, g: 1, b: 1, a: 1}
-    - {r: 1, g: 1, b: 0, a: 1}
-  - Color: {r: 0, g: 0, b: 1, a: 1}
-    Requirements:
-    - {r: 0, g: 0, b: 1, a: 1}
-    - {r: 0, g: 1, b: 1, a: 1}
-    - {r: 1, g: 0, b: 1, a: 1}
-  - Color: {r: 0, g: 1, b: 1, a: 1}
-    Requirements:
-    - {r: 0, g: 1, b: 1, a: 1}
-  - Color: {r: 1, g: 0, b: 1, a: 1}
-    Requirements:
-    - {r: 1, g: 0, b: 1, a: 1}
-  - Color: {r: 1, g: 1, b: 0, a: 1}
-    Requirements:
-    - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0.551, b: 0, a: 1}
+  - {r: 1, g: 0, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
   ColorPreset: 0
   LevelGlasses:
   - Color: {r: 1, g: 0, b: 0, a: 1}
+    GlassesType: 0
     Keybind: 113
-  - Color: {r: 0, g: 1, b: 0, a: 1}
+  - Color: {r: 1, g: 1, b: 0, a: 1}
+    GlassesType: 1
     Keybind: 119
   - Color: {r: 0, g: 0, b: 1, a: 1}
+    GlassesType: 2
     Keybind: 101
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 2468609010130945173}
+  Name: 
 --- !u!114 &7540469956283409044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,12 +265,22 @@ PrefabInstance:
     - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: _color.r
-      value: 1
+      value: -2.58922e-20
       objectReference: {fileID: 0}
     - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: _color.b
-      value: 1
+      value: 106
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: _color.g
+      value: 8.07e-43
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: _color.a
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}

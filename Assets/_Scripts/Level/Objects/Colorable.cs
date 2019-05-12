@@ -23,25 +23,26 @@ namespace Level.Objects
         }
         
         [SerializeField, HideInInspector] private Color _color;
+        [SerializeField, HideInInspector] private OcularState _ocularState;
         [SerializeField] private Material _blockMat;
         [SerializeField] private Material _outlineMat;
         
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
         private GameObject[] _models;
-        private LevelInfo _levelInfo;
-        private Color _initialColor;
+        private static LevelInfo _levelInfo;
+        private OcularState _initialState;
         private BlockState _blockState;
 
         private List<IController> _controllers;
-        
-        [ColorPalette("RGB"), ShowInInspector]
-        public Color Color
+
+        public OcularState OcularState
         {
-            get => _color;
+            get => _ocularState;
             set
             {
-                _color = value == Color.clear ? _initialColor : value;
+                _ocularState = value;
+                _color = StateToColor(value) == Color.clear ? StateToColor(_initialState) : StateToColor(value);
 
                 foreach (var r in _renderers)
                 {
@@ -82,7 +83,7 @@ namespace Level.Objects
 
         public void Initialize()
         {
-            if (Color == Color.white) return;
+            if (OcularState == OcularState.Zero) return;
             State = BlockState.Invisible;
             if (transform.HasComponent<Walkable>(out var walkable))
             {
@@ -105,30 +106,30 @@ namespace Level.Objects
         /// A tuple containing the color and state of a colorable.
         /// </returns>
         // TODO Only calculate once per color then update all colorables, continue using custom logic for controlled blocks
-        private (Color color, BlockState state) CalculateVisibility()
+        private (OcularState color, BlockState state) CalculateVisibility()
         {
-            if (Color == Color.white) 
-                return (Color.white, BlockState.Visible);
+            if (OcularState == OcularState.Zero) 
+                return (OcularState.Zero, BlockState.Visible);
 
-            var visible = IsColorVisible(Color);
+            var visible = IsColorVisible(OcularState);
 
             // ATM This code assumes controller is button bc thats the only implemented controller
             // TODO Come up with better controller solution
 
             if (_controllers.All(c => ((MonoBehaviour) c).GetComponent<Colorable>().State != BlockState.Visible))
-                return visible ? (Color, BlockState.Visible) : (Color, BlockState.Invisible);
+                return visible ? (_state: OcularState, BlockState.Visible) : (_state: OcularState, BlockState.Invisible);
             
             if (visible)
-                return  (Color, BlockState.Visible);
+                return  (OcularState, BlockState.Visible);
 
-            if (Color == _initialColor)
+            if (OcularState == _initialState)
             {
                 if (IsColorVisible(((ButtonWalkable) _controllers[0]).Color))
                     return (((ButtonWalkable) _controllers[0]).Color, BlockState.Outlined);
-                return (Color, BlockState.Invisible);
+                return (OcularState, BlockState.Invisible);
             }
 
-            return (Color, BlockState.Invisible);
+            return (OcularState, BlockState.Invisible);
         }
         
         private void InternalOnGlassesToggled()
@@ -142,12 +143,12 @@ namespace Level.Objects
                 foreach (var r in _renderers)
                 {
                     r.GetPropertyBlock(_propBlock);
-                    _propBlock.SetColor("_Color", color);
+                    _propBlock.SetColor("_Color", StateToColor(color));
                     r.SetPropertyBlock(_propBlock);
                 }
             }
             else
-                Color = color;
+                OcularState = color;
 
             if (transform.HasComponent<Walkable>(out var walkable))
             {
@@ -170,10 +171,37 @@ namespace Level.Objects
             }
         }
 
-        private bool IsColorVisible(Color color)
+        public static Color StateToColor(OcularState ocularState)
         {
-            return _levelInfo.BlockColors.FirstOrDefault(x => x.Color == color)?.Requirements
-                        .Contains(GlassesController.CurrentGlassesColor) ?? false;
+            if (ocularState == OcularState.Null)
+                return Color.clear;
+            
+            return _levelInfo.BlockColors[(int) ocularState];
+        }
+        
+        public static bool IsColorVisible(OcularState ocularState)
+        {
+            var c = GlassesController.CurrentOcularState;
+            switch (ocularState)
+            {
+                case OcularState.Zero:
+                    return true;
+                case OcularState.One:
+                    return c == OcularState.One || c == OcularState.Two || c == OcularState.Five;
+                case OcularState.Two:
+                    return c == OcularState.Two;
+                case OcularState.Three:
+                    return c == OcularState.Three || c == OcularState.Five;
+                case OcularState.Four:
+                    return c == OcularState.Four;
+                case OcularState.Five:
+                    return c == OcularState.Five;
+                case OcularState.Six:
+                    return c == OcularState.Two || c == OcularState.Six;
+                default:
+                    return false;
+            }
+
         }
         
         private void SetModelsState(bool state)
@@ -184,7 +212,7 @@ namespace Level.Objects
         
         private void Start()
         {
-            _initialColor = Color;
+            _initialState = OcularState;
         }
         
         private void OnEnable()
@@ -198,7 +226,7 @@ namespace Level.Objects
             if (Application.isPlaying)
                 _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
             _propBlock = new MaterialPropertyBlock();
-            Color = Color;
+            OcularState = OcularState;
             SetModelsState(true);
         }
 

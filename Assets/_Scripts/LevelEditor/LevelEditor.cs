@@ -125,13 +125,13 @@ namespace LevelEditor
                 {
                     _limitedObjects.Add(@object);
                     if (@object.transform.HasComponent<Colorable>(out var colorable))
-                        colorable.Color = _colorPalette.SelectedColor;
+                        colorable.OcularState = _colorPalette.SelectedColor;
                 }
             }
             else
             {
                 if (@object.transform.HasComponent<Colorable>(out var colorable))
-                    colorable.Color = _colorPalette.SelectedColor;
+                    colorable.OcularState = _colorPalette.SelectedColor;
             }
         }
     }

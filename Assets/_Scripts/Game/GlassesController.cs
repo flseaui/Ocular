@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Level;
@@ -7,6 +8,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game {
+    public enum OcularState
+    {
+        Zero,   // white
+        One,    // red
+        Two,    // yellow 
+        Three,  // blue
+        Four,   // orange
+        Five,   // magenta
+        Six,     // green
+        
+        Null
+    }
+    
     /// <summary>
     /// <c>GlassesController</c> keeps track of and manipulates all current glasses.
     /// </summary>
@@ -15,7 +29,7 @@ namespace Game {
         /// <summary>
         /// The combined color of all active glasses.
         /// </summary>
-        public static Color CurrentGlassesColor;
+        public static OcularState CurrentOcularState;
         /// <summary>
         /// <c>OnGlassesToggled</c> is invoked when glasses are removed or put on.
         /// </summary>
@@ -30,6 +44,17 @@ namespace Game {
         [SerializeField] private GameObject _colorIndicator;
         [SerializeField] private GameObject _glassesContainer;
 
+        private readonly IDictionary<string, OcularState> _glassesMap = new Dictionary<string, OcularState>
+        {
+            {"", OcularState.Zero},
+            {"1", OcularState.One},
+            {"2", OcularState.Two},
+            {"3", OcularState.Three},
+            {"12", OcularState.Four},
+            {"13", OcularState.Five},
+            {"23", OcularState.Six}
+        };
+        
         private MapController _mapController;
         private MapController MapController
         {
@@ -42,27 +67,21 @@ namespace Game {
         }
 
         /// <summary>
-        /// The combined color of all active glasses.
+        /// Calculate the current ocular state based on the enabled glasses.
         /// </summary>
-        private Color CombinedColor
+        private void CalcOcularState()
         {
-            get
-            {
-                var temp = Color.black;
-                ActiveGlasses.Where(x => x.Enabled).ForEach(x =>
-                {
-                    temp.r += x.Color.r;
-                    temp.g += x.Color.g;
-                    temp.b += x.Color.b;
-                });
-                CurrentGlassesColor = temp;
-                return temp;
-            }
+            var glasses = ActiveGlasses.Where(x => x.Enabled).Select(x => x.GlassesType).ToArray();
+            var str = "";
+            glasses.ForEach(x => str += (int) x + 1);
+            Debug.Log(str);
+            CurrentOcularState = _glassesMap[str];
         }
 
         private void Awake()
         {
             _colorIndicators = new Dictionary<Color, Image>();
+            
         }
 
         private void Update()
@@ -148,8 +167,7 @@ namespace Game {
                         : glasses.Color;
 
                     ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
-                    // TODO CHANGE THIS BAD
-                    var dumb = CombinedColor;
+                    CalcOcularState();
                     MapController.UpdateColorables();
                     OnGlassesToggled?.Invoke();
                 }

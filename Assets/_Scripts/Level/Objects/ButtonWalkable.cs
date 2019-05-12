@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using cakeslice;
+using Game;
 using Misc;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace Level.Objects
     {
         [SerializeField] private Button _buttonModel;
 
-        [SerializeField, ColorPalette("RGB")] public Color Color;
+        [SerializeField] public OcularState Color;
 
         private Vector3 _initialPosition;
 
@@ -50,7 +52,7 @@ namespace Level.Objects
                     _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
                     TargetBlocks.ForEach(t =>
                     {
-                        t.Color = Color;
+                        t.OcularState = Color;
                         t.UpdateState();
                     });
                 }
@@ -60,7 +62,7 @@ namespace Level.Objects
                     _buttonModel.transform.localPosition = _initialPosition;
                     TargetBlocks.ForEach(t =>
                     {
-                        t.Color = Color.clear;
+                        t.OcularState = OcularState.Null;
                         t.UpdateState();
                     });
                 }

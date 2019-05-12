@@ -4,7 +4,8 @@ using Game;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Level {
+namespace Level
+{
     public class LevelInfo : SerializedMonoBehaviour
     {
         public enum ColorSet
@@ -13,7 +14,8 @@ namespace Level {
             Custom
         }
 
-        public List<ColorData> BlockColors;
+        [SerializeField]
+        public List<Color> BlockColors;
 
         [OnValueChanged(nameof(ApplyColorPreset))]
         public ColorSet ColorPreset;
@@ -26,59 +28,50 @@ namespace Level {
         public Transform PlayerSpawnPoint;
 
         public string Name;
-        
+
         private void ApplyColorPreset()
         {
             if (ColorPreset == ColorSet.RGB)
             {
-                LevelGlasses = new List<Glasses>
-                {
-                    new Glasses(Color.red, KeyCode.Q),
-                    new Glasses(Color.green, KeyCode.W),
-                    new Glasses(Color.blue, KeyCode.E)
-                };
 
                 var yellow = new Color(1, 1, 0, 1);
-                BlockColors = new List<ColorData>
+                var orange = new Color(1, .551f, 0);
+
+                LevelGlasses = new List<Glasses>
                 {
-                    new ColorData(Color.red, new List<Color> {Color.red, Color.magenta, yellow}),
-                    new ColorData(Color.green, new List<Color> {Color.green, Color.cyan, yellow}),
-                    new ColorData(Color.blue, new List<Color> {Color.blue, Color.cyan, Color.magenta}),
-                    new ColorData(Color.cyan, new List<Color> {Color.cyan}),
-                    new ColorData(Color.magenta, new List<Color> {Color.magenta}),
-                    new ColorData(yellow, new List<Color> {yellow})
+                    new Glasses(Color.red, GlassesType.One,KeyCode.Q),
+                    new Glasses(yellow, GlassesType.Two, KeyCode.W),
+                    new Glasses(Color.blue, GlassesType.Three, KeyCode.E)
                 };
-            }
-        }
 
-        /*private void CalcBlockColors()
-    {
-        BlockColors.Clear();
-        foreach (var glassesX in LevelGlasses)
-        {
-            foreach (var glassesY in LevelGlasses)
-            {
-                var color = new Color(
-                    (glassesX.Color.r + glassesY.Color.r) / 2,
-                    (glassesX.Color.g + glassesY.Color.g) / 2,
-                    (glassesX.Color.b + glassesY.Color.b) / 2);
-                if (!BlockColors.Contains(color))
-                    BlockColors.Add(color);
-            }
-        }
-    }    */
-
-        [Serializable]
-        public class ColorData
-        {
-            public Color Color;
-            public List<Color> Requirements;
-
-            public ColorData(Color color, List<Color> requirements)
-            {
-                Color = color;
-                Requirements = requirements;
+                BlockColors = new List<Color>
+                {
+                    Color.white,
+                    Color.red,
+                    yellow,
+                    Color.blue,
+                    orange,
+                    Color.magenta,
+                    Color.green
+                };
             }
         }
     }
 }
+/*private void CalcBlockColors()
+{
+BlockColors.Clear();
+foreach (var glassesX in LevelGlasses)
+{
+    foreach (var glassesY in LevelGlasses)
+    {
+        var color = new Color(
+            (glassesX.Color.r + glassesY.Color.r) / 2,
+            (glassesX.Color.g + glassesY.Color.g) / 2,
+            (glassesX.Color.b + glassesY.Color.b) / 2);
+        if (!BlockColors.Contains(color))
+            BlockColors.Add(color);
+    }
+}
+}    */
+    
