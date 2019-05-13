@@ -74,7 +74,6 @@ namespace Game {
             var glasses = ActiveGlasses.Where(x => x.Enabled).Select(x => x.GlassesType).ToArray();
             var str = "";
             glasses.ForEach(x => str += (int) x + 1);
-            Debug.Log(str);
             CurrentOcularState = _glassesMap[str];
         }
 
