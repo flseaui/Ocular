@@ -25,11 +25,16 @@ namespace Player {
         {
             _spawnPos = transform.position;
         }
+
+        public void Death()
+        {
+            transform.position = _spawnPos;
+        }
         
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Harmful"))
-                transform.position = _spawnPos;
+                Death();
         }
     }
 }

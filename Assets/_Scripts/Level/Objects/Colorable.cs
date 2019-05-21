@@ -21,12 +21,12 @@ namespace Level.Objects
             Invisible,
             Outlined
         }
-        
+
         [SerializeField, HideInInspector] private Color _color;
         [SerializeField, HideInInspector] private OcularState _ocularState;
         [SerializeField] private Material _blockMat;
         [SerializeField] private Material _outlineMat;
-        
+
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
         private GameObject[] _models;
@@ -41,8 +41,8 @@ namespace Level.Objects
             get => _ocularState;
             set
             {
-                _ocularState = value;
-                _color = StateToColor(value) == Color.clear ? StateToColor(_initialState) : StateToColor(value);
+                _ocularState = _ocularState == OcularState.Null ? _initialState : value;
+                _color = InternalStateToColor(value);
 
                 foreach (var r in _renderers)
                 {
@@ -66,6 +66,9 @@ namespace Level.Objects
                         SetModelsState(false);
                         break;
                     case BlockState.Visible:
+                        //todo alert player of collision/death
+
+
                         _renderers.ForEach(r => r.material = _blockMat);
                         SetModelsState(true);
                         break;
@@ -76,7 +79,7 @@ namespace Level.Objects
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
                 _blockState = value;
             }
         }
@@ -98,7 +101,7 @@ namespace Level.Objects
         }
 
         public void UpdateState() => InternalOnGlassesToggled();
-        
+
         /// <summary>
         /// Calculates the color and visibility of the <c>Colorable</c> based on its properties and environment.
         /// </summary>
@@ -108,7 +111,7 @@ namespace Level.Objects
         // TODO Only calculate once per color then update all colorables, continue using custom logic for controlled blocks
         private (OcularState color, BlockState state) CalculateVisibility()
         {
-            if (OcularState == OcularState.Zero) 
+            if (OcularState == OcularState.Zero)
                 return (OcularState.Zero, BlockState.Visible);
 
             var visible = IsColorVisible(OcularState);
@@ -117,10 +120,12 @@ namespace Level.Objects
             // TODO Come up with better controller solution
 
             if (_controllers.All(c => ((MonoBehaviour) c).GetComponent<Colorable>().State != BlockState.Visible))
-                return visible ? (_state: OcularState, BlockState.Visible) : (_state: OcularState, BlockState.Invisible);
-            
+                return visible
+                    ? (_state: OcularState, BlockState.Visible)
+                    : (_state: OcularState, BlockState.Invisible);
+
             if (visible)
-                return  (OcularState, BlockState.Visible);
+                return (OcularState, BlockState.Visible);
 
             if (OcularState == _initialState)
             {
@@ -131,11 +136,11 @@ namespace Level.Objects
 
             return (OcularState, BlockState.Invisible);
         }
-        
+
         private void InternalOnGlassesToggled()
-        {            
+        {
             var (color, state) = CalculateVisibility();
-    
+
             State = state;
             if (state == BlockState.Outlined)
             {
@@ -153,9 +158,9 @@ namespace Level.Objects
             if (transform.HasComponent<Walkable>(out var walkable))
             {
                 var visible = _blockState == BlockState.Visible;
-                
+
                 //if custom disable behavior gets overly complex, move into child classes
-                switch (walkable) 
+                switch (walkable)
                 {
                     case ButtonWalkable button:
                         if (!visible)
@@ -165,7 +170,7 @@ namespace Level.Objects
 
                         break;
                 }
-                    
+
                 walkable.CheckBelow(!visible);
                 walkable.Enabled = visible;
             }
@@ -175,10 +180,10 @@ namespace Level.Objects
         {
             if (ocularState == OcularState.Null)
                 return Color.clear;
-            
+
             return _levelInfo.BlockColors[(int) ocularState];
         }
-        
+
         public static bool IsColorVisible(OcularState ocularState)
         {
             var c = GlassesController.CurrentOcularState;
@@ -201,9 +206,16 @@ namespace Level.Objects
                 default:
                     return false;
             }
-
         }
-        
+    
+        private Color InternalStateToColor(OcularState ocularState)
+        {
+            if (ocularState == OcularState.Null)
+                return InternalStateToColor(_initialState);
+                
+            return _levelInfo.BlockColors[(int) ocularState];
+        }
+
         private void SetModelsState(bool state)
         {
             foreach (var model in _models)

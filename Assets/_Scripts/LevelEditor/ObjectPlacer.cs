@@ -249,13 +249,13 @@ namespace LevelEditor
                     
                     if (validObject)
                     {
-                        if (left)
+                        if (left && !isUI)
                         {
                             var button = _customizingObject.GetComponent<ButtonWalkable>();
                             var outline = hObj.GetComponent<Outline>();
                             
                             if (outline.enabled)
-                                button.TargetBlocks.Remove(outline.gameObject.GetComponent<Colorable>());
+                                button.TargetBlocks.Remove(hObj.GetComponentInParent<Colorable>());
                             else
                                 button.TargetBlocks.Add(hObj.GetComponentInParent<Colorable>());
                             

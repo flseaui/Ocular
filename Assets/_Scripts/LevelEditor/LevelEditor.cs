@@ -109,6 +109,10 @@ namespace LevelEditor
             {
                 slope.MatchRotation(orientation, direction);
             }
+            else if (@object.CompareTag("PlayerSpawn"))
+            {
+                _level.GetComponentInParent<LevelController>().CurrentLevelInfo.PlayerSpawnPoint = @object.transform;
+            }
             
             if (@object.transform.HasComponent<MaxCount>(out var max))
             {
