@@ -120,40 +120,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!84 &25262868
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 3
-  m_Width: 1920
-  m_Height: 1080
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &59732482
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +483,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204697663}
   m_CullTransparentMesh: 0
+--- !u!84 &286863508
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  serializedVersion: 3
+  m_Width: 1920
+  m_Height: 1080
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &307590795
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,7 +701,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 447009932}
         m_MethodName: TestLevel
         m_Mode: 1
         m_Arguments:
@@ -805,6 +805,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8b6f16feab9477ca04ecf7e4cee7535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameManager: {fileID: 1491914794}
+  _glassesContainer: {fileID: 972098831}
 --- !u!1 &531571111
 GameObject:
   m_ObjectHideFlags: 0
@@ -1653,7 +1655,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 0
   m_RenderingPath: 1
-  m_TargetTexture: {fileID: 1830103322}
+  m_TargetTexture: {fileID: 1829323707}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -1916,7 +1918,7 @@ MonoBehaviour:
   ActiveGlasses: []
   _colorIndicator: {fileID: 2830387764642596028, guid: 0d46181e475f6c440bd4a2c61f3bf9f6,
     type: 3}
-  _glassesContainer: {fileID: 0}
+  _glassesContainer: {fileID: 972098831}
 --- !u!114 &1491914793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1929,10 +1931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1fa5bad09629b7489197164e596c48b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levels:
-  - {fileID: 117874224982239615, guid: f1cff18b3dcab36459348a732b889dac, type: 3}
-  - {fileID: 2306753193450845500, guid: e6069c2dac82a7e449abd8cabdb4e597, type: 3}
-  - {fileID: 2306753193450845500, guid: 4b1bfa16fdb6b894091b8f0b9b5640d2, type: 3}
+  _levels: []
   CurrentLevelInfo: {fileID: 0}
   StartingLevel: {fileID: 117874224982239615, guid: f1cff18b3dcab36459348a732b889dac,
     type: 3}
@@ -2085,7 +2084,7 @@ Transform:
   m_Father: {fileID: 1189483686}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1830103322
+--- !u!84 &1829323707
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2197,8 +2196,8 @@ MonoBehaviour:
   sourceCamera: {fileID: 1861463425}
   outlineCamera: {fileID: 1054520153}
   outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 1830103322}
-  extraRenderTexture: {fileID: 25262868}
+  renderTexture: {fileID: 1829323707}
+  extraRenderTexture: {fileID: 286863508}
 --- !u!114 &1861463423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2344,7 +2343,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 447009932}
         m_MethodName: SaveLevel
         m_Mode: 1
         m_Arguments:

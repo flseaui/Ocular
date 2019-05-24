@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -12,12 +12,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Outline = cakeslice.Outline;
 
-namespace LevelEditor.New
+namespace LevelEditor
 {
     /// <summary>
     /// Used to place and interact with objects in the level editor, works on a state based system.
     /// </summary>
-    public class NewObjectPlacer : MonoBehaviour
+    public class ObjectPlacer : MonoBehaviour
     {
         /// <summary>
         /// Placing mode of the Level Editor placer.
@@ -48,7 +48,7 @@ namespace LevelEditor.New
 
         private GameObject _customizingObject;
         
-        private NewLevelEditor _levelEditor;
+        private OldLevelEditor _levelEditor;
         private GraphicRaycaster _graphicRaycaster;
         private PointerEventData _pointer;
         
@@ -92,18 +92,16 @@ namespace LevelEditor.New
             var isUI = hUI != null;
             if (validObject)
             {
-                var side = Vector3.zero;
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out var hit, Mathf.Infinity, LayerMask.GetMask("EditorTrigger")))
-                {
-                    var center = hit.collider.bounds.center;
-                    side.x = Math.Abs(hit.point.x - center.x) >= .5 ? hit.point.x > center.x ? 1 : -1 : 0;
-                    side.y = Math.Abs(hit.point.y - center.y) >= .5 ? hit.point.y > center.y ? 1 : -1 : 0;
-                    side.z = Math.Abs(hit.point.z - center.z) >= .5 ? hit.point.z > center.z ? 1 : -1 : 0;
-                }
-
-                transform.position = hObj.transform.position + side;
+                var pos = hObj.transform.position + normal;
+                transform.position = new Vector3
+                (
+                    Mathf.Floor(pos.x / 1) * 1,
+                    Mathf.Floor(pos.y / 1) * 1,
+                    Mathf.Floor(pos.z / 1) * 1
+                );
                 
+                //transform.position = hObj.transform.position + normal;
+
                 if      (_direction == Direction.Right   ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 0  , 0);
                 else if (_direction == Direction.Left    ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 180, 0);
                 else if (_direction == Direction.Forward ) transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, 270, 0);
@@ -158,8 +156,7 @@ namespace LevelEditor.New
                         
                         if (left)
                         {
-                            var gridPosition = new Vector3Int((int) transform.position.x, (int) transform.position.y, (int) transform.position.z);
-                            _levelEditor.PlaceElement(gridPosition, _orientation, _direction);
+                            _levelEditor.PlaceObject(transform.position, _orientation, _direction);
                         }
 
                         if (right)
@@ -310,7 +307,7 @@ namespace LevelEditor.New
         private GameObject GetHighlightedObject(out Vector3 normal)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit,Mathf.Infinity, LayerMask.GetMask("Model")))
+            if (Physics.Raycast(ray, out var hit))
             {
                 normal = hit.normal;
                 return hit.collider.gameObject;
@@ -347,7 +344,7 @@ namespace LevelEditor.New
             _tempOutlines = new List<Outline>();
             
             _meshes = transform.GetChild(0).gameObject;
-            _levelEditor = GameObject.Find("LevelEditor").GetComponent<NewLevelEditor>();
+            _levelEditor = GameObject.Find("LevelEditor").GetComponent<OldLevelEditor>();
             var canvas = GameObject.Find("Canvas");
             _pointer = new PointerEventData(canvas.GetComponent<EventSystem>());
             _graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
@@ -393,10 +390,7 @@ namespace LevelEditor.New
             if (@object.transform.GetComponent<MeshFilter>() != null)
                 CreateMesh(@object);
             else
-                @object.transform.ForEachChild(x =>
-                {
-                    if (!x.CompareTag("EditorTrigger")) CreateMesh(x.gameObject);
-                });
+                @object.transform.ForEachChild(x => CreateMesh(x.gameObject));
         }
     }
-}
+}*/
