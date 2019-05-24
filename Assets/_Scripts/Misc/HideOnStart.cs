@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Misc {
     public class HideOnStart : MonoBehaviour
@@ -15,6 +16,8 @@ namespace Misc {
         
         public void Start()
         {
+            if (SceneManager.GetActiveScene().name == "NewEditor") return;
+            
             switch (_mode)
             {
                 case Mode.HideMesh:
