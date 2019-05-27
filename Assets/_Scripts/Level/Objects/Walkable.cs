@@ -11,6 +11,7 @@ namespace Level.Objects {
     {
         public Node Node;
 
+        [ShowInInspector]
         public bool Enabled
         {
             get => Node != null && Node.Enabled;

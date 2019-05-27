@@ -7,7 +7,8 @@ namespace Player
     {
         private void OnTriggerEnter(Collider other)
         {
-            transform.parent.GetComponent<Player>().Death();
+            if (other.CompareTag("Harmful"))
+                transform.parent.GetComponent<Player>().Death();
         }
     }
 }

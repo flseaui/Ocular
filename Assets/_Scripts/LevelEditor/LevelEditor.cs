@@ -125,7 +125,7 @@ namespace LevelEditor
             if (element.transform.HasComponent<SlopeWalkable>(out var slope))
                 slope.MatchRotation(orientation, direction);
             else if (element.CompareTag("PlayerSpawn"))
-                _level.GetComponentInParent<LevelInfo>().PlayerSpawnPoint = element.transform;
+                _level.GetComponentInParent<LevelInfo>().PlayerSpawnPoint = element.transform.Find("Model").transform;
 
             if (element.transform.HasComponent<MaxCount>(out var max))
             {

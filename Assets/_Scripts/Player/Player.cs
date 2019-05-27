@@ -1,11 +1,12 @@
 ﻿using Game;
+using Level;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Player {
+namespace Player
+{
     public class Player : MonoBehaviour
     {
-        private Vector3 _spawnPos;
-
         private void Awake()
         {
             GameManager.OnLevelLoad += CommitDie;
@@ -20,21 +21,11 @@ namespace Player {
         {
             Destroy(gameObject);
         }
-        
-        private void Start()
-        {
-            _spawnPos = transform.position;
-        }
 
         public void Death()
         {
-            transform.position = _spawnPos;
-        }
-        
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Harmful"))
-                Death();
+            transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
+                .PlayerSpawnPoint.position;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Game {
             _levelController.LoadLevel(level);
             _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
             _indicator = Instantiate(_indicatorPrefab);
-            _player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
+            _player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position ,
                 Quaternion.identity);
         }
         

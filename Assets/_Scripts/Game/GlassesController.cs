@@ -83,6 +83,12 @@ namespace Game {
             
         }
 
+        private IEnumerator Start()
+        {
+            yield return new WaitForFixedUpdate();
+            ToggleGlasses(ActiveGlasses[0]);
+        }
+
         private void Update()
         {
             foreach (var glasses in ActiveGlasses)
