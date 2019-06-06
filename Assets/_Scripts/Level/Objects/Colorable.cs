@@ -68,7 +68,7 @@ namespace Level.Objects
                         break;
                     case BlockState.Visible:
                         //todo alert player of collision/death
-
+                        GameObject.FindWithTag("Player").GetComponent<Player.Player>().CheckForDeath(this);
 
                         _renderers.ForEach(r => r.material = _blockMat);
                         SetModelsState(true);
