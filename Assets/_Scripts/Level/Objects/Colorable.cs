@@ -41,9 +41,10 @@ namespace Level.Objects
             get => _ocularState;
             set
             {
-                _ocularState = _ocularState == OcularState.Null ? _initialState : value;
-                _color = InternalStateToColor(value);
-
+                var reset = value == OcularState.Null;
+                _ocularState = reset ? _initialState : value;
+                _color = InternalStateToColor(reset ? _initialState : value);
+                
                 foreach (var r in _renderers)
                 {
                     r.GetPropertyBlock(_propBlock);
