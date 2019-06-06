@@ -187,23 +187,23 @@ namespace Level.Objects
 
         public static bool IsColorVisible(OcularState ocularState)
         {
-            var c = GlassesController.CurrentOcularState;
-            switch (ocularState)
+            var c = ocularState;
+            switch (GlassesController.CurrentOcularState)
             {
-                case OcularState.Zero:
+                case OcularState.Zero: // White
                     return true;
-                case OcularState.One:
-                    return c == OcularState.One || c == OcularState.Two || c == OcularState.Five;
-                case OcularState.Two:
+                case OcularState.One: // Red
+                    return c == OcularState.One;
+                case OcularState.Two: // Yellow
                     return c == OcularState.Two;
-                case OcularState.Three:
-                    return c == OcularState.Three || c == OcularState.Five;
-                case OcularState.Four:
-                    return c == OcularState.Four;
-                case OcularState.Five:
-                    return c == OcularState.Five;
-                case OcularState.Six:
-                    return c == OcularState.Two || c == OcularState.Six;
+                case OcularState.Three: // Blue
+                    return c == OcularState.Three;
+                case OcularState.Four: // Orange
+                    return c == OcularState.Four || c == OcularState.One || c == OcularState.Two;
+                case OcularState.Five: // Magenta
+                    return c == OcularState.Five || c == OcularState.One || c == OcularState.Three;
+                case OcularState.Six: // Green
+                    return c == OcularState.Six || c == OcularState.Two || c == OcularState.Three;
                 default:
                     return false;
             }
