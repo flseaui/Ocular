@@ -40,18 +40,18 @@ namespace Level.Objects
         {
             if (other.transform.CompareTag("Player"))
             {
-                if (State) return;
-                State = true;
+                /*if (State) return;*/
+                State = !State;
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        /*private void OnTriggerExit(Collider other)
         {
             if (other.transform.CompareTag("Player"))
             {
                 if (!State) return;
                 State = false;
             }
-        }
+        }*/
     }
 }

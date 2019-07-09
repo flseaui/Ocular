@@ -7,7 +7,7 @@ namespace LevelEditor
     {
         public void CreateLevel()
         {
-            SceneManager.LoadScene("LevelEditor");
+            SceneManager.LoadScene("NewEditor");
         }
     }
 }

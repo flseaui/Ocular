@@ -1,43 +1,49 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Game;
 using Level;
 using Level.Objects;
 using Misc;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
-using Random = System.Random;
 
 namespace LevelEditor
 {
     public class LevelEditor : MonoBehaviour
     {
+        public GameObject[,,] _currentLevel;
+
         private ColorPalette _colorPalette;
         private ObjectDrawer _objectDrawer;
         private GameObject _currentObject;
         private GameObject _level;
 
+        
         [SerializeField] GameManager _gameManager;
         [SerializeField] GameObject _glassesContainer;
         
+        [ShowInInspector]
         private List<GameObject> _limitedObjects;
         private static readonly int OnScreen = Animator.StringToHash("OnScreen");
 
         public static Action<bool> OnLevelPlayToggle;
         
+        private readonly Vector3Int _levelDimensions = new Vector3Int(100, 100, 100);
+        
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
+            _currentLevel = new GameObject[_levelDimensions.x, _levelDimensions.y, _levelDimensions.z];
             _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
             _objectDrawer = GameObject.Find("ObjectDrawer").GetComponent<ObjectDrawer>();
             ObjectDrawer.OnObjectSelectionChanged += @object => { _currentObject = @object; };
             
         }
-
+        
         private void Start()
         {
             var level = PlayerPrefs.GetString("LevelToLoad");
@@ -51,11 +57,16 @@ namespace LevelEditor
                 LoadLevel(levelGameObject);
             }
         }
-
+        
         public void LoadLevel(GameObject level)
         {
             _level = Instantiate(level).transform.Find("MainFloor").gameObject;
             GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
+            _level.transform.ForEachChild(x =>
+            {
+                if (x.HasComponent<MaxCount>())
+                    _limitedObjects.Add(x.gameObject);
+            });
         }
 
         public void NewLevel()
@@ -65,6 +76,11 @@ namespace LevelEditor
                 _level = Instantiate(handle.Result).transform.Find("MainFloor").gameObject;
                 _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
                 GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
+                _level.transform.ForEachChild(x =>
+                {
+                    if (x.HasComponent<MaxCount>())
+                        _limitedObjects.Add(x.gameObject);
+                });
             };
         }
 
@@ -102,41 +118,40 @@ namespace LevelEditor
             SceneManager.LoadSceneAsync("EditorMenu");
         }
         
-        public void PlaceObject(Vector3 position, Orientation orientation, Direction direction)
+        public void PlaceElement(Vector3Int position, Orientation orientation, Direction direction)
         {
-            var @object = Instantiate(_currentObject, position, Quaternion.identity, _level.transform);
-            if (@object.transform.HasComponent<SlopeWalkable>(out var slope))
-            {
-                slope.MatchRotation(orientation, direction);
-            }
-            else if (@object.CompareTag("PlayerSpawn"))
-            {
-                _level.GetComponentInParent<LevelController>().CurrentLevelInfo.PlayerSpawnPoint = @object.transform;
-            }
+            var element = Instantiate(_currentObject, position, Quaternion.identity, _level.transform);
             
-            if (@object.transform.HasComponent<MaxCount>(out var max))
+            if (element.transform.HasComponent<SlopeWalkable>(out var slope))
+                slope.MatchRotation(orientation, direction);
+            else if (element.CompareTag("PlayerSpawn"))
+                _level.GetComponentInParent<LevelInfo>().PlayerSpawnPoint = element.transform.Find("Model").transform;
+
+            if (element.transform.HasComponent<MaxCount>(out var max))
             {
-                var objects = _limitedObjects.Count > 0
-                    ? _limitedObjects.Where(x =>
-                        x.name == @object.name || x.name.Substring(0, x.name.IndexOf("(")) == @object.name)
-                    : null;
-                if (objects != null && objects.Count() >= max.Max)
+                var theseObjects = _limitedObjects.Where(x => x.name == element.name || x.name.Contains(element.name)).ToArray();
+       
+                if (theseObjects.Length >= max.Max)
                 {
-                    _limitedObjects.Remove(@object);
-                    Destroy(@object);
+                    var obj = theseObjects.First();
+                    _limitedObjects.Remove(obj);
+                    Destroy(obj);
                 }
-                else
-                {
-                    _limitedObjects.Add(@object);
-                    if (@object.transform.HasComponent<Colorable>(out var colorable))
-                        colorable.OcularState = _colorPalette.SelectedColor;
-                }
+                
+                _limitedObjects.Add(element);
             }
-            else
-            {
-                if (@object.transform.HasComponent<Colorable>(out var colorable))
-                    colorable.OcularState = _colorPalette.SelectedColor;
-            }
+
+            if (element.transform.HasComponent<Colorable>(out var colorable))
+                colorable.OcularState = _colorPalette.SelectedColor;
+
+            var pos = new Vector3Int
+            (
+                _levelDimensions.x / 2 + position.x,
+                _levelDimensions.y / 2 + position.y,
+                _levelDimensions.z / 2 + position.z
+            );
+            
+            _currentLevel[pos.x, pos.y, pos.z] = element;
         }
     }
 }

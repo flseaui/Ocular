@@ -15,7 +15,7 @@ namespace UI {
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out var hit))
+            if (Physics.Raycast(ray, out var hit, Mathf.Infinity, LayerMask.GetMask("Model")))
             {
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable) && walkable.Enabled)
                 {

@@ -11,6 +11,7 @@ namespace Level.Objects {
     {
         public Node Node;
 
+        [ShowInInspector]
         public bool Enabled
         {
             get => Node != null && Node.Enabled;
@@ -102,6 +103,18 @@ namespace Level.Objects {
         public static bool operator !=(Walkable left, Walkable right) => !Equals(left, right);
 
 #if UNITY_EDITOR
+        protected void OnDrawGizmosSelected()
+        {
+            if (!Enabled || Node.Neighbors == null)
+                return;
+            
+            Gizmos.color = Color.green;
+            foreach (var neighbor in Node.Neighbors)
+            {
+                Gizmos.DrawCube(neighbor.Walkable.transform.position, new Vector3(1, 1, 1));
+            }
+        }
+
         protected void OnDrawGizmos()
         {
             if (!Enabled || Node.Neighbors == null)

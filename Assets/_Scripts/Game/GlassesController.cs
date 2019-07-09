@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Level;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,7 @@ namespace Game {
         /// <summary>
         /// The combined color of all active glasses.
         /// </summary>
+        [ShowInInspector, ReadOnly]
         public static OcularState CurrentOcularState;
         /// <summary>
         /// <c>OnGlassesToggled</c> is invoked when glasses are removed or put on.
@@ -81,6 +83,12 @@ namespace Game {
         {
             _colorIndicators = new Dictionary<Color, Image>();
             
+        }
+
+        private IEnumerator Start()
+        {
+            yield return new WaitForFixedUpdate();
+            ToggleGlasses(ActiveGlasses[0]);
         }
 
         private void Update()

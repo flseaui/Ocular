@@ -28,7 +28,7 @@ namespace LevelEditor
                 banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = source.name;
                 banner.transform.Find("PlayButton").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    SceneManager.LoadSceneAsync("LevelEditor").completed += operation =>
+                    SceneManager.LoadSceneAsync("NewEditor").completed += operation =>
                     {
                         PlayerPrefs.SetString("LevelToLoad", assetPath);
                     };
@@ -77,7 +77,7 @@ namespace LevelEditor
 
         public void NewLevel()
         {
-            SceneManager.LoadSceneAsync("LevelEditor").completed += operation =>
+            SceneManager.LoadSceneAsync("NewEditor").completed += operation =>
             {
                 PlayerPrefs.SetString("LevelToLoad", "New");
             };
