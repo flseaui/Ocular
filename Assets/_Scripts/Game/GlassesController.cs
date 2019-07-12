@@ -88,7 +88,7 @@ namespace Game {
         private IEnumerator Start()
         {
             yield return new WaitForFixedUpdate();
-            ToggleGlasses(ActiveGlasses[0]);
+            ToggleGlasses(ActiveGlasses[0], true);
         }
 
         private void Update()
@@ -165,19 +165,22 @@ namespace Game {
         {
             if (ActiveGlasses.Contains(glasses))
             {
-                if (bypassLimit || glasses.Enabled || ActiveGlasses.Count(x => x.Enabled) < 2)
-                {
-                    var index = ActiveGlasses.IndexOf(glasses);
-                    
-                    _colorIndicators[glasses.Color].color = ActiveGlasses[index].Enabled
-                        ? _colorIndicators[glasses.Color].color / 2
-                        : glasses.Color;
+                var active = ActiveGlasses.Count(x => x.Enabled);
 
-                    ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
-                    CalcOcularState();
-                    MapController.UpdateColorables();
-                    OnGlassesToggled?.Invoke();
-                }
+                var index = ActiveGlasses.IndexOf(glasses);
+
+                if (active > 2 && glasses.Enabled)
+                    return;
+                if (active == 1 && glasses.Enabled)
+                    return;
+                _colorIndicators[glasses.Color].color = ActiveGlasses[index].Enabled
+                    ? _colorIndicators[glasses.Color].color / 2
+                    : glasses.Color;
+
+                ActiveGlasses[index].Enabled = !ActiveGlasses[index].Enabled;
+                CalcOcularState();
+                MapController.UpdateColorables();
+                OnGlassesToggled?.Invoke();
             }
         }
     }
