@@ -169,7 +169,7 @@ namespace Game {
 
                 var index = ActiveGlasses.IndexOf(glasses);
 
-                if (active > 2 && glasses.Enabled)
+                if (active == 2 && !glasses.Enabled)
                     return;
                 if (active == 1 && glasses.Enabled)
                     return;

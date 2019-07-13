@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
+using DG.Tweening.Plugins.Core.PathCore;
 using Level;
 using Level.Objects;
 using Priority_Queue;
@@ -28,10 +30,11 @@ namespace Player {
 
         private void NavigateTo(Walkable destination)
         {
-            var path = GeneratePath(GetCurrentWalkable(), destination);
+            var path = GeneratePath(GetCurrentWalkable(out _), destination);
             if (path == null)
                 return;
             _currentPath = new Queue<Walkable>(path);
+
             _currentEnd = _currentPath.Dequeue();
             Navigating = true;
         }
@@ -86,23 +89,26 @@ namespace Player {
             return path.Reverse();
         }
 
-        private Walkable GetCurrentWalkable() =>
-            Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out var hit, 2)
+        private Walkable GetCurrentWalkable(out RaycastHit hit) =>
+            Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2)
                 ? hit.transform.parent.GetComponent<Walkable>()
                 : null;
 
         private void Update()
         {
             if (Navigating)
-                if (transform.position != _currentEnd.transform.position)
+                if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
                 {
                     var position = _currentEnd.transform.position;
+
+                    var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    
+                    Physics.Raycast(pos + new Vector3(0, .5f, 0), new Vector3(0, -1, 0), out var hit, 1);
+                    var topFace = hit.point.y;
                     var vec = new Vector3(position.x,
-                        position.y + 0.5f + transform.GetComponent<CapsuleCollider>().height / 2,
+                        position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
-
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
-
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
                         transform.position = vec;
