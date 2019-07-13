@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DarkTonic.MasterAudio;
 using Level;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -46,6 +47,8 @@ namespace Game {
         [SerializeField] private GameObject _colorIndicator;
         [SerializeField] private GameObject _glassesContainer;
 
+        private List<PlaySoundResult> _musicStreams;
+        
         private readonly IDictionary<string, OcularState> _glassesMap = new Dictionary<string, OcularState>
         {
             {"", OcularState.Zero},
@@ -82,11 +85,15 @@ namespace Game {
         private void Awake()
         {
             _colorIndicators = new Dictionary<Color, Image>();
-            
+            _musicStreams = new List<PlaySoundResult>();
         }
 
         private IEnumerator Start()
         {
+            _musicStreams.Add(MasterAudio.PlaySound("World1_A"));
+            _musicStreams.Add(MasterAudio.PlaySound("World1_B"));
+            _musicStreams.Add(MasterAudio.PlaySound("World1_C"));
+            
             yield return new WaitForFixedUpdate();
             ToggleGlasses(ActiveGlasses[0], true);
         }
@@ -173,6 +180,10 @@ namespace Game {
                     return;
                 if (active == 1 && glasses.Enabled)
                     return;
+                
+                var type = (int) glasses.GlassesType;
+                _musicStreams[type].ActingVariation.AdjustVolume(glasses.Enabled ? 0 : 1);
+                
                 _colorIndicators[glasses.Color].color = ActiveGlasses[index].Enabled
                     ? _colorIndicators[glasses.Color].color / 2
                     : glasses.Color;
