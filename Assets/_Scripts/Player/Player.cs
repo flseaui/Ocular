@@ -4,6 +4,7 @@ using Level.Objects;
 using Misc;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Player
 {
@@ -22,6 +23,15 @@ namespace Player
             GameManager.OnLevelLoad += CommitDie;
         }
 
+        private void Update()
+        {
+            Physics.Raycast(transform.localPosition, Vector3.down, out var hit, 1.5f, LayerMask.GetMask("Model"));
+            if (hit.collider == null)
+            {
+                GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
+            }
+        }
+        
         private void OnDestroy()
         {
             GameManager.OnLevelLoad -= CommitDie;
