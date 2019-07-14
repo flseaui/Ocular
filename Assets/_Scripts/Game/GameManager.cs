@@ -10,7 +10,7 @@ namespace Game {
     {
         private GlassesController _glassesController;
         private LevelController _levelController;
-        [CanBeNull] private GameObject _player;
+        [CanBeNull] public GameObject Player;
         [CanBeNull] private GameObject _indicator;
         [SerializeField] private GameObject _indicatorPrefab;
         [SerializeField] private GameObject _playerPrefab;
@@ -22,7 +22,7 @@ namespace Game {
         /// </summary>
         public void StopPlaying()
         {
-            Destroy(_player.gameObject);
+            Destroy(Player.gameObject);
             Destroy(_indicator.gameObject);
             _levelController.UnloadLevel();
         }
@@ -38,7 +38,7 @@ namespace Game {
             _levelController.LoadLevel(level);
             _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
             _indicator = Instantiate(_indicatorPrefab);
-            _player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position ,
+            Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position ,
                 Quaternion.identity);
         }
         
@@ -63,7 +63,7 @@ namespace Game {
                 _levelController.LoadLevel();
                 _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
                 Instantiate(_indicatorPrefab);
-                Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
+                Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                     Quaternion.identity);
             }
         }        

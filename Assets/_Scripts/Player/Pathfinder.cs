@@ -83,7 +83,14 @@ namespace Player {
             while (current.Walkable.UniqueId != start.UniqueId)
             {
                 path.Enqueue(current.Walkable);
-                current = cameFrom[current.Walkable.UniqueId];
+                try
+                {
+                    current = cameFrom[current.Walkable.UniqueId];
+                }
+                catch (KeyNotFoundException e)
+                {
+                    return null;
+                }
             }
 
             return path.Reverse();
@@ -94,11 +101,14 @@ namespace Player {
                 ? hit.transform.parent.GetComponent<Walkable>()
                 : null;
 
+        public Action OnMove;
+        
         private void Update()
         {
             if (Navigating)
                 if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
                 {
+                    
                     var position = _currentEnd.transform.position;
 
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -108,12 +118,16 @@ namespace Player {
                     var vec = new Vector3(position.x,
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
+                    transform.LookAt(vec, Vector3.up);
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
                         transform.position = vec;
                         if (_currentPath.Count > 0)
+                        {
                             _currentEnd = _currentPath.Dequeue();
+                            OnMove?.Invoke();
+                        }
                         else
                             Navigating = false;
                     }

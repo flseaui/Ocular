@@ -186,6 +186,8 @@ namespace Game {
                 
                 _musicStreams[type].ActingVariation.FadeToVolume(glasses.Enabled ? 0 : AudioMixing.WorldOneVolumes[type], 1);
                 
+                
+                
                 _colorIndicators[glasses.Color].color = ActiveGlasses[index].Enabled
                     ? _colorIndicators[glasses.Color].color / 2
                     : glasses.Color;
