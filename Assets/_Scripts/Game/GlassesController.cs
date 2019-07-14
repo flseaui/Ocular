@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Audio;
 using DarkTonic.MasterAudio;
 using Level;
 using Sirenix.OdinInspector;
@@ -182,7 +183,8 @@ namespace Game {
                     return;
                 
                 var type = (int) glasses.GlassesType;
-                _musicStreams[type].ActingVariation.AdjustVolume(glasses.Enabled ? 0 : 1);
+                
+                _musicStreams[type].ActingVariation.FadeToVolume(glasses.Enabled ? 0 : AudioMixing.WorldOneVolumes[type], 1);
                 
                 _colorIndicators[glasses.Color].color = ActiveGlasses[index].Enabled
                     ? _colorIndicators[glasses.Color].color / 2
