@@ -92,7 +92,7 @@ namespace Player {
                     return null;
                 }
             }
-
+        
             return path.Reverse();
         }
 

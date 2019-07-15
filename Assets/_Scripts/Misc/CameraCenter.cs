@@ -14,8 +14,8 @@ namespace Misc
         private void Start()
         {
             _centerParent = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo.transform
-                .Find("MainFloor");
-            var pos = _centerParent.position;
+                .Find("Level1").GetChild(0);
+            /*var pos = _centerParent.position;
             float maxX = pos.x,
                 minX = pos.x,
                 maxY = pos.y,
@@ -32,9 +32,17 @@ namespace Misc
                 maxZ = Mathf.Max(cPos.z, maxZ);
                 minZ = Mathf.Min(cPos.z, minZ);
             });
+
+            /*minX = bounds.min.x;
+            maxX = bounds.max.x;
+            minY = bounds.min.y;
+            maxY = bounds.max.y;
             
-            _center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f, -10f);
-            transform.localPosition = _center;
+            _center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f, -10f);*/
+            
+            var bounds = _centerParent.GetComponent<MeshFilter>().sharedMesh.bounds;
+            transform.position = new Vector3(bounds.center.x, bounds.center.y + 1, bounds.center.z);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
         }
     }
 }
