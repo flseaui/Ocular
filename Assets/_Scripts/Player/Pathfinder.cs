@@ -40,7 +40,8 @@ namespace Player {
         }
 
         private IEnumerable<Walkable> GeneratePath(Walkable start, Walkable destination)
-        {       
+        {
+            if (start == null) return null;
             if (start == destination) return null;
             
             float Heuristic(Vector3 a, Vector3 b) => Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);

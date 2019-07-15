@@ -74,11 +74,12 @@ namespace LevelEditor
             }
         }
 
-        public void NewLevel()
+        public void NewLevel(int size)
         {
             SceneManager.LoadSceneAsync("NewEditor").completed += operation =>
             {
                 PlayerPrefs.SetString("LevelToLoad", "New");
+                PlayerPrefs.SetInt("LevelSize", size);
             };
         }
         

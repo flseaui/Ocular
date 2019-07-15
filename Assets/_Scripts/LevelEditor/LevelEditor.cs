@@ -22,6 +22,14 @@ namespace LevelEditor
         private GameObject _currentObject;
         private GameObject _level;
 
+        /*
+         * 0 - 5x5
+         * 1 - 6x6
+         * 2 - 7x7
+         * 3 - 8x8
+         * 4 - 9x9
+         */
+        [SerializeField] private GameObject[] _levelBasePrefabs;
         
         [SerializeField] GameManager _gameManager;
         [SerializeField] GameObject _glassesContainer;
@@ -47,9 +55,10 @@ namespace LevelEditor
         private void Start()
         {
             var level = PlayerPrefs.GetString("LevelToLoad");
+            var size = PlayerPrefs.GetInt("LevelSize");
             if (level == "New")
             {
-                NewLevel();
+                NewLevel(size);
             }
             else
             {
@@ -69,19 +78,16 @@ namespace LevelEditor
             });
         }
 
-        public void NewLevel()
+        public void NewLevel(int size)
         {
-            Addressables.LoadAsset<GameObject>("blank_level").Completed += handle =>
+            _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
+            _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
+            GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
+            _level.transform.ForEachChild(x =>
             {
-                _level = Instantiate(handle.Result).transform.Find("MainFloor").gameObject;
-                _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
-                GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
-                _level.transform.ForEachChild(x =>
-                {
-                    if (x.HasComponent<MaxCount>())
-                        _limitedObjects.Add(x.gameObject);
-                });
-            };
+                if (x.HasComponent<MaxCount>())
+                    _limitedObjects.Add(x.gameObject);
+            });
         }
 
         public void TestLevel()

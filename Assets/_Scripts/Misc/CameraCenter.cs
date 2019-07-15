@@ -14,7 +14,7 @@ namespace Misc
         private void Start()
         {
             _centerParent = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo.transform
-                .Find("Level1").GetChild(0);
+                .Find("Level").GetChild(0);
             /*var pos = _centerParent.position;
             float maxX = pos.x,
                 minX = pos.x,
