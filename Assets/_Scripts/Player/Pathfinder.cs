@@ -12,11 +12,11 @@ using UnityEngine;
 namespace Player {
     public class Pathfinder : MonoBehaviour
     {
-        private Walkable _currentEnd;
+        public Walkable _currentEnd;
         private Queue<Walkable> _currentPath;
         private Walkable _currentStart;
-        [SerializeField] private bool Navigating;
-        [SerializeField] private float WalkSpeed = 5.0f;
+        [SerializeField] public bool Navigating;
+        [SerializeField] public float WalkSpeed = 5.0f;
 
         private void Awake()
         {
@@ -96,7 +96,7 @@ namespace Player {
             return path.Reverse();
         }
 
-        private Walkable GetCurrentWalkable(out RaycastHit hit) =>
+        public Walkable GetCurrentWalkable(out RaycastHit hit) =>
             Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2)
                 ? hit.transform.parent.GetComponent<Walkable>()
                 : null;
@@ -107,14 +107,9 @@ namespace Player {
         {
             if (Navigating)
                 if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
-                {
-                    
+                {                   
                     var position = _currentEnd.transform.position;
 
-                    var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    
-                    Physics.Raycast(pos + new Vector3(0, .5f, 0), new Vector3(0, -1, 0), out var hit, 1);
-                    var topFace = hit.point.y;
                     var vec = new Vector3(position.x,
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
