@@ -10,13 +10,13 @@ using UnityEngine;
 
 public class ClonePathfinder : MonoBehaviour
 {
-    enum Cardinal
+    private enum Cardinal
     {
-        north,
-        east,
-        south,
-        west,
-        none
+        North,
+        East,
+        South,
+        West,
+        None
     }
 
     private Walkable _currentEnd;
@@ -45,23 +45,23 @@ public class ClonePathfinder : MonoBehaviour
 
     public void MirrorClone(Walkable playerStart, Walkable playerEnd)
     {
-        Cardinal playerCardinal = GetCardinal(playerStart, playerEnd);
+        var playerCardinal = GetCardinal(playerStart, playerEnd);
         Cardinal targetCardinal;
-        Walkable currentWalkable = GetCurrentWalkable(out _);
+        var currentWalkable = GetCurrentWalkable(out _);
 
-        if (playerCardinal == Cardinal.south)
-            targetCardinal = Cardinal.north;
-        else if (playerCardinal == Cardinal.north)
-            targetCardinal = Cardinal.south;
-        else if (playerCardinal == Cardinal.east)
-            targetCardinal = Cardinal.west;
-        else if (playerCardinal == Cardinal.west)
-            targetCardinal = Cardinal.east;
+        if (playerCardinal == Cardinal.South)
+            targetCardinal = Cardinal.North;
+        else if (playerCardinal == Cardinal.North)
+            targetCardinal = Cardinal.South;
+        else if (playerCardinal == Cardinal.East)
+            targetCardinal = Cardinal.West;
+        else if (playerCardinal == Cardinal.West)
+            targetCardinal = Cardinal.East;
         else
-            targetCardinal = Cardinal.none;
+            targetCardinal = Cardinal.None;
         
 
-        foreach (Node neighbor in currentWalkable.Node.Neighbors)
+        foreach (var neighbor in currentWalkable.Node.Neighbors)
         {
             if (GetCardinal(currentWalkable, neighbor.Walkable) == targetCardinal)
             {
@@ -74,17 +74,20 @@ public class ClonePathfinder : MonoBehaviour
 
     private Cardinal GetCardinal(Walkable start, Walkable end)
     {
+        if (start is null || end is null)
+            return Cardinal.None;
+        
         if (start.transform.position.x > end.transform.position.x)
-            return Cardinal.west;
+            return Cardinal.West;
         if (start.transform.position.x < end.transform.position.x)
-            return Cardinal.east;
+            return Cardinal.East;
         if (start.transform.position.z > end.transform.position.z)
-            return Cardinal.south;
+            return Cardinal.South;
         if (start.transform.position.z < end.transform.position.z)
-            return Cardinal.north;
+            return Cardinal.North;
         
         Debug.Log("Same as start");
-        return Cardinal.none;
+        return Cardinal.None;
     }
     
     
