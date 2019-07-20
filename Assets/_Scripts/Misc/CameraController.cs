@@ -19,7 +19,7 @@ namespace Misc
             var left = Input.GetKey(KeyCode.LeftArrow);
             var right = Input.GetKey(KeyCode.RightArrow);
 
-            var angle = left ? right ? 0 : -45 : right ? 45 : 0;
+            var angle = left ? right ? 0 : -90 : right ? 90 : 0;
             
             _moving = true;
             var rotate = transform.DOLocalRotate(transform.rotation.eulerAngles + new Vector3(0, angle, 0), .2f);
