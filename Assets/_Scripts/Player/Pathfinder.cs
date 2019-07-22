@@ -32,7 +32,10 @@ namespace Player {
         {
             var path = GeneratePath(GetCurrentWalkable(out _), destination);
             if (path == null)
+            {
                 return;
+            }
+
             _currentPath = new Queue<Walkable>(path);
 
             _currentEnd = _currentPath.Dequeue();
