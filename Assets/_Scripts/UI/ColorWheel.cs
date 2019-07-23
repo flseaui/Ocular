@@ -28,7 +28,6 @@ public class ColorWheel : MonoBehaviour
             {
                 transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, -60), .5f);
             }
-        }
-        
+        }   
     }
 }
