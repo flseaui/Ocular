@@ -21,7 +21,7 @@ public class ColorWheel : MonoBehaviour
         {
             if (left)
             {
-                transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60), .5f);
+                var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60), .5f);
             }
 
             if (right)

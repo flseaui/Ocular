@@ -36,7 +36,7 @@ namespace Game {
         public void PlayLevel(GameObject level)
         {
             _levelController.LoadLevel(level);
-            _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
+            //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
             _indicator = Instantiate(_indicatorPrefab);
             Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position ,
                 Quaternion.identity);
@@ -50,7 +50,7 @@ namespace Game {
             OnLevelLoad += () =>
             {
                 _levelController.LoadNextLevel();
-                _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
+                //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
                 Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                     Quaternion.identity);
             };
@@ -61,7 +61,7 @@ namespace Game {
             if (PlayerPrefs.GetInt("PlayFromEditor") == 0)
             {
                 _levelController.LoadLevel();
-                _glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
+                //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
                 Instantiate(_indicatorPrefab);
                 Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                     Quaternion.identity);

@@ -5,6 +5,7 @@ using System.Linq;
 using Game;
 using Sirenix.Utilities;
 using UnityEngine;
+using OcularState = Game.GlassesController.OcularState;
 
 namespace OldEditor
 {

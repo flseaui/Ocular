@@ -6,6 +6,7 @@ using Misc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using OcularState = Game.GlassesController.OcularState;
 
 namespace Level.Objects
 {
@@ -36,6 +37,7 @@ namespace Level.Objects
 
         private List<IController> _controllers;
 
+        [ShowInInspector, ReadOnly]
         public OcularState OcularState
         {
             get => _ocularState;
@@ -87,7 +89,7 @@ namespace Level.Objects
 
         public void Initialize()
         {
-            if (OcularState == OcularState.Zero) return;
+            if (OcularState == OcularState.Z) return;
             State = BlockState.Invisible;
             if (transform.HasComponent<Walkable>(out var walkable))
             {
@@ -112,8 +114,8 @@ namespace Level.Objects
         // TODO Only calculate once per color then update all colorables, continue using custom logic for controlled blocks
         private (OcularState color, BlockState state) CalculateVisibility()
         {
-            if (OcularState == OcularState.Zero)
-                return (OcularState.Zero, BlockState.Visible);
+            if (OcularState == OcularState.Z)
+                return (OcularState.Z, BlockState.Visible);
 
             var visible = IsColorVisible(OcularState);
 
@@ -190,20 +192,20 @@ namespace Level.Objects
             var c = ocularState;
             switch (GlassesController.CurrentOcularState)
             {
-                case OcularState.Zero: // White
+                case OcularState.Z:
                     return true;
-                case OcularState.One: // Red
-                    return c == OcularState.One;
-                case OcularState.Two: // Yellow
-                    return c == OcularState.Two;
-                case OcularState.Three: // Blue
-                    return c == OcularState.Three;
-                case OcularState.Four: // Orange
-                    return c == OcularState.Four || c == OcularState.One || c == OcularState.Two;
-                case OcularState.Five: // Magenta
-                    return c == OcularState.Five || c == OcularState.One || c == OcularState.Three;
-                case OcularState.Six: // Green
-                    return c == OcularState.Six || c == OcularState.Two || c == OcularState.Three;
+                case OcularState.A: // Red
+                    return c == OcularState.A;
+                case OcularState.B: // Yellow
+                    return c == OcularState.B;
+                case OcularState.C: // Blue
+                    return c == OcularState.C;
+                case OcularState.AB: // Orange
+                    return c == OcularState.AB || c == OcularState.A || c == OcularState.B;
+                case OcularState.AC: // Magenta
+                    return c == OcularState.AC || c == OcularState.A || c == OcularState.C;
+                case OcularState.BC: // Green
+                    return c == OcularState.BC || c == OcularState.B || c == OcularState.C;
                 default:
                     return false;
             }
@@ -213,8 +215,36 @@ namespace Level.Objects
         {
             if (ocularState == OcularState.Null)
                 return InternalStateToColor(_initialState);
-                
-            return _levelInfo.BlockColors[(int) ocularState];
+
+            switch (ocularState)
+            {
+                case OcularState.Z:
+                    return Color.white;
+                    break;
+                case OcularState.A:
+                    return Color.red;
+                    break;
+                case OcularState.AB:
+                    return new Color(1, .551f, 0);
+                    break;
+                case OcularState.B:
+                    return new Color(1, 1, 0, 1);
+                    break;
+                case OcularState.BC:
+                    return Color.green;
+                    break;
+                case OcularState.C:
+                    return Color.blue;
+                    break;
+                case OcularState.AC:
+                    return Color.magenta;
+                    break;
+                case OcularState.Null:
+                    return Color.clear;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ocularState), ocularState, null);
+            }
         }
 
         private void SetModelsState(bool state)

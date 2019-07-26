@@ -15,7 +15,7 @@ namespace Level.Objects
     {
         [SerializeField] private Button _buttonModel;
 
-        [SerializeField] public OcularState Color;
+        [SerializeField] public GlassesController.OcularState Color;
 
         private Vector3 _initialPosition;
 
@@ -62,7 +62,7 @@ namespace Level.Objects
                     _buttonModel.transform.localPosition = _initialPosition;
                     TargetBlocks.ForEach(t =>
                     {
-                        t.OcularState = OcularState.Null;
+                        t.OcularState = GlassesController.OcularState.Null;
                         t.UpdateState();
                     });
                 }

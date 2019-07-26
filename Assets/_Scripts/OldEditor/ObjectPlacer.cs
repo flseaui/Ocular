@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Outline = cakeslice.Outline;
+using OcularState = Game.GlassesController.OcularState;
 
 namespace OldEditor
 {

@@ -146,13 +146,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103089386}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.86602545, w: 0.49999994}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 1472611915}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -120}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 249, y: -253}
@@ -1094,6 +1094,7 @@ GameObject:
   - component: {fileID: 820979995}
   - component: {fileID: 820979994}
   - component: {fileID: 820979993}
+  - component: {fileID: 820979997}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1108,7 +1109,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820979992}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2239bac4c32bdfe468e56cf1e2180743, type: 3}
   m_Name: 
@@ -1117,6 +1118,7 @@ MonoBehaviour:
   _colorIndicator: {fileID: 2830387764642596028, guid: 0d46181e475f6c440bd4a2c61f3bf9f6,
     type: 3}
   _glassesContainer: {fileID: 1744526757}
+  _mapController: {fileID: 0}
 --- !u!114 &820979994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1168,6 +1170,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &820979997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820979992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 818692b0e91d47b44aa42bab26a342e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &824637161
 GameObject:
   m_ObjectHideFlags: 0
