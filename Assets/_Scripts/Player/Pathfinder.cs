@@ -6,6 +6,7 @@ using DG.Tweening.Plugins.Core.PathCore;
 using Level;
 using Level.Objects;
 using Priority_Queue;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Player {
         public Walkable _currentEnd;
         private Queue<Walkable> _currentPath;
         private Walkable _currentStart;
-        [SerializeField] public bool Navigating;
+        [ShowInInspector] public static bool Navigating;
         [SerializeField] public float WalkSpeed = 5.0f;
 
         private void Awake()

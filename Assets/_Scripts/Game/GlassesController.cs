@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DarkTonic.MasterAudio;
 using Level;
+using Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace Game
             Null,
         }
 
-        private OcularState[] states =
+        private readonly OcularState[] _states =
         {
             OcularState.A,
             OcularState.AB,
@@ -39,7 +40,7 @@ namespace Game
         [ShowInInspector, ReadOnly]
         public static OcularState CurrentOcularState;
     
-        private int index;
+        private int _index;
     
         private List<PlaySoundResult> _musicStreams;
     
@@ -73,8 +74,8 @@ namespace Game
             _musicStreams.Add(MasterAudio.PlaySound("World1_C"));
             
             yield return new WaitForFixedUpdate();
-            index = 0;
-            CurrentOcularState = states[Math.Abs(index) % 6];
+            _index = 0;
+            CurrentOcularState = _states[Math.Abs(_index) % 6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
             
@@ -86,25 +87,25 @@ namespace Game
         {
             var left = Input.GetKeyDown(KeyCode.Q);
             var right = Input.GetKeyDown(KeyCode.E);
-            if (!(left && right) && !ColorWheel.Turning)
+            if (!(left && right) && !ColorWheel.Turning && !Pathfinder.Navigating)
             {
                 if (left)
                 {
-                    index--;
+                    _index--;
                     UpdateOcularState();
                 }
 
                 if (right)
                 {
-                    index++;
+                    _index++;
                     UpdateOcularState();
                 }
             }
         }
-        
-        public void UpdateOcularState()
+
+        private void UpdateOcularState()
         {
-            CurrentOcularState = states[Math.Abs(index) % 6];
+            CurrentOcularState = _states[Math.Abs(_index) % 6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
         }
