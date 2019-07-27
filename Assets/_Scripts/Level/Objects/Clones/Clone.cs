@@ -17,7 +17,7 @@ namespace Level.Objects
 
         private void Update()
         {
-            if (_player.GetComponent<Pathfinder>().Navigating && !GetComponent<ClonePathfinder>().Navigating)
+            if (Pathfinder.Navigating && !GetComponent<ClonePathfinder>().Navigating)
             {
                 GetComponent<ClonePathfinder>().MirrorClone(_player.GetComponent<Pathfinder>().GetCurrentWalkable(out _), _player.GetComponent<Pathfinder>()._currentEnd);
             }
