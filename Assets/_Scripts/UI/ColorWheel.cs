@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ColorWheel : MonoBehaviour
 {
-    private bool turning;
+    public static bool Turning;
 
     // Update is called once per frame
     void Update()
@@ -13,20 +13,20 @@ public class ColorWheel : MonoBehaviour
         var left = Input.GetKeyDown(KeyCode.Q);
         var right = Input.GetKeyDown(KeyCode.E);
 
-        if (!(left && right) && !turning)
+        if (!(left && right) && !Turning)
         {
             if (left)
             {
-                turning = true;
+                Turning = true;
                 var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60), .3f);
-                rotate.onComplete += () => turning = false;
+                rotate.onComplete += () => Turning = false;
             }
 
             if (right)
             {
-                turning = true;
+                Turning = true;
                 var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, -60), .3f);
-                rotate.onComplete += () => turning = false;
+                rotate.onComplete += () => Turning = false;
             }
         }   
     }

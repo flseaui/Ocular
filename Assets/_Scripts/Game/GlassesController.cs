@@ -86,7 +86,7 @@ namespace Game
         {
             var left = Input.GetKeyDown(KeyCode.Q);
             var right = Input.GetKeyDown(KeyCode.E);
-            if (!(left && right))
+            if (!(left && right) && !ColorWheel.Turning)
             {
                 if (left)
                 {
