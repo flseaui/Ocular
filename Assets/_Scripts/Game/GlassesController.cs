@@ -75,7 +75,7 @@ namespace Game
             
             yield return new WaitForFixedUpdate();
             _index = 0;
-            CurrentOcularState = _states[Math.Abs(_index) % 6];
+            CurrentOcularState = _states[(_index%6 + 6)%6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
             
@@ -91,13 +91,13 @@ namespace Game
             {
                 if (left)
                 {
-                    _index--;
+                    _index++;
                     UpdateOcularState();
                 }
 
                 if (right)
                 {
-                    _index++;
+                    _index--;
                     UpdateOcularState();
                 }
             }
@@ -105,7 +105,7 @@ namespace Game
 
         private void UpdateOcularState()
         {
-            CurrentOcularState = _states[Math.Abs(_index) % 6];
+            CurrentOcularState = _states[(_index%6 + 6)%6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
         }
