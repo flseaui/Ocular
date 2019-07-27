@@ -119,7 +119,7 @@ namespace OldEditor
             }
             else
             {
-                PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, _level.transform.parent.GetComponent<LevelInfo>().Name);
+                var level = PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, _level.transform.parent.GetComponent<LevelInfo>().Name);
             }
             HiResScreenshot.TakeHiResShot($"Level{_level.GetHashCode()}");
             SceneManager.LoadSceneAsync("EditorMenu");

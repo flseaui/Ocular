@@ -50,9 +50,10 @@ namespace OldEditor
                     panel.transform.Find("NameInputField").GetComponent<TMP_InputField>().onEndEdit.AddListener(text =>
                     {
                         var oldFile = $"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png";
-                        source.name = text;
                         AssetDatabase.RenameAsset(assetPath, text);
-                        source.GetComponent<LevelInfo>().Name = assetPath = AssetDatabase.GetAssetPath(source);
+                        source.name = text;
+                        assetPath = AssetDatabase.GetAssetPath(source);
+                        source.GetComponent<LevelInfo>().Name = assetPath;
                         banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = text;
                         if (File.Exists(oldFile))
                             File.Move(oldFile, $"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png");

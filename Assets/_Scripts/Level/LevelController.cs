@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ namespace Level {
 
         private int LevelCount => _levels.Count;
 
+        public static Action OnLevelLoaded;
+        
         public void LoadNextLevel()
         {
             LoadLevel(_loadedLevelNumber + 1);
@@ -34,6 +37,7 @@ namespace Level {
             _loadedLevel = Instantiate(level);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
+            OnLevelLoaded?.Invoke();
         }
         
         public void LoadLevel(int levelNumber)
@@ -45,6 +49,7 @@ namespace Level {
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = levelNumber;
+            OnLevelLoaded?.Invoke();
         }
 
         public void UnloadLevel()

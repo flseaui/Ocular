@@ -54,6 +54,13 @@ namespace Game
             }
         }
 
+        public void BlankState()
+        {
+            CurrentOcularState = OcularState.Z;
+            MapController.UpdateColorables();
+            OnGlassesToggled?.Invoke();
+        }
+        
         private void Awake()
         {
             _musicStreams = new List<PlaySoundResult>();
@@ -67,9 +74,12 @@ namespace Game
             
             yield return new WaitForFixedUpdate();
             index = 0;
-            CurrentOcularState = states[Math.Abs(index) % 5];
+            CurrentOcularState = states[Math.Abs(index) % 6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
+            
+            
+            LevelController.OnLevelLoaded += UpdateOcularState;
         }
 
         private void Update()
@@ -90,13 +100,13 @@ namespace Game
                     UpdateOcularState();
                 }
             }
-
-            void UpdateOcularState()
-            {
-                CurrentOcularState = states[Math.Abs(index) % 5];
-                MapController.UpdateColorables();
-                OnGlassesToggled?.Invoke();
-            }
+        }
+        
+        public void UpdateOcularState()
+        {
+            CurrentOcularState = states[Math.Abs(index) % 6];
+            MapController.UpdateColorables();
+            OnGlassesToggled?.Invoke();
         }
     }
 }
