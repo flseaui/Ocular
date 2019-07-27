@@ -30,9 +30,11 @@ namespace Player {
 
         private void NavigateTo(Walkable destination)
         {
-            var path = GeneratePath(GetCurrentWalkable(out _), destination);
+            var path = GeneratePath(GetCurrentWalkable(out var walk), destination);
+            Debug.Log(walk.collider.name);
             if (path == null)
             {
+                Debug.Log("Gaming");
                 return;
             }
 
@@ -101,7 +103,7 @@ namespace Player {
         }
 
         public Walkable GetCurrentWalkable(out RaycastHit hit) =>
-            Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2)
+            Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
                 ? hit.transform.parent.GetComponent<Walkable>()
                 : null;
 
