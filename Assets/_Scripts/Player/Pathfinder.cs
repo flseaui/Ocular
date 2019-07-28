@@ -18,7 +18,7 @@ namespace Player {
         private Walkable _currentStart;
         [ShowInInspector] public static bool Navigating;
         [SerializeField] public float WalkSpeed = 5.0f;
-
+        private Queue<Walkable> _queuedPath = null;
         private void Awake()
         {
             Indicator.OnWalkableClicked += NavigateTo;
@@ -40,18 +40,23 @@ namespace Player {
         
         private void NavigateTo(Walkable destination)
         {
-            var path = GeneratePath(GetCurrentWalkable(out var walk), destination);
-            Debug.Log(walk.collider.name);
+            
+            var path = GeneratePath(Navigating ? _currentEnd : GetCurrentWalkable(out _), destination);
             if (path == null)
-            {
-                Debug.Log("Gaming");
                 return;
+            
+            if (Navigating)
+            {
+                _queuedPath = new Queue<Walkable>(path);
             }
+            else
+            {
+                _queuedPath = null;
+                _currentPath = new Queue<Walkable>(path);
 
-            _currentPath = new Queue<Walkable>(path);
-
-            _currentEnd = _currentPath.Dequeue();
-            Navigating = true;
+                _currentEnd = _currentPath.Dequeue();
+                Navigating = true;
+            }
         }
 
         private IEnumerable<Walkable> GeneratePath(Walkable start, Walkable destination)
@@ -129,18 +134,28 @@ namespace Player {
                     var vec = new Vector3(position.x,
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
-                    transform.LookAt(vec, Vector3.up);
+                    //transform.LookAt(vec, Vector3.up);
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
-                        transform.position = vec;
-                        if (_currentPath.Count > 0)
+                        if (_queuedPath != null && _queuedPath.Count > 0)
                         {
+                            ClearPath();
+                            _currentPath = _queuedPath;
                             _currentEnd = _currentPath.Dequeue();
-                            OnMove?.Invoke();
+                            Navigating = true;
                         }
                         else
-                            Navigating = false;
+                        {
+                            transform.position = vec;
+                            if (_currentPath.Count > 0)
+                            {
+                                _currentEnd = _currentPath.Dequeue();
+                                OnMove?.Invoke();
+                            }
+                            else
+                                Navigating = false;
+                        }
                     }
                 }
         }
