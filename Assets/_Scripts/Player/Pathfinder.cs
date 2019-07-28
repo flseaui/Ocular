@@ -13,6 +13,7 @@ using UnityEngine;
 namespace Player {
     public class Pathfinder : MonoBehaviour
     {
+        [NonSerialized]
         public Walkable _currentEnd;
         private Queue<Walkable> _currentPath;
         private Walkable _currentStart;

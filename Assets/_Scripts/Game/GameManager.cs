@@ -35,7 +35,7 @@ namespace Game {
         /// </param>
         public void PlayLevel(GameObject level)
         {
-            _levelController.LoadLevel(level);
+            _levelController.LoadLevelFromObj(level);
             //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
             _indicator = Instantiate(_indicatorPrefab);
             Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position ,
@@ -49,19 +49,28 @@ namespace Game {
 
             OnLevelLoad += () =>
             {
-                _levelController.LoadNextLevel();
-                //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
-                Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
-                    Quaternion.identity);
+                _levelController.CurrentLevelInfo = null;
+                
+                StartCoroutine(_levelController.LoadNextLevel());
+                StartCoroutine(nameof(SpawnPlayer));
             };
         }
 
-        private void Start()
+        IEnumerator SpawnPlayer()
+        {
+            yield return new WaitUntil(() => _levelController.CurrentLevelInfo != null);
+            Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
+                Quaternion.identity);
+        }
+        
+        private IEnumerator Start()
         {
             if (PlayerPrefs.GetInt("PlayFromEditor") == 0)
             {
-                _levelController.LoadLevel();
-                //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
+                StartCoroutine(_levelController.LoadFirstLevel());
+
+                yield return new WaitUntil(() => _levelController.CurrentLevelInfo != null);
+                
                 Instantiate(_indicatorPrefab);
                 Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                     Quaternion.identity);

@@ -45,15 +45,8 @@ namespace Game
         private List<PlaySoundResult> _musicStreams;
     
         private MapController _mapController;
-        private MapController MapController
-        {
-            get
-            {
-                if (_mapController == null)
-                    _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
-                return _mapController;
-            }
-        }
+
+        private MapController MapController => _mapController;
 
         public void BlankState()
         {
@@ -65,21 +58,22 @@ namespace Game
         private void Awake()
         {
             _musicStreams = new List<PlaySoundResult>();
+            LevelController.OnLevelLoaded += () =>
+            {
+                _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
+            };
         }
 
         private IEnumerator Start()
         {
+            
             _musicStreams.Add(MasterAudio.PlaySound("World1_A"));
             _musicStreams.Add(MasterAudio.PlaySound("World1_B"));
             _musicStreams.Add(MasterAudio.PlaySound("World1_C"));
             
             yield return new WaitForFixedUpdate();
             _index = 0;
-            CurrentOcularState = _states[(_index%6 + 6)%6];
-            MapController.UpdateColorables();
-            OnGlassesToggled?.Invoke();
-            
-            
+
             LevelController.OnLevelLoaded += UpdateOcularState;
         }
 

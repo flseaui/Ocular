@@ -112,6 +112,8 @@ namespace Level.Objects {
             Gizmos.color = Color.green;
             foreach (var neighbor in Node.Neighbors)
             {
+                if (neighbor is null) continue;
+                
                 Gizmos.DrawCube(neighbor.Walkable.transform.position, new Vector3(1, 1, 1));
             }
         }
@@ -123,6 +125,7 @@ namespace Level.Objects {
             Gizmos.color = Color.black;
             foreach (var neighbor in Node.Neighbors)
             {
+                if (neighbor is null) continue;
                 if (!neighbor.Walkable.Enabled) continue;
                 Gizmos.DrawLine(transform.position + new Vector3(0, 1.5f, 0),
                     neighbor.Walkable.transform.position + new Vector3(0, 1.5f, 0));

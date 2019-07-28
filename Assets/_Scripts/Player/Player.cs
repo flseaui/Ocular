@@ -56,7 +56,7 @@ namespace Player
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform.ParentHasComponent<Colorable>(out var colorable))
+            if (other.transform.ParentHasComponent<Colorable>(out var colorable) && other.transform.parent.CompareTag("Colorable"))
                 _currentCollision = colorable;
             if (other.CompareTag("Harmful"))
                 Death();
