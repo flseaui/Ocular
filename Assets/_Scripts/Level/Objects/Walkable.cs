@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level.Objects {
+    [SelectionBase]
     public class Walkable : MonoBehaviour, IEquatable<Walkable>
     {
         public Node Node;

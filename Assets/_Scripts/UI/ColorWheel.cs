@@ -16,7 +16,7 @@ public class ColorWheel : MonoBehaviour
         var left = Input.GetKeyDown(KeyCode.Q);
         var right = Input.GetKeyDown(KeyCode.E);
 
-        if (Pathfinder.Navigating)
+        if (Pathfinder.Navigating || Player.Player.Falling)
         {
             if (!_disabled)
             {

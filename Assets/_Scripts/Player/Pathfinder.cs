@@ -22,6 +22,7 @@ namespace Player {
         private void Awake()
         {
             Indicator.OnWalkableClicked += NavigateTo;
+            LevelController.OnLevelLoaded += ClearPath;
         }
 
         private void OnDestroy()
@@ -29,6 +30,14 @@ namespace Player {
             Indicator.OnWalkableClicked -= NavigateTo;
         }
 
+        private void ClearPath()
+        {
+            _currentPath = null;
+            _currentEnd = null;
+            _currentStart = null;
+            Navigating = false;
+        }
+        
         private void NavigateTo(Walkable destination)
         {
             var path = GeneratePath(GetCurrentWalkable(out var walk), destination);

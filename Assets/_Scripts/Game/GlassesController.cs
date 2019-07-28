@@ -87,7 +87,7 @@ namespace Game
         {
             var left = Input.GetKeyDown(KeyCode.Q);
             var right = Input.GetKeyDown(KeyCode.E);
-            if (!(left && right) && !ColorWheel.Turning && !Pathfinder.Navigating)
+            if (!(left && right) && !ColorWheel.Turning && !Pathfinder.Navigating && !Player.Player.Falling)
             {
                 if (left)
                 {

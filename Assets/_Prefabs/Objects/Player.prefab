@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2cc982cda6425cb33ca0bb1837b5d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Navigating: 0
+  _currentEnd: {fileID: 0}
   WalkSpeed: 1
 --- !u!114 &8965717987664949874
 MonoBehaviour:
@@ -149,6 +149,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
+    - target: {fileID: 2502203975881118265, guid: 5ae0d428920d2a94f89eea1c04da0cb1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 5ae0d428920d2a94f89eea1c04da0cb1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -203,11 +208,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2502203975881118265, guid: 5ae0d428920d2a94f89eea1c04da0cb1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ae0d428920d2a94f89eea1c04da0cb1, type: 3}
