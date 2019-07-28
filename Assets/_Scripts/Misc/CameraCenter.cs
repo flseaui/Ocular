@@ -43,8 +43,8 @@ namespace Misc
                 
                 _center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f, -10f);*/
 
-                var bounds = _centerParent.GetComponent<MeshFilter>().sharedMesh.bounds;
-                transform.position = new Vector3(bounds.center.x, bounds.center.y + 1, bounds.center.z);
+                var bounds = _centerParent.GetComponent<MeshRenderer>().bounds;
+                transform.position = new Vector3(bounds.center.x, bounds.center.y + 5, bounds.center.z);
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
             };
         }
