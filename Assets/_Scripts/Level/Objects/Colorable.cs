@@ -173,7 +173,7 @@ namespace Level.Objects
 
                         break;
                 }
-
+                Debug.Log($"[ID]: {walkable.UniqueId}\n[S]: {visible}");
                 walkable.CheckBelow(!visible);
                 walkable.Enabled = visible;
             }
@@ -218,30 +218,14 @@ namespace Level.Objects
 
             switch (ocularState)
             {
-                case OcularState.Z:
-                    return Color.white;
-                    break;
-                case OcularState.A:
-                    return Color.red;
-                    break;
-                case OcularState.AB:
-                    return new Color(1, .551f, 0);
-                    break;
-                case OcularState.B:
-                    return new Color(1, 1, 0, 1);
-                    break;
-                case OcularState.BC:
-                    return Color.green;
-                    break;
-                case OcularState.C:
-                    return Color.blue;
-                    break;
-                case OcularState.AC:
-                    return Color.magenta;
-                    break;
-                case OcularState.Null:
-                    return Color.clear;
-                    break;
+                case OcularState.Z    : return Color.white;
+                case OcularState.A    : return Color.red;
+                case OcularState.AB   : return new Color(1, .551f, 0);
+                case OcularState.B    : return new Color(1, 1, 0, 1);
+                case OcularState.BC   : return Color.green;
+                case OcularState.C    : return Color.blue;
+                case OcularState.AC   : return Color.magenta;
+                case OcularState.Null : return Color.clear;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ocularState), ocularState, null);
             }

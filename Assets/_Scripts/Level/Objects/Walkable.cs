@@ -78,9 +78,12 @@ namespace Level.Objects {
         {
             if (Physics.Raycast(
                 new Vector3(transform.localPosition.x, transform.localPosition.y - .1f, transform.localPosition.z),
-                new Vector3(0, -1, 0), out var hit, 1))
+                new Vector3(0, -1, 0), out var hit, 1, LayerMask.GetMask("Model")))
+            {
+                if (hit.collider is null) return;
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
                     walkable.Enabled = state;
+            }
         }
 
         public override bool Equals(object obj)
