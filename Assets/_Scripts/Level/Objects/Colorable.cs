@@ -23,6 +23,14 @@ namespace Level.Objects
             Outlined
         }
 
+        public enum ColorableType
+        {
+            StateChanging,
+            ColorChanging
+        }
+
+        [SerializeField] private ColorableType _type; 
+        
         [SerializeField, HideInInspector] private Color _color;
         [SerializeField, HideInInspector] private OcularState _ocularState;
         [SerializeField] private Material _blockMat;
@@ -142,40 +150,49 @@ namespace Level.Objects
 
         private void InternalOnGlassesToggled()
         {
-            var (color, state) = CalculateVisibility();
-
-            State = state;
-            if (state == BlockState.Outlined)
+            switch (_type)
             {
-                // Set temp color for outline
-                foreach (var r in _renderers)
-                {
-                    r.GetPropertyBlock(_propBlock);
-                    _propBlock.SetColor("_Color", StateToColor(color));
-                    r.SetPropertyBlock(_propBlock);
-                }
-            }
-            else
-                OcularState = color;
+                case ColorableType.StateChanging:
+                    var (color, state) = CalculateVisibility();
 
-            if (transform.HasComponent<Walkable>(out var walkable))
-            {
-                var visible = _blockState == BlockState.Visible;
-
-                //if custom disable behavior gets overly complex, move into child classes
-                switch (walkable)
-                {
-                    case ButtonWalkable button:
-                        if (!visible)
+                    State = state;
+                    if (state == BlockState.Outlined)
+                    {
+                        // Set temp color for outline
+                        foreach (var r in _renderers)
                         {
-                            button.State = false;
+                            r.GetPropertyBlock(_propBlock);
+                            _propBlock.SetColor("_Color", StateToColor(color));
+                            r.SetPropertyBlock(_propBlock);
                         }
+                    }
+                    else
+                        OcularState = color;
+                    
+                    if (transform.HasComponent<Walkable>(out var walkable))
+                    {
+                        var visible = _blockState == BlockState.Visible;
 
-                        break;
-                }
-                Debug.Log($"[ID]: {walkable.UniqueId}\n[S]: {visible}");
-                walkable.CheckBelow(!visible);
-                walkable.Enabled = visible;
+                        //if custom disable behavior gets overly complex, move into child classes
+                        switch (walkable)
+                        {
+                            case ButtonWalkable button:
+                                if (!visible)
+                                {
+                                    button.State = false;
+                                }
+
+                                break;
+                        }
+                        walkable.CheckBelow(!visible);
+                        walkable.Enabled = visible;
+                    }
+                    break;
+                case ColorableType.ColorChanging:
+                    OcularState = GlassesController.CurrentOcularState;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
