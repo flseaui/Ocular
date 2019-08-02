@@ -38,7 +38,7 @@ namespace UI {
             }
             else
             {
-                transform.position = new Vector3(-100, -100, -100);
+                transform.position = new Vector3(-1000, -1000, -1000);
             }
             
             void SetTransform(float yShift, Action rotation = null)

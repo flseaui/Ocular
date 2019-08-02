@@ -41,7 +41,7 @@ namespace Game
         [ShowInInspector, ReadOnly]
         public static OcularState CurrentOcularState;
     
-        private int _index;
+        public int index;
     
         private List<PlaySoundResult> _musicStreams;
     
@@ -73,34 +73,14 @@ namespace Game
             _musicStreams.Add(MasterAudio.PlaySound("World1_C"));
             
             yield return new WaitForFixedUpdate();
-            _index = 0;
+            index = 0;
 
             LevelController.OnLevelLoaded += UpdateOcularState;
         }
 
-        private void Update()
+        public void UpdateOcularState()
         {
-            var left = Input.GetKeyDown(KeyCode.Q);
-            var right = Input.GetKeyDown(KeyCode.E);
-            if (!(left && right) && !ColorWheel.Turning && !Pathfinder.Navigating && !Player.Player.Falling)
-            {
-                if (left)
-                {
-                    _index++;
-                    UpdateOcularState();
-                }
-
-                if (right)
-                {
-                    _index--;
-                    UpdateOcularState();
-                }
-            }
-        }
-
-        private void UpdateOcularState()
-        {
-            CurrentOcularState = _states[(_index%6 + 6)%6];
+            CurrentOcularState = _states[(index%6 + 6)%6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
             UpdateMusicStreams();

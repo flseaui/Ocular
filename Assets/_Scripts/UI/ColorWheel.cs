@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game;
 using Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,11 +11,40 @@ public class ColorWheel : MonoBehaviour
     public static bool Turning;
 
     private bool _disabled;
-    // Update is called once per frame
+    private bool _bufferLeft;
+    private bool _bufferRight;
+
+    [SerializeField] private GameObject _gameManager;
+    private GlassesController _glassesController;
+
+
+    private void Start()
+    {
+        _glassesController = _gameManager.GetComponent<GlassesController>();
+    }
+
     void Update()
     {
-        var left = Input.GetKeyDown(KeyCode.Q);
-        var right = Input.GetKeyDown(KeyCode.E);
+        var left = Input.GetKey(KeyCode.Q);
+        var right = Input.GetKey(KeyCode.E);
+
+        if (Turning && Input.GetKeyDown(KeyCode.Q))
+        {
+            _bufferLeft = true;
+            _bufferRight = false;
+        }
+
+        if (Turning && Input.GetKeyDown(KeyCode.E))
+        {
+            _bufferRight = true;
+            _bufferLeft = false;
+        }
+
+        if (left && right)
+        {
+            left = false;
+            right = false;
+        }
 
         if (Pathfinder.Navigating || Player.Player.Falling)
         {
@@ -31,19 +61,25 @@ public class ColorWheel : MonoBehaviour
                 GetComponent<Image>().DOColor(new Color(255, 255, 255, 255), .1f);
                 _disabled = false;
             }
-            if (!(left && right) && !Turning)
+            if (!Turning)
             {
-                if (left)
+                if (left || _bufferLeft)
                 {
                     Turning = true;
+                    _bufferLeft = false;
+                    _glassesController.index++;
+                    _glassesController.UpdateOcularState();                  
                     var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60),
                         .3f);
                     rotate.onComplete += () => Turning = false;
                 }
 
-                if (right)
+                if (right || _bufferRight)
                 {
                     Turning = true;
+                    _bufferRight = false;
+                    _glassesController.index--;
+                    _glassesController.UpdateOcularState();   
                     var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, -60),
                         .3f);
                     rotate.onComplete += () => Turning = false;
