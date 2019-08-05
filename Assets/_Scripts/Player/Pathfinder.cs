@@ -56,6 +56,7 @@ namespace Player {
                 _currentPath = new Queue<Walkable>(path);
 
                 _currentEnd = _currentPath.Dequeue();
+                GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
                 Navigating = true;
             }
         }
@@ -144,6 +145,7 @@ namespace Player {
                             ClearPath();
                             _currentPath = _queuedPath;
                             _currentEnd = _currentPath.Dequeue();
+                            GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
                             Navigating = true;
                         }
                         else
@@ -152,6 +154,7 @@ namespace Player {
                             if (_currentPath.Count > 0)
                             {
                                 _currentEnd = _currentPath.Dequeue();
+                                GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
                                 OnMove?.Invoke();
                             }
                             else
@@ -159,6 +162,24 @@ namespace Player {
                         }
                     }
                 }
+        }
+        
+        private Player.Cardinal GetCardinal(Walkable start, Walkable end)
+        {
+            if (start is null || end is null)
+                return Player.Cardinal.None;
+        
+            if (start.transform.position.x > end.transform.position.x)
+                return Player.Cardinal.West;
+            if (start.transform.position.x < end.transform.position.x)
+                return Player.Cardinal.East;
+            if (start.transform.position.z > end.transform.position.z)
+                return Player.Cardinal.South;
+            if (start.transform.position.z < end.transform.position.z)
+                return Player.Cardinal.North;
+        
+            Debug.Log("Same as start");
+            return Player.Cardinal.None;
         }
 
 #if UNITY_EDITOR

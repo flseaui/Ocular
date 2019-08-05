@@ -71,6 +71,7 @@ namespace Game
             _musicStreams.Add(MasterAudio.PlaySound("World1_A"));
             _musicStreams.Add(MasterAudio.PlaySound("World1_B"));
             _musicStreams.Add(MasterAudio.PlaySound("World1_C"));
+            _musicStreams.Add(MasterAudio.PlaySound("World1_Main"));
             
             yield return new WaitForFixedUpdate();
             index = 0;
@@ -91,44 +92,52 @@ namespace Game
             switch (CurrentOcularState)
             {
                 case OcularState.Z:
-                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], AudioMixing.FadeInTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], AudioMixing.FadeInTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], AudioMixing.FadeInTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.A:
-                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(0, 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], AudioMixing.FadeInTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.AB:
-                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(0, 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], AudioMixing.FadeInTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], AudioMixing.FadeInTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.B:
-                    _musicStreams[0].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(0, 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], AudioMixing.FadeInTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.BC:
-                    _musicStreams[0].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[1], AudioMixing.FadeInTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], AudioMixing.FadeInTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.C:
-                    _musicStreams[0].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], AudioMixing.FadeInTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.AC:
-                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[0], AudioMixing.FadeInTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[2], AudioMixing.FadeInTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldOneVolumes[3], AudioMixing.FadeInTime);
                     break;
                 case OcularState.Null:
-                    _musicStreams[0].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[1].ActingVariation.FadeToVolume(0, 1);
-                    _musicStreams[2].ActingVariation.FadeToVolume(0, 1);
+                    _musicStreams[0].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[1].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[2].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                    _musicStreams[3].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
