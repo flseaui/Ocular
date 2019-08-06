@@ -9,6 +9,7 @@ namespace Level.Objects {
             if (other.CompareTag("Player"))
             {
                 GameManager.OnLevelLoad?.Invoke();
+                ES3.Save<int>("LatestLevel", 0);
             }
         }
     }

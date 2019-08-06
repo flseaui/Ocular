@@ -201,7 +201,19 @@ namespace Level.Objects
             if (ocularState == OcularState.Null)
                 return Color.clear;
 
-            return _levelInfo.BlockColors[(int) ocularState];
+            switch (ocularState)
+            {
+                case OcularState.Z    : return Color.white;
+                case OcularState.A    : return Color.red;
+                case OcularState.AB   : return new Color(1, .551f, 0);
+                case OcularState.B    : return new Color(1, 1, 0, 1);
+                case OcularState.BC   : return Color.green;
+                case OcularState.C    : return Color.blue;
+                case OcularState.AC   : return Color.magenta;
+                case OcularState.Null : return Color.clear;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ocularState), ocularState, null);
+            }
         }
 
         public static bool IsColorVisible(OcularState ocularState)
