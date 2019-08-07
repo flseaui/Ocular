@@ -62,7 +62,7 @@ namespace Animation
 
         public int CurrentFrameLength()
         {
-            return _frames[_currentFrame]._timing;
+            return _frames[_currentFrame - 1]._timing;
         }
     }
 }
