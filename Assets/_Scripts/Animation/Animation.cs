@@ -1,20 +1,26 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Animation
 {
-    internal abstract class Frame
+    [Serializable]
+    public class Frame
     {
-        private MeshFilter _mesh;
+        [SerializeField]
+        private Mesh _mesh;
+        [SerializeField]
         private Material _material;
-    }
 
-    struct Animation
+        [SerializeField] private int _timing;
+    }
+    
+    [CreateAssetMenu(menuName = "Voxel Animation")]
+    public class Animation : ScriptableObject
     {
+        [SerializeField]
         private List<Frame> _frames;
-        private List<int> _timing;
+        [SerializeField]
         private bool _looping;
         private int _currentFrame;
 
@@ -52,12 +58,5 @@ namespace Animation
             _currentFrame = 0;
             _looping = false;
         }
-
-    }
-
-    public class PlayerAnimationController : MonoBehaviour
-    {
-        
-        
     }
 }
