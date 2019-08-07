@@ -137,7 +137,7 @@ namespace Player {
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
                     //transform.LookAt(vec, Vector3.up);
-                    transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
+                    transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
                         if (_queuedPath != null && _queuedPath.Count > 0)

@@ -8,11 +8,11 @@ namespace Animation
     public class Frame
     {
         [SerializeField]
-        private Mesh _mesh;
+        public Mesh _mesh;
         [SerializeField]
-        private Material _material;
+        public Material _material;
 
-        [SerializeField] private int _timing;
+        [SerializeField] public int _timing;
     }
     
     [CreateAssetMenu(menuName = "Voxel Animation")]
@@ -31,7 +31,7 @@ namespace Animation
             _looping = false;
         }
 
-        Frame Play()
+        public Frame Play()
         {
             if (_currentFrame >= _frames.Count)
             {
@@ -48,15 +48,21 @@ namespace Animation
             return nextFrame;
         }
 
-        void Loop()
+        public Frame Loop()
         {
-            _looping = true;            
+            _looping = true;
+            return Play();
         }
 
-        void Stop()
+        public void Stop()
         {
             _currentFrame = 0;
             _looping = false;
+        }
+
+        public int CurrentFrameLength()
+        {
+            return _frames[_currentFrame]._timing;
         }
     }
 }
