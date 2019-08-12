@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -15,7 +16,7 @@ namespace UI
         
         public void NextWorld()
         {
-            _worlds[_worldIndex].transform.rotation = Quaternion.Euler(Vector3.zero);
+            //_worlds[_worldIndex].transform.rotation = Quaternion.Euler(Vector3.zero);
             _currentTween.Kill();
             ++_worldIndex;
             if (_worldIndex > _worlds.Count - 1)
@@ -28,7 +29,7 @@ namespace UI
 
         public void PreviousWorld()
         {
-            _worlds[_worldIndex].transform.rotation = Quaternion.Euler(Vector3.zero);
+            //_worlds[_worldIndex].transform.rotation = Quaternion.Euler(Vector3.zero);
             _currentTween.Kill();
             --_worldIndex;
             if (_worldIndex < 0)
@@ -37,6 +38,17 @@ namespace UI
             transform.DOMove(new Vector3(-prevWorld.x, transform.localPosition.y, -prevWorld.z), .5f);
             _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
+        }
+
+        public void ChooseWorld()
+        {
+            transform.DOScale(new Vector3(10, 10, 10), 3).onUpdate += () =>
+            {
+                if (transform.localScale.x >= 3 && transform.localScale.x <= 3.1)
+                {
+                    SceneManager.LoadSceneAsync("Game");
+                }
+            };
         }
     }
 }
