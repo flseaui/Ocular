@@ -23,7 +23,7 @@ namespace Level {
                         return Tuple.Create(x, y);
                 }
             }
-
+            Debug.Log("Item not found");
             return Tuple.Create(-1, -1);
         }
         
@@ -34,13 +34,13 @@ namespace Level {
 
             for (int x = value.Item1; x < w; ++x)
             {
-                for (int y = value.Item2; y < h; ++y)
+                for (int y = value.Item2 + 1; y < h; ++y)
                 {
-                    if (!matrix[x, y].Equals(null))
+                    if (!ReferenceEquals(matrix[x, y], null))
                         return Tuple.Create(x, y);
                 }
             }
-
+            Debug.Log("Item is last item in matrix");
             return Tuple.Create(-1, -1);
         }
     }
@@ -51,8 +51,8 @@ namespace Level {
         [SerializeField] private List<GameObject> _worldTwoLevels;
 
         private List<List<GameObject>> _worlds;
-        
-        private GameObject[,] _levels = new GameObject[2,6];
+
+        private GameObject[,] _levels = new GameObject[2, 6];
 
         private GameObject _loadedLevel;
         private Tuple<int, int> _loadedLevelNumber;
