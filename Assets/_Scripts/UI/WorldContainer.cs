@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,8 @@ namespace UI
     public class WorldContainer : MonoBehaviour
     {
 
+        [SerializeField] private TextMeshProUGUI _worldTitle;
+        
         [SerializeField] private List<GameObject> _worlds;
 
         private int _worldIndex = 0;
@@ -25,6 +28,7 @@ namespace UI
             transform.DOMove(new Vector3(-nextWorld.x, transform.localPosition.y, -nextWorld.z), .5f);
             _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
+            _worldTitle.text = _worlds[_worldIndex].name;
         }
 
         public void PreviousWorld()
@@ -38,6 +42,7 @@ namespace UI
             transform.DOMove(new Vector3(-prevWorld.x, transform.localPosition.y, -prevWorld.z), .5f);
             _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
+            _worldTitle.text = _worlds[_worldIndex].name;
         }
 
         public void ChooseWorld()
