@@ -134,6 +134,11 @@ namespace Level {
             Destroy(_loadedLevel);
             CurrentLevelInfo = null;
         }
-        
+
+        public int GetCurrentWorld()
+        {
+            return _loadedLevelNumber.Item1;
+        }
+
     }
 }
