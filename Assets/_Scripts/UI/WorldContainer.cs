@@ -13,10 +13,10 @@ namespace UI
         
         [SerializeField] private List<GameObject> _worlds;
 
-        private int _worldIndex = 0;
+        private int _worldIndex;
 
         private Tween _currentTween;
-        
+
         public void NextWorld()
         {
             //_worlds[_worldIndex].transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -55,5 +55,13 @@ namespace UI
                 }
             };
         }
+
+        private void Start()
+        {
+            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
+                .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
+            _worldTitle.text = _worlds[_worldIndex].name;
+        }
+        
     }
 }
