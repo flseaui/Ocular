@@ -24,12 +24,6 @@ namespace Audio
         public static readonly float FadeInTime = 1.5f;
         public static readonly float FadeOutTime = 3f;
 
-        public static readonly float[][] WorldVolumes =
-        {
-            WorldOneVolumes,
-            WorldTwoVolumes
-        };
-
         private static readonly float[] WorldOneVolumes =
         {
             WorldOneAVolume * MasterVolume * MasterMusicVolume,
@@ -44,6 +38,12 @@ namespace Audio
             WorldTwoBVolume * MasterVolume * MasterMusicVolume,
             WorldTwoCVolume * MasterVolume * MasterMusicVolume,
             WorldTwoMainVolume * MasterVolume * MasterMusicVolume
+        };
+        
+        public static readonly float[][] WorldVolumes =
+        {
+            WorldOneVolumes,
+            WorldTwoVolumes
         };
     }
 }

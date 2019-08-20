@@ -91,10 +91,10 @@ namespace Game
         {
             _musicStreams.Clear();
             _currentWorldMusic = CurrentWorld;
-            _musicStreams.Add(MasterAudio.PlaySound("World{0}_A", CurrentWorld + 1));
-            _musicStreams.Add(MasterAudio.PlaySound("World{0}_B", CurrentWorld + 1));
-            _musicStreams.Add(MasterAudio.PlaySound("World{0}_C", CurrentWorld + 1));
-            _musicStreams.Add(MasterAudio.PlaySound("World{0}_Main", CurrentWorld + 1));
+            _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_A", AudioMixing.WorldVolumes[CurrentWorld][0]));
+            _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_B", AudioMixing.WorldVolumes[CurrentWorld][1]));
+            _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_C", AudioMixing.WorldVolumes[CurrentWorld][2]));
+            _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_Main", AudioMixing.WorldVolumes[CurrentWorld][3]));
         }
 
         private void UpdateMusicStreams()
