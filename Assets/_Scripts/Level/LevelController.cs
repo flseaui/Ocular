@@ -34,7 +34,7 @@ namespace Level {
 
             for (int x = value.Item1; x < w; ++x)
             {
-                for (int y = value.Item2 + 1; y < h; ++y)
+                for (int y = x == value.Item1 ? value.Item2 + 1 : 0; y < h; ++y)
                 {
                     if (!ReferenceEquals(matrix[x, y], null))
                         return Tuple.Create(x, y);
