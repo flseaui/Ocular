@@ -1,4 +1,5 @@
 ﻿using Game;
+using Player;
 using UnityEngine;
 
 namespace Level.Objects {
@@ -8,8 +9,9 @@ namespace Level.Objects {
         {
             if (other.CompareTag("Player"))
             {
+                Pathfinder.Navigating = false;
                 GameManager.OnLevelLoad?.Invoke();
-                ES3.Save<int>("LatestLevel", GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo.Name);
+                //ES3.Save<int>("LatestLevel", GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo.Name);
             }
         }
     }

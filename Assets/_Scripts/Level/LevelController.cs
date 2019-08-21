@@ -65,7 +65,7 @@ namespace Level {
         public static Action OnLevelLoaded;
 
         private Tuple<int, int> _levelToLoad;
-
+        
         private void Awake()
         {      
             _worlds = new List<List<GameObject>>
@@ -91,8 +91,11 @@ namespace Level {
         public IEnumerator LoadNextLevel()
         {
             _levelToLoad = _levels.GetNext(_loadedLevelNumber);
+            CurrentLevelInfo.Animator.SetTrigger("FadeOut");
+            
+            yield return new WaitUntil(() => CurrentLevelInfo.ReadyToLoad);
+            CurrentLevelInfo.ReadyToLoad = false;
             StartCoroutine(nameof(LoadLevel));
-            yield return new WaitForSeconds(1);
         }
 
         public IEnumerator LoadFirstLevel()
@@ -127,6 +130,7 @@ namespace Level {
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = _levelToLoad;
             OnLevelLoaded?.Invoke();
+            CurrentLevelInfo.Animator.SetTrigger("FadeIn");
         }
 
         public void UnloadLevel()

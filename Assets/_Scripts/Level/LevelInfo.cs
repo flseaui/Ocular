@@ -29,6 +29,15 @@ namespace Level
 
         public string Name;
 
+        public Animator Animator;
+
+        public bool ReadyToLoad;
+        
+        private void Awake()
+        {
+            Animator = GetComponent<Animator>();
+        }
+
         private void ApplyColorPreset()
         {
             if (ColorPreset == ColorSet.RGB)

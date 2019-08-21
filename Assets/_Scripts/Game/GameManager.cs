@@ -49,7 +49,7 @@ namespace Game {
 
             OnLevelLoad += () =>
             {
-                _levelController.CurrentLevelInfo = null;
+                //_levelController.CurrentLevelInfo = null;
                 
                 StartCoroutine(_levelController.LoadNextLevel());
                 StartCoroutine(nameof(SpawnPlayer));
