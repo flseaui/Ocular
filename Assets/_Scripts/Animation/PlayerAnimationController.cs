@@ -46,13 +46,15 @@ namespace Animation
         {
             if (_currentAnimation == _teleport && _currentFrame == null)
             {
+                Pathfinder.AtGoal = false;
                 GameManager.OnLevelLoad?.Invoke();
                 return null;
             }
             
             if (Pathfinder.AtGoal)
             {
-                _currentAnimation.Stop();
+                _loopAnimation = false;
+                if(_currentAnimation != _teleport) _currentAnimation.Stop();
                 return _teleport;
             }
             

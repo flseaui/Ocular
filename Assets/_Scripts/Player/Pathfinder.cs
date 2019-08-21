@@ -8,6 +8,7 @@ using Level.Objects;
 using Priority_Queue;
 using Sirenix.OdinInspector;
 using UI;
+using UnityEditor;
 using UnityEngine;
 
 namespace Player {
@@ -46,7 +47,8 @@ namespace Player {
             var path = GeneratePath(Navigating ? _currentEnd : GetCurrentWalkable(out _), destination);
             if (path == null)
                 return;
-            
+
+            if (AtGoal) return;
             if (Navigating)
             {
                 _queuedPath = new Queue<Walkable>(path);
