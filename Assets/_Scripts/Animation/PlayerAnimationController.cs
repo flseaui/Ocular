@@ -36,6 +36,8 @@ namespace Animation
 
         private Animation DetermineAnimation()
         {
+            
+            
             if (Pathfinder.Navigating)
             {
                 _loopAnimation = true;
