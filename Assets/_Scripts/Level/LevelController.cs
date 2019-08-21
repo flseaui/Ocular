@@ -141,7 +141,8 @@ namespace Level {
 
         public int GetCurrentWorld()
         {
-            return _loadedLevelNumber.Item1;
+            //return _loadedLevelNumber.Item1;
+            return 0;
         }
 
     }

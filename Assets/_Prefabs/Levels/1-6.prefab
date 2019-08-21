@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6184163973117071106}
   - component: {fileID: 1253017126898052937}
   - component: {fileID: 7758605055600970008}
+  - component: {fileID: -7341713498638058477}
   m_Layer: 0
   m_Name: 1-6
   m_TagString: Untagged
@@ -78,6 +79,8 @@ MonoBehaviour:
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 8364614951871700145}
   Name: Assets/_Prefabs/Levels/1-6.prefab
+  Animator: {fileID: 0}
+  ReadyToLoad: 0
 --- !u!114 &7758605055600970008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,6 +93,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a7cb8b56132c2a489f77eb527019e38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &-7341713498638058477
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38395150145670225}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 05f4803e1633ef16ca64d511368d630e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &124578503012976589
 GameObject:
   m_ObjectHideFlags: 0
