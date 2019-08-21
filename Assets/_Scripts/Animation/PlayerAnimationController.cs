@@ -3,6 +3,7 @@ using ES3Types;
 using Game;
 using Player;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -49,7 +50,7 @@ namespace Animation
                 Pathfinder.AtGoal = false;
                 Destroy(gameObject);
                 GameManager.OnLevelLoad?.Invoke();
-                return null;
+                return _teleport;
             }
             
             if (Pathfinder.AtGoal)
@@ -74,7 +75,7 @@ namespace Animation
         private void PlayAnimation(Animation anim, bool loop)
         {
             _currentFrame = loop ? anim.Loop(): anim.Play();
-            if (_currentFrame == null) return;
+            if (ReferenceEquals(_currentFrame, null)) return;
             GetComponentInChildren<MeshFilter>().mesh = _currentFrame._mesh;
             GetComponentInChildren<MeshRenderer>().sharedMaterial = _currentFrame._material;
             _timeRemaining = anim.CurrentFrameLength() * .00001f;
