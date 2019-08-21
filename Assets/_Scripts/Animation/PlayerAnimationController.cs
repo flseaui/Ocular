@@ -1,6 +1,8 @@
 using System.Collections;
 using ES3Types;
+using Game;
 using Player;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,8 +12,9 @@ namespace Animation
     {
         [SerializeField] private Animation _walk;
         [SerializeField] private Animation _idle;
+        [SerializeField] private Animation _teleport;
         private Frame _currentFrame;
-        private Animation _currentAnimation;
+        [ShowInInspector] private Animation _currentAnimation;
         private bool _loopAnimation;
         private bool _resolvingFrame;
         private float _timeRemaining;
@@ -24,6 +27,11 @@ namespace Animation
 
         private void Update()
         {
+            if (Pathfinder.AtGoal && _currentAnimation != _teleport)
+            {
+                DetermineAnimation();
+            }
+            
             if (_resolvingFrame)
             {
                 _timeRemaining -= Time.deltaTime;
@@ -36,7 +44,17 @@ namespace Animation
 
         private Animation DetermineAnimation()
         {
+            if (_currentAnimation == _teleport && _currentFrame == null)
+            {
+                GameManager.OnLevelLoad?.Invoke();
+                return null;
+            }
             
+            if (Pathfinder.AtGoal)
+            {
+                _currentAnimation.Stop();
+                return _teleport;
+            }
             
             if (Pathfinder.Navigating)
             {
@@ -53,6 +71,7 @@ namespace Animation
         private void PlayAnimation(Animation anim, bool loop)
         {
             _currentFrame = loop ? anim.Loop(): anim.Play();
+            if (_currentFrame == null) return;
             GetComponentInChildren<MeshFilter>().mesh = _currentFrame._mesh;
             GetComponentInChildren<MeshRenderer>().sharedMaterial = _currentFrame._material;
             _timeRemaining = anim.CurrentFrameLength() * .00001f;

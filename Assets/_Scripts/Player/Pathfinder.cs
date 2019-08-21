@@ -18,6 +18,7 @@ namespace Player {
         private Queue<Walkable> _currentPath;
         private Walkable _currentStart;
         [ShowInInspector] public static bool Navigating;
+        [ShowInInspector] public static bool AtGoal;
         [SerializeField] public float WalkSpeed = 5.0f;
         private Queue<Walkable> _queuedPath = null;
         private void Awake()
