@@ -47,6 +47,7 @@ namespace Animation
             if (_currentAnimation == _teleport && _currentFrame == null)
             {
                 Pathfinder.AtGoal = false;
+                Destroy(gameObject);
                 GameManager.OnLevelLoad?.Invoke();
                 return null;
             }

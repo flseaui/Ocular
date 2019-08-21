@@ -38,8 +38,8 @@ namespace Game {
             _levelController.LoadLevelFromObj(level);
             //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
             _indicator = Instantiate(_indicatorPrefab);
-            Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
-                Quaternion.identity);
+            //Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
+              //  Quaternion.identity);
         }
         
         private void Awake()
@@ -52,10 +52,11 @@ namespace Game {
                 //_levelController.CurrentLevelInfo = null;
                 
                 StartCoroutine(_levelController.LoadNextLevel());
-                StartCoroutine(nameof(SpawnPlayer));
             };
+            LevelController.OnLevelLoaded += () => { StartCoroutine(SpawnPlayer()); };
         }
 
+        
         IEnumerator SpawnPlayer()
         {
             yield return new WaitUntil(() => _levelController.CurrentLevelInfo != null);
@@ -72,8 +73,8 @@ namespace Game {
                 yield return new WaitUntil(() => _levelController.CurrentLevelInfo != null);
                 
                 Instantiate(_indicatorPrefab);
-                Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
-                    Quaternion.identity);
+                //Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
+                  //  Quaternion.identity);
             }
         }        
     }
