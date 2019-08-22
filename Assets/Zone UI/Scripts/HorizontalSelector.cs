@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Doozy.Engine.Events;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
@@ -33,6 +36,8 @@ namespace Michsky.UI.Zone
         private TextMeshProUGUI labeHelper;
         private Animator selectorAnimator;
 
+        public string CurrentElement => elements[index];
+        
         void Awake()
         {
             selectorAnimator = gameObject.GetComponent<Animator>();
