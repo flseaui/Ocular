@@ -77,10 +77,6 @@ namespace Level.Objects
                         SetModelsState(false);
                         break;
                     case BlockState.Visible:
-                        //todo alert player of collision/death
-                        GameObject.FindWithTag("Player")?.GetComponent<Player.Player>().CheckForDeath(this);
-
-                        
                         _renderers.ForEach(r =>
                         {
                             var tex = r.material.mainTexture;
@@ -88,6 +84,10 @@ namespace Level.Objects
                             r.material.mainTexture = tex;
                         });
                         SetModelsState(true);
+                        
+                        //todo alert player of collision/death
+                        GameObject.FindWithTag("Player")?.GetComponent<Player.Player>().CheckForDeath(this);
+
                         break;
                     case BlockState.Outlined:
                         _renderers.ForEach(r => r.material = _outlineMat);

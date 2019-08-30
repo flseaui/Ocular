@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Game;
 using Level;
@@ -26,10 +27,14 @@ namespace Player
         [ShowInInspector]
         public static bool Falling;
 
-        [ShowInInspector]public static Cardinal Facing;
+        [ShowInInspector] public static Cardinal Facing;
+
+        private Colorable _lastEnabled;
         
         public void CheckForDeath(Colorable colorable)
         {
+            _lastEnabled = colorable;
+            
             if (colorable == _currentCollision)
                 Death();
         }
@@ -66,18 +71,32 @@ namespace Player
             transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
                 .PlayerSpawnPoint.position;
         }
-        
-        private void OnTriggerEnter(Collider other)
+
+        private void OnCollisionEnter(Collision other)
         {
-            if (other.transform.ParentHasComponent<Colorable>(out var colorable) && other.transform.parent.CompareTag("Colorable"))
+            if (other.transform.ParentHasComponent<Colorable>(out var colorable) &&
+                other.transform.CompareTag("Colorable"))
+            {
+                CheckForDeath(_lastEnabled);
+                Debug.Log("OH YEAH OH BABY OH YEAH");
                 _currentCollision = colorable;
-            if (other.CompareTag("Harmful"))
+
+            }
+
+            if (other.gameObject.CompareTag("Harmful"))
                 Death();
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnCollisionExit(Collision other)
         {
+            Debug.Log("BOO HOO HOO HOO");
             _currentCollision = null;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Harmful"))
+                Death();
         }
 
         public void ChangeFacing(Cardinal newDirection)
