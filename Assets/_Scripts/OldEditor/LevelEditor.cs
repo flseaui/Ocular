@@ -127,7 +127,8 @@ namespace OldEditor
         
         public void PlaceElement(Vector3Int position, Orientation orientation, Direction direction)
         {
-            var element = Instantiate(_currentObject, position, Quaternion.identity, _level.transform);
+            var element = (GameObject) PrefabUtility.InstantiatePrefab(_currentObject, _level.transform);
+            element.transform.position = position;
             
             if (element.transform.HasComponent<SlopeWalkable>(out var slope))
                 slope.MatchRotation(orientation, direction);

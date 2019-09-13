@@ -45,7 +45,7 @@ namespace Level.Objects
 
         private List<IController> _controllers;
 
-        [ShowInInspector, ReadOnly]
+        [ShowInInspector, ReadOnly]  
         public OcularState OcularState
         {
             get => _ocularState;

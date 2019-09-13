@@ -72,8 +72,8 @@ namespace OldEditor
                     var fileData = File.ReadAllBytes($"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png");
                     tex = new Texture2D(2, 2);
                     tex.LoadImage(fileData);
+                    img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
                 }
-                img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
             }
         }
 

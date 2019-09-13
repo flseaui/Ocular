@@ -81,7 +81,7 @@ namespace Game
 
         public void UpdateOcularState()
         {
-            CurrentOcularState = _states[(index%6 + 6)%6];
+            CurrentOcularState = _states[(index % 6 + 6) % 6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
             UpdateMusicStreams();

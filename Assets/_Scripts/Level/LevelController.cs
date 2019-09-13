@@ -74,17 +74,13 @@ namespace Level {
                 _worldTwoLevels
             };
             
-            var worldIndex = 0;
-            foreach (var world in _worlds)
+            for (var i = 0; i < _worlds.Count - 1; i++)
             {
-                var levelIndex = 0;
-                foreach (var level in world)
+                var world = _worlds[i];
+                for (var j = 0; j < world.Count - 1; j++)
                 {
-                    _levels[worldIndex, levelIndex] = level;
-                    levelIndex++;
+                    _levels[i, j] = world[j];
                 }
-
-                worldIndex++;
             }
         }
 

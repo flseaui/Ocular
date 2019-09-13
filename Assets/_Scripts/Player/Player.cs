@@ -78,7 +78,6 @@ namespace Player
                 other.transform.CompareTag("Colorable"))
             {
                 CheckForDeath(_lastEnabled);
-                Debug.Log("OH YEAH OH BABY OH YEAH");
                 _currentCollision = colorable;
 
             }
@@ -89,7 +88,6 @@ namespace Player
 
         private void OnCollisionExit(Collision other)
         {
-            Debug.Log("BOO HOO HOO HOO");
             _currentCollision = null;
         }
 
