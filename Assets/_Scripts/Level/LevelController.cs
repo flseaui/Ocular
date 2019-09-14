@@ -74,10 +74,10 @@ namespace Level {
                 _worldTwoLevels
             };
             
-            for (var i = 0; i < _worlds.Count - 1; i++)
+            for (var i = 0; i < _worlds.Count; i++)
             {
                 var world = _worlds[i];
-                for (var j = 0; j < world.Count - 1; j++)
+                for (var j = 0; j < world.Count; j++)
                 {
                     _levels[i, j] = world[j];
                 }

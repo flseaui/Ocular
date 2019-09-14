@@ -22,7 +22,7 @@ namespace UI {
                     switch (walkable)
                     {
                         case SlopeWalkable slope:
-                           SetTransform(0, () => transform.localRotation = Quaternion.Euler(45, _slopeAngles[(int) slope.DirectionFacing], 0));
+                           SetTransform(1.26f, () => transform.localRotation = Quaternion.Euler(45, _slopeAngles[(int) slope.DirectionFacing], 0));
                             break;
                         case ButtonWalkable _:
                             SetTransform(0.61f);

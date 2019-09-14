@@ -94,8 +94,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -373,6 +373,234 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &403300568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 403300572}
+  - component: {fileID: 403300571}
+  - component: {fileID: 403300570}
+  - component: {fileID: 403300569}
+  m_Layer: 0
+  m_Name: Easy Save 3 Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &403300569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403300568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9107aee0ced90422da95f0b31680501f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 01d99181-aeca-4b72-8cca-5353e56a0e31
+  saveEvent: 1
+  loadEvent: 1
+  settings:
+    _location: 0
+    path: SaveData.es3
+    encryptionType: 0
+    encryptionPassword: password
+    directory: 0
+    format: 0
+    bufferSize: 2048
+    saveChildren: 0
+    typeChecking: 1
+    safeReflection: 1
+    memberReferenceMode: 0
+    referenceMode: 2
+    assemblyNames:
+    - Assembly-CSharp
+    - Assembly-CSharp-firstpass
+    showAdvancedSettings: 0
+  autoSaves: []
+--- !u!114 &403300570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403300568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a83408fcc9044c4fbc7e5d09a369ab6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openReferences: 0
+  openPrefabs: 0
+  idRef:
+    _Keys: 8d1873687f58e46a94b14eb8a809d860a9369d5e868270230cacbf911a625728b45b932d30e329050d010b351298ce1b60ef360c47d2c30f77698cd3e8897b080877044c75aa3074a05d9477725aca5c7bdaf2099863701e697c5b669002126983ebd2656b7e5a49bfc16cea3e4c9d2ecb17a7f2698d906c18dd4b0ef969fb5d6ffdfa5d2d30c8037f5737a52fa4a24b1a8a32a7a905d21084c0b171cdb4af29443685bfadc0fe644fa3731156ea3c4380690b90c8ac4c7430f5269381a9c93459f1179ad69e06588ccdf64d78e46766846df163a81f601083fa8fb89a6ae3076da86a4801d6191e919be36a5d66124b8ebf18ef9a2ddd77532717db0e4dbe21ebeebb204eb06752ac2d0bbbfd35921ce8432ada52f46d647b1d64d6110ad242223d7f91550e032259c5436d22227a1d6b040c34dd1b310a7ea859cfb46fbf5ea53721c54adb8e09474d828cb00041585cb9bde9e9f8e0060b7513acb5336e3886a112594440687076027b2a9ebebb7e164e8d054e298a52a9e5462a371eab7abdbb070fede81462212e72e67db5684d466b3efc3e8c785b18c0b05efa3d396a520a19a63a35942c3a2a267d9c71cf5e4e93e5cbe0ae3b2fbc5408d3c84a975f9922c77831f0770f28ee3dec9a05405a0fadef99a792755d31169c70c2980a7bc385e57aaa562c5d1dd5f4cfeb28c948ec523be5a401482a9824aa478ce8d16fe4c1af1feabb0466da4cb57d87444959dfe55c14d4f01f3f3ebae285ace5d033fc7b4c522816cc58a85d400f483a4d236e04277244e6440c5f90a35a6275ed40e4167ff30709ce36e8fc938950ef0977090617a8bd5eef1dbf58b0b8ba27ba1eb67f0da046bed46436f08a4852bbbb6f79d4ada4a2bb7d7b2862b360ba87f10fb8b2d4d1e1683149ce4c8c322b58357becdfc01985e984700376861bf58c5652007c90a0e6ea8d1e05f7d6562f4a4f7f68d18b2538287632d19c2ba710b2c0410bc5cd58162a9e0153a21f7dbfda9f46d9f94cdbfecfe6280e3c8d7ceacad152ca6b9f0ae8576a6d91738825b70c0d53c48d7ff50063bf3ae0a46752b71aeb1c8c8e4cabc56ba17e7021b574b83f8f1ab61ebf87b538ac65ad652b43f017b575896bb24558b9192f30fe66211933f31f35819d995b63663ac54ea7d5691b9077d62bfd24f1d57204069058b7d28b4c78720b0e6f791c1a240577810a1143c5136eeff84431171009f4a193cb0aaf6839022f645d0c21fd0c45222869567c153dcb4549e29208475afc057bd7894e1955104708e1df67064cf2ec895340795f70482eff3a9a7a5906e9096206a626836cc58287627b08e263c1020e59810ce67e59f5df48b2ab10755ff1062afaff593497e270420d020a50106278976bff840bf1e0609b06cb1e6f94fdc16c0e0c5d3e
+    _Values:
+    - {fileID: 189584250}
+    - {fileID: 189584251}
+    - {fileID: 189584253}
+    - {fileID: 189584254}
+    - {fileID: 189584252}
+    - {fileID: 1573702085}
+    - {fileID: 1573702084}
+    - {fileID: 11500000, guid: 49b209a7287b4de8bd695b5f848b3126, type: 3}
+    - {fileID: 925678208}
+    - {fileID: 925678207}
+    - {fileID: 925678209}
+    - {fileID: 610849056}
+    - {fileID: 610849059}
+    - {fileID: 610849058}
+    - {fileID: 610849057}
+    - {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+    - {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+    - {fileID: 659280582}
+    - {fileID: 582049853}
+    - {fileID: 1980127469}
+    - {fileID: 24049363}
+    - {fileID: 24049362}
+    - {fileID: 24049360}
+    - {fileID: 24049361}
+    - {fileID: 444208442}
+    - {fileID: 444208441}
+    - {fileID: 444208439}
+    - {fileID: 444208440}
+    - {fileID: 1698853557}
+    - {fileID: 1698853556}
+    - {fileID: 1760568016}
+    - {fileID: 1760568015}
+    - {fileID: 1760568014}
+    - {fileID: 1760568013}
+    - {fileID: 1882470143}
+    - {fileID: 1882470148}
+    - {fileID: 1882470147}
+    - {fileID: 1882470146}
+    - {fileID: 1882470145}
+    - {fileID: 1941523256}
+    - {fileID: 1941523257}
+    - {fileID: 1941523259}
+    - {fileID: 1941523258}
+    - {fileID: 1980127468}
+    - {fileID: 1980127475}
+    - {fileID: 1980127474}
+    - {fileID: 1980127472}
+    - {fileID: 1980127471}
+    - {fileID: 1980127470}
+    - {fileID: 1983235749}
+    - {fileID: 1983235754}
+    - {fileID: 1983235753}
+    - {fileID: 1983235752}
+    - {fileID: 1983235751}
+    - {fileID: 2846298, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - {fileID: 1558228076}
+    - {fileID: 582049851}
+    - {fileID: 659280583}
+    - {fileID: 659280585}
+    - {fileID: 659280584}
+    - {fileID: 1882470144}
+    - {fileID: 1044823123}
+    - {fileID: 1044823124}
+    - {fileID: 1044823126}
+    - {fileID: 1044823125}
+    - {fileID: 1760568012}
+    - {fileID: 582049852}
+    - {fileID: 582049854}
+    - {fileID: 1208561588}
+    - {fileID: 1208561595}
+    - {fileID: 1208561594}
+    - {fileID: 1208561592}
+    - {fileID: 1208561591}
+    - {fileID: 1208561590}
+    - {fileID: 1983235750}
+    - {fileID: 1698853560}
+    - {fileID: 1558228075}
+    - {fileID: 1558228080}
+    - {fileID: 1558228079}
+    - {fileID: 1558228078}
+    - {fileID: 1558228077}
+    - {fileID: 1698853555}
+    - {fileID: 1698853559}
+    - {fileID: 1698853558}
+    - {fileID: 1760568011}
+    - {fileID: 1208561589}
+    - {fileID: 1208561593}
+    - {fileID: 1980127473}
+    - {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
+    - {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+    - {fileID: 11500000, guid: 314affd16bceddb4c99fbaa07de901d9, type: 3}
+    - {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+    - {fileID: 11500000, guid: 7d12bfc32d0d797428cf0191288caabd, type: 3}
+    - {fileID: 11500000, guid: 26fc1288f608ee54da6568942b278960, type: 3}
+    - {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+    - {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+    - {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+    - {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+    - {fileID: 2800000, guid: ee148e281f3c41c5b4ff5f8a5afe5a6c, type: 3}
+    - {fileID: 2800000, guid: 042ceb6d3caca6b4f93220402e8426db, type: 3}
+    - {fileID: 2800000, guid: 2fd6421f253b4ef1a19526541f9ffc0c, type: 3}
+    - {fileID: 2800000, guid: 7fa23ff768f64a847b3d3419ffa1740a, type: 3}
+    - {fileID: 2800000, guid: 36ac3567fb0dac54bafd2dcbe8e11a31, type: 3}
+    - {fileID: 4964579820494906105, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: -7830453022095007333, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: 9145175864187778145, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: 7509482453068622377, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: -5945406100174422733, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: 292388601226486327, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: 11400000, guid: 17c55cb14f212be46b7063fec299a309, type: 2}
+    - {fileID: 1087443878}
+    - {fileID: 1087443880}
+    - {fileID: 1087443879}
+    - {fileID: 11500000, guid: e021c5c27274514469ad2992883d55db, type: 3}
+    - {fileID: 11500000, guid: 306e3ee67fc748fca180c1c6b99061ab, type: 3}
+    - {fileID: 11500000, guid: d57ed238b12b4e09aba0c83117a55de7, type: 3}
+    - {fileID: 11500000, guid: b46aa3ddf48e43cebd5d3d03f3bd145d, type: 3}
+    - {fileID: 11500000, guid: 840a439e06374673a9115ed02deb5a54, type: 3}
+    - {fileID: 11500000, guid: ea82279f292f4f6ebe47212017fa5f89, type: 3}
+    - {fileID: 2800000, guid: f69b14b8ee0345047b382b96a21e4c53, type: 3}
+    - {fileID: 2800000, guid: a2b898bc2b11df6428105f73df88fe63, type: 3}
+    - {fileID: 2800000, guid: 2c077ca8533a35242a94326c88d3b705, type: 3}
+    - {fileID: 2800000, guid: 9ab672c3abd8c0d44aa0aea6240434a5, type: 3}
+    - {fileID: 2800000, guid: 0bee6bd24bdb5834f8f8b97bb5888c44, type: 3}
+  prefabs: []
+--- !u!114 &403300571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403300568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8714d999c5ae749538494c1347e5a3ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  message: 'The Easy Save 3 Manager is required in any scenes which use Easy Save,
+    and is automatically added to your scene when you enter Play mode.
+
+
+    To stop this from automatically being added to your scene, go to ''Window > Easy
+    Save 3 > Settings'' and deselect the ''Auto Add Manager to Scene'' checkbox.'
+--- !u!4 &403300572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403300568}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &444208439
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +942,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 610849056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalAxis: Horizontal
@@ -733,7 +961,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 610849056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
@@ -1259,7 +1487,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1208561588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -1279,6 +1507,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1208561591
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1762,7 +1991,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1208561588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
@@ -3944,7 +4173,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1558228075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -3989,7 +4218,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1558228075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -4009,6 +4238,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1558228080
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4097,7 +4327,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1698853555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
@@ -4114,7 +4344,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1698853555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_UiScaleMode: 0
@@ -6322,7 +6552,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1760568011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -6367,7 +6597,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1760568011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -6387,6 +6617,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1760568016
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8548,7 +8779,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1882470143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -8593,7 +8824,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1882470143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -8613,6 +8844,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1882470148
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8830,7 +9062,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1980127468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -8850,6 +9082,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1980127471
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9333,7 +9566,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1980127468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
@@ -11515,7 +11748,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1983235749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -11560,7 +11793,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1983235749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -11580,6 +11813,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1983235754
 CanvasRenderer:
   m_ObjectHideFlags: 0
