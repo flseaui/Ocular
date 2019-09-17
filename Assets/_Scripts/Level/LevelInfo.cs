@@ -48,9 +48,9 @@ namespace Level
 
                 LevelGlasses = new List<Glasses>
                 {
-                    new Glasses(Color.red, GlassesType.One,KeyCode.Q),
-                    new Glasses(yellow, GlassesType.Two, KeyCode.W),
-                    new Glasses(Color.blue, GlassesType.Three, KeyCode.E)
+                    new Glasses(Color.red, GlassesType.One),
+                    new Glasses(yellow, GlassesType.Two),
+                    new Glasses(Color.blue, GlassesType.Three)
                 };
 
                 BlockColors = new List<Color>

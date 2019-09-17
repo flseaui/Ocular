@@ -10,13 +10,15 @@ namespace Game {
     {
         private GlassesController _glassesController;
         private LevelController _levelController;
-        [CanBeNull] public GameObject Player;
+        private EntityManager _entityManager;
+        
         [CanBeNull] private GameObject _indicator;
         [SerializeField] private GameObject _indicatorPrefab;
-        [SerializeField] private GameObject _playerPrefab;
 
         public static Action OnLevelLoad;
 
+        public GameObject Player => _entityManager.Player;
+        
         /// <summary>
         /// Stops the current game, unloading the level and destroying entities.
         /// </summary>
@@ -36,10 +38,7 @@ namespace Game {
         public void PlayLevel(GameObject level)
         {
             _levelController.LoadLevelFromObj(level);
-            //_glassesController.ResetGlasses(_levelController.CurrentLevelInfo.LevelGlasses);
             _indicator = Instantiate(_indicatorPrefab);
-            //Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
-              //  Quaternion.identity);
         }
         
         private void Awake()
@@ -49,32 +48,22 @@ namespace Game {
 
             OnLevelLoad += () =>
             {
-                //_levelController.CurrentLevelInfo = null;
-                
                 StartCoroutine(_levelController.LoadNextLevel());
             };
-            LevelController.OnLevelLoaded += () => { StartCoroutine(SpawnPlayer()); };
+            LevelController.OnLevelLoaded += () =>
+            {
+                _entityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
+            };
         }
 
-        
-        IEnumerator SpawnPlayer()
+        private void Start()
         {
-            yield return new WaitUntil(() => _levelController.CurrentLevelInfo != null);
-            Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
-                Quaternion.identity);
-        }
-        
-        private IEnumerator Start()
-        {
+            // If NOT playing from editor
             if (PlayerPrefs.GetInt("PlayFromEditor") == 0)
             {
-                StartCoroutine(_levelController.LoadFirstLevel());
-
-                yield return new WaitUntil(() => _levelController.CurrentLevelInfo != null);
+                _levelController.LoadFirstLevel();
                 
                 Instantiate(_indicatorPrefab);
-                //Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
-                  //  Quaternion.identity);
             }
         }        
     }

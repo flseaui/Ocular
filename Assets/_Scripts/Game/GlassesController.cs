@@ -6,6 +6,8 @@ using DarkTonic.MasterAudio;
 using Level;
 using Player;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
+using UI;
 using UnityEngine;
 
 namespace Game
@@ -61,22 +63,16 @@ namespace Game
         }
         
         private void Awake()
-        {
+        {   
+            index = 0;
             _musicStreams = new List<PlaySoundResult>();
+
+            SpotlightController.SpotlightEnabled += UpdateOcularState;
+
             LevelController.OnLevelLoaded += () =>
             {
                 _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
             };
-        }
-
-        private IEnumerator Start()
-        {
-            SetMusicStreams();
-        
-            yield return new WaitForFixedUpdate();
-            index = 0;
-
-            LevelController.OnLevelLoaded += UpdateOcularState;
         }
 
         public void UpdateOcularState()
@@ -99,7 +95,7 @@ namespace Game
 
         private void UpdateMusicStreams()
         {
-            if(_currentWorldMusic != CurrentWorld) SetMusicStreams();
+            if(_currentWorldMusic != CurrentWorld || _musicStreams.IsNullOrEmpty()) SetMusicStreams();
             
             switch (CurrentOcularState)
             {

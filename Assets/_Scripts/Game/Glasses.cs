@@ -31,16 +31,10 @@ namespace Game {
         /// </summary>
         [NonSerialized] public bool Enabled;
 
-        /// <summary>
-        /// The key that toggles the glasses state.
-        /// </summary>
-        [SerializeField] public KeyCode Keybind;
-
-        public Glasses(Color color, GlassesType type, KeyCode keybind)
+        public Glasses(Color color, GlassesType type)
         {
             Color = color;
             GlassesType = type;
-            Keybind = keybind;
             Enabled = false;
         }
 

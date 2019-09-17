@@ -17,8 +17,7 @@ public class ColorWheel : MonoBehaviour
     [SerializeField] private GameObject _gameManager;
     private GlassesController _glassesController;
 
-
-    private void Start()
+    private void Awake()
     {
         _glassesController = _gameManager.GetComponent<GlassesController>();
     }
@@ -27,7 +26,7 @@ public class ColorWheel : MonoBehaviour
     {
         var left = Input.GetKey(KeyCode.Q);
         var right = Input.GetKey(KeyCode.E);
-
+        
         if (Turning && Input.GetKeyDown(KeyCode.Q))
         {
             _bufferLeft = true;

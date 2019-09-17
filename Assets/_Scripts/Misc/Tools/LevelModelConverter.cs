@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System.Collections.Generic;
 using Game;
 using Level.Objects;
@@ -85,3 +87,5 @@ namespace Misc.Tools
         }
     }
 }
+
+#endif

@@ -90,16 +90,15 @@ namespace Level {
             CurrentLevelInfo.Animator.SetTrigger("FadeOut");
             
             yield return new WaitUntil(() => CurrentLevelInfo.ReadyToLoad);
+            
             CurrentLevelInfo.ReadyToLoad = false;
-            StartCoroutine(nameof(LoadLevel));
+            LoadLevel();
         }
 
-        public IEnumerator LoadFirstLevel()
+        public void LoadFirstLevel()
         {
             _levelToLoad = _levels.CoordinatesOf(StartingLevel);
-            StartCoroutine(nameof(LoadLevel));
-            
-            yield return new WaitForSeconds(1);
+            LoadLevel();
         }
 
         public void LoadLevelFromObj(GameObject level)
@@ -109,20 +108,20 @@ namespace Level {
             _loadedLevel = Instantiate(level);
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
+            
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             OnLevelLoaded?.Invoke();
         }
-        
-        public IEnumerator LoadLevel()
+
+        private void LoadLevel()
         {
             if (_loadedLevel != null)
                 UnloadLevel();
-            
-            yield return new WaitForEndOfFrame();
-            
+
             _loadedLevel = Instantiate(_levels[_levelToLoad.Item1, _levelToLoad.Item2]);
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
+            
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = _levelToLoad;
             OnLevelLoaded?.Invoke();
