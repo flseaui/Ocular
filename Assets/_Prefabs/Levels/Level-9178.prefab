@@ -262,15 +262,15 @@ Transform:
   - {fileID: 6361042713951826674}
   - {fileID: 1144515000172418946}
   - {fileID: 1996390102558679942}
-  - {fileID: 2356738840056944487}
-  - {fileID: 3647939680221200946}
-  - {fileID: 8463314869243174458}
-  - {fileID: 8345332433773719660}
-  - {fileID: 6175066372704604976}
-  - {fileID: 7806981618612509449}
-  - {fileID: 3965980530440321937}
-  - {fileID: 9127737546840834667}
-  - {fileID: 7537649111555946059}
+  - {fileID: 8430307083352271818}
+  - {fileID: 7415936629111340703}
+  - {fileID: 2393974179404407447}
+  - {fileID: 2853652135231278273}
+  - {fileID: 142031593389338525}
+  - {fileID: 4043492176866912164}
+  - {fileID: 7152658055809500988}
+  - {fileID: 3091327713461386950}
+  - {fileID: 4382491939695135462}
   m_Father: {fileID: 8062196696491421905}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -504,6 +504,7 @@ GameObject:
   - component: {fileID: 7193400007259532848}
   - component: {fileID: 5012065742174432036}
   - component: {fileID: 672663318983853079}
+  - component: {fileID: 7330929853806236869}
   m_Layer: 0
   m_Name: Level-9178
   m_TagString: Untagged
@@ -541,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -561,15 +562,12 @@ MonoBehaviour:
   LevelGlasses:
   - Color: {r: 1, g: 0, b: 0, a: 1}
     GlassesType: 0
-    Keybind: 113
   - Color: {r: 1, g: 1, b: 0, a: 1}
     GlassesType: 1
-    Keybind: 119
   - Color: {r: 0, g: 0, b: 1, a: 1}
     GlassesType: 2
-    Keybind: 101
   NumConcurrentGlasses: 2
-  PlayerSpawnPoint: {fileID: 3992780244370219933}
+  PlayerSpawnPoint: {fileID: 6361042713951826674}
   Name: Assets/_Prefabs/Levels/Level-9178.prefab
   Animator: {fileID: 672663318983853079}
   ReadyToLoad: 0
@@ -604,6 +602,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7330929853806236869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3479341789857847849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41bbbd4d984447aca1d86aaad35c6342, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerPrefab: {fileID: 3343191074711946764, guid: a3e53fc4bd222fb4fb720d8884fe7b33,
+    type: 3}
 --- !u!1 &4042330444553886572
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,7 +1436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &6175066372704604976 stripped
+--- !u!4 &142031593389338525 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1524,7 +1536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &8463314869243174458 stripped
+--- !u!4 &2393974179404407447 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1624,7 +1636,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &8345332433773719660 stripped
+--- !u!4 &2853652135231278273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1724,7 +1736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &9127737546840834667 stripped
+--- !u!4 &3091327713461386950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1824,7 +1836,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &7806981618612509449 stripped
+--- !u!4 &4043492176866912164 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1924,7 +1936,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &7537649111555946059 stripped
+--- !u!4 &4382491939695135462 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -2024,7 +2036,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &3965980530440321937 stripped
+--- !u!4 &7152658055809500988 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -2124,7 +2136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &3647939680221200946 stripped
+--- !u!4 &7415936629111340703 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -2224,7 +2236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &2356738840056944487 stripped
+--- !u!4 &8430307083352271818 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}

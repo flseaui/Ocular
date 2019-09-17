@@ -139,9 +139,9 @@ Transform:
   - {fileID: 5690959662334843168}
   - {fileID: 8156341064424054438}
   - {fileID: 1547740351527278852}
-  - {fileID: 3080678426082313835}
-  - {fileID: 1795873834764250322}
-  - {fileID: 4659702352440976941}
+  - {fileID: 9118208601671252678}
+  - {fileID: 5523277235094851711}
+  - {fileID: 1504255346625337984}
   - {fileID: 4574144892842158750}
   m_Father: {fileID: 7011001105358960147}
   m_RootOrder: 1
@@ -895,6 +895,7 @@ GameObject:
   - component: {fileID: 7696361141599843380}
   - component: {fileID: 7296572577578347148}
   - component: {fileID: 170268923102806840}
+  - component: {fileID: -5725013690810359668}
   m_Layer: 0
   m_Name: 2-1
   m_TagString: Untagged
@@ -932,7 +933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -952,15 +953,12 @@ MonoBehaviour:
   LevelGlasses:
   - Color: {r: 1, g: 0, b: 0, a: 1}
     GlassesType: 0
-    Keybind: 113
   - Color: {r: 1, g: 1, b: 0, a: 1}
     GlassesType: 1
-    Keybind: 119
   - Color: {r: 0, g: 0, b: 1, a: 1}
     GlassesType: 2
-    Keybind: 101
   NumConcurrentGlasses: 2
-  PlayerSpawnPoint: {fileID: 6173280313530511941}
+  PlayerSpawnPoint: {fileID: 0}
   Name: Assets/_Prefabs/Levels/2-1.prefab
   Animator: {fileID: 170268923102806840}
   ReadyToLoad: 0
@@ -995,6 +993,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-5725013690810359668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6374514934192190448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41bbbd4d984447aca1d86aaad35c6342, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerPrefab: {fileID: 3343191074711946764, guid: a3e53fc4bd222fb4fb720d8884fe7b33,
+    type: 3}
 --- !u!1001 &1504255346625339074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1094,13 +1106,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &4659702352440976941 stripped
+--- !u!4 &1504255346625337984 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
   m_PrefabInstance: {fileID: 1504255346625339074}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7860697090595375018 stripped
+--- !u!114 &1504255346625337198 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1206,7 +1218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &1795873834764250322 stripped
+--- !u!4 &5523277235094851711 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1293,7 +1305,7 @@ PrefabInstance:
         type: 3}
       propertyPath: TargetBlocks.Array.data[0]
       value: 
-      objectReference: {fileID: 7860697090595375018}
+      objectReference: {fileID: 1504255346625337198}
     - target: {fileID: 8788491135060777320, guid: 1f1b8b2c72c037347baf3973fa531e70,
         type: 3}
       propertyPath: _color.r
@@ -1416,7 +1428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &3080678426082313835 stripped
+--- !u!4 &9118208601671252678 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
