@@ -52,7 +52,7 @@ namespace Level {
 
         private List<List<GameObject>> _worlds;
 
-        private GameObject[,] _levels = new GameObject[2, 6];
+        private GameObject[,] _levels = new GameObject[2, 7];
 
         private GameObject _loadedLevel;
         private Tuple<int, int> _loadedLevelNumber;
@@ -60,7 +60,9 @@ namespace Level {
         [HideInInspector]
         public LevelInfo CurrentLevelInfo;
 
-        [ValueDropdown("_worldOneLevels")] public GameObject StartingLevel;
+        private List<GameObject> _allWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).ToList();
+        
+        [ValueDropdown("_allWorldLevels")] public GameObject StartingLevel;
 
         public static Action OnLevelLoaded;
 

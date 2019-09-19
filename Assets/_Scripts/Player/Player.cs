@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Game;
@@ -29,18 +30,24 @@ namespace Player
 
         [ShowInInspector] public static Cardinal Facing;
 
-        private Colorable _lastEnabled;
+        private List<Colorable> _lastEnabled;
+
+        private int _frameCounter;
         
-        public void CheckForDeath(Colorable colorable)
+        public void CheckForDeath(Colorable colorable = null)
         {
-            _lastEnabled = colorable;
-            
-            if (colorable == _currentCollision)
-                Death();
+            if (colorable != null)
+                _lastEnabled.Add(colorable);
+            foreach (var block in _lastEnabled)
+            {
+                if (block == _currentCollision)
+                    Death();
+            }
         }
         
         private void Awake()
         {
+            _lastEnabled = new List<Colorable>();
             GameManager.OnLevelLoad += CommitDie;
         }
 
@@ -54,6 +61,16 @@ namespace Player
             }
             else
                 Falling = false;
+        }
+
+        private void FixedUpdate()
+        {
+            _frameCounter++;
+            if (_frameCounter > 20)
+            {
+                _lastEnabled.Clear();
+                _frameCounter = 0;
+            }
         }
         
         private void OnDestroy()
@@ -77,13 +94,15 @@ namespace Player
             if (other.transform.ParentHasComponent<Colorable>(out var colorable) &&
                 other.transform.CompareTag("Colorable"))
             {
-                CheckForDeath(_lastEnabled);
+                CheckForDeath();
                 _currentCollision = colorable;
-
+                Debug.Log("DEING 3");
             }
 
             if (other.gameObject.CompareTag("Harmful"))
+            {
                 Death();
+            }
         }
 
         private void OnCollisionExit(Collision other)
@@ -94,7 +113,9 @@ namespace Player
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Harmful"))
+            {
                 Death();
+            }
         }
 
         public void ChangeFacing(Cardinal newDirection)
