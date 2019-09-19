@@ -129,7 +129,7 @@ namespace Player {
 
         public Action OnMove;
         
-        private void Update()
+        private void FixedUpdate()
         {
             if (Navigating)
                 if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)

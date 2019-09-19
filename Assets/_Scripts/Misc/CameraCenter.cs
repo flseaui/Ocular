@@ -15,17 +15,26 @@ namespace Misc
         {
             LevelController.OnLevelLoaded += () =>
             {
-                _centerParent = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
-                    .transform.Find("Level");
+                var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
 
-                if (_centerParent == null)
-                    return;
-                
-                _centerParent = _centerParent.GetChild(0);
-
-                var bounds = _centerParent.GetComponentInChildren<MeshRenderer>().bounds;
-                transform.position = new Vector3(bounds.center.x, bounds.center.y + 3, bounds.center.z);
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
+                if (levelInfo.HasCustomCamera)
+                {
+                    transform.position = levelInfo.CameraPosition;
+                    GetComponent<Camera>().orthographicSize = levelInfo.CameraSize;
+                }
+                else
+                {
+                    _centerParent = levelInfo.transform.Find("Level");
+    
+                    if (_centerParent == null)
+                        return;
+                    
+                    _centerParent = _centerParent.GetChild(0);
+    
+                    var bounds = _centerParent.GetComponentInChildren<MeshRenderer>().bounds;
+                    transform.position = new Vector3(bounds.center.x, bounds.center.y + 3, bounds.center.z);
+                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
+                }
             };
         }
     }

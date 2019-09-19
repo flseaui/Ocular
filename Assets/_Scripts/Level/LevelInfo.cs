@@ -32,7 +32,22 @@ namespace Level
         public Animator Animator;
 
         public bool ReadyToLoad;
-        
+
+        public bool HasCustomCamera;
+        public Vector3 CameraPosition;
+        public float CameraSize;
+
+        [Button]
+        private void SetCamInfo()
+        {
+            if (Camera.main == null) return;
+            
+            var main = Camera.main;
+            
+            CameraPosition = main.transform.position;
+            CameraSize = main.orthographicSize;
+        }
+
         private void Awake()
         {
             Animator = GetComponent<Animator>();

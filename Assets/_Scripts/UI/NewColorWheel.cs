@@ -77,14 +77,13 @@ public class NewColorWheel : MonoBehaviour
                     _bufferLeft = false;
                     _glassesController.index++;
                     _glassesController.UpdateOcularState();
-                    _spriteIndex--;
-                    if (_spriteIndex < 0)
-                        _spriteIndex = _wheelSprites.Count - 1;
+                    _spriteIndex++;
+                    if (_spriteIndex > _wheelSprites.Count - 1)
+                        _spriteIndex = 0;
                     _wheelImage.sprite = _wheelSprites[_spriteIndex];
-                    Turning = false;
-                    /*var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60),
+                    var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60),
                         .3f);
-                    rotate.onComplete += () => Turning = false;*/
+                    rotate.onComplete += () => Turning = false;
                 }
 
                 if (right || _bufferRight)
@@ -93,14 +92,13 @@ public class NewColorWheel : MonoBehaviour
                     _bufferRight = false;
                     _glassesController.index--;
                     _glassesController.UpdateOcularState();
-                    _spriteIndex++;
-                    if (_spriteIndex > _wheelSprites.Count - 1)
-                        _spriteIndex = 0;
+                    _spriteIndex--;
+                    if (_spriteIndex < 0)
+                        _spriteIndex = _wheelSprites.Count - 1;
                     _wheelImage.sprite = _wheelSprites[_spriteIndex];
-                    Turning = false;
-                    /*var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, -60),
+                    var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, -60),
                         .3f);
-                    rotate.onComplete += () => Turning = false;*/
+                    rotate.onComplete += () => Turning = false;
                 }
             }
         }
