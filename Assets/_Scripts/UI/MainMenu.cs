@@ -9,5 +9,10 @@ namespace UI
         {
             SceneManager.LoadScene("Game");
         }
+
+        public void StartMenuMusic()
+        {
+            GetComponent<AudioSource>().Play();
+        }
     }
 }
