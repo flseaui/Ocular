@@ -75,7 +75,7 @@ public class NewColorWheel : MonoBehaviour
                 {
                     Turning = true;
                     _bufferLeft = false;
-                    _glassesController.index++;
+                    _glassesController.index--;
                     _glassesController.UpdateOcularState();
                     _spriteIndex++;
                     if (_spriteIndex > _wheelSprites.Count - 1)
@@ -90,7 +90,7 @@ public class NewColorWheel : MonoBehaviour
                 {
                     Turning = true;
                     _bufferRight = false;
-                    _glassesController.index--;
+                    _glassesController.index++;
                     _glassesController.UpdateOcularState();
                     _spriteIndex--;
                     if (_spriteIndex < 0)
