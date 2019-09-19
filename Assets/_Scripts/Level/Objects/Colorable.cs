@@ -272,6 +272,7 @@ namespace Level.Objects
         {
             foreach (var model in _models)
                 model.SetActive(state);
+            
         }
         
         private void Start()
@@ -286,7 +287,7 @@ namespace Level.Objects
                 if (child.CompareTag("Colorable"))
                     temp.Add(child.gameObject);
             _models = temp.ToArray();
-            _renderers = _models.Select(m => m.GetComponent<Renderer>()).ToArray();
+            _renderers = _models.Select(m => m.GetComponent<MeshRenderer>()).ToArray();
             if (Application.isPlaying)
                 _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
             _propBlock = new MaterialPropertyBlock();

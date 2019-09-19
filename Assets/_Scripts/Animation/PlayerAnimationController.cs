@@ -14,8 +14,10 @@ namespace Animation
         [SerializeField] private Animation _walk;
         [SerializeField] private Animation _idle;
         [SerializeField] private Animation _teleport;
+        [SerializeField] private Animation _death;
+        
         private Frame _currentFrame;
-        [ShowInInspector] private Animation _currentAnimation;
+        [ShowInInspector] [ReadOnly] private Animation _currentAnimation;
         private bool _loopAnimation;
         private bool _resolvingFrame;
         private float _timeRemaining;
@@ -52,7 +54,20 @@ namespace Animation
                 GameManager.OnLevelLoad?.Invoke();
                 return _teleport;
             }
+
+            if (_currentAnimation == _death && _currentFrame == null)
+            {
+                GetComponent<Player.Player>().ActuallyDie();
+                Player.Player.Died = false;
+                return _death;
+            }
             
+            if (Player.Player.Died)
+            {
+                _loopAnimation = false;
+                if(_currentAnimation != _death) _currentAnimation.Stop();
+                return _death;
+            }
             if (Pathfinder.AtGoal)
             {
                 _loopAnimation = false;

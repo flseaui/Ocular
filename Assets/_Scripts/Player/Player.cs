@@ -33,6 +33,8 @@ namespace Player
         private List<Colorable> _lastEnabled;
 
         private int _frameCounter;
+
+        public static bool Died;
         
         public void CheckForDeath(Colorable colorable = null)
         {
@@ -85,10 +87,15 @@ namespace Player
 
         public void Death()
         {
+            Died = true;
+        }
+
+        public void ActuallyDie()
+        {
             transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
                 .PlayerSpawnPoint.position;
         }
-
+        
         private void OnCollisionEnter(Collision other)
         {
             if (other.transform.ParentHasComponent<Colorable>(out var colorable) &&
@@ -96,7 +103,6 @@ namespace Player
             {
                 CheckForDeath();
                 _currentCollision = colorable;
-                Debug.Log("DEING 3");
             }
 
             if (other.gameObject.CompareTag("Harmful"))
