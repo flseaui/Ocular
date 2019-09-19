@@ -33,8 +33,8 @@ public class NewColorWheel : MonoBehaviour
 
     void Update()
     {
-        var left = Input.GetKeyDown(KeyCode.Q);
-        var right = Input.GetKeyDown(KeyCode.E);
+        var left = Input.GetKey(KeyCode.Q);
+        var right = Input.GetKey(KeyCode.E);
         
         if (Turning && Input.GetKeyDown(KeyCode.Q))
         {
