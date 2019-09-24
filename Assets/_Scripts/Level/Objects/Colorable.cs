@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Game;
 using Misc;
@@ -45,7 +46,7 @@ namespace Level.Objects
 
         private List<IController> _controllers;
 
-        [ShowInInspector, ReadOnly]  
+        [DisableInPlayMode, ShowInInspector]
         public OcularState OcularState
         {
             get => _ocularState;
