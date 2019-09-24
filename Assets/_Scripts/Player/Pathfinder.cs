@@ -46,7 +46,6 @@ namespace Player {
             var path = GeneratePath(Navigating ? _currentEnd : GetCurrentWalkable(out _), destination);
             if (path == null)
                 return;
-
             
             if (AtGoal) return;
             if (Navigating)

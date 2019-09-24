@@ -1,6 +1,8 @@
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
+using Game;
+using Level;
 using UnityEngine;
 
 namespace Misc
@@ -10,6 +12,13 @@ namespace Misc
         public static bool Turning;
         private bool _bufferLeft;
         private bool _bufferRight;
+
+        private LevelController _levelController;
+
+        private void Awake()
+        {
+            _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
+        }
         
         private void Start()
         {

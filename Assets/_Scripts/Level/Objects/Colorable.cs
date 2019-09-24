@@ -289,8 +289,16 @@ namespace Level.Objects
             _models = temp.ToArray();
             _renderers = _models.Select(m => m.GetComponent<MeshRenderer>()).ToArray();
             if (Application.isPlaying)
+            {
                 _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
+            }
+
+#if UNITY_EDITOR
+            _renderers.ForEach(r => r.sharedMaterial = _blockMat);            
+#endif
+            
             _propBlock = new MaterialPropertyBlock();
+            State = BlockState.Visible;
             OcularState = OcularState;
             SetModelsState(true);
         }

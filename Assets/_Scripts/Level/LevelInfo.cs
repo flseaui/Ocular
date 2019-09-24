@@ -37,6 +37,8 @@ namespace Level
         public Vector3 CameraPosition;
         public float CameraSize;
 
+        public Transform CameraCenter;
+        
         [Button]
         private void SetCamInfo()
         {
