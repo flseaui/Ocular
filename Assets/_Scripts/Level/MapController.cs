@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using Boo.Lang;
 using Level.Objects;
 using Misc;
@@ -22,6 +23,7 @@ namespace Level {
         
         public void FindNeighbors()
         {
+
             NUM_WALKABLES = 0;
             foreach (var walkable in _walkables)
             {
@@ -31,7 +33,7 @@ namespace Level {
 
             foreach (var colorable in _colorables) colorable.Initialize();
         }
-
+        
         public void UpdateColorables()
         {
             var controllers = new List<GameObject>();

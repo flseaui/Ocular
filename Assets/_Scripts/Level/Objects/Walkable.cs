@@ -4,6 +4,7 @@ using System.Linq;
 using Misc;
 using Player;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Level.Objects {
@@ -26,6 +27,7 @@ namespace Level.Objects {
         [ShowInInspector, ReadOnly]
         public int UniqueId { get; private set; }
 
+        
 #if UNITY_EDITOR
         [ShowInInspector, HideInEditorMode]
         private List<Walkable> Neighbors =>
@@ -57,8 +59,8 @@ namespace Level.Objects {
         public virtual void CheckForNeighbors()
         {
             // Up
-            if (Physics.Raycast(transform.localPosition, new Vector3(0, 1, 0), out var hit, 1))
-                if (hit.transform.ParentHasComponent<Walkable>())
+            if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var vHit, 1))
+                if (vHit.transform.ParentHasComponent<Walkable>())
                     Enabled = false;
 
             // Left Right Forward Back
@@ -67,9 +69,10 @@ namespace Level.Objects {
                 for (var z = -1; z < 2; z++)
                 {
                     if (Math.Abs(x) == Math.Abs(z)) continue;
-                    if (!Physics.Raycast(transform.localPosition, new Vector3(x, 0, z), out hit, 1)) continue;
+                    var ray = new Ray(transform.position, new Vector3(x, 0, z));
+                    if (!Physics.Raycast(ray, out var hHit, 1, LayerMask.GetMask("Model"))) continue;
 
-                    if (hit.transform.ParentHasComponent<Walkable>(out var walkable)) AddNeighbor(walkable);
+                    if (hHit.transform.ParentHasComponent<Walkable>(out var walkable)) AddNeighbor(walkable);
                 }
             }
         }
@@ -77,7 +80,7 @@ namespace Level.Objects {
         public void CheckBelow(bool state)
         {
             if (Physics.Raycast(
-                new Vector3(transform.localPosition.x, transform.localPosition.y - .1f, transform.localPosition.z),
+                new Vector3(transform.position.x, transform.position.y - .1f, transform.position.z),
                 new Vector3(0, -1, 0), out var hit, 1, LayerMask.GetMask("Model")))
             {
                 if (hit.collider is null) return;
@@ -117,7 +120,7 @@ namespace Level.Objects {
             {
                 if (neighbor is null) continue;
                 
-                Gizmos.DrawCube(neighbor.Walkable.transform.position, new Vector3(1, 1, 1));
+                Gizmos.DrawCube(neighbor.Walkable.transform.position, new Vector3(.5f, .5f, .5f));
             }
         }
 

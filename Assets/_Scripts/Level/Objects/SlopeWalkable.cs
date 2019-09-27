@@ -41,12 +41,12 @@ namespace Level.Objects {
         public override void CheckForNeighbors()
         {
             // Up
-            if (Physics.Raycast(transform.localPosition, new Vector3(0, 1, 0), out var hit, 1))
+            if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var hit, 1))
                 if (hit.transform.ParentHasComponent<Walkable>())
                     Enabled = false;
 
             // Back & Down
-            if (Physics.Raycast(transform.localPosition + RelativeBack, new Vector3(0, -1, 0), out hit, 1f))
+            if (Physics.Raycast(transform.position + RelativeBack, new Vector3(0, -1, 0), out hit, 1f))
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
                 {
                     AddNeighbor(walkable);
@@ -54,7 +54,7 @@ namespace Level.Objects {
                 }
 
             // Forward
-            if (Physics.Raycast(transform.localPosition + RelativeForward / 4, RelativeForward, out hit, 1))
+            if (Physics.Raycast(transform.position + RelativeForward / 4, RelativeForward, out hit, 1))
             {
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var slope))
                 {
@@ -67,20 +67,20 @@ namespace Level.Objects {
             }
 
             // Back
-            if (Physics.Raycast(transform.localPosition, RelativeBack, out hit, 1))
+            if (Physics.Raycast(transform.position, RelativeBack, out hit, 1))
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
                     if (walkable.DirectionFacing == OppositeDirection)
                         AddNeighbor(walkable);
 
             // Left
-            if (Physics.Raycast(transform.localPosition, RelativeLeft, out hit, 1))
+            if (Physics.Raycast(transform.position, RelativeLeft, out hit, 1))
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
                     if (walkable.DirectionFacing == DirectionFacing)
                         if (walkable.Orientation == Orientation)
                             AddNeighbor(walkable);
 
             // Right
-            if (Physics.Raycast(transform.localPosition, RelativeRight, out hit, 1))
+            if (Physics.Raycast(transform.position, RelativeRight, out hit, 1))
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var walkable))
                     if (walkable.DirectionFacing == DirectionFacing)
                         if (walkable.Orientation == Orientation)
