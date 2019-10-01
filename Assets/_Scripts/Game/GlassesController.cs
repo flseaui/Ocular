@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using Audio;
 using DarkTonic.MasterAudio;
 using Level;
@@ -83,20 +84,35 @@ namespace Game
             UpdateMusicStreams();
         }
 
+        public void CheckForNewWorldMusic()
+        {
+           if(_musicStreams.IsNullOrEmpty() || _currentWorldMusic != CurrentWorld) SetMusicStreams();
+        }
+
         private void SetMusicStreams()
         {
-            _musicStreams.Clear();
+            if (_musicStreams.Count != 0)
+            {
+                _musicStreams[0].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                _musicStreams[1].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                _musicStreams[2].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                _musicStreams[3].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
+                _musicStreams.Clear();
+            }
             _currentWorldMusic = CurrentWorld;
             _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_A", AudioMixing.WorldVolumes[CurrentWorld][0]));
             _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_B", AudioMixing.WorldVolumes[CurrentWorld][1]));
             _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_C", AudioMixing.WorldVolumes[CurrentWorld][2]));
             _musicStreams.Add(MasterAudio.PlaySound($"World{CurrentWorld + 1}_Main", AudioMixing.WorldVolumes[CurrentWorld][3]));
+            
+            _musicStreams[0].ActingVariation.FadeToVolume(AudioMixing.WorldVolumes[CurrentWorld][0], AudioMixing.FadeInTime * 2);
+            _musicStreams[1].ActingVariation.FadeToVolume(AudioMixing.WorldVolumes[CurrentWorld][1], AudioMixing.FadeInTime * 2);
+            _musicStreams[2].ActingVariation.FadeToVolume(AudioMixing.WorldVolumes[CurrentWorld][2], AudioMixing.FadeInTime * 2);
+            _musicStreams[3].ActingVariation.FadeToVolume(AudioMixing.WorldVolumes[CurrentWorld][3], AudioMixing.FadeInTime * 2);
         }
 
         private void UpdateMusicStreams()
-        {
-            if(_currentWorldMusic != CurrentWorld || _musicStreams.IsNullOrEmpty()) SetMusicStreams();
-            
+        {       
             switch (CurrentOcularState)
             {
                 case OcularState.Z:

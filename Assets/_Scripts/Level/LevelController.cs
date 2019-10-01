@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Game;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -52,7 +53,7 @@ namespace Level {
 
         private List<List<GameObject>> _worlds;
 
-        private GameObject[,] _levels = new GameObject[2, 8];
+        private GameObject[,] _levels = new GameObject[2, 9];
 
         private GameObject _loadedLevel;
         private Tuple<int, int> _loadedLevelNumber;
@@ -128,6 +129,8 @@ namespace Level {
             _loadedLevelNumber = _levelToLoad;
             OnLevelLoaded?.Invoke();
             CurrentLevelInfo.Animator.SetTrigger("FadeIn");
+            
+            GetComponent<GlassesController>().CheckForNewWorldMusic();
         }
 
         public void UnloadLevel()
