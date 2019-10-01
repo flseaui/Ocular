@@ -7,7 +7,7 @@ namespace Audio
 {
     public static class AudioMixing
     {
-        public static float MasterVolume = 1;
+        public static float MasterVolume = .4f;
         public static float MasterMusicVolume = 1;
         public static float MasterEffectVolume = 1;
     

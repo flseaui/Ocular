@@ -87,7 +87,14 @@ namespace Level.Objects
                         SetModelsState(true);
                         
                         //todo alert player of collision/death
-                        GameObject.FindWithTag("Player")?.GetComponent<Player.Player>().CheckForDeath(this);
+                        if (_blockState != BlockState.Visible)
+                            if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 2,
+                                LayerMask.GetMask("Player")))
+                            {
+                                Debug.Log(hit.transform.name);
+                                GameObject.FindWithTag("Player")?.GetComponent<Player.Player>().Death();
+                            }
+
 
                         break;
                     case BlockState.Outlined:
