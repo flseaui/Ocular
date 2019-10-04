@@ -19,7 +19,7 @@ namespace Misc
 
                 if (levelInfo.HasCustomCamera)
                 {
-                    transform.position = levelInfo.CameraPosition;
+                    transform.localPosition = levelInfo.CameraPosition;
                     GetComponent<Camera>().orthographicSize = levelInfo.CameraSize;
                 }
                 else

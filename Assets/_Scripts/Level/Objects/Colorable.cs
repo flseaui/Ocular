@@ -301,9 +301,9 @@ namespace Level.Objects
                 _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
             }
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
             _renderers.ForEach(r => r.sharedMaterial = _blockMat);            
-#endif
+//#endif
             
             _propBlock = new MaterialPropertyBlock();
             State = BlockState.Visible;

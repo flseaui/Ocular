@@ -46,7 +46,7 @@ namespace Level
             
             var main = Camera.main;
             
-            CameraPosition = main.transform.position;
+            CameraPosition = main.transform.localPosition;
             CameraSize = main.orthographicSize;
         }
 
