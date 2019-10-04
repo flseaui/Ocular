@@ -68,6 +68,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -134,6 +135,7 @@ GameObject:
   - component: {fileID: 8172619689411631341}
   - component: {fileID: 1867777678550137343}
   - component: {fileID: 4813936391771332588}
+  - component: {fileID: 1102660070044574372}
   m_Layer: 9
   m_Name: FloorModel
   m_TagString: Colorable
@@ -162,7 +164,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3327680575265314836}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -7327755864995188792, guid: 8e9fee517108b66438e821027059ca0a, type: 3}
 --- !u!23 &8172619689411631341
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -188,6 +190,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -229,6 +232,22 @@ MonoBehaviour:
   eraseRenderer: 0
   originalLayer: 0
   originalMaterials: []
+--- !u!114 &1102660070044574372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3327680575265314836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24f5f965aa664fcebe2d3dbcb32293fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textures:
+  - {fileID: 2800000, guid: 8dc3994b32416ae40b1e84a0b1a575e2, type: 3}
+  - {fileID: 2800000, guid: a0ed678f5bb09f74d852dc4f83bec5f8, type: 3}
+  - {fileID: 2800000, guid: 3309d83327d69fb4aa2e512b895e1ebd, type: 3}
 --- !u!1 &6073850517314746595
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,6 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72a1c3f00dce4e10962b17135e9ecab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _type: 0
   _color: {r: 1, g: 1, b: 1, a: 1}
   _ocularState: 0
   _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
@@ -302,11 +322,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6073850517314746607}
     m_Modifications:
-    - target: {fileID: 2321039254617182086, guid: ca392b9eda5ae8946a39fc6a8202da54,
-        type: 3}
-      propertyPath: m_Name
-      value: EditorTrigger
-      objectReference: {fileID: 0}
     - target: {fileID: 1334861868405669958, guid: ca392b9eda5ae8946a39fc6a8202da54,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -361,6 +376,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321039254617182086, guid: ca392b9eda5ae8946a39fc6a8202da54,
+        type: 3}
+      propertyPath: m_Name
+      value: EditorTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 8655519002681677322, guid: ca392b9eda5ae8946a39fc6a8202da54,
         type: 3}

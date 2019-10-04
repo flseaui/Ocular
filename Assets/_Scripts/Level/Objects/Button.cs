@@ -17,6 +17,9 @@ namespace Level.Objects
         private bool _oldState;
 
         private bool _state;
+
+        private int _cooldown;
+        
         /// <summary>
         /// The state of the button (true - pressed, false - unpressed).
         /// </summary>
@@ -35,14 +38,25 @@ namespace Level.Objects
                 _oldState = _state;
             }
         }
-        
+
+        private void FixedUpdate()
+        {
+            if (_cooldown > 0)
+            {
+                _cooldown--;
+            }
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform.CompareTag("Player"))
-            {
-                /*if (State) return;*/
-                State = !State;
-            }
+            if (_cooldown > 0) return;
+
+            if (!other.transform.CompareTag("Player")) return;
+            
+            Debug.Log("OH YEAH");
+            
+            State = !State;
+            _cooldown = 20;
         }
 
         /*private void OnTriggerExit(Collider other)
