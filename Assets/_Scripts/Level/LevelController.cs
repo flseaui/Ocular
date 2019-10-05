@@ -96,6 +96,8 @@ namespace Level {
             
             CurrentLevelInfo.ReadyToLoad = false;
             LoadLevel();
+
+            GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState(); 
         }
 
         public void LoadFirstLevel()
