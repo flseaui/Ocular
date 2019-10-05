@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game;
+using Misc;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ namespace Level
         public float CameraSize;
 
         public Transform CameraCenter;
+        public Direction CameraStartDirection;
         
         [Button]
         private void SetCamInfo()

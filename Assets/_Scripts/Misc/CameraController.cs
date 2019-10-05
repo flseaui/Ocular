@@ -18,8 +18,27 @@ namespace Misc
         private void Awake()
         {
             _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
+            LevelController.OnLevelLoaded += () =>
+            {
+                var lr = transform.rotation.eulerAngles;
+                switch (_levelController.CurrentLevelInfo.CameraStartDirection)
+                {
+                    case Direction.Forward:
+                        transform.rotation = Quaternion.Euler(lr.x, 45, lr.z);
+                        break;
+                    case Direction.Left:
+                        transform.rotation = Quaternion.Euler(lr.x, 135, lr.z);
+                        break;
+                    case Direction.Back:
+                        transform.rotation = Quaternion.Euler(lr.x, -135, lr.z);
+                        break;
+                    case Direction.Right:
+                        transform.rotation = Quaternion.Euler(lr.x, -45, lr.z);
+                        break;
+                }
+            };
         }
-        
+
         private void Start()
         {
             DOTween.Init();
