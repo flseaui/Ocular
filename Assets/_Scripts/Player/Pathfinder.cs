@@ -5,13 +5,15 @@ using DG.Tweening;
 using DG.Tweening.Plugins.Core.PathCore;
 using Level;
 using Level.Objects;
+using Misc;
 using Priority_Queue;
 using Sirenix.OdinInspector;
 using UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace Player {
+namespace Player
+{
     public class Pathfinder : MonoBehaviour
     {
         [NonSerialized]
@@ -40,13 +42,13 @@ namespace Player {
             _currentStart = null;
             Navigating = false;
         }
-        
+
         private void NavigateTo(Walkable destination)
         {
             var path = GeneratePath(Navigating ? _currentEnd : GetCurrentWalkable(out _), destination);
             if (path == null)
                 return;
-            
+
             if (AtGoal) return;
             if (Navigating)
             {
@@ -67,7 +69,7 @@ namespace Player {
         {
             if (start == null) return null;
             if (start == destination) return null;
-            
+
             float Heuristic(Vector3 a, Vector3 b) => Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
 
             float MovementCost(Node a, Node b) => 1;
@@ -76,11 +78,11 @@ namespace Player {
             var path = new Queue<Walkable>();
             var frontier = new FastPriorityQueue<Node>(MapController.NUM_WALKABLES);
             var cameFrom = new Dictionary<int, Node>();
-            var costSoFar = new Dictionary<int, float> {{start.UniqueId, 0}};
+            var costSoFar = new Dictionary<int, float> { { start.UniqueId, 0 } };
             frontier.Enqueue(start.Node, 0);
 
             Node current;
-            
+
             do
             {
                 current = frontier.Dequeue();
@@ -117,7 +119,7 @@ namespace Player {
                     return null;
                 }
             }
-        
+
             return path.Reverse();
         }
 
@@ -127,12 +129,12 @@ namespace Player {
                 : null;
 
         public Action OnMove;
-        
+
         private void FixedUpdate()
         {
             if (Navigating)
                 if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
-                {                   
+                {
                     var position = _currentEnd.transform.position;
 
                     var vec = new Vector3(position.x,
@@ -142,12 +144,13 @@ namespace Player {
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
+                        var curWalk = GetCurrentWalkable(out _);
                         if (_queuedPath != null && _queuedPath.Count > 0)
                         {
                             ClearPath();
                             _currentPath = _queuedPath;
                             _currentEnd = _currentPath.Dequeue();
-                            GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
+                            GetComponent<Player>().ChangeFacing(GetCardinal(curWalk, _currentEnd));
                             Navigating = true;
                         }
                         else
@@ -156,8 +159,16 @@ namespace Player {
                             if (_currentPath.Count > 0)
                             {
                                 _currentEnd = _currentPath.Dequeue();
-                                GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
-                                OnMove?.Invoke();
+                                if (_currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Outlined)
+                                {
+                                    Navigating = false;
+                                    ClearPath();
+                                }
+                                else
+                                {
+                                    GetComponent<Player>().ChangeFacing(GetCardinal(curWalk, _currentEnd));
+                                    OnMove?.Invoke();
+                                }
                             }
                             else
                                 Navigating = false;
@@ -165,12 +176,12 @@ namespace Player {
                     }
                 }
         }
-        
+
         private Player.Cardinal GetCardinal(Walkable start, Walkable end)
         {
             if (start is null || end is null)
                 return Player.Cardinal.None;
-        
+
             if (start.transform.position.x > end.transform.position.x)
                 return Player.Cardinal.West;
             if (start.transform.position.x < end.transform.position.x)
@@ -179,17 +190,17 @@ namespace Player {
                 return Player.Cardinal.South;
             if (start.transform.position.z < end.transform.position.z)
                 return Player.Cardinal.North;
-        
+
             Debug.Log("Same as start");
             return Player.Cardinal.None;
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
-        {                      
+        {
             Gizmos.color = Color.cyan;
             if (_currentPath == null) return;
-            
+
             foreach (var walkable in _currentPath)
                 Gizmos.DrawSphere(walkable.transform.position + Vector3.up / 2, .2f);
         }

@@ -7,6 +7,7 @@ using Misc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using OcularState = Game.GlassesController.OcularState;
 
 namespace Level.Objects
@@ -30,12 +31,13 @@ namespace Level.Objects
             ColorChanging
         }
 
-        [SerializeField] private ColorableType _type; 
-        
+        [SerializeField] private ColorableType _type;
+
         [SerializeField, HideInInspector] private Color _color;
         [SerializeField, HideInInspector] private OcularState _ocularState;
         [SerializeField] private Material _blockMat;
         [SerializeField] private Material _outlineMat;
+        [SerializeField] private GameObject _outlineModel;
 
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
@@ -43,6 +45,7 @@ namespace Level.Objects
         private static LevelInfo _levelInfo;
         private OcularState _initialState;
         private BlockState _blockState;
+        private GameObject _runtimeOutlineModel;
 
         private List<IController> _controllers;
 
@@ -55,7 +58,7 @@ namespace Level.Objects
                 var reset = value == OcularState.Null;
                 _ocularState = reset ? _initialState : value;
                 _color = InternalStateToColor(reset ? _initialState : value);
-                
+
                 foreach (var r in _renderers)
                 {
                     r.GetPropertyBlock(_propBlock);
@@ -75,9 +78,13 @@ namespace Level.Objects
                 switch (value)
                 {
                     case BlockState.Invisible:
+                        if (_runtimeOutlineModel != null)
+                            _runtimeOutlineModel.SetActive(false);
                         SetModelsState(false);
                         break;
                     case BlockState.Visible:
+                        if (_runtimeOutlineModel != null)
+                            _runtimeOutlineModel.SetActive(false);
                         _renderers.ForEach(r =>
                         {
                             var tex = r.material.mainTexture;
@@ -85,7 +92,7 @@ namespace Level.Objects
                             r.material.mainTexture = tex;
                         });
                         SetModelsState(true);
-                        
+
                         //todo alert player of collision/death
                         if (_blockState != BlockState.Visible)
                             if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 2,
@@ -95,11 +102,15 @@ namespace Level.Objects
                                 GameObject.FindWithTag("Player")?.GetComponent<Player.Player>().Death();
                             }
 
-
                         break;
                     case BlockState.Outlined:
-                        _renderers.ForEach(r => r.material = _outlineMat);
-                        SetModelsState(true);
+                        if (_runtimeOutlineModel == null)
+                            _runtimeOutlineModel = Instantiate(_outlineModel, transform);
+                        else
+                            _runtimeOutlineModel.SetActive(true);
+                        SetModelsState(false);
+                        //_renderers.ForEach(r => r.material = _outlineMat);
+                        //SetModelsState(true);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -144,7 +155,8 @@ namespace Level.Objects
             // ATM This code assumes controller is button bc thats the only implemented controller
             // TODO Come up with better controller solution
 
-            if (_controllers.All(c => ((MonoBehaviour) c).GetComponent<Colorable>().State != BlockState.Visible))
+            // if all controllers are visible
+            if (_controllers.All(c => ((MonoBehaviour)c).GetComponent<Colorable>().State != BlockState.Visible))
                 return visible
                     ? (_state: OcularState, BlockState.Visible)
                     : (_state: OcularState, BlockState.Invisible);
@@ -154,8 +166,8 @@ namespace Level.Objects
 
             if (OcularState == _initialState)
             {
-                if (IsColorVisible(((ButtonWalkable) _controllers[0]).Color))
-                    return (((ButtonWalkable) _controllers[0]).Color, BlockState.Outlined);
+                if (IsColorVisible(((ButtonWalkable)_controllers[0]).Color))
+                    return (((ButtonWalkable)_controllers[0]).Color, BlockState.Outlined);
                 return (OcularState, BlockState.Invisible);
             }
 
@@ -182,7 +194,7 @@ namespace Level.Objects
                     }
                     else
                         OcularState = color;
-                    
+
                     if (transform.HasComponent<Walkable>(out var walkable))
                     {
                         var visible = _blockState == BlockState.Visible;
@@ -193,7 +205,7 @@ namespace Level.Objects
                             case ButtonWalkable button:
                                 if (!visible)
                                 {
-                                    button.State = false;
+                                    //button.State = false;
                                 }
 
                                 break;
@@ -217,14 +229,14 @@ namespace Level.Objects
 
             switch (ocularState)
             {
-                case OcularState.Z    : return Color.white;
-                case OcularState.A    : return Color.red;
-                case OcularState.AB   : return new Color(1, .551f, 0);
-                case OcularState.B    : return new Color(1, 1, 0, 1);
-                case OcularState.BC   : return Color.green;
-                case OcularState.C    : return Color.blue;
-                case OcularState.AC   : return Color.magenta;
-                case OcularState.Null : return Color.clear;
+                case OcularState.Z: return Color.white;
+                case OcularState.A: return Color.red;
+                case OcularState.AB: return new Color(1, .551f, 0);
+                case OcularState.B: return new Color(1, 1, 0, 1);
+                case OcularState.BC: return Color.green;
+                case OcularState.C: return Color.blue;
+                case OcularState.AC: return Color.magenta;
+                case OcularState.Null: return Color.clear;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ocularState), ocularState, null);
             }
@@ -253,24 +265,24 @@ namespace Level.Objects
                     return false;
             }
         }
-    
+
         private Color InternalStateToColor(OcularState ocularState)
         {
             if (ocularState == OcularState.Null)
                 return InternalStateToColor(_initialState);
 
             Color newCol;
-            
+
             switch (ocularState)
             {
-                case OcularState.Z    : return Color.white;
-                case OcularState.A    : ColorUtility.TryParseHtmlString("#BE5151", out newCol); return newCol;
-                case OcularState.AB   : ColorUtility.TryParseHtmlString("#C99555", out newCol); return newCol;
-                case OcularState.B    : ColorUtility.TryParseHtmlString("#C7C360", out newCol); return newCol;
-                case OcularState.BC   : ColorUtility.TryParseHtmlString("#5BC75C", out newCol); return newCol;
-                case OcularState.C    : ColorUtility.TryParseHtmlString("#6E88CE", out newCol); return newCol;
-                case OcularState.AC   : ColorUtility.TryParseHtmlString("#975FBD", out newCol); return newCol;
-                case OcularState.Null : return Color.clear;
+                case OcularState.Z: return Color.white;
+                case OcularState.A: ColorUtility.TryParseHtmlString("#BE5151", out newCol); return newCol;
+                case OcularState.AB: ColorUtility.TryParseHtmlString("#C99555", out newCol); return newCol;
+                case OcularState.B: ColorUtility.TryParseHtmlString("#C7C360", out newCol); return newCol;
+                case OcularState.BC: ColorUtility.TryParseHtmlString("#5BC75C", out newCol); return newCol;
+                case OcularState.C: ColorUtility.TryParseHtmlString("#6E88CE", out newCol); return newCol;
+                case OcularState.AC: ColorUtility.TryParseHtmlString("#975FBD", out newCol); return newCol;
+                case OcularState.Null: return Color.clear;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ocularState), ocularState, null);
             }
@@ -280,20 +292,21 @@ namespace Level.Objects
         {
             foreach (var model in _models)
                 model.SetActive(state);
-            
+
         }
-        
+
         private void Start()
         {
             _initialState = OcularState;
         }
-        
+
         private void OnEnable()
         {
             var temp = new List<GameObject>();
             foreach (Transform child in transform)
                 if (child.CompareTag("Colorable"))
                     temp.Add(child.gameObject);
+
             _models = temp.ToArray();
             _renderers = _models.Select(m => m.GetComponent<MeshRenderer>()).ToArray();
             if (Application.isPlaying)
@@ -301,10 +314,10 @@ namespace Level.Objects
                 _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
             }
 
-//#if UNITY_EDITOR
-            _renderers.ForEach(r => r.sharedMaterial = _blockMat);            
-//#endif
-            
+            //#if UNITY_EDITOR
+            _renderers.ForEach(r => r.sharedMaterial = _blockMat);
+            //#endif
+
             _propBlock = new MaterialPropertyBlock();
             State = BlockState.Visible;
             OcularState = OcularState;
@@ -316,10 +329,15 @@ namespace Level.Objects
             if (!Application.isPlaying) return;
 
             _controllers = new List<IController>();
-            
+
+            Addressables.LoadAssetAsync<GameObject>("block_outline_model").Completed += result =>
+                {
+                    _outlineModel = result.Result;
+                };
+
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
-        
+
         private void OnDestroy()
         {
             GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
