@@ -2,7 +2,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Level.Objects 
+namespace Level.Objects
 {
     /// <summary>
     /// A button that gets pressed when collided with.
@@ -19,7 +19,7 @@ namespace Level.Objects
         private bool _state;
 
         private int _cooldown;
-        
+
         /// <summary>
         /// The state of the button (true - pressed, false - unpressed).
         /// </summary>
@@ -52,9 +52,7 @@ namespace Level.Objects
             if (_cooldown > 0) return;
 
             if (!other.transform.CompareTag("Player")) return;
-            
-            Debug.Log("OH YEAH");
-            
+
             State = !State;
             _cooldown = 20;
         }
