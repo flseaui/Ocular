@@ -159,7 +159,7 @@ namespace Player
                             if (_currentPath.Count > 0)
                             {
                                 _currentEnd = _currentPath.Dequeue();
-                                if (_currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Outlined)
+                                if (_currentEnd.GetComponent<Colorable>().Outlined && _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible)
                                 {
                                     Navigating = false;
                                     ClearPath();

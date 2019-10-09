@@ -21,8 +21,7 @@ namespace Level.Objects
         public enum BlockState
         {
             Visible,
-            Invisible,
-            Outlined
+            Invisible
         }
 
         public enum ColorableType
@@ -78,13 +77,9 @@ namespace Level.Objects
                 switch (value)
                 {
                     case BlockState.Invisible:
-                        if (_runtimeOutlineModel != null)
-                            _runtimeOutlineModel.SetActive(false);
                         SetModelsState(false);
                         break;
                     case BlockState.Visible:
-                        if (_runtimeOutlineModel != null)
-                            _runtimeOutlineModel.SetActive(false);
                         _renderers.ForEach(r =>
                         {
                             var tex = r.material.mainTexture;
@@ -103,20 +98,34 @@ namespace Level.Objects
                             }
 
                         break;
-                    case BlockState.Outlined:
-                        if (_runtimeOutlineModel == null)
-                            _runtimeOutlineModel = Instantiate(_outlineModel, transform);
-                        else
-                            _runtimeOutlineModel.SetActive(true);
-                        SetModelsState(false);
-                        //_renderers.ForEach(r => r.material = _outlineMat);
-                        //SetModelsState(true);
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
                 _blockState = value;
+            }
+        }
+
+        private bool _outlined;
+        public bool Outlined
+        {
+            get => _outlined;
+            set
+            {
+                if (value)
+                {
+                    if (_runtimeOutlineModel == null)
+                        _runtimeOutlineModel = Instantiate(_outlineModel, transform);
+
+                    _runtimeOutlineModel.SetActive(true);
+                }
+                else if (_runtimeOutlineModel != null)
+                {
+                    _runtimeOutlineModel.SetActive(false);
+                }
+
+                _outlined = value;
+
             }
         }
 
@@ -155,19 +164,39 @@ namespace Level.Objects
             // ATM This code assumes controller is button bc thats the only implemented controller
             // TODO Come up with better controller solution
 
-            // if all controllers are visible
-            if (_controllers.All(c => ((MonoBehaviour)c).GetComponent<Colorable>().State != BlockState.Visible))
+            if (_controllers.Count > 0)
+            {
+                if (((MonoBehaviour)_controllers[0]).GetComponent<Colorable>().State != BlockState.Visible)
+                {
+                    Outlined = false;
+                    return visible
+                        ? (_state: OcularState, BlockState.Visible)
+                        : (_state: OcularState, BlockState.Invisible);
+                }
+                else
+                {
+                    Outlined = true;
+                }
+            }
+            else
+            {
                 return visible
                     ? (_state: OcularState, BlockState.Visible)
                     : (_state: OcularState, BlockState.Invisible);
+            }
 
             if (visible)
+            {
                 return (OcularState, BlockState.Visible);
+            }
 
             if (OcularState == _initialState)
             {
                 if (IsColorVisible(((ButtonWalkable)_controllers[0]).Color))
-                    return (((ButtonWalkable)_controllers[0]).Color, BlockState.Outlined);
+                {
+                    return (((ButtonWalkable)_controllers[0]).Color, BlockState.Invisible);
+                }
+
                 return (OcularState, BlockState.Invisible);
             }
 
@@ -182,18 +211,19 @@ namespace Level.Objects
                     var (color, state) = CalculateVisibility();
 
                     State = state;
-                    if (state == BlockState.Outlined)
+
+                    if (_runtimeOutlineModel != null)
                     {
-                        // Set temp color for outline
-                        foreach (var r in _renderers)
-                        {
-                            r.GetPropertyBlock(_propBlock);
-                            _propBlock.SetColor("_Color", StateToColor(color));
-                            r.SetPropertyBlock(_propBlock);
-                        }
+                        var r = _runtimeOutlineModel.transform.GetChild(0).GetComponent<Renderer>();
+
+                        r.GetPropertyBlock(_propBlock);
+                        if (State == BlockState.Visible)
+                            _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
+                        else
+                            _propBlock.SetColor("_Color", StateToColor(_initialState));
+                        r.SetPropertyBlock(_propBlock);
+
                     }
-                    else
-                        OcularState = color;
 
                     if (transform.HasComponent<Walkable>(out var walkable))
                     {
