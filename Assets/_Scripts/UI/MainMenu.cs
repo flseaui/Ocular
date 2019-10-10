@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,21 @@ namespace UI
     {
         public void StartNewGame()
         {
-            SceneManager.LoadScene("Game");
+            LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("Game"));
+        }
+
+        private IEnumerator LoadScene(string scene)
+        {
+            var AO = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+            AO.allowSceneActivation = false;
+            while (AO.progress < 0.9f)
+            {
+                yield return null;
+            }
+
+            //Fade the loading screen out here
+
+            AO.allowSceneActivation = true;
         }
 
         public void StartMenuMusic()
