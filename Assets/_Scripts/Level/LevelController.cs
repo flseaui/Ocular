@@ -53,7 +53,7 @@ namespace Level {
 
         private List<List<GameObject>> _worlds;
 
-        private GameObject[,] _levels = new GameObject[2, 9];
+        private GameObject[,] _levels = new GameObject[2, 10];
 
         private GameObject _loadedLevel;
         private Tuple<int, int> _loadedLevelNumber;
