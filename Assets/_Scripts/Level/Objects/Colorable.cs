@@ -217,7 +217,7 @@ namespace Level.Objects
                         var r = _runtimeOutlineModel.transform.GetChild(0).GetComponent<Renderer>();
 
                         r.GetPropertyBlock(_propBlock);
-                        if (State == BlockState.Visible)
+                        if (State != BlockState.Visible)
                             _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
                         else
                             _propBlock.SetColor("_Color", StateToColor(_initialState));
