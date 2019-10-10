@@ -7,7 +7,7 @@ public class LoadingScreen : MonoBehaviour
 {
     public static LoadingScreen Instance;
 
-    private const float MinTimeToShow = 1f;
+    private const float MinTimeToShow = 3f;
 
     private AsyncOperation _currentLoadingOperation;
 
@@ -71,16 +71,20 @@ public class LoadingScreen : MonoBehaviour
         percentLoadedText.text = Mathf.CeilToInt(progress * 100).ToString() + "%";
     }
 
-    public void Show(AsyncOperation loadingOperation)
+    public void StartLoading()
     {
-        _currentLoadingOperation = loadingOperation;
+        _currentLoadingOperation = SceneManager.LoadSceneAsync("Game");
         _currentLoadingOperation.allowSceneActivation = false;
+        _isLoading = true;
+    }
+
+    public void Show()
+    {
         gameObject.SetActive(true);
         SetProgress(0f);
         _timeElapsed = 0f;
         _animator.SetTrigger("Show");
         _didTriggerFadeOutAnim = false;
-        _isLoading = true;
     }
 
     public void Hide()

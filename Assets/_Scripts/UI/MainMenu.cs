@@ -8,7 +8,7 @@ namespace UI
     {
         public void StartNewGame()
         {
-            LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("Game"));
+            LoadingScreen.Instance.Show();
         }
 
         private IEnumerator LoadScene(string scene)
