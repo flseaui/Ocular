@@ -59,7 +59,7 @@ public class SoundGroupVariationInspector : Editor {
 
 				GUI.color = DTGUIHelper.BrightButtonColor;
 				if (_variation.ObjectToFollow != null || _variation.ObjectToTriggerFrom != null) {
-					if (GUILayout.Button("Select Caller", EditorStyles.miniButton, GUILayout.Width(80))) {
+					if (GUILayout.Button("Select Caller", EditorStyles.toolbarButton, GUILayout.Width(80))) {
 						if (_variation.ObjectToFollow != null) {
 							Selection.activeGameObject = _variation.ObjectToFollow.gameObject;
 						} else {
@@ -156,7 +156,7 @@ public class SoundGroupVariationInspector : Editor {
         } else {
             EditorGUILayout.LabelField("Audio Origin", _variation.audLocation.ToString());
         }
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#AudioOrigin");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#AudioOrigin");
         EditorGUILayout.EndHorizontal();
 
         switch (_variation.audLocation) {
@@ -313,7 +313,7 @@ public class SoundGroupVariationInspector : Editor {
 
         EditorGUILayout.BeginHorizontal();
         var newWeight = EditorGUILayout.IntSlider("Voices (Weight)", _variation.weight, 0, 100);
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#Voices");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#Voices");
         EditorGUILayout.EndHorizontal();
         if (newWeight != _variation.weight) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Voices (Weight)");

@@ -265,6 +265,7 @@ namespace DarkTonic.MasterAudio {
             _lostFocus = false;
         }
 
+        /*! \cond PRIVATE */
         public void SetSpatialBlend() {
             if (MasterAudio.SafeInstance == null) {
                 return;
@@ -299,6 +300,7 @@ namespace DarkTonic.MasterAudio {
                     break;
             }
         }
+        /*! \endcond */
 
         private void SetAudiosIfEmpty() {
             var audios = GetComponents<AudioSource>();
@@ -1984,10 +1986,12 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
+        /*! \cond PRIVATE */
         public void RouteToMixerChannel(AudioMixerGroup group) {
             _activeAudio.outputAudioMixerGroup = group;
             _transitioningAudio.outputAudioMixerGroup = group;
         }
+        /*! \endcond */
 
         /// <summary>
         /// This property returns the current Playlist

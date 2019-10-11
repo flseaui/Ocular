@@ -46,6 +46,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -280,15 +281,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Root
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: BACKSOLID BOTTOMSOLID FRONTSOLID LEFTSOLID RIGHTSOLID TOPSOLID
-    _AOUV_UV0 _GRADIENTSPACE_WORLD_SPACE _GRADSETTINGS_B_USE_GLOBAL _GRADSETTINGS_D_USE_GLOBAL
-    _GRADSETTINGS_F_USE_GLOBAL _GRADSETTINGS_L_USE_GLOBAL _GRADSETTINGS_R_USE_GLOBAL
-    _GRADSETTINGS_T_USE_GLOBAL _LMAPBLENDINGMODE_ADD _MODE_OPAQUE _OTHERSETTINGS_ON
-    _SHADING_B_SOLID_COLOR _SHADING_D_SOLID_COLOR _SHADING_F_VERTEXCOLOR _SHADING_L_SOLID_COLOR
-    _SHADING_R_SOLID_COLOR _SHADING_T_SOLID_COLOR _SHOWAMBIENTSETTINGS_ON _SHOWAO_ON
-    _SHOWBACK_ON _SHOWBOTTOM_ON _SHOWCUSTOMSHADING_ON _SHOWFRONT_ON _SHOWLEFT_ON _SHOWRIGHT_ON
-    _SHOWTEXTURE_ON _SHOWTOP_ON
+  m_Shader: {fileID: -6465566751694194690, guid: be7be050466ea6d49a26974a32da5a4d,
+    type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -298,12 +293,20 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_A623A46E:
+        m_Texture: {fileID: 7908270052134848673}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AOTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BackTex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 7908270052134848673}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -378,7 +381,9 @@ Material:
     - _AOEnable: 0
     - _AOPower: 0
     - _AOuv: 0
+    - _AlphaClip: 0
     - _AmbientPower: 0
+    - _Blend: 0
     - _Brightness: 0
     - _BumpAmt: 10
     - _BumpScale: 1
@@ -388,6 +393,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DontMix: 0
     - _DstBlend: 0
+    - _EnvironmentReflections: 1
     - _Exposure: 1
     - _Fade: 1
     - _FogHeight: 10
@@ -420,7 +426,9 @@ Material:
     - _OcclusionStrength: 1
     - _OtherSettings: 1
     - _Parallax: 0.02
+    - _QueueOffset: 0
     - _RealtimeShadow: 0
+    - _ReceiveShadows: 1
     - _RimEnable: 0
     - _RimPower: 1
     - _Rotation: 0
@@ -453,15 +461,19 @@ Material:
     - _ShowTexture: 1
     - _ShowTop: 1
     - _Size: 1
+    - _Smoothness: 0.4
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Surface: 0
     - _UVSec: 0
     - _UnityFogEnable: 0
+    - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _AOColor: {r: 1, g: 1, b: 1, a: 1}
     - _AmbientColor: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color1_B: {r: 0.07509885, g: 0.3584906, b: 0, a: 1}
     - _Color1_D: {r: 0.3025982, g: 0.6792453, b: 0, a: 1}

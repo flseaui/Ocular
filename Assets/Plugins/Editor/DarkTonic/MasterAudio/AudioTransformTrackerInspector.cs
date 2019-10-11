@@ -105,8 +105,7 @@ public class AudioTransformTrackerInspector : Editor {
                 percentagePlayed = (int)(variation.VarAudio.time / variation.VarAudio.clip.length * 100);
             }
 
-			EditorGUILayout.LabelField(string.Format(label, percentagePlayed),
-                EditorStyles.miniButtonMid, GUILayout.Height(16));
+			EditorGUILayout.LabelField(string.Format(label, percentagePlayed), EditorStyles.miniButtonMid, GUILayout.Height(16));
 
             GUI.color = Color.white;
 

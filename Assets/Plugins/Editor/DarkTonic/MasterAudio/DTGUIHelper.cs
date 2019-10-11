@@ -213,6 +213,93 @@ public static class DTGUIHelper {
 
     }
 
+    public static void ShowCollapsibleSection(ref bool state, string text, bool showArrow = true) {
+        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+        if (!state)
+        {
+            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+        }
+        else
+        {
+            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
+        }
+
+        var style = new GUIStyle();
+        style.fontSize = 11;
+        style.fontStyle = FontStyle.Bold;
+        style.margin = new RectOffset(0, 0, 0, 0);
+        style.padding = new RectOffset(0, 0, 0, 0);
+        style.fixedHeight = 18;
+
+        GUILayout.BeginHorizontal(style);
+
+        if (showArrow)
+        {
+            if (state)
+            {
+                text = DownArrow + " " + text;
+            }
+            else
+            {
+                text = "\u25BA " + text;
+            }
+        }
+
+        var headerStyle = new GUIStyle(EditorStyles.popup);
+        headerStyle.fontSize = 11;
+        headerStyle.fontStyle = FontStyle.Bold;
+        headerStyle.margin = new RectOffset(0, 0, 2, 0);
+        headerStyle.padding = new RectOffset(6, 0, 1, 2);
+        headerStyle.fixedHeight = 18;
+
+        if (!GUILayout.Toggle(true, text, headerStyle, GUILayout.MinWidth(20f))) {
+            state = !state;
+        }
+    }
+
+    public static void ShowCollapsibleSectionInline(ref bool state, string text)
+    {
+        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+        if (!state)
+        {
+            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+        }
+        else
+        {
+            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
+        }
+
+        var style = new GUIStyle();
+        style.fontSize = 11;
+        style.fontStyle = FontStyle.Bold;
+        style.margin = new RectOffset(0, 0, 0, 0);
+        style.padding = new RectOffset(0, 0, 0, 0);
+        style.fixedHeight = 18;
+
+        GUILayout.BeginHorizontal(style);
+
+        if (state)
+        {
+            text = DownArrow + " " + text;
+        }
+        else
+        {
+            text = "\u25BA " + text;
+        }
+
+        var headerStyle = new GUIStyle(EditorStyles.popup);
+        headerStyle.fontSize = 11;
+        headerStyle.fontStyle = FontStyle.Bold;
+        headerStyle.margin = new RectOffset(0, 0, 2, 0);
+        headerStyle.padding = new RectOffset(6, 0, 1, 2);
+        headerStyle.fixedHeight = 18;
+
+        if (!GUILayout.Toggle(true, text, headerStyle, GUILayout.MinWidth(20f)))
+        {
+            state = !state;
+        }
+    }
+
     public static void ShowHeaderTexture(Texture tex) {
         if (MasterAudio.HideLogoNav) {
             return;
@@ -241,7 +328,7 @@ public static class DTGUIHelper {
 
     public static void HelpHeader(string helpUrl, string apiUrl = "http://www.dtdevtools.com/API/masteraudio/annotated.html") {
         EditorGUILayout.BeginHorizontal(CornerGUIStyle);
-        AddHelpIcon(helpUrl, true);
+        AddHelpIconNoStyle(helpUrl);
         GUILayout.Label("Click button for online help!");
         AddAPIIcon(apiUrl);
         EditorGUILayout.EndHorizontal();
@@ -283,17 +370,34 @@ public static class DTGUIHelper {
         EditorGUILayout.EndVertical();
     }
 
-    public static void AddHelpIcon(string helpUrl, bool useMiddleButton = false) {
+    public static void AddMiddleHelpIcon(string helpUrl)
+    {
         var oldColor = GUI.color;
         var oldBG = GUI.backgroundColor;
         GUI.color = HelpIconColor;
         GUI.backgroundColor = Color.white;
         var buttonStyle = EditorStyles.miniButtonRight;
-        if (useMiddleButton) {
-            buttonStyle = EditorStyles.miniButton;
-        }
+        buttonStyle = EditorStyles.miniButton;
+        buttonStyle.padding = new RectOffset(0, 0, 0, 0);
+        buttonStyle.margin = new RectOffset(0, 0, 3, 0);
 
-        if (GUILayout.Button(new GUIContent("?", "Online Help"), buttonStyle, GUILayout.MaxWidth(16), GUILayout.Height(15))) {
+        if (GUILayout.Button(new GUIContent("?", "Online Help"), buttonStyle, GUILayout.Width(16), GUILayout.Height(15)))
+        {
+            Application.OpenURL(helpUrl);
+        }
+        GUILayout.Space(3);
+        GUI.color = oldColor;
+        GUI.backgroundColor = oldBG;
+    }
+
+    public static void AddHelpIconNoStyle(string helpUrl) {
+        var oldColor = GUI.color;
+        var oldBG = GUI.backgroundColor;
+        GUI.color = HelpIconColor;
+        GUI.backgroundColor = Color.white;
+        var buttonStyle = EditorStyles.miniButton;
+        if (GUILayout.Button(new GUIContent("?", "Online Help"), buttonStyle, GUILayout.Width(16), GUILayout.Height(15)))
+        {
             Application.OpenURL(helpUrl);
         }
         GUILayout.Space(3);

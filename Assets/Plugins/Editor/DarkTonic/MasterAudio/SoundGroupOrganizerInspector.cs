@@ -466,9 +466,10 @@ public class SoundGroupOrganizerInspector : Editor {
         if (_organizer.itemType == SoundGroupOrganizer.MAItemType.SoundGroups) {
             // ReSharper disable once ConvertToConstant.Local
             var text = "Group Control";
-            GUILayout.BeginHorizontal();
-            text = "<b><size=11>" + text + "</size></b>";
-            GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f));
+
+            var collapsed = true;
+
+            DTGUIHelper.ShowCollapsibleSection(ref collapsed, text, false);
             EditorGUILayout.EndHorizontal();
 
             DTGUIHelper.BeginGroupedControls();
@@ -709,11 +710,10 @@ public class SoundGroupOrganizerInspector : Editor {
 
             // ReSharper disable once ConvertToConstant.Local
             var text = "Custom Event Control";
-            GUILayout.BeginHorizontal();
-            text = "<b><size=11>" + text + "</size></b>";
-            GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f));
-            EditorGUILayout.EndHorizontal();
+            var collapsed = true;
 
+            DTGUIHelper.ShowCollapsibleSection(ref collapsed, text, false);
+            EditorGUILayout.EndHorizontal();
 
             var catNames = new List<string>(_organizer.customEventCategories.Count);
             // ReSharper disable once ForCanBeConvertedToForeach
@@ -834,8 +834,6 @@ public class SoundGroupOrganizerInspector : Editor {
 
                 var hasItems = matchingItems.Count > 0;
 
-                EditorGUILayout.BeginHorizontal();
-
                 if (!cat.IsEditing || Application.isPlaying) {
                     var catName = cat.CatName;
 
@@ -844,23 +842,7 @@ public class SoundGroupOrganizerInspector : Editor {
                     var state2 = cat.IsExpanded;
                     var text2 = catName;
 
-                    // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                    if (!state2) {
-                        GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-                    } else {
-                        GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
-                    }
-
-                    text2 = "<b><size=11>" + text2 + "</size></b>";
-
-                    if (state2) {
-                        text2 = "\u25BC " + text2;
-                    } else {
-                        text2 = "\u25BA " + text2;
-                    }
-                    if (!GUILayout.Toggle(true, text2, "dragtab", GUILayout.MinWidth(20f))) {
-                        state2 = !state2;
-                    }
+                    DTGUIHelper.ShowCollapsibleSection(ref state2, text2);
 
                     GUILayout.Space(2f);
 
@@ -880,6 +862,13 @@ public class SoundGroupOrganizerInspector : Editor {
                         catItemsCollapsed = false;
                         break;
                     }
+
+                    var headerStyle = new GUIStyle();
+                    headerStyle.margin = new RectOffset(0, 0, 2, 0);
+                    headerStyle.padding = new RectOffset(6, 0, 1, 2);
+                    headerStyle.fixedHeight = 18;
+
+                    EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
 
                     GUI.backgroundColor = Color.white;
 
@@ -923,18 +912,20 @@ public class SoundGroupOrganizerInspector : Editor {
                                              GUILayout.Height(16))) {
                             catEditing = cat;
                         }
-                        GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                        if (GUILayout.Button(new GUIContent("Delete", "Click to delete Category"),
-                                             EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Category"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                        {
                             catToDelete = cat;
                         }
 
-                        GUILayout.Space(2);
+                        GUILayout.Space(6);
                     } else {
                         GUILayout.Space(4);
                     }
 
+                    EditorGUILayout.EndHorizontal();
                 } else {
+                    EditorGUILayout.BeginHorizontal();
+
                     GUI.backgroundColor = DTGUIHelper.BrightTextColor;
                     var tex = EditorGUILayout.TextField("", cat.ProspectiveName);
                     if (tex != cat.ProspectiveName) {
@@ -1021,9 +1012,8 @@ public class SoundGroupOrganizerInspector : Editor {
                                     eventEditing = anEvent;
                                 }
 
-                                GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                if (GUILayout.Button(new GUIContent("Delete", "Click to delete Event"),
-                                                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Event"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                {
                                     eventToDelete = anEvent;
                                 }
                             }

@@ -40,6 +40,7 @@ namespace DarkTonic.MasterAudio {
 
         // error numbers
         public const int ERROR_MA_LAYER_COLLISIONS_DISABLED = 1;
+        public const int PHYSICS_DISABLED = 2;
 
         public const string StoredLanguageNameKey = "~MA_Language_Key~";
 
@@ -3061,7 +3062,12 @@ namespace DarkTonic.MasterAudio {
 
         #endregion
 
-#region Sound Group methods
+        #region Sound Group methods
+        /// <summary>
+        /// This returns the AudioSource for the next Variation to be played. Only works for top-to-bottom Variation Sequence. 
+        /// </summary>
+        /// <param name="sType"></param>
+        /// <returns>Audio Source</returns>
         public static AudioSource GetNextVariationForSoundGroup(string sType) {
             var aGroup = GrabGroup(sType, false);
             if (aGroup == null || AppIsShuttingDown) {
@@ -3389,7 +3395,6 @@ namespace DarkTonic.MasterAudio {
                 aVar.SetSpatialBlend();
             }
         }
-        /*! \endcond */
 
         public static void RouteGroupToUnityMixerGroup(string sType, AudioMixerGroup mixerGroup) {
             if (!Application.isPlaying) {
@@ -3413,6 +3418,7 @@ namespace DarkTonic.MasterAudio {
                 aVar.VarAudio.outputAudioMixerGroup = mixerGroup;
             }
         }
+        /*! \endcond */
 
         /// <summary>
         /// This method allows you to unpause all Audio Sources in a Sound Group.
@@ -4468,15 +4474,16 @@ namespace DarkTonic.MasterAudio {
             group.Group.UnsubscribeFromLastVariationFinishedPlay();
         }
 
-#endregion
+        #endregion
 
 #region Mixer methods
-
+        /*! \cond PRIVATE */
         public void SetSpatialBlendForMixer() {
             foreach (var key in AudioSourcesBySoundType.Keys) {
                 SetGroupSpatialBlend(key);
             }
         }
+        /*! \endcond */
 
         /// <summary>
         /// This method allows you to pause all Audio Sources in the mixer (everything but Playlists).
@@ -4873,6 +4880,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
+        /*! \cond PRIVATE */
         public static void RouteBusToUnityMixerGroup(string busName, AudioMixerGroup mixerGroup) {
             if (!Application.isPlaying) {
                 return;
@@ -4901,6 +4909,7 @@ namespace DarkTonic.MasterAudio {
                 RouteGroupToUnityMixerGroup(aGroup.name, mixerGroup);
             }
         }
+        /*! \endcond */
 
         private static void StopOldestSoundOnBus(GroupBus bus) {
             var busIndex = GetBusIndex(bus.busName, true);

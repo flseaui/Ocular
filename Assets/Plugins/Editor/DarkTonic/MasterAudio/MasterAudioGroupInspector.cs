@@ -203,7 +203,7 @@ public class MasterAudioGroupInspector : Editor {
         EditorGUI.indentLevel = 0;
         EditorGUILayout.BeginHorizontal();
         var newTargetGone = (MasterAudioGroup.TargetDespawnedBehavior)EditorGUILayout.EnumPopup("Caller Despawned Mode", _group.targetDespawnedBehavior);
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#CallerDespawned");
+        DTGUIHelper.AddMiddleHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#CallerDespawned");
         EditorGUILayout.EndHorizontal();
         if (newTargetGone != _group.targetDespawnedBehavior) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _group, "Change Caller Despawned Mode");
@@ -428,7 +428,7 @@ public class MasterAudioGroupInspector : Editor {
         DTGUIHelper.StartGroupHeader();
         EditorGUILayout.BeginHorizontal();
         var newVarMode = (MasterAudioGroup.VariationMode)EditorGUILayout.EnumPopup("Variation Mode", _group.curVariationMode);
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#VarMode");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#VarMode");
         EditorGUILayout.EndHorizontal();
         if (newVarMode != _group.curVariationMode) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _group, "change Variation Mode");
@@ -442,7 +442,7 @@ public class MasterAudioGroupInspector : Editor {
             case MasterAudioGroup.VariationMode.Normal:
                 EditorGUILayout.BeginHorizontal();
                 var newRetrigger = EditorGUILayout.IntSlider("Retrigger Percentage", _group.retriggerPercentage, 0, 100);
-                DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#Retrigger");
+                DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#Retrigger");
                 EditorGUILayout.EndHorizontal();
                 if (newRetrigger != _group.retriggerPercentage) {
                     AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _group, "change Retrigger Percentage");
@@ -890,7 +890,7 @@ public class MasterAudioGroupInspector : Editor {
                     _group.copySettingsExpanded = newBulk;
                 }
                 GUILayout.FlexibleSpace();
-                DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#CopySettings");
+                DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#CopySettings");
 
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.EndVertical();
@@ -1105,25 +1105,7 @@ public class MasterAudioGroupInspector : Editor {
                 var state = variation.isExpanded;
                 var text = variation.name;
 
-                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                if (!state) {
-                    GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-                } else {
-                    GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-                }
-
-                GUILayout.BeginHorizontal();
-
-                text = "<b><size=11>" + text + "</size></b>";
-
-                if (state) {
-                    text = "\u25BC " + text;
-                } else {
-                    text = "\u25BA " + text;
-                }
-                if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-                    state = !state;
-                }
+                DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
                 GUI.backgroundColor = Color.white;
                 if (!state) {
@@ -1136,6 +1118,13 @@ public class MasterAudioGroupInspector : Editor {
                 }
 
                 var varIsDirty = false;
+
+                var headerStyle = new GUIStyle();
+                headerStyle.margin = new RectOffset(0, 0, 2, 0);
+                headerStyle.padding = new RectOffset(6, 0, 1, 2);
+                headerStyle.fixedHeight = 18;
+
+                EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
 
                 if (canCopy) {
                     EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
@@ -1221,7 +1210,8 @@ public class MasterAudioGroupInspector : Editor {
                 }
 
                 GUILayout.Space(4);
-                DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#Variations");
+                EditorGUILayout.EndHorizontal();
+                DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroups.htm#Variations");
 
                 EditorGUILayout.EndHorizontal();
 
@@ -1242,8 +1232,7 @@ public class MasterAudioGroupInspector : Editor {
                         var percentagePlayed = (int)(variation.VarAudio.time / variation.VarAudio.clip.length * 100);
 
 
-                        EditorGUILayout.LabelField(string.Format(label, percentagePlayed),
-                            EditorStyles.miniButtonMid, GUILayout.Height(16));
+                        EditorGUILayout.LabelField(string.Format(label, percentagePlayed), EditorStyles.miniButtonMid, GUILayout.Height(16));
 
                         variation.frames++;
                         varIsDirty = true;
@@ -1251,7 +1240,7 @@ public class MasterAudioGroupInspector : Editor {
 
                         GUI.color = DTGUIHelper.BrightButtonColor;
                         if (variation.ObjectToFollow != null || variation.ObjectToTriggerFrom != null) {
-                            if (GUILayout.Button("Select Caller", EditorStyles.miniButton, GUILayout.Width(80))) {
+                            if (GUILayout.Button("Select Caller", EditorStyles.toolbarButton, GUILayout.Width(80))) {
                                 if (variation.ObjectToFollow != null) {
                                     Selection.activeGameObject = variation.ObjectToFollow.gameObject;
                                 } else {

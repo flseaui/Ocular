@@ -6,12 +6,12 @@ using Random = System.Random;
 
 namespace Level.Objects
 {
-    
+
     [ExecuteInEditMode]
     public class BlockRandomizer : MonoBehaviour
     {
         [SerializeField] private List<Texture2D> _textures;
-    
+
         public void OnEnable()
         {
             var renderer = GetComponent<Renderer>();

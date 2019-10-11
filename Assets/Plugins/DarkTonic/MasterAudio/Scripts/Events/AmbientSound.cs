@@ -201,10 +201,15 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
+#if PHY3D_MISSING
+            MasterAudio.LogWarningIfNeverLogged("Ambient Sounds script will not function because you do not have Physics package installed.", MasterAudio.PHYSICS_DISABLED);
+#else
             var shouldIgnoreCollisions = Physics.GetIgnoreLayerCollision(AmbientUtil.IgnoreRaycastLayerNumber, AmbientUtil.IgnoreRaycastLayerNumber);
             if (shouldIgnoreCollisions) {
                 MasterAudio.LogWarningIfNeverLogged("You have disabled collisions between Ignore Raycast layer and itself on the Physics Layer Collision matrix. This must be turned back on or Ambient Sounds script will not function.", MasterAudio.ERROR_MA_LAYER_COLLISIONS_DISABLED);
+                return;
             }
+#endif
 
             var isListenerFollowerAvailable = AmbientUtil.InitListenerFollower();
             if (!isListenerFollowerAvailable) {

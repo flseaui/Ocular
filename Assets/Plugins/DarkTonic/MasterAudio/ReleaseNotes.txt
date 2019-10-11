@@ -2,6 +2,14 @@ MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2019
 
 - Code by Brian Hunsaker
 
+-V 4.2.5     - Made compilation possible without having Physics3D and/or Physics2D installed. You will lose Occlusion / AmbientSound functionality and corresponding events on EventSounds depending on which you remove, but everything else will work. Check the Physics page on the documentation on how to get it compiling since you have to add a define for each missing package. Link here: http://www.dtdevtools.com/docs/masteraudio/Physics.htm
+
+-V 4.2.4	- Fixed warning: Script execution order thing with DGSC and Ambient Sound would log "missing sound group". Added a check so the warning doesn't happen. Fixed a similar bug last update but it was only half the problem.
+			- Fixed bug where re-enter mode of Ambient Sound wouldn't play anything after the first trigger enter if set to "fade in same sound".
+			- Fixed bug where adding a new song after song metadata is created in a Playlist won't add the required metadata properties, with no way to add them.
+			- Added MasterAudioPlaylistChange Playmaker Custom Action.
+			- Fixed invisible control headers on Unity 2019.
+
 -V 4.2.3    - Removed Upgrade to 3.5.5 button on Master Audio Manager since it's been over 4 years since that update. No longer needed.
 			- Fixed bug: TriggerExit doesn't fire when an object is disabled right after Instantiating and TriggerEnter instantly fires. This led to problems with sounds playing that should not be with AmbientSounds on pooled Game Objects (with Pool Boss or Core GameKit).
 			- Fixed bug: Ambient Sounds had a problem with "Use Closest Collider Position" where it didn't place the collider in the correct position initially.

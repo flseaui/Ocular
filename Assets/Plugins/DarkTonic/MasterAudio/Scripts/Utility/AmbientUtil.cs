@@ -13,7 +13,9 @@ namespace DarkTonic.MasterAudio {
 
         private static Transform _followerHolder;
         private static ListenerFollower _listenerFollower;
+#if !PHY3D_MISSING
         private static Rigidbody _listenerFollowerRB;
+#endif
         private static List<TransformFollower> _transformFollowers = new List<TransformFollower>();
 
         public static void InitFollowerHolder() {
@@ -29,6 +31,9 @@ namespace DarkTonic.MasterAudio {
                 return false;
             }
 
+#if PHY3D_MISSING
+            return false; // there is no Ambient Sound script functionality without Physics.
+#else
             var follower = ListenerFollower;
             if (follower == null) {
                 return false;
@@ -36,6 +41,7 @@ namespace DarkTonic.MasterAudio {
 
             follower.StartFollowing(listener, ListenerFollowerTrigRadius);
             return true;
+#endif
         }
 
         public static void RemoveTransformFollower(TransformFollower follower) {
@@ -49,6 +55,9 @@ namespace DarkTonic.MasterAudio {
             MasterAudio.AmbientSoundExitMode exitMode, float exitFadeTime,
             MasterAudio.AmbientSoundReEnterMode reEnterMode, float reEnterFadeTime) {
 
+#if PHY3D_MISSING
+            return null; // there is no Ambient Sound script functionality without Physics.
+#else
             if (ListenerFollower == null || FollowerHolder == null) {
                 return null;
             }
@@ -94,6 +103,7 @@ namespace DarkTonic.MasterAudio {
             _transformFollowers.Add(followerScript);
 
             return follower.transform;
+#endif
         }
 
         public static ListenerFollower ListenerFollower {
@@ -118,6 +128,7 @@ namespace DarkTonic.MasterAudio {
                     _listenerFollower = follower.gameObject.AddComponent<ListenerFollower>();
                 }
 
+#if !PHY3D_MISSING
                 if (MasterAudio.Instance.listenerFollowerHasRigidBody) {
                     var rb = follower.gameObject.GetComponent<Rigidbody>();
                     if (rb == null) {
@@ -125,7 +136,8 @@ namespace DarkTonic.MasterAudio {
                     }
                     rb.useGravity = false;
                     _listenerFollowerRB = rb;
-                }
+            }
+#endif
 
                 return _listenerFollower;
             }
@@ -176,7 +188,13 @@ namespace DarkTonic.MasterAudio {
         }
 
         public static bool HasListenerFolowerRigidBody {
-            get { return _listenerFollowerRB != null; }
+            get {
+#if !PHY3D_MISSING
+                return _listenerFollowerRB != null;
+#else
+                return false;
+#endif
+            }
         }
     }
 }

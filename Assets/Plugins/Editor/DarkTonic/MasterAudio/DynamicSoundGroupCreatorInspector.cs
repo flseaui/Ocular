@@ -275,25 +275,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         var state = _creator.showMusicDucking;
         var text = "Dynamic Music Ducking";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -304,7 +286,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.showMusicDucking = state;
         }
 
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Ducking");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Ducking");
 
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
@@ -429,25 +411,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         state = _creator.soundGroupsAreExpanded;
         text = "Dynamic Group Mixer";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -458,7 +422,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         }
 
         var applyTemplateToAll = false;
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Mixer");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Mixer");
 
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
@@ -954,25 +918,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         state = _creator.playListExpanded;
         text = "Dynamic Playlist Settings";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -982,7 +928,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.playListExpanded = state;
         }
 
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Playlists");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#Playlists");
 
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
@@ -1219,8 +1165,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                         if (GUILayout.Button(settingsIcon, EditorStyles.toolbarButton, GUILayout.Width(24), GUILayout.Height(16))) {
                                             property.IsEditing = true;
                                         }
-                                        GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                        if (GUILayout.Button(new GUIContent("Delete", "Click to delete Property"), EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                        {
                                             propIndexToDelete = s;
                                         }
                                     }
@@ -1642,8 +1588,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                                 aVal.Value = newVal;
                                             }
 
-                                            GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                            if (GUILayout.Button(new GUIContent("Delete", "Click to delete Property"), EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36))) { 
                                                 sIndexToDelete = m;
                                             }
 
@@ -1662,8 +1607,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                                 aVal.Value = newVal;
                                             }
 
-                                            GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                            if (GUILayout.Button(new GUIContent("Delete", "Click to delete Property"), EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                            {
                                                 bIndexToDelete = m;
                                             }
 
@@ -1683,8 +1628,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                                 aVal.Value = newVal;
                                             }
 
-                                            GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                            if (GUILayout.Button(new GUIContent("Delete", "Click to delete Property"), EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                            {
                                                 iIndexToDelete = m;
                                             }
 
@@ -1704,8 +1649,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                                 aVal.Value = newVal;
                                             }
 
-                                            GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                            if (GUILayout.Button(new GUIContent("Delete", "Click to delete Property"), EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                            if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Property"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                            {
                                                 fIndexToDelete = m;
                                             }
 
@@ -2221,25 +2166,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         state = _creator.showCustomEvents;
         text = "Dynamic Custom Events";
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
-
-        GUILayout.BeginHorizontal();
-
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
         GUILayout.Space(2f);
 
@@ -2248,7 +2175,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.showCustomEvents = state;
         }
 
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#CustomEvents");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/DynamicSoundGroupCreators.htm#CustomEvents");
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
 
@@ -2374,8 +2301,6 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 				
 				var hasItems = matchingItems.Count > 0;
 				
-				EditorGUILayout.BeginHorizontal();
-				
 				if (!cat.IsEditing || Application.isPlaying) {
 					var catName = cat.CatName;
 					
@@ -2383,24 +2308,8 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 					
 					var state2 = cat.IsExpanded;
 					var text2 = catName;
-					
-					// ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-					if (!state2) {
-						GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-					} else {
-						GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
-					}
-					
-					text2 = "<b><size=11>" + text2 + "</size></b>";
-					
-					if (state2) {
-						text2 = "\u25BC " + text2;
-					} else {
-						text2 = "\u25BA " + text2;
-					}
-					if (!GUILayout.Toggle(true, text2, "dragtab", GUILayout.MinWidth(20f))) {
-						state2 = !state2;
-					}
+
+                    DTGUIHelper.ShowCollapsibleSectionInline(ref state2, text2);
 					
 					GUILayout.Space(2f);
 					
@@ -2408,8 +2317,15 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 						AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Custom Event Category");
 						cat.IsExpanded = state2;
 					}
-					
-					var catItemsCollapsed = true;
+
+                    var headerStyle = new GUIStyle();
+                    headerStyle.margin = new RectOffset(0, 0, 2, 0);
+                    headerStyle.padding = new RectOffset(6, 0, 1, 2);
+                    headerStyle.fixedHeight = 18;
+
+                    EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
+
+                    var catItemsCollapsed = true;
 					
 					for (var i = 0; i < matchingItems.Count; i++) {
 						var item = matchingItems[i];
@@ -2463,19 +2379,21 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 						                     GUILayout.Height(16))) {
 							catEditing = cat;
 						}
-						GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-						if (GUILayout.Button(new GUIContent("Delete", "Click to delete Category"),
-						                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Category"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                        {
 							catToDelete = cat;
 						}
 						
-						GUILayout.Space(2);
+						GUILayout.Space(6);
 					} else {
 						GUILayout.Space(4);
 					}
-					
+
+                    EditorGUILayout.EndHorizontal();
 				} else {
-					GUI.backgroundColor = DTGUIHelper.BrightTextColor;
+                    EditorGUILayout.BeginHorizontal();
+
+                    GUI.backgroundColor = DTGUIHelper.BrightTextColor;
 					var tex = EditorGUILayout.TextField("", cat.ProspectiveName);
 					if (tex != cat.ProspectiveName) {
 						cat.ProspectiveName = tex;
@@ -2561,11 +2479,10 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 								                     GUILayout.Height(16))) {
 									eventEditing = anEvent;
 								}
-								
-								GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-								if (GUILayout.Button(new GUIContent("Delete", "Click to delete Event"),
-								                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
-									eventToDelete = anEvent;
+
+                                if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Event"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                {
+                                    eventToDelete = anEvent;
 								}
 							}
 							GUI.contentColor = Color.white;
@@ -3185,6 +3102,31 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                     mus.resourceFileName = resourceFileName;
                     mus.songName = aClip.name;
                     break;
+            }
+
+            foreach (var property in pList.songMetadataProps) {
+                if (!property.AllSongsMustContain) {
+                    continue;
+                }
+
+                switch (property.PropertyType) {
+                    case SongMetadataProperty.MetadataPropertyType.Boolean:
+                        var bVal = new SongMetadataBoolValue(property);
+                        mus.metadataBoolValues.Add(bVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.String:
+                        var sVal = new SongMetadataStringValue(property);
+                        mus.metadataStringValues.Add(sVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.Integer:
+                        var iVal = new SongMetadataIntValue(property);
+                        mus.metadataIntValues.Add(iVal);
+                        break;
+                    case SongMetadataProperty.MetadataPropertyType.Float:
+                        var fVal = new SongMetadataFloatValue(property);
+                        mus.metadataFloatValues.Add(fVal);
+                        break;
+                }
             }
 
             pList.MusicSettings.Add(mus);

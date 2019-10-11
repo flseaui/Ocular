@@ -218,6 +218,7 @@ namespace DarkTonic.MasterAudio {
             SpatializerHelper.TurnOnSpatializerIfEnabled(VarAudio);
         }
 
+        /*! \cond PRIVATE */
         public void SetMixerGroup() {
             var aBus = ParentGroup.BusForGroup;
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
@@ -240,7 +241,6 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        /*! \cond PRIVATE */
         public void LoadInternetFile() {
             StartCoroutine(AudioResourceOptimizer.PopulateSourceWithInternetFile(internetFileUrl, this, InternetFileLoaded, InternetFileFailedToLoad));
         }
@@ -1198,6 +1198,21 @@ namespace DarkTonic.MasterAudio {
             get {
                 if (!VariationUpdater.MAThisFrame.useOcclusion) {
                     return false;
+                }
+
+                switch (VariationUpdater.MAThisFrame.occlusionRaycastMode) {
+                    case MasterAudio.RaycastMode.Physics2D:
+#if PHY2D_MISSING
+                        return false;
+#else
+                        break;
+#endif
+                    case MasterAudio.RaycastMode.Physics3D:
+#if PHY3D_MISSING
+                        return false;
+#else
+                        break;
+#endif
                 }
 
                 if (Is2D) {

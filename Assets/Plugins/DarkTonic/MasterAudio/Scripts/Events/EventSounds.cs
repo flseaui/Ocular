@@ -470,8 +470,9 @@ namespace DarkTonic.MasterAudio {
 
         #endregion
 
-        #region Collision and Trigger Events
+#region Collision and Trigger Events
 
+#if !PHY2D_MISSING
         // ReSharper disable once UnusedMember.Local
         private void OnTriggerEnter2D(Collider2D other) {
             _triggerEnter2dTime = Time.realtimeSinceStartup;
@@ -573,7 +574,9 @@ namespace DarkTonic.MasterAudio {
 
             PlaySounds(collisionExit2dSound, EventType.OnCollisionExit2D);
         }
+#endif
 
+#if !PHY3D_MISSING
         // ReSharper disable once UnusedMember.Local
         private void OnCollisionEnter(Collision collision) {
             if (!useCollisionSound) {
@@ -673,6 +676,7 @@ namespace DarkTonic.MasterAudio {
 
             PlaySounds(triggerExitSound, EventType.OnTriggerExit);
         }
+#endif
 
         // ReSharper disable once UnusedMember.Local
         private void OnParticleCollision(GameObject other) {
@@ -694,9 +698,9 @@ namespace DarkTonic.MasterAudio {
             PlaySounds(particleCollisionSound, EventType.OnParticleCollision);
         }
 
-        #endregion
+#endregion
 
-        #region UI Events
+#region UI Events
         public void OnPointerEnter(PointerEventData data) {
             if (IsSetToUGUI && useUnityPointerEnterSound) {
                 PlaySounds(unityPointerEnterSound, EventType.UnityPointerEnter);
@@ -811,9 +815,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Unity UI Events (4.6)
+#region Unity UI Events (4.6)
         private void SliderChanged(float newValue) {
             if (!useUnitySliderChangedSound) {
                 return;
@@ -836,9 +840,9 @@ namespace DarkTonic.MasterAudio {
                 PlaySounds(unityButtonClickedSound, EventType.UnityButtonClicked);
             }
         }
-        #endregion
+#endregion
 
-        #region Unity GUI Mouse Events
+#region Unity GUI Mouse Events
 
         // ReSharper disable once UnusedMember.Local
         private bool IsSetToUGUI {
@@ -916,9 +920,9 @@ namespace DarkTonic.MasterAudio {
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region NGUI Events
+#region NGUI Events
 
         // ReSharper disable once UnusedMember.Local
         private void OnPress(bool isDown) {
@@ -961,9 +965,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Pooling Events
+#region Pooling Events
 
         // ReSharper disable once UnusedMember.Local
         private void OnSpawned() {
@@ -981,9 +985,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region public methods
+#region public methods
         /*! \cond PRIVATE */
         public void CalculateRadius(AudioEvent anEvent) {
             var aud = GetNamedOrFirstAudioSource(anEvent);
@@ -1102,9 +1106,9 @@ namespace DarkTonic.MasterAudio {
 
             return true;
         }
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
         // ReSharper disable once UnusedMember.Local
         private void OnDrawGizmos() {
             if (MasterAudio.SafeInstance == null || !MasterAudio.Instance.showRangeSoundGizmos || eventToGizmo == null) {
@@ -1825,9 +1829,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region ICustomEventReceiver methods
+#region ICustomEventReceiver methods
 
         public void CheckForIllegalCustomEvents() {
             if (useStartSound) {
@@ -2023,7 +2027,7 @@ namespace DarkTonic.MasterAudio {
 #endif
         }
 
-        #endregion
+#endregion
 
 
         // UGUI events are handled by separate components so that only
@@ -2057,7 +2061,8 @@ namespace DarkTonic.MasterAudio {
         }
     }
 
-    #region UGUI methods
+    /*! \cond PRIVATE */
+#region UGUI methods
     // UGUI event handler components
     public class EventSoundsUGUIHandler : MonoBehaviour {
         // ReSharper disable once InconsistentNaming
@@ -2191,6 +2196,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
     }
-    #endregion
+#endregion
+    /*! \endcond */
 }
 /*! \endcond */

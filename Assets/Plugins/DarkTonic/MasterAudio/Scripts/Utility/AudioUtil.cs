@@ -100,6 +100,7 @@ namespace DarkTonic.MasterAudio {
         }
 
 
+        /*! \cond PRIVATE */
         public static void ClipPlayed(AudioClip clip, GameObject actor) {
             if (AudioClipWillPreload(clip)) {
                 return;
@@ -108,7 +109,6 @@ namespace DarkTonic.MasterAudio {
             AudioLoaderOptimizer.AddNonPreloadedPlayingClip(clip, actor);
         }
 
-        /*! \cond PRIVATE */
         public static void UnloadNonPreloadedAudioData(AudioClip clip, GameObject actor) {
             if (clip == null) {
 				return;
