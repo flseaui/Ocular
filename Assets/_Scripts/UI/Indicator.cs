@@ -28,7 +28,7 @@ namespace UI {
                             SetTransform(0.61f);
                             break;
                         default:
-                            SetTransform(0.55f);
+                            SetTransform(0.52f);
                             break;
                     }
 
