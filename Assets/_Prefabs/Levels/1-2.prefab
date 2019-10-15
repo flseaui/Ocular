@@ -56,6 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -156,6 +157,7 @@ MonoBehaviour:
   _ocularState: 6
   _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
   _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
+  _outlineModel: {fileID: 0}
 --- !u!1 &1445404468389896179
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,17 +218,17 @@ Transform:
   m_Children:
   - {fileID: 6361042713951826674}
   - {fileID: 1144515000172418946}
-  - {fileID: 2796207158110210235}
-  - {fileID: 8430307083352271939}
-  - {fileID: 7415936629111339286}
-  - {fileID: 2393974179404408094}
-  - {fileID: 2853652135231277896}
-  - {fileID: 142031593389336596}
-  - {fileID: 4043492176866910253}
-  - {fileID: 7152658055809499317}
-  - {fileID: 3091327713461385551}
-  - {fileID: 4382491939695136111}
-  - {fileID: 5242502552729049885}
+  - {fileID: 700343514097245146}
+  - {fileID: 2356738840056944487}
+  - {fileID: 3647939680221200946}
+  - {fileID: 8463314869243174458}
+  - {fileID: 8345332433773719660}
+  - {fileID: 6175066372704604976}
+  - {fileID: 7806981618612509449}
+  - {fileID: 3965980530440321937}
+  - {fileID: 9127737546840834667}
+  - {fileID: 7537649111555946059}
+  - {fileID: 2056942811757961273}
   m_Father: {fileID: 8062196696491421905}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -357,6 +359,7 @@ MonoBehaviour:
   CameraPosition: {x: 0, y: 0.8400025, z: -10}
   CameraSize: 3.57
   CameraCenter: {fileID: 0}
+  CameraStartDirection: 0
 --- !u!114 &5012065742174432036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +483,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -568,6 +572,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -678,6 +683,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -789,6 +795,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1005,7 +1012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &142031593389336596 stripped
+--- !u!4 &6175066372704604976 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1105,7 +1112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &2393974179404408094 stripped
+--- !u!4 &8463314869243174458 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1118,16 +1125,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6508531030967235584}
     m_Modifications:
-    - target: {fileID: 3419922269534916828, guid: 12620f72c9c6d28468d46614e48c1469,
-        type: 3}
-      propertyPath: m_Name
-      value: Stairs
-      objectReference: {fileID: 0}
-    - target: {fileID: 2281383999225131961, guid: 12620f72c9c6d28468d46614e48c1469,
-        type: 3}
-      propertyPath: DirectionFacing
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3419922269534916831, guid: 12620f72c9c6d28468d46614e48c1469,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1183,6 +1180,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3419922269534916828, guid: 12620f72c9c6d28468d46614e48c1469,
+        type: 3}
+      propertyPath: m_Name
+      value: Stairs
+      objectReference: {fileID: 0}
+    - target: {fileID: 2281383999225131961, guid: 12620f72c9c6d28468d46614e48c1469,
+        type: 3}
+      propertyPath: DirectionFacing
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2181742307742716617, guid: 12620f72c9c6d28468d46614e48c1469,
         type: 3}
       propertyPath: _color.r
@@ -1210,7 +1217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12620f72c9c6d28468d46614e48c1469, type: 3}
---- !u!4 &2796207158110210235 stripped
+--- !u!4 &700343514097245146 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3419922269534916831, guid: 12620f72c9c6d28468d46614e48c1469,
     type: 3}
@@ -1310,7 +1317,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &2853652135231277896 stripped
+--- !u!4 &8345332433773719660 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1410,7 +1417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &3091327713461385551 stripped
+--- !u!4 &9127737546840834667 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1510,7 +1517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &4043492176866910253 stripped
+--- !u!4 &7806981618612509449 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1610,7 +1617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &4382491939695136111 stripped
+--- !u!4 &7537649111555946059 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1720,7 +1727,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &5242502552729049885 stripped
+--- !u!4 &2056942811757961273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1820,7 +1827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &7152658055809499317 stripped
+--- !u!4 &3965980530440321937 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -1920,7 +1927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &7415936629111339286 stripped
+--- !u!4 &3647939680221200946 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
@@ -2020,7 +2027,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
---- !u!4 &8430307083352271939 stripped
+--- !u!4 &2356738840056944487 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
     type: 3}
