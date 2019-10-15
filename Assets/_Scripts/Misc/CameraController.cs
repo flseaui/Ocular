@@ -44,6 +44,24 @@ namespace Misc
             DOTween.Init();
         }
 
+        public void TurnLeft()
+        {
+            TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
+            Turning = true;
+            rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 90, 0),
+                .3f);
+            rotate.onComplete += () => Turning = false;
+        }
+
+        public void TurnRight()
+        {
+            TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
+            Turning = true;
+            rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, -90, 0),
+                .3f);
+            rotate.onComplete += () => Turning = false;
+        }
+
         private void Update()
         {            
             if (Turning && Input.GetKeyDown(KeyCode.LeftArrow))
@@ -65,24 +83,18 @@ namespace Misc
 
             if (left && right) return;
 
-            TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
+            
             
             if (left || _bufferLeft)
             {
-                Turning = true;
+                TurnLeft();
                 _bufferLeft = false;
-                rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 90, 0),
-                    .3f);
-                rotate.onComplete += () => Turning = false;
             }
 
             if (!right && !_bufferRight) return;
             
-            Turning = true;
+            TurnRight();
             _bufferRight = false;
-            rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, -90, 0),
-                .3f);
-            rotate.onComplete += () => Turning = false;
             
 
         }
