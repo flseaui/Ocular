@@ -7,17 +7,17 @@ using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Animation
+namespace OcularAnimation
 {
     public class PlayerAnimationController : MonoBehaviour
     {
-        [SerializeField] private Animation _walk;
-        [SerializeField] private Animation _idle;
-        [SerializeField] private Animation _teleport;
-        [SerializeField] private Animation _death;
+        [SerializeField] private VoxelAnimation _walk;
+        [SerializeField] private VoxelAnimation _idle;
+        [SerializeField] private VoxelAnimation _teleport;
+        [SerializeField] private VoxelAnimation _death;
         
-        private Frame _currentFrame;
-        [ShowInInspector] [ReadOnly] private Animation _currentAnimation;
+        private AnimFrame _currentFrame;
+        [ShowInInspector] [ReadOnly] private VoxelAnimation _currentAnimation;
         private bool _loopAnimation;
         private bool _resolvingFrame;
         private float _timeRemaining;
@@ -45,7 +45,7 @@ namespace Animation
             PlayAnimation(_currentAnimation, _loopAnimation);
         }
 
-        private Animation DetermineAnimation()
+        private VoxelAnimation DetermineAnimation()
         {
             if (_currentAnimation == _teleport && _currentFrame == null)
             {
@@ -87,7 +87,7 @@ namespace Animation
             return _idle;
         }
 
-        private void PlayAnimation(Animation anim, bool loop)
+        private void PlayAnimation(VoxelAnimation anim, bool loop)
         {
             _currentFrame = loop ? anim.Loop(): anim.Play();
             if (ReferenceEquals(_currentFrame, null)) return;

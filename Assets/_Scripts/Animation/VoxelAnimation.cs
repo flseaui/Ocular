@@ -2,38 +2,26 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Animation
+namespace OcularAnimation
 {
-    [Serializable]
-    public class Frame
-    {
-        [SerializeField]
-        public Mesh _mesh;
-        [SerializeField]
-        public Material _material;
-
-        [SerializeField] public int _timing;
-    }
-    
     [CreateAssetMenu(menuName = "Voxel Animation")]
-    public class Animation : ScriptableObject
+    public class VoxelAnimation : ScriptableObject
     {
-        [SerializeField]
-        private List<Frame> _frames;
+        public List<AnimFrame> Frames;
         [SerializeField]
         private bool _looping;
         private int _currentFrame;
 
-        Animation(List<Frame> frameList)
+        VoxelAnimation(List<AnimFrame> frameList)
         {
-            _frames = frameList;
+            Frames = frameList;
             _currentFrame = 0;
             _looping = false;
         }
 
-        public Frame Play()
+        public AnimFrame Play()
         {
-            if (_currentFrame >= _frames.Count)
+            if (_currentFrame >= Frames.Count)
             {
                 if (!_looping)
                 {
@@ -43,12 +31,12 @@ namespace Animation
                 _currentFrame = 0;
             }
 
-            Frame nextFrame = _frames[_currentFrame];
+            AnimFrame nextFrame = Frames[_currentFrame];
             _currentFrame++;
             return nextFrame;
         }
 
-        public Frame Loop()
+        public AnimFrame Loop()
         {
             _looping = true;
             return Play();
@@ -62,7 +50,26 @@ namespace Animation
 
         public int CurrentFrameLength()
         {
-            return _frames[_currentFrame - 1]._timing;
+            return Frames[_currentFrame - 1]._timing;
         }
     }
+
+   [Serializable]
+    public class AnimFrame
+    {
+        [SerializeField]
+        public Mesh _mesh;
+        [SerializeField]
+        public Material _material;
+
+        [SerializeField] public int _timing;
+
+        public AnimFrame(Mesh mesh, Material mat, int timing) {
+            _mesh = mesh;
+            _material = mat;
+            _timing = timing;
+        }
+    }
+    
+
 }

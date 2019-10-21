@@ -7,7 +7,7 @@ using Misc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.AddressableAssets;+
+using UnityEngine.AddressableAssets;
 using OcularState = Game.GlassesController.OcularState;
 
 namespace Level.Objects
