@@ -219,8 +219,13 @@ namespace Level.Objects
                         r.GetPropertyBlock(_propBlock);
                         if (State != BlockState.Visible)
                             _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
-                        else
-                            _propBlock.SetColor("_Color", StateToColor(_initialState));
+                        else 
+                        {
+                            if (OcularState != _initialState)
+                                _propBlock.SetColor("_Color", StateToColor(_initialState));
+                            else
+                                _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
+                        }
                         r.SetPropertyBlock(_propBlock);
 
                     }
