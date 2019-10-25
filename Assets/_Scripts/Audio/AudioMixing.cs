@@ -16,9 +16,9 @@ namespace Audio
         private static readonly float WorldOneCVolume = 0.5f;
         private static readonly float WorldOneMainVolume = 0.7f;
         
-        private static readonly float WorldTwoAVolume = 0.5f;
+        private static readonly float WorldTwoAVolume = 0.7f;
         private static readonly float WorldTwoBVolume = 0.5f;
-        private static readonly float WorldTwoCVolume = 0.5f;
+        private static readonly float WorldTwoCVolume = 0.7f;
         private static readonly float WorldTwoMainVolume = 0.5f;
 
         public static readonly float FadeInTime = 1.5f;
