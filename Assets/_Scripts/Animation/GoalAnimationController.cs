@@ -40,6 +40,8 @@ namespace OcularAnimation
 
         private void PlayAnimation(VoxelAnimation anim, bool loop)
         {
+            if (!transform.GetChild(0).gameObject.activeSelf)
+                return; 
             _currentFrame = loop ? anim.Loop(): anim.Play();
             if (ReferenceEquals(_currentFrame, null)) return;
             GetComponentInChildren<MeshFilter>().mesh = _currentFrame._mesh;
