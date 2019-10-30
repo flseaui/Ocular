@@ -32,7 +32,6 @@ namespace Level.Objects
                 _state = value;
                 if (_state != _oldState)
                 {
-                    Debug.Log("SETTING");
                     OnStateChanged?.Invoke();
                 }
 

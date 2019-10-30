@@ -228,7 +228,6 @@ namespace Level.Objects
                         }
                         else
                         {
-                            Debug.Log($"YES YES YES {State}, {OcularState}, {_initialState}");
                             if (OcularState != _initialState)
                                 _propBlock.SetColor("_Color", StateToColor(_initialState));
                             else
