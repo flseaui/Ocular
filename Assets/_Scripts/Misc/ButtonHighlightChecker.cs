@@ -44,6 +44,17 @@ public class ButtonHighlightChecker : MonoBehaviour
                     });
                 }
             }
+            else
+            {
+                if (_lastHighlighted != null)
+                {
+                    foreach (var target in _lastHighlighted.TargetBlocks)
+                    {
+                        var outlines = target.transform.GetComponentsInChildren<Outline>();
+                        outlines.ForEach(x => { x.enabled = false; });
+                    }
+                }
+            }
 
         }
         else
