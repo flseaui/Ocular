@@ -1,9 +1,5 @@
-﻿using System;
+﻿using Game;
 using System.Collections.Generic;
-using cakeslice;
-using Game;
-using Misc;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level.Objects
@@ -53,6 +49,7 @@ namespace Level.Objects
 
             _buttonModel.OnStateChanged += () =>
             {
+                Debug.Log($"OH YEAH DA STATE IS {_buttonModel.State}");
                 if (_buttonModel.State)
                 {
                     // Press button
@@ -61,6 +58,7 @@ namespace Level.Objects
                     {
                         t.OcularState = Color;
                         t.UpdateState();
+                        Debug.Log("YES");
                     });
                 }
                 else

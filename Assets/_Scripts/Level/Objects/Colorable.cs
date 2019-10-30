@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -42,7 +42,10 @@ namespace Level.Objects
         private Renderer[] _renderers;
         private GameObject[] _models;
         private static LevelInfo _levelInfo;
+
+        [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
         private OcularState _initialState;
+
         private BlockState _blockState;
         private GameObject _runtimeOutlineModel;
 
@@ -215,12 +218,17 @@ namespace Level.Objects
                     if (_runtimeOutlineModel != null)
                     {
                         var r = _runtimeOutlineModel.transform.GetChild(0).GetComponent<Renderer>();
-
                         r.GetPropertyBlock(_propBlock);
                         if (State != BlockState.Visible)
-                            _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
-                        else 
                         {
+                            if (OcularState != _initialState)
+                                _propBlock.SetColor("_Color", StateToColor(_initialState));
+                            else
+                                _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
+                        }
+                        else
+                        {
+                            Debug.Log($"YES YES YES {State}, {OcularState}, {_initialState}");
                             if (OcularState != _initialState)
                                 _propBlock.SetColor("_Color", StateToColor(_initialState));
                             else

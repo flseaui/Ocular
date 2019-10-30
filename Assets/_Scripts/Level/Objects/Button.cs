@@ -32,6 +32,7 @@ namespace Level.Objects
                 _state = value;
                 if (_state != _oldState)
                 {
+                    Debug.Log("SETTING");
                     OnStateChanged?.Invoke();
                 }
 
@@ -41,6 +42,7 @@ namespace Level.Objects
 
         private void Start()
         {
+            _oldState = _state;
             Player.Player.OnDeath += () => { State = false; };
         }
 
