@@ -18,13 +18,13 @@ namespace Misc
             scrollDelta = .3f * -scrollDelta;
             if (scrollDelta > 0)
             {
-                if (_camera.orthographicSize + scrollDelta < 10)
+                if (_camera.orthographicSize + scrollDelta < 8)
                 {
                     _camera.orthographicSize += scrollDelta;
                 }
                 else
                 {
-                    _camera.orthographicSize = 10;
+                    _camera.orthographicSize = 8;
                 }
             }
             else
