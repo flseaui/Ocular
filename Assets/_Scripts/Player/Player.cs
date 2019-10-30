@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Game;
+﻿using Game;
 using Level;
-using Level.Objects;
-using Misc;
 using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 namespace Player
 {
@@ -23,16 +16,17 @@ namespace Player
             West,
             None
         }
-        
-        [ShowInInspector]
-        public static bool Falling;
+
+        [ShowInInspector] public static bool Falling;
 
         [ShowInInspector] public static Cardinal Facing;
-        
+
 
         public static bool Died;
-  
-        
+
+        public static Action OnDeath;
+
+
         private void Awake()
         {
             GameManager.OnLevelLoad += CommitDie;
@@ -47,7 +41,9 @@ namespace Player
                 GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else
+            {
                 Falling = false;
+            }
         }
 
         private void OnDestroy()
@@ -64,6 +60,7 @@ namespace Player
         {
             Died = true;
             GetComponent<Rigidbody>().isKinematic = true;
+            OnDeath?.Invoke();
         }
 
         public void ActuallyDie()
@@ -72,57 +69,57 @@ namespace Player
                 .PlayerSpawnPoint.position;
             GetComponent<Rigidbody>().isKinematic = false;
         }
-        
+
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag("Harmful"))
-            {
-                Death();
-            }
+            if (other.gameObject.CompareTag("Harmful")) Death();
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.CompareTag("Harmful"))
-            {
-                Death();
-            }
+            if (other.gameObject.CompareTag("Harmful")) Death();
         }
 
         public void ChangeFacing(Cardinal newDirection)
         {
+            var rot = gameObject.transform.eulerAngles;
             switch (newDirection)
             {
-                case Cardinal.North: gameObject.transform.eulerAngles = new Vector3(
-                        gameObject.transform.eulerAngles.x,
+                case Cardinal.North:
+                    gameObject.transform.eulerAngles = new Vector3(
+                        rot.x,
                         270,
-                        gameObject.transform.eulerAngles.z
+                        rot.z
                     );
                     break;
-                case Cardinal.East: gameObject.transform.eulerAngles = new Vector3(
-                        gameObject.transform.eulerAngles.x,
+                case Cardinal.East:
+                    gameObject.transform.eulerAngles = new Vector3(
+                        rot.x,
                         0,
-                        gameObject.transform.eulerAngles.z
+                        rot.z
                     );
                     break;
-                case Cardinal.South: gameObject.transform.eulerAngles = new Vector3(
-                        gameObject.transform.eulerAngles.x,
+                case Cardinal.South:
+                    gameObject.transform.eulerAngles = new Vector3(
+                        rot.x,
                         90,
-                        gameObject.transform.eulerAngles.z
+                        rot.z
                     );
                     break;
-                case Cardinal.West: gameObject.transform.eulerAngles = new Vector3(
-                        gameObject.transform.eulerAngles.x,
+                case Cardinal.West:
+                    gameObject.transform.eulerAngles = new Vector3(
+                        rot.x,
                         180,
-                        gameObject.transform.eulerAngles.z
+                        rot.z
                     );
+                    break;
+                case Cardinal.None:
                     break;
                 default:
-                    Debug.Log("Ah fuck");
                     return;
             }
+
             Facing = newDirection;
         }
-        
     }
 }

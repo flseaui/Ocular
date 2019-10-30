@@ -1,5 +1,5 @@
+﻿using Sirenix.OdinInspector;
 using System;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level.Objects
@@ -37,6 +37,11 @@ namespace Level.Objects
 
                 _oldState = _state;
             }
+        }
+
+        private void Start()
+        {
+            Player.Player.OnDeath += () => { State = false; };
         }
 
         private void FixedUpdate()

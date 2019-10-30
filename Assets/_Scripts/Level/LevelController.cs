@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Game;
+using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
-namespace Level {
-    
+namespace Level
+{
+
     public static class Extensions
     {
         public static Tuple<int, int> CoordinatesOf<T>(this T[,] matrix, T value)
@@ -20,6 +20,8 @@ namespace Level {
             {
                 for (int y = 0; y < h; ++y)
                 {
+                    if (matrix[x, y] == null) continue;
+
                     if (matrix[x, y].Equals(value))
                         return Tuple.Create(x, y);
                 }
@@ -27,7 +29,7 @@ namespace Level {
             Debug.Log("Item not found");
             return Tuple.Create(-1, -1);
         }
-        
+
         public static Tuple<int, int> GetNext<T>(this T[,] matrix, Tuple<int, int> value)
         {
             int w = matrix.GetLength(0);
@@ -62,21 +64,21 @@ namespace Level {
         public LevelInfo CurrentLevelInfo;
 
         private List<GameObject> _allWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).ToList();
-        
+
         [ValueDropdown("_allWorldLevels")] public GameObject StartingLevel;
 
         public static Action OnLevelLoaded;
 
         private Tuple<int, int> _levelToLoad;
-        
+
         private void Awake()
-        {      
+        {
             _worlds = new List<List<GameObject>>
             {
                 _worldOneLevels,
                 _worldTwoLevels
             };
-            
+
             for (var i = 0; i < _worlds.Count; i++)
             {
                 var world = _worlds[i];
@@ -91,13 +93,13 @@ namespace Level {
         {
             _levelToLoad = _levels.GetNext(_loadedLevelNumber);
             CurrentLevelInfo.Animator.SetTrigger("FadeOut");
-            
+
             yield return new WaitUntil(() => CurrentLevelInfo.ReadyToLoad);
-            
+
             CurrentLevelInfo.ReadyToLoad = false;
             LoadLevel();
 
-            GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState(); 
+            GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState();
         }
 
         public void LoadFirstLevel()
@@ -113,7 +115,7 @@ namespace Level {
             _loadedLevel = Instantiate(level);
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
-            
+
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             OnLevelLoaded?.Invoke();
         }
@@ -126,12 +128,12 @@ namespace Level {
             _loadedLevel = Instantiate(_levels[_levelToLoad.Item1, _levelToLoad.Item2]);
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
-            
+
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = _levelToLoad;
             OnLevelLoaded?.Invoke();
             CurrentLevelInfo.Animator.SetTrigger("FadeIn");
-            
+
             GetComponent<GlassesController>().CheckForNewWorldMusic();
         }
 
