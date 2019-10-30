@@ -14,50 +14,7 @@ public class ButtonHighlightChecker : MonoBehaviour
 
     private void Update()
     {
-        var hObj = GetHighlightedObject(out _);
-        if (hObj)
-        {
-
-            if (hObj.transform.ParentHasComponent<ButtonWalkable>(out var button))
-            {
-                _lastHighlighted = button;
-
-                if (button != _lastHighlighted)
-                {
-                    foreach (var target in _lastHighlighted.TargetBlocks)
-                    {
-                        var outlines = target.transform.GetComponentsInChildren<Outline>();
-                        outlines.ForEach(x =>
-                        {
-                            x.enabled = false;
-                        });
-                    }
-                }
-
-                foreach (var target in button.TargetBlocks)
-                {
-                    var outlines = target.transform.GetComponentsInChildren<Outline>();
-                    _mainCamera.GetComponent<OutlineEffect>().lineColor0 = Colorable.StateToColor(target.GetComponent<Colorable>().OcularState);
-                    outlines.ForEach(x =>
-                    {
-                        x.enabled = true;
-                    });
-                }
-            }
-            else
-            {
-                if (_lastHighlighted != null)
-                {
-                    foreach (var target in _lastHighlighted.TargetBlocks)
-                    {
-                        var outlines = target.transform.GetComponentsInChildren<Outline>();
-                        outlines.ForEach(x => { x.enabled = false; });
-                    }
-                }
-            }
-
-        }
-        else
+        void DisableLast()
         {
             if (_lastHighlighted != null)
             {
@@ -67,6 +24,44 @@ public class ButtonHighlightChecker : MonoBehaviour
                     outlines.ForEach(x => { x.enabled = false; });
                 }
             }
+        }
+
+        var hObj = GetHighlightedObject(out _);
+        if (hObj)
+        {
+
+            if (hObj.transform.ParentHasComponent<ButtonWalkable>(out var button))
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    _lastHighlighted = button;
+
+                    if (button != _lastHighlighted)
+                    {
+                        DisableLast();
+                    }
+
+                    foreach (var target in button.TargetBlocks)
+                    {
+                        var outlines = target.transform.GetComponentsInChildren<Outline>();
+                        _mainCamera.GetComponent<OutlineEffect>().lineColor0 =
+                            Colorable.StateToColor(target.GetComponent<Colorable>().OcularState);
+                        outlines.ForEach(x => { x.enabled = true; });
+                    }
+                }
+                else
+                {
+                    DisableLast();
+                }
+            }
+            else
+            {
+                DisableLast();
+            }
+        }
+        else
+        {
+            DisableLast();
         }
     }
 
