@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Game;
+﻿using Game;
 using Misc;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Level
@@ -34,24 +33,40 @@ namespace Level
 
         public bool ReadyToLoad;
 
-        public bool HasCustomCamera;
-        public Vector3 CameraPosition;
-        public float CameraSize;
+        [BoxGroup("Camera")] public bool HasCustomCamera;
+        [BoxGroup("Camera")] public Vector3 CameraPosition;
+        [BoxGroup("Camera")] public float CameraSize;
+        [BoxGroup("Camera")] public Transform CameraCenter;
+        [BoxGroup("Camera")] public Direction CameraStartDirection;
 
-        public Transform CameraCenter;
-        public Direction CameraStartDirection;
-        
-        [Button]
+
+        [BoxGroup("Fog")] public bool HasCustomFog;
+        [BoxGroup("Fog")] public float FogHeightStart;
+        [BoxGroup("Fog")] public float FogHeightEnd;
+        [BoxGroup("Fog")] public float FogPlaneY;
+
+        [Button, BoxGroup("Camera")]
         private void SetCamInfo()
         {
             if (Camera.main == null) return;
-            
+
             var main = Camera.main;
-            
+
             CameraPosition = main.transform.localPosition;
             CameraSize = main.orthographicSize;
         }
 
+        [Button, BoxGroup("Fog")]
+        private void SetFogInfo()
+        {
+            var fog = GameObject.Find("Height Fog Global").GetComponent<HeightFogGlobal>();
+            var plane = GameObject.Find("FauxFogPlane");
+
+            HasCustomFog = true;
+            FogHeightStart = fog.fogHeightStart;
+            FogHeightEnd = fog.fogHeightEnd;
+            FogPlaneY = plane.transform.position.y;
+        }
         private void Awake()
         {
             Animator = GetComponent<Animator>();
@@ -102,4 +117,3 @@ foreach (var glassesX in LevelGlasses)
     }
 }
 }    */
-    

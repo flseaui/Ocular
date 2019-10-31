@@ -596,7 +596,7 @@ GameObject:
   - component: {fileID: 4762847220926760851}
   - component: {fileID: 8366349313196617857}
   m_Layer: 0
-  m_Name: 1-1
+  m_Name: A_New_Beginning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -666,6 +666,9 @@ MonoBehaviour:
   CameraSize: 3.35
   CameraCenter: {fileID: 0}
   CameraStartDirection: 1
+  FogHeightStart: 0
+  FogHeightEnd: 0
+  FogPlaneY: 0
 --- !u!114 &5095138045521560803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1003,15 +1006,15 @@ PrefabInstance:
       propertyPath: _ocularState
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3327680575265314836, guid: f824e110f9a91584c88015018cc1caae,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327680575265314836, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
@@ -1128,11 +1131,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7381652276146266716}
     m_Modifications:
-    - target: {fileID: 6073850517314746595, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: m_Name
-      value: Goal
-      objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746607, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1187,6 +1185,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6073850517314746595, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_Name
+      value: Goal
       objectReference: {fileID: 0}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
@@ -1508,15 +1511,15 @@ PrefabInstance:
       propertyPath: _ocularState
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3327680575265314836, guid: f824e110f9a91584c88015018cc1caae,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327680575265314836, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
