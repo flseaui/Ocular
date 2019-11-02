@@ -186,6 +186,7 @@ MonoBehaviour:
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 0}
   Name: Assets/_Prefabs/Levels/Level-75710.prefab
+  InGameName: The Wind Rises
   Animator: {fileID: 0}
   ReadyToLoad: 0
   HasCustomCamera: 1
@@ -193,6 +194,10 @@ MonoBehaviour:
   CameraSize: 4.89
   CameraCenter: {fileID: 0}
   CameraStartDirection: 0
+  HasCustomFog: 0
+  FogHeightStart: 0
+  FogHeightEnd: 0
+  FogPlaneY: 0
 --- !u!114 &6936313426759873806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2784,6 +2789,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Goal
       objectReference: {fileID: 0}
+    - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -6669791554124553747, guid: 300532aff03bf5e4cb230b5925ff3788,
+        type: 3}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: _color.r
@@ -2809,12 +2820,6 @@ PrefabInstance:
       propertyPath: _outlineModel
       value: 
       objectReference: {fileID: 3364352014373522285, guid: 946f18c0079936c4da76719db2a2d9ae,
-        type: 3}
-    - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: -6669791554124553747, guid: 300532aff03bf5e4cb230b5925ff3788,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c904e82cd42f724cb303fd2ff0e7a5d, type: 3}

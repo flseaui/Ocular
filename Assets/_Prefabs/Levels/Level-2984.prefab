@@ -1497,6 +1497,7 @@ MonoBehaviour:
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 8413486311268517428}
   Name: Assets/_Prefabs/Levels/Level-2984.prefab
+  InGameName: swag
   Animator: {fileID: 7819052424134963719}
   ReadyToLoad: 0
   HasCustomCamera: 1
@@ -1504,6 +1505,10 @@ MonoBehaviour:
   CameraSize: 4.86
   CameraCenter: {fileID: 0}
   CameraStartDirection: 0
+  HasCustomFog: 0
+  FogHeightStart: 0
+  FogHeightEnd: 0
+  FogPlaneY: 0
 --- !u!114 &4553092128441379735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6113,11 +6118,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8570900904768759856}
     m_Modifications:
-    - target: {fileID: 1870077429174537984, guid: 3841e5b569abf0147b45988b489c10bb,
-        type: 3}
-      propertyPath: m_Name
-      value: Level
-      objectReference: {fileID: 0}
     - target: {fileID: 8033051876932178584, guid: 3841e5b569abf0147b45988b489c10bb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6187,6 +6187,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1870077429174537984, guid: 3841e5b569abf0147b45988b489c10bb,
+        type: 3}
+      propertyPath: m_Name
+      value: Level
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3841e5b569abf0147b45988b489c10bb, type: 3}
