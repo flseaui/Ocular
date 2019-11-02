@@ -68,6 +68,16 @@ namespace OldEditor
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                var model = _level.transform.parent.Find("Level").gameObject;
+                if (model != null)
+                    model.SetActive(!model.activeSelf);
+            }
+        }
+
         public void LoadLevel(GameObject level)
         {
             _level = Instantiate(level).transform.Find("MainFloor").gameObject;
