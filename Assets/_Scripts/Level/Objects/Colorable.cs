@@ -372,10 +372,10 @@ namespace Level.Objects
 
             _controllers = new List<IController>();
 
-            /*Addressables.LoadAssetAsync<GameObject>("block_outline_model").Completed += result =>
+            Addressables.LoadAssetAsync<GameObject>("block_outline_model").Completed += result =>
                 {
                     _outlineModel = result.Result;
-                };*/
+                };
 
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
