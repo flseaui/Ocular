@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game;
@@ -31,18 +31,18 @@ namespace OldEditor
          * 4 - 9x9
          */
         [SerializeField] private GameObject[] _levelBasePrefabs;
-        
+
         [SerializeField] GameManager _gameManager;
         [SerializeField] GameObject _glassesContainer;
-        
+
         [ShowInInspector]
         private List<GameObject> _limitedObjects;
         private static readonly int OnScreen = Animator.StringToHash("OnScreen");
 
         public static Action<bool> OnLevelPlayToggle;
-        
+
         private readonly Vector3Int _levelDimensions = new Vector3Int(100, 100, 100);
-        
+
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
@@ -50,9 +50,9 @@ namespace OldEditor
             _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
             _objectDrawer = GameObject.Find("ObjectDrawer").GetComponent<ObjectDrawer>();
             ObjectDrawer.OnObjectSelectionChanged += @object => { _currentObject = @object; };
-            
+
         }
-        
+
         private void Start()
         {
             var level = PlayerPrefs.GetString("LevelToLoad");
@@ -63,11 +63,11 @@ namespace OldEditor
             }
             else
             {
-                var levelGameObject = (GameObject) AssetDatabase.LoadAssetAtPath(level, typeof(GameObject));
+                var levelGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(level, typeof(GameObject));
                 LoadLevel(levelGameObject);
             }
         }
-        
+
         public void LoadLevel(GameObject level)
         {
             _level = Instantiate(level).transform.Find("MainFloor").gameObject;
@@ -77,6 +77,8 @@ namespace OldEditor
                 if (x.HasComponent<MaxCount>())
                     _limitedObjects.Add(x.gameObject);
             });
+            Camera.main.GetComponent<EditorCameraCenter>().LevelInfo =
+                _level.transform.parent.GetComponent<LevelInfo>();
         }
 
         public void NewLevel(int size)
@@ -107,7 +109,7 @@ namespace OldEditor
             _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
 
         }
-        
+
         public void SaveLevel()
         {
             if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
@@ -124,12 +126,12 @@ namespace OldEditor
             HiResScreenshot.TakeHiResShot($"Level{_level.GetHashCode()}");
             SceneManager.LoadSceneAsync("EditorMenu");
         }
-        
+
         public void PlaceElement(Vector3Int position, Orientation orientation, Direction direction)
         {
-            var element = (GameObject) PrefabUtility.InstantiatePrefab(_currentObject, _level.transform);
+            var element = (GameObject)PrefabUtility.InstantiatePrefab(_currentObject, _level.transform);
             element.transform.position = position;
-            
+
             if (element.transform.HasComponent<SlopeWalkable>(out var slope))
                 slope.MatchRotation(orientation, direction);
             else if (element.CompareTag("PlayerSpawn"))
@@ -138,14 +140,14 @@ namespace OldEditor
             if (element.transform.HasComponent<MaxCount>(out var max))
             {
                 var theseObjects = _limitedObjects.Where(x => x.name == element.name || x.name.Contains(element.name)).ToArray();
-       
+
                 if (theseObjects.Length >= max.Max)
                 {
                     var obj = theseObjects.First();
                     _limitedObjects.Remove(obj);
                     Destroy(obj);
                 }
-                
+
                 _limitedObjects.Add(element);
             }
 
@@ -158,7 +160,7 @@ namespace OldEditor
                 _levelDimensions.y / 2 + position.y,
                 _levelDimensions.z / 2 + position.z
             );
-            
+
             _currentLevel[pos.x, pos.y, pos.z] = element;
         }
     }
