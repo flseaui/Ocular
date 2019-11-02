@@ -26,6 +26,7 @@ namespace Player
 
         public static Action OnDeath;
 
+        private bool _superDead = false;
 
         private void Awake()
         {
@@ -63,11 +64,27 @@ namespace Player
             OnDeath?.Invoke();
         }
 
+        // Kill with no respawn
+        public void SuperKill()
+        {
+            _superDead = true;
+            Died = true;
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+
         public void ActuallyDie()
         {
-            transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
-                .PlayerSpawnPoint.position;
-            GetComponent<Rigidbody>().isKinematic = false;
+            if (_superDead)
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+            else
+            {
+                transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
+                    .PlayerSpawnPoint.position;
+                GetComponent<Rigidbody>().isKinematic = false;
+            }
         }
 
         private void OnCollisionEnter(Collision other)

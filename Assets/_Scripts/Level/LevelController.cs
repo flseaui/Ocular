@@ -120,6 +120,11 @@ namespace Level
             OnLevelLoaded?.Invoke();
         }
 
+        public void RestartLevel()
+        {
+            LoadLevel();
+        }
+
         private void LoadLevel()
         {
             if (_loadedLevel != null)

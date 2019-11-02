@@ -15,6 +15,9 @@ namespace UI
         {
             LevelController.OnLevelLoaded += () =>
             {
+                _animator.ResetTrigger("Show");
+                _levelNameText.transform.position += Vector3.up;
+
                 _levelNameText.text = _levelController.CurrentLevelInfo.InGameName;
                 StartCoroutine(ShowName());
             };
@@ -23,6 +26,12 @@ namespace UI
         private IEnumerator ShowName()
         {
             yield return new WaitForSeconds(1.5f);
+
+            if (PauseMenu.Restarting)
+            {
+                PauseMenu.Restarting = false;
+                yield break;
+            }
 
             _animator.SetTrigger("Show");
         }

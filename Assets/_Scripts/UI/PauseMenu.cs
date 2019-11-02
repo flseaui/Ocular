@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Game;
+using Level;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace UI
@@ -12,6 +14,8 @@ namespace UI
 
         private CanvasGroup _cg;
 
+        public static bool Restarting;
+
         private void Awake()
         {
             _cg = _pauseMenuUI.GetComponent<CanvasGroup>();
@@ -22,6 +26,7 @@ namespace UI
             //_pauseMenuUI.SetActive(false);
             _cg.alpha = 0;
             _cg.interactable = false;
+            _cg.blocksRaycasts = false;
         }
 
         // Update is called once per frame
@@ -44,6 +49,7 @@ namespace UI
         {
             _cg.alpha = 0;
             _cg.interactable = false;
+            _cg.blocksRaycasts = false;
             //_pauseMenuUI.SetActive(false);
             Time.timeScale = 1f;
             GameIsPaused = false;
@@ -53,12 +59,22 @@ namespace UI
         {
             _cg.alpha = 1;
             _cg.interactable = true;
+            _cg.blocksRaycasts = true;
             //_pauseMenuUI.SetActive(true);
             Time.timeScale = 0f;
             GameIsPaused = true;
         }
 
         /*---------PAUSE MENU BUTTONS---------*/
+
+        public void Restart()
+        {
+            Restarting = true;
+            Resume();
+            var manager = GameObject.Find("GameManager");
+            manager.GetComponent<GameManager>().Player.GetComponent<Player.Player>().SuperKill();
+            manager.GetComponent<LevelController>().RestartLevel();
+        }
 
         public void Settings()
         {
