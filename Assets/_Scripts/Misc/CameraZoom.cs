@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UI;
+using UnityEngine;
 
 namespace Misc
 {
@@ -14,6 +15,8 @@ namespace Misc
 
         private void Update()
         {
+            if (PauseMenu.GameIsPaused) return;
+
             var scrollDelta = Input.mouseScrollDelta.y;
             scrollDelta = .3f * -scrollDelta;
             if (scrollDelta > 0)

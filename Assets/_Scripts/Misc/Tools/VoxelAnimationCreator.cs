@@ -1,3 +1,4 @@
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -5,7 +6,8 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using OcularAnimation;
 
-public class VoxelAnimationCreator : OdinEditorWindow {
+public class VoxelAnimationCreator : OdinEditorWindow
+{
     [MenuItem("Tools/Ocular/Voxel Animation Creator")]
     private static void OpenWindow()
     {
@@ -19,12 +21,14 @@ public class VoxelAnimationCreator : OdinEditorWindow {
     private string _name;
 
     [Button(ButtonSizes.Large), GUIColor(0, 1, 0)]
-    public void CreateAnimation() {
+    public void CreateAnimation()
+    {
         var anim = ScriptableObject.CreateInstance<VoxelAnimation>();
 
         anim.Frames = new List<AnimFrame>();
 
-        foreach (var frame in _frameObjects) {
+        foreach (var frame in _frameObjects)
+        {
             var model = frame.transform.GetChild(0);
             var mat = model.GetComponent<Renderer>().sharedMaterial;
             var mesh = model.GetComponent<MeshFilter>().sharedMesh;
@@ -39,3 +43,4 @@ public class VoxelAnimationCreator : OdinEditorWindow {
         Selection.activeObject = anim;
     }
 }
+#endif

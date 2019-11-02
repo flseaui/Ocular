@@ -7,7 +7,7 @@ namespace UI
     {
         public void Start()
         {
-            SceneManager.LoadScene("Main Menu (Cross Platform)");
+            SceneManager.LoadScene("MainMenu");
         }
     }
 }

@@ -1,4 +1,5 @@
-using System.Collections;
+﻿using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,7 @@ namespace UI
     {
         public void StartNewGame()
         {
+            LoadingScreen.SceneToLoad = "Game";
             LoadingScreen.Instance.Show();
         }
 
@@ -28,6 +30,15 @@ namespace UI
         public void StartMenuMusic()
         {
             GetComponent<AudioSource>().Play();
+        }
+
+        public void Quit()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

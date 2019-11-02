@@ -1,7 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class LoadingScreen : MonoBehaviour
 {
@@ -23,6 +22,8 @@ public class LoadingScreen : MonoBehaviour
     private Animator _animator;
 
     private bool _didTriggerFadeOutAnim;
+
+    public static string SceneToLoad;
 
     private void Awake()
     {
@@ -71,9 +72,10 @@ public class LoadingScreen : MonoBehaviour
         percentLoadedText.text = Mathf.CeilToInt(progress * 100).ToString() + "%";
     }
 
+    //triggered by animation
     public void StartLoading()
     {
-        _currentLoadingOperation = SceneManager.LoadSceneAsync("Game");
+        _currentLoadingOperation = SceneManager.LoadSceneAsync(SceneToLoad);
         _currentLoadingOperation.allowSceneActivation = false;
         _isLoading = true;
     }

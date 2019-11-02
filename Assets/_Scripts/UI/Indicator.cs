@@ -14,6 +14,8 @@ namespace UI
 
         private void Update()
         {
+            if (PauseMenu.GameIsPaused) return;
+
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out var hit, Mathf.Infinity, LayerMask.GetMask("Model")))
