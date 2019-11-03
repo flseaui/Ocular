@@ -372,10 +372,22 @@ namespace Level.Objects
 
             _controllers = new List<IController>();
 
-            Addressables.LoadAssetAsync<GameObject>("block_outline_model").Completed += result =>
+            if (transform.HasComponent<SlopeWalkable>())
+            {
+                Addressables.LoadAssetAsync<GameObject>("stair_outline_model").Completed += result =>
                 {
                     _outlineModel = result.Result;
                 };
+            }
+            else
+            {
+                Addressables.LoadAssetAsync<GameObject>("block_outline_model").Completed += result =>
+                {
+                    _outlineModel = result.Result;
+                };
+            }
+
+
 
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
