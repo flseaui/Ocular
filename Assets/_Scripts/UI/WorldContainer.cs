@@ -53,6 +53,8 @@ namespace UI
         {
             transform.DOMoveY(20, .5f).onComplete += () =>
             {
+                _levelContainers.GetComponent<LevelContainers>().WorldIndex = _worldIndex;
+                _levelContainers.GetComponent<LevelContainers>().SwitchWorlds(_worldIndex);
                 _levelContainers.SetActive(true);
                 gameObject.SetActive(false);
                 _mainPanelManager.PanelAnim(4);

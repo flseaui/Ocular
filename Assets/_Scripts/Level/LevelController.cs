@@ -11,7 +11,7 @@ namespace Level
 
     public static class Extensions
     {
-        public static Tuple<int, int> CoordinatesOf<T>(this T[,] matrix, T value)
+        public static (int, int) CoordinatesOf<T>(this T[,] matrix, T value)
         {
             int w = matrix.GetLength(0);
             int h = matrix.GetLength(1);
@@ -23,14 +23,14 @@ namespace Level
                     if (matrix[x, y] == null) continue;
 
                     if (matrix[x, y].Equals(value))
-                        return Tuple.Create(x, y);
+                        return (x, y);
                 }
             }
             Debug.Log("Item not found");
-            return Tuple.Create(-1, -1);
+            return (-1, -1);
         }
 
-        public static Tuple<int, int> GetNext<T>(this T[,] matrix, Tuple<int, int> value)
+        public static (int, int) GetNext<T>(this T[,] matrix, (int, int) value)
         {
             int w = matrix.GetLength(0);
             int h = matrix.GetLength(1);
@@ -40,11 +40,11 @@ namespace Level
                 for (int y = x == value.Item1 ? value.Item2 + 1 : 0; y < h; ++y)
                 {
                     if (!ReferenceEquals(matrix[x, y], null))
-                        return Tuple.Create(x, y);
+                        return (x, y);
                 }
             }
             Debug.Log("Item is last item in matrix");
-            return Tuple.Create(-1, -1);
+            return (-1, -1);
         }
     }
 
@@ -58,18 +58,22 @@ namespace Level
         private GameObject[,] _levels = new GameObject[2, 10];
 
         private GameObject _loadedLevel;
-        private Tuple<int, int> _loadedLevelNumber;
+        private (int, int) _loadedLevelNumber;
 
         [HideInInspector]
         public LevelInfo CurrentLevelInfo;
 
         private List<GameObject> _allWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).ToList();
 
-        [ValueDropdown("_allWorldLevels")] public GameObject StartingLevel;
+        [ValueDropdown("_allWorldLevels"), SerializeField]
+        public GameObject StartingLevel;
+
 
         public static Action OnLevelLoaded;
 
-        private Tuple<int, int> _levelToLoad;
+        private (int, int) _levelToLoad;
+
+        public static (int, int) StartingLevelIndex = (-1, -1);
 
         private void Awake()
         {
@@ -104,7 +108,11 @@ namespace Level
 
         public void LoadFirstLevel()
         {
-            _levelToLoad = _levels.CoordinatesOf(StartingLevel);
+            if (StartingLevelIndex != (-1, -1))
+                _levelToLoad = StartingLevelIndex;
+            else
+                _levelToLoad = _levels.CoordinatesOf(StartingLevel);
+
             LoadLevel();
         }
 
