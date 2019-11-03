@@ -1,8 +1,8 @@
+﻿using DG.Tweening;
+using Michsky.UI.Zone;
 using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -10,12 +10,16 @@ namespace UI
     {
 
         [SerializeField] private TextMeshProUGUI _worldTitle;
-        
+
         [SerializeField] private List<GameObject> _worlds;
+
+        [SerializeField] private GameObject _levelContainers;
 
         private int _worldIndex;
 
         private Tween _currentTween;
+
+        [SerializeField] private MainPanelManager _mainPanelManager;
 
         public void NextWorld()
         {
@@ -47,12 +51,11 @@ namespace UI
 
         public void ChooseWorld()
         {
-            transform.DOScale(new Vector3(10, 10, 10), 3).onUpdate += () =>
+            transform.DOMoveY(20, .5f).onComplete += () =>
             {
-                if (transform.localScale.x >= 3 && transform.localScale.x <= 3.1)
-                {
-                    SceneManager.LoadSceneAsync("Game");
-                }
+                _levelContainers.SetActive(true);
+                gameObject.SetActive(false);
+                _mainPanelManager.PanelAnim(4);
             };
         }
 
@@ -62,6 +65,6 @@ namespace UI
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
             _worldTitle.text = _worlds[_worldIndex].name;
         }
-        
+
     }
 }
