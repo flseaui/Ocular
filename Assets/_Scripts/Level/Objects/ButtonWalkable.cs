@@ -39,30 +39,36 @@ namespace Level.Objects
             // register with all target blocks
             TargetBlocks.ForEach(t => t.RegisterController(this));
 
+            _buttonModel.OnStateChanged += OnStateChanged;
+        }
 
-            _buttonModel.OnStateChanged += () =>
+        private void OnStateChanged()
+        {
+            if (_buttonModel.State)
             {
-                if (_buttonModel.State)
+                // Press button
+                _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
+                TargetBlocks.ForEach(t =>
                 {
-                    // Press button
-                    _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
-                    TargetBlocks.ForEach(t =>
-                    {
-                        t.OcularState = Color;
-                        t.UpdateState();
-                    });
-                }
-                else
+                    t.OcularState = Color;
+                    t.UpdateState();
+                });
+            }
+            else
+            {
+                // Release button
+                _buttonModel.transform.localPosition = _initialPosition;
+                TargetBlocks.ForEach(t =>
                 {
-                    // Release button
-                    _buttonModel.transform.localPosition = _initialPosition;
-                    TargetBlocks.ForEach(t =>
-                    {
-                        t.OcularState = GlassesController.OcularState.Null;
-                        t.UpdateState();
-                    });
-                }
-            };
+                    t.OcularState = GlassesController.OcularState.Null;
+                    t.UpdateState();
+                });
+            }
+        }
+
+        private void OnDestroy()
+        {
+            _buttonModel.OnStateChanged -= OnStateChanged;
         }
     }
 }
