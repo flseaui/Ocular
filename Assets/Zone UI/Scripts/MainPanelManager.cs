@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 
 namespace Michsky.UI.Zone
 {
@@ -52,7 +51,7 @@ namespace Michsky.UI.Zone
             currentPanelAnimator = currentPanel.GetComponent<Animator>();
             currentPanelAnimator.Play(panelFadeIn);
 
-            if(enableTitleAnim == true)
+            if (enableTitleAnim == true)
             {
                 titleAnimator = titleObject.GetComponent<Animator>();
                 title = titleObject.transform.Find("Text").GetComponent<TextMeshProUGUI>();

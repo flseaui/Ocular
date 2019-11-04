@@ -49,6 +49,11 @@ namespace UI
             _worldTitle.text = _worlds[_worldIndex].name;
         }
 
+        public void MoveBack()
+        {
+            transform.DOMoveY(2, .5f);
+        }
+
         public void ChooseWorld()
         {
             transform.DOMoveY(20, .5f).onComplete += () =>

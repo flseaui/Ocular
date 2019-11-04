@@ -160,6 +160,12 @@ namespace UI
             }
         }
 
+        public void Disable()
+        {
+            _worldContainers[_worldIndex].gameObject.SetActive(false);
+            _active = false;
+        }
+
         public void SwitchWorlds(int worldIndex)
         {
             Debug.Log(worldIndex);
