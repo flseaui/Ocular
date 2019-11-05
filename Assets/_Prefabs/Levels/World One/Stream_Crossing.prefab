@@ -1498,17 +1498,17 @@ MonoBehaviour:
   PlayerSpawnPoint: {fileID: 8413486311268517428}
   Name: Assets/_Prefabs/Levels/Stream_Crossing.prefab
   InGameName: Stream Crossing
-  Animator: {fileID: 7819052424134963719}
+  Animator: {fileID: 0}
   ReadyToLoad: 0
   HasCustomCamera: 1
   CameraPosition: {x: 0, y: 8.25, z: -10}
   CameraSize: 4.86
   CameraCenter: {fileID: 0}
   CameraStartDirection: 0
-  HasCustomFog: 0
-  FogHeightStart: 0
-  FogHeightEnd: 0
-  FogPlaneY: 0
+  HasCustomFog: 1
+  FogHeightStart: 5.82
+  FogHeightEnd: 9.73
+  FogPlaneY: 5.97
 --- !u!114 &4553092128441379735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6208,6 +6208,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1100332096631422702}
     m_Modifications:
+    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: _color.r
+      value: 0.74509805
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: _color.g
+      value: 0.31764707
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: _color.b
+      value: 0.31764707
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: _ocularState
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746607, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6267,26 +6287,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Goal
-      objectReference: {fileID: 0}
-    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: _color.r
-      value: 0.74509805
-      objectReference: {fileID: 0}
-    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: _color.g
-      value: 0.31764707
-      objectReference: {fileID: 0}
-    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: _color.b
-      value: 0.31764707
-      objectReference: {fileID: 0}
-    - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: _ocularState
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c904e82cd42f724cb303fd2ff0e7a5d, type: 3}
