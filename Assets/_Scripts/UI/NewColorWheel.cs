@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class NewColorWheel : MonoBehaviour
 {
-    public static bool Turning;
+    public bool Turning;
 
     private bool _disabled;
     private bool _bufferLeft;
@@ -35,7 +35,13 @@ public class NewColorWheel : MonoBehaviour
     {
         var left = Input.GetKey(KeyCode.Q);
         var right = Input.GetKey(KeyCode.E);
-        
+
+        if (left && right)
+        {
+            left = false;
+            right = false;
+        }
+
         if (Turning && Input.GetKeyDown(KeyCode.Q))
         {
             _bufferLeft = true;
@@ -48,13 +54,7 @@ public class NewColorWheel : MonoBehaviour
             _bufferLeft = false;
         }
 
-        if (left && right)
-        {
-            left = false;
-            right = false;
-        }
-
-        if (Pathfinder.Navigating || Player.Player.Falling)
+        if (Pathfinder.Navigating || Player.Player.Falling || Pathfinder.AtGoal)
         {
             if (!_disabled)
             {
@@ -71,36 +71,38 @@ public class NewColorWheel : MonoBehaviour
             }
             if (!Turning)
             {
-                if (left || _bufferLeft)
-                {
-                    Turning = true;
-                    _bufferLeft = false;
-                    _glassesController.index--;
-                    _glassesController.UpdateOcularState();
-                    _spriteIndex++;
-                    if (_spriteIndex > _wheelSprites.Count - 1)
-                        _spriteIndex = 0;
-                    _wheelImage.sprite = _wheelSprites[_spriteIndex];
-                    var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, 60),
-                        .3f);
-                    rotate.onComplete += () => Turning = false;
-                }
-
-                if (right || _bufferRight)
-                {
-                    Turning = true;
-                    _bufferRight = false;
-                    _glassesController.index++;
-                    _glassesController.UpdateOcularState();
-                    _spriteIndex--;
-                    if (_spriteIndex < 0)
-                        _spriteIndex = _wheelSprites.Count - 1;
-                    _wheelImage.sprite = _wheelSprites[_spriteIndex];
-                    var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, -60),
-                        .3f);
-                    rotate.onComplete += () => Turning = false;
-                }
+                if (_bufferLeft)
+                    Turn(true);
+                else if (_bufferRight)
+                    Turn(false);
+                else if (left)
+                    Turn(true);
+                else if (right)
+                    Turn(false);
             }
         }
+    }
+
+    private void Turn(bool left)
+    {
+        Turning = true;
+        if (left) { _bufferLeft = false; } else _bufferRight = false;
+        _glassesController.index -= left ? 1 : -1;
+        _glassesController.UpdateOcularState();
+        _spriteIndex += left ? 1 : -1; ;
+        if (left)
+        {
+            if (_spriteIndex > _wheelSprites.Count - 1)
+                _spriteIndex = 0;
+        }
+        else
+        {
+            if (_spriteIndex < 0)
+                _spriteIndex = _wheelSprites.Count - 1;
+        }
+        _wheelImage.sprite = _wheelSprites[_spriteIndex];
+        var rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 0, left? 60 : -60),
+            .3f);
+        rotate.onComplete += () => Turning = false;
     }
 }
