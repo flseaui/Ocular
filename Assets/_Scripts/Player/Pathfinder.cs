@@ -49,7 +49,7 @@ namespace Player
             if (path == null)
                 return;
 
-            if (AtGoal) return;
+            if (AtGoal || Player.Died) return;
             if (Navigating)
             {
                 _queuedPath = new Queue<Walkable>(path);

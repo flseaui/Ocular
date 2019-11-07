@@ -54,7 +54,7 @@ public class NewColorWheel : MonoBehaviour
             _bufferLeft = false;
         }
 
-        if (Pathfinder.Navigating || Player.Player.Falling || Pathfinder.AtGoal)
+        if (Pathfinder.Navigating || Player.Player.Falling || Pathfinder.AtGoal || Player.Player.Died)
         {
             if (!_disabled)
             {
