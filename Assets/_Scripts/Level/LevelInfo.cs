@@ -45,6 +45,8 @@ namespace Level
         [BoxGroup("Fog")] public float FogHeightStart;
         [BoxGroup("Fog")] public float FogHeightEnd;
         [BoxGroup("Fog")] public float FogPlaneY;
+        [BoxGroup("Fog")] public bool HasCustomFogColor;
+        [BoxGroup("Fog")] public Color FogColor;
 
         [Button, BoxGroup("Camera")]
         private void SetCamInfo()
@@ -67,6 +69,7 @@ namespace Level
             FogHeightStart = fog.fogHeightStart;
             FogHeightEnd = fog.fogHeightEnd;
             FogPlaneY = plane.transform.position.y;
+            FogColor = fog.fogColor;
         }
         private void Awake()
         {

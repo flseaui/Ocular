@@ -32,9 +32,20 @@ namespace Misc
                 {
                     _fog.fogHeightEnd = -0.3f;
                     _fog.fogHeightStart = -2.8f;
+
                     var position = _fogPlane.position;
                     position = new Vector3(position.x, -2.86f, position.z);
                     _fogPlane.position = position;
+                }
+
+                if (_levelController.CurrentLevelInfo.HasCustomFogColor)
+                {
+                    DOTween.To(() => _fog.fogColor, x => _fog.fogColor = x,
+                        _levelController.CurrentLevelInfo.FogColor, 1.3f);
+                }
+                else
+                {
+                    _fog.fogColor = new Color(0.6235294f, 0.9294118f, 0.9333333f);
                 }
             };
         }
