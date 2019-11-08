@@ -46,6 +46,7 @@ namespace Misc
 
         public void TurnLeft()
         {
+            if (Turning) return;
             TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
             Turning = true;
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 90, 0),
@@ -55,6 +56,7 @@ namespace Misc
 
         public void TurnRight()
         {
+            if (Turning) return;
             TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
             Turning = true;
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, -90, 0),
