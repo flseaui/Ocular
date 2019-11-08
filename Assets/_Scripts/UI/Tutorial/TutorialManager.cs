@@ -14,8 +14,14 @@ public class TutorialManager : MonoBehaviour
     private GameObject _tutorialOnePrefab;
     [SerializeField]
     private GameObject _tutorialTwoPrefab;
+    [SerializeField]
+    private GameObject _tutorialThreePrefab;
+    [SerializeField]
+    private GameObject _tutorialZoomPrefab;
 
     private GameObject _liveTutorialTwo;
+    private GameObject _liveTutorialThree;
+
 
     public void Awake()
     {
@@ -29,6 +35,12 @@ public class TutorialManager : MonoBehaviour
                 case "The Bridge":
                     _liveTutorialTwo = Instantiate(_tutorialTwoPrefab, _canvas.transform);
                     break;
+                case "Midnight Stroll":
+                    _liveTutorialThree = Instantiate(_tutorialThreePrefab, _canvas.transform);
+                    break;
+                case "The Forest":
+                    Instantiate(_tutorialZoomPrefab, _canvas.transform);
+                    break;
             }
         };
     }
@@ -39,5 +51,19 @@ public class TutorialManager : MonoBehaviour
         {
             _liveTutorialTwo.GetComponent<LeftAndRight>().FadeOut();
         }
+    }
+
+    public void DisableTutorialThree()
+    {
+        if (_liveTutorialThree != null)
+        {
+            _liveTutorialThree.GetComponent<Shift>().FadeOut();
+        }
+    }
+
+    public void SetTutThree(bool value)
+    {
+        if (_liveTutorialThree != null)
+            _liveTutorialThree.SetActive(value);
     }
 }

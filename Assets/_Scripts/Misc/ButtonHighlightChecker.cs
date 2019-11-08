@@ -12,6 +12,10 @@ public class ButtonHighlightChecker : MonoBehaviour
 
     [SerializeField] private Camera _mainCamera;
 
+    [SerializeField] private TutorialManager _tutManager;
+
+    private bool _doneItOnce;
+
     private void Update()
     {
         void DisableLast()
@@ -34,6 +38,12 @@ public class ButtonHighlightChecker : MonoBehaviour
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
+                    if (!_doneItOnce)
+                    {
+                        _tutManager.DisableTutorialThree();
+                        _doneItOnce = true;
+                    }
+
                     _lastHighlighted = button;
 
                     if (button != _lastHighlighted)
