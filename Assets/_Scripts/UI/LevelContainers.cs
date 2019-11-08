@@ -78,18 +78,19 @@ namespace UI
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
         }
 
+        public void OnLevelClick()
+        {
+
+            LevelController.StartingLevelIndex = (WorldIndex, _selectedIndex);
+            LoadingScreen.SceneToLoad = "Game";
+            LoadingScreen.Instance.Show();
+        }
+
         public void Update()
         {
             if (!_active) return;
 
             var worldLevels = _levels[WorldIndex];
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                LevelController.StartingLevelIndex = (WorldIndex, _selectedIndex);
-                LoadingScreen.SceneToLoad = "Game";
-                LoadingScreen.Instance.Show();
-            }
 
             var up = Input.GetKeyDown(KeyCode.UpArrow);
             var down = Input.GetKeyDown(KeyCode.DownArrow);
