@@ -1562,7 +1562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1601,6 +1601,8 @@ MonoBehaviour:
   FogHeightStart: 5.82
   FogHeightEnd: 9.73
   FogPlaneY: 5.97
+  HasCustomFogColor: 1
+  FogColor: {r: 0.5061855, g: 0.65375555, b: 0.8584906, a: 0}
 --- !u!114 &4553092128441379735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6300,6 +6302,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1100332096631422702}
     m_Modifications:
+    - target: {fileID: 6073850517314746595, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_Name
+      value: Goal
+      objectReference: {fileID: 0}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: _color.r
@@ -6374,11 +6381,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6073850517314746595, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: m_Name
-      value: Goal
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c904e82cd42f724cb303fd2ff0e7a5d, type: 3}

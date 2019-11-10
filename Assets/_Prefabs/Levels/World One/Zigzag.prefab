@@ -5786,6 +5786,8 @@ MonoBehaviour:
   FogHeightStart: 5.78
   FogHeightEnd: 9.85
   FogPlaneY: 5.9
+  HasCustomFogColor: 1
+  FogColor: {r: 1, g: 0.9014023, b: 0.504717, a: 0}
 --- !u!114 &3995849120691541654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10913,13 +10915,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7998826236301411376}
-  m_LocalRotation: {x: 0.45462927, y: -0.100941405, z: 0.33530596, w: 0.8189585}
+  m_LocalRotation: {x: 0.97874844, y: -0.16773361, z: -0.051867142, w: 0.10595695}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3771890462364053036}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 54.325, y: 13.844001, z: 51.660004}
+  m_LocalEulerAnglesHint: {x: 10.953, y: 188.02599, z: 200.21999}
 --- !u!108 &1196084652791049472
 Light:
   m_ObjectHideFlags: 0
@@ -12281,11 +12283,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7003966850035218484}
     m_Modifications:
-    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746595, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: m_Name
@@ -12295,6 +12292,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
@@ -12386,11 +12388,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7003966850035218484}
     m_Modifications:
-    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746595, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: m_Name
@@ -12400,6 +12397,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
@@ -12491,15 +12493,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7003966850035218484}
     m_Modifications:
-    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746595, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
       propertyPath: m_Name
       value: Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6073850517314746607, guid: f824e110f9a91584c88015018cc1caae,
         type: 3}
@@ -12591,6 +12593,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7003966850035218484}
     m_Modifications:
+    - target: {fileID: 6073850517314746595, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_Name
+      value: Goal (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: _color.r
@@ -12665,11 +12672,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6073850517314746595, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
-        type: 3}
-      propertyPath: m_Name
-      value: Goal (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c904e82cd42f724cb303fd2ff0e7a5d, type: 3}
