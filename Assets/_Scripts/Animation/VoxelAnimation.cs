@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace OcularAnimation
 {
-    [CreateAssetMenu(menuName = "Voxel Animation")]
+    [CreateAssetMenu(menuName = "Old Voxel Animation")]
     public class VoxelAnimation : ScriptableObject
     {
         public List<AnimFrame> Frames;
