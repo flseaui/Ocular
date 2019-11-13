@@ -159,7 +159,7 @@ namespace OldEditor
                         
                         if (left)
                         {
-                            var gridPosition = new Vector3Int((int) transform.position.x, (int) transform.position.y, (int) transform.position.z);
+                            var gridPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                             _levelEditor.PlaceElement(gridPosition, _orientation, _direction);
                         }
 

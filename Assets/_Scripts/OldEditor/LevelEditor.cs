@@ -137,7 +137,7 @@ namespace OldEditor
             SceneManager.LoadSceneAsync("EditorMenu");
         }
 
-        public void PlaceElement(Vector3Int position, Orientation orientation, Direction direction)
+        public void PlaceElement(Vector3 position, Orientation orientation, Direction direction)
         {
             var element = (GameObject)PrefabUtility.InstantiatePrefab(_currentObject, _level.transform);
             element.transform.position = position;
@@ -166,9 +166,9 @@ namespace OldEditor
 
             var pos = new Vector3Int
             (
-                _levelDimensions.x / 2 + position.x,
-                _levelDimensions.y / 2 + position.y,
-                _levelDimensions.z / 2 + position.z
+                (int) (_levelDimensions.x / 2 + position.x),
+                (int) (_levelDimensions.y / 2 + position.y),
+                (int) (_levelDimensions.z / 2 + position.z)
             );
 
             _currentLevel[pos.x, pos.y, pos.z] = element;
