@@ -2,10 +2,19 @@
 
 public class QAndE : MonoBehaviour
 {
+    private bool _q, _e;
+    private bool _fading;
+    
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
+            _q = true;
+        if (Input.GetKeyDown(KeyCode.E))
+            _e = true;
+        
+        if (_q && _e && !_fading)
         {
+            _fading = true;
             FadeOut();
         }
     }
