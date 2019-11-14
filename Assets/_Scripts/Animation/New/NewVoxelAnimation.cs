@@ -43,7 +43,7 @@ namespace OcularAnimation.New
     [Serializable]
     public class VoxelFrame
     {
-        public int TimingMS;
+        public int TimingMS = 180;
         
         [SerializeField]
         private GameObject _voxelContainer;
