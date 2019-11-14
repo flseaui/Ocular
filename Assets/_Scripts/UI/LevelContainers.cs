@@ -2,6 +2,7 @@
 using Level;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 
@@ -48,7 +49,7 @@ namespace UI
             }
         }
 
-        public void Start()
+        public void OnEnable()
         {
             var worldLevels = _levels[WorldIndex];
 
@@ -78,9 +79,9 @@ namespace UI
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
         }
 
+        [UsedImplicitly]
         public void OnLevelClick()
         {
-
             LevelController.StartingLevelIndex = (WorldIndex, _selectedIndex);
             LoadingScreen.SceneToLoad = "Game";
             LoadingScreen.Instance.Show();
@@ -92,13 +93,13 @@ namespace UI
 
             var worldLevels = _levels[WorldIndex];
 
-            var up = Input.GetKeyDown(KeyCode.UpArrow);
-            var down = Input.GetKeyDown(KeyCode.DownArrow);
+            var down = Input.GetKeyDown(KeyCode.UpArrow);
+            var up = Input.GetKeyDown(KeyCode.DownArrow);
 
             var mouseDelta = Input.mouseScrollDelta.y;
 
             //transform.position = new Vector3(transform.position.x, transform.position.y + mouseDelta, transform.position.z);
-            if (mouseDelta > 0 || up)
+            if (mouseDelta < 0 || up)
             {
                 if (_selectedIndex + 1 == worldLevels.Count) return;
 
@@ -116,7 +117,7 @@ namespace UI
                 worldLevels[_selectedIndex].transform.rotation = _initialRot;
                 _selectedIndex++;
             }
-            else if (mouseDelta < 0 || down)
+            else if (mouseDelta > 0 || down)
             {
                 if (_selectedIndex == 0) return;
 
