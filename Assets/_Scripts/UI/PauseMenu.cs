@@ -85,7 +85,7 @@ namespace UI
         {
             Time.timeScale = 1f;
             LoadingScreen.SceneToLoad = "MainMenu";
-            SceneManager.LoadSceneAsync("LoadingScene");
+            SceneManager.LoadScene("LoadingScene");
         }
 
     }
