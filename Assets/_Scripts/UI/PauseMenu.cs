@@ -84,8 +84,9 @@ namespace UI
         public void Quit()
         {
             Time.timeScale = 1f;
+            GameIsPaused = false;
             LoadingScreen.SceneToLoad = "MainMenu";
-            SceneManager.LoadScene("LoadingScene");
+            SceneManager.LoadScene("MainMenu");
         }
 
     }
