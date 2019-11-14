@@ -66,6 +66,7 @@ namespace OcularAnimation.New
                 else
                 {
                     ChooseNewIdle();
+                    StartCoroutine(NextFrame());
                 }
             }
             else
