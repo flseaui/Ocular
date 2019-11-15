@@ -92,31 +92,33 @@ namespace OcularAnimation.New
             }
             else
             {
-                if (Player.Player.Died && _currentAnimation != _death)
-                {
-                    _currentAnimation = _death;
-                    _idle = false;
-                    NewAnim();
-                }
-                else if (Pathfinder.AtGoal && _currentAnimation != _teleport)
-                {
-                    _currentAnimation = _teleport;
-                    _idle = false;
-                    NewAnim();
-                }
-                else if (Pathfinder.Navigating && _currentAnimation != _walk)
-                {
-                    _currentAnimation = _walk;
-                    _idle = false;
-                    NewAnim();
-                }
-                else
-                {
-                    if (!_idle)
-                    {
-                        ChooseNewIdle();
-                    }
-                }
+                ChooseAnim();
+            }
+        }
+
+        private void ChooseAnim()
+        {
+            if (Player.Player.Died && _currentAnimation != _death)
+            {
+                _currentAnimation = _death;
+                _idle = false;
+                NewAnim();
+            }
+            else if (Pathfinder.AtGoal && _currentAnimation != _teleport)
+            {
+                _currentAnimation = _teleport;
+                _idle = false;
+                NewAnim();
+            }
+            else if (Pathfinder.Navigating && _currentAnimation != _walk)
+            {
+                _currentAnimation = _walk;
+                _idle = false;
+                NewAnim();
+            }
+            else if (!Pathfinder.Navigating && !Pathfinder.AtGoal && !Player.Player.Died && !_idle)
+            {
+                ChooseNewIdle();
             }
         }
 
