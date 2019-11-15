@@ -46,14 +46,26 @@ namespace Game {
             _levelController = GetComponent<LevelController>();
             _glassesController = GetComponent<GlassesController>();
 
-            OnLevelLoad += () =>
-            {
-                StartCoroutine(_levelController.LoadNextLevel());
-            };
-            LevelController.OnLevelLoaded += () =>
-            {
-                _entityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
-            };
+            OnLevelLoad += OnLoad;
+
+            LevelController.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnLoad()
+        {
+            StartCoroutine(_levelController.LoadNextLevel());
+        }
+
+        private void OnLevelLoaded()
+        {
+            _entityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
+        }
+        
+        private void OnDestroy()
+        {
+            OnLevelLoad -= OnLoad;
+            LevelController.OnLevelLoaded -= OnLevelLoaded;
+
         }
 
         private void Start()

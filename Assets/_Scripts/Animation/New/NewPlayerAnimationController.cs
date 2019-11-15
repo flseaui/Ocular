@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Game;
 using JetBrains.Annotations;
+using Player;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +17,10 @@ namespace OcularAnimation.New
     {
         [SerializeField] private List<WeightedAnimation> _idleAnims;
 
+        [SerializeField] private NewVoxelAnimation _walk;
+        [SerializeField] private NewVoxelAnimation _teleport;
+        [SerializeField] private NewVoxelAnimation _death;
+        
         private MeshFilter[] _meshes;
 
         private int _idleIndex;
@@ -26,6 +33,10 @@ namespace OcularAnimation.New
         {
             _meshes = transform.GetComponentsInChildren<MeshFilter>();
 
+            _walk.Init();
+            _teleport.Init();
+            _death.Init();
+            
             foreach (var anim in _idleAnims)
             {
                 anim.Animation.Init();
@@ -47,6 +58,38 @@ namespace OcularAnimation.New
 
         private IEnumerator NextFrame()
         {
+            if (_currentAnimation.LastFrame)
+            {
+                if (_currentAnimation == _teleport)
+                {
+                    Pathfinder.AtGoal = false;
+                    Destroy(gameObject);
+                    GameManager.OnLevelLoad?.Invoke();
+                }
+                else if (_currentAnimation == _death)
+                {
+                    GetComponent<Player.Player>().ActuallyDie();
+                    Player.Player.Died = false;
+                }
+                
+                ChooseNewIdle();
+            }
+            else
+            {
+                if (Player.Player.Died)
+                {
+                    _currentAnimation = _death;
+                }
+                else if (Pathfinder.AtGoal)
+                {
+                    _currentAnimation = _teleport;
+                }
+                else if (Pathfinder.Navigating)
+                {
+                    _currentAnimation = _walk;
+                }
+            }
+            
             yield return new WaitForSeconds(_currentAnimation.CurrentFrame.TimingMS / 1000f);
             for (var i = 0; i < _meshes.Length; ++i)
             {
@@ -56,23 +99,8 @@ namespace OcularAnimation.New
             }
 
             _currentAnimation.NextFrame();
-            
-            if (_currentAnimation.LastFrame)
-            {
-                if (_currentAnimation.Looping)
-                {
-                    StartCoroutine(NextFrame());
-                }
-                else
-                {
-                    ChooseNewIdle();
-                    StartCoroutine(NextFrame());
-                }
-            }
-            else
-            {
-                StartCoroutine(NextFrame());
-            }
+
+            StartCoroutine(NextFrame());
         }
 
         private void ChooseNewIdle()

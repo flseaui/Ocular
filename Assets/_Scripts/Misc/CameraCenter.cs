@@ -1,4 +1,5 @@
-﻿using Level;
+﻿using System;
+using Level;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,31 +14,37 @@ namespace Misc
 
         private void Awake()
         {
-            LevelController.OnLevelLoaded += () =>
+            LevelController.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnDestroy()
+        {
+            LevelController.OnLevelLoaded -= OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded()
+        {
+            var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+
+            if (levelInfo.HasCustomCamera)
             {
-                var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+                transform.localPosition = levelInfo.CameraPosition;
+                GetComponent<Camera>().orthographicSize = levelInfo.CameraSize;
+            }
+            else
+            {
+                _centerParent = levelInfo.transform.Find("Level");
 
-                if (levelInfo.HasCustomCamera)
-                {
-                    transform.localPosition = levelInfo.CameraPosition;
-                    GetComponent<Camera>().orthographicSize = levelInfo.CameraSize;
-                }
-                else
-                {
-                    _centerParent = levelInfo.transform.Find("Level");
+                if (_centerParent == null) return;
 
-                    if (_centerParent == null)
-                        return;
+                _centerParent = _centerParent.GetChild(0);
 
-                    _centerParent = _centerParent.GetChild(0);
+                GetComponent<Camera>().orthographicSize = 5;
 
-                    GetComponent<Camera>().orthographicSize = 5;
-
-                    var bounds = _centerParent.GetComponentInChildren<MeshRenderer>().bounds;
-                    transform.position = new Vector3(bounds.center.x, bounds.center.y + 3, bounds.center.z);
-                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
-                }
-            };
+                var bounds = _centerParent.GetComponentInChildren<MeshRenderer>().bounds;
+                transform.position = new Vector3(bounds.center.x, bounds.center.y + 3, bounds.center.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
+            }
         }
     }
 }

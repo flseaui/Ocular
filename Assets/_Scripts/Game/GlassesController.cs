@@ -70,10 +70,17 @@ namespace Game
 
             SpotlightController.SpotlightEnabled += UpdateOcularState;
 
-            LevelController.OnLevelLoaded += () =>
-            {
-                _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
-            };
+            LevelController.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded()
+        {
+            _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
+        }
+
+        private void OnDestroy()
+        {
+            LevelController.OnLevelLoaded -= OnLevelLoaded;
         }
 
         public void UpdateOcularState()
