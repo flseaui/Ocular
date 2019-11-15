@@ -25,6 +25,9 @@ namespace OcularAnimation.New
 
         private int _idleIndex;
 
+        private bool _idle;
+        private bool _nextFrame;
+        
         private NewVoxelAnimation CurrentIdle => _idleAnims[_idleIndex].Animation;
 
         private NewVoxelAnimation _currentAnimation;
@@ -43,6 +46,7 @@ namespace OcularAnimation.New
             }
 
             _currentAnimation = _idleAnims[0].Animation;
+            _idle = true;
             StartAnim();
         }
 
@@ -56,8 +60,18 @@ namespace OcularAnimation.New
             StopCoroutine(NextFrame());
         }
 
-        private IEnumerator NextFrame()
+        private void NewAnim()
         {
+            StopAnim();
+            StartAnim();
+        }
+        
+        private void Update()
+        {
+            if (!_nextFrame) return;
+
+            _nextFrame = false;
+            
             if (_currentAnimation.LastFrame)
             {
                 if (_currentAnimation == _teleport)
@@ -71,26 +85,45 @@ namespace OcularAnimation.New
                     GetComponent<Player.Player>().ActuallyDie();
                     Player.Player.Died = false;
                 }
-                
-                ChooseNewIdle();
+                if (!_currentAnimation.Looping)
+                    ChooseNewIdle();
+                else
+                    NewAnim();
             }
             else
             {
-                if (Player.Player.Died)
+                if (Player.Player.Died && _currentAnimation != _death)
                 {
                     _currentAnimation = _death;
+                    _idle = false;
+                    NewAnim();
                 }
-                else if (Pathfinder.AtGoal)
+                else if (Pathfinder.AtGoal && _currentAnimation != _teleport)
                 {
                     _currentAnimation = _teleport;
+                    _idle = false;
+                    NewAnim();
                 }
-                else if (Pathfinder.Navigating)
+                else if (Pathfinder.Navigating && _currentAnimation != _walk)
                 {
                     _currentAnimation = _walk;
+                    _idle = false;
+                    NewAnim();
+                }
+                else
+                {
+                    if (!_idle)
+                    {
+                        ChooseNewIdle();
+                    }
                 }
             }
-            
+        }
+
+        private IEnumerator NextFrame()
+        {
             yield return new WaitForSeconds(_currentAnimation.CurrentFrame.TimingMS / 1000f);
+            _nextFrame = true;
             for (var i = 0; i < _meshes.Length; ++i)
             {
                 _meshes[i].sharedMesh = _currentAnimation.CurrentFrame.Meshes[i].sharedMesh;
@@ -106,6 +139,7 @@ namespace OcularAnimation.New
         private void ChooseNewIdle()
         {
             var nextIdle = _idleAnims.PickWeighted();
+            _idle = true;
             _currentAnimation = nextIdle.Animation;
         }
     }
