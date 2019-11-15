@@ -87,6 +87,7 @@ namespace OcularAnimation.New
                 
                 if (_currentAnimation == _teleport)
                 {
+                    _currentAnimation.Reset();
                     Pathfinder.AtGoal = false;
                     Destroy(gameObject);
                     GameManager.OnLevelLoad?.Invoke();
