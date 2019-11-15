@@ -16,10 +16,16 @@ namespace OcularAnimation.New
 
         public VoxelFrame CurrentFrame => _frames[_currentFrame];
 
-        public bool LastFrame => _currentFrame == _frames.Count - 1;
+        [NonSerialized]
+        public bool LastFrame;
         
         private int _currentFrame;
 
+        public void Reset()
+        {
+            _currentFrame = 0;
+        }
+        
         public void Init()
         {
             _currentFrame = 0;
@@ -32,8 +38,12 @@ namespace OcularAnimation.New
         
         public void NextFrame()
         {
+            LastFrame = false;
             if (_currentFrame + 1 == _frames.Count)
+            {
+                LastFrame = true;
                 _currentFrame = 0;
+            }
             else
                 ++_currentFrame;
         }

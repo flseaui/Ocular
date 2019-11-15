@@ -1,16 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Game;
+using JetBrains.Annotations;
 using Player;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 using Random = System.Random;
 
 namespace OcularAnimation.New
 {
-    public class NewPlayerAnimationController : SerializedMonoBehaviour
+    public class RestartPlayerAnimationController : SerializedMonoBehaviour
     {
         [SerializeField] private List<WeightedAnimation> _idleAnims;
 
@@ -23,6 +26,7 @@ namespace OcularAnimation.New
         private int _idleIndex;
 
         private bool _idle;
+        private bool _nextFrame;
         
         private NewVoxelAnimation CurrentIdle => _idleAnims[_idleIndex].Animation;
 
@@ -56,9 +60,72 @@ namespace OcularAnimation.New
             StopCoroutine(NextFrame());
         }
 
+        private void NewAnim()
+        {
+            StopAnim();
+            StartAnim();
+        }
+        
+        private void Update()
+        {
+            if (!_nextFrame) return;
+
+            _nextFrame = false;
+            
+            if (_currentAnimation.LastFrame)
+            {
+                if (_currentAnimation == _teleport)
+                {
+                    Pathfinder.AtGoal = false;
+                    Destroy(gameObject);
+                    GameManager.OnLevelLoad?.Invoke();
+                }
+                else if (_currentAnimation == _death)
+                {
+                    GetComponent<Player.Player>().ActuallyDie();
+                    Player.Player.Died = false;
+                }
+                if (!_currentAnimation.Looping)
+                    ChooseNewIdle();
+                else
+                    NewAnim();
+            }
+            else
+            {
+                ChooseAnim();
+            }
+        }
+
+        private void ChooseAnim()
+        {
+            if (Player.Player.Died && _currentAnimation != _death)
+            {
+                _currentAnimation = _death;
+                _idle = false;
+                NewAnim();
+            }
+            else if (Pathfinder.AtGoal && _currentAnimation != _teleport)
+            {
+                _currentAnimation = _teleport;
+                _idle = false;
+                NewAnim();
+            }
+            else if (Pathfinder.Navigating && _currentAnimation != _walk)
+            {
+                _currentAnimation = _walk;
+                _idle = false;
+                NewAnim();
+            }
+            else if (!Pathfinder.Navigating && !Pathfinder.AtGoal && !Player.Player.Died && !_idle)
+            {
+                ChooseNewIdle();
+            }
+        }
+
         private IEnumerator NextFrame()
         {
             yield return new WaitForSeconds(_currentAnimation.CurrentFrame.TimingMS / 1000f);
+            _nextFrame = true;
             for (var i = 0; i < _meshes.Length; ++i)
             {
                 _meshes[i].sharedMesh = _currentAnimation.CurrentFrame.Meshes[i].sharedMesh;
@@ -71,65 +138,15 @@ namespace OcularAnimation.New
             StartCoroutine(NextFrame());
         }
 
-        private void Update()
+        private void ChooseNewIdle()
         {
-            var newAnim = DetermineAnimation();
-            if (newAnim != null)
-            {
-                Debug.Log(newAnim.name);
-                _currentAnimation.Reset();
-                _currentAnimation = newAnim;
-            }
-
-            if (_currentAnimation.LastFrame)
-            {
-                _idle = false;
-                
-                if (_currentAnimation == _teleport)
-                {
-                    Pathfinder.AtGoal = false;
-                    Destroy(gameObject);
-                    GameManager.OnLevelLoad?.Invoke();
-                }
-                else if (_currentAnimation == _death)
-                {
-                    GetComponent<Player.Player>().ActuallyDie();
-                    Player.Player.Died = false;
-                }
-            }
-        }
-        
-        private NewVoxelAnimation DetermineAnimation()
-        {
-            if (Player.Player.Died && _currentAnimation != _death)
-            {
-                _idle = false;
-                return _death;
-            }
-
-            if (Pathfinder.AtGoal && _currentAnimation != _teleport)
-            {
-                _idle = false;
-                return _teleport;
-            }
-
-            if (Pathfinder.Navigating && _currentAnimation != _walk)
-            {
-                _idle = false;
-                return _walk;
-            }
-
-            if (!Pathfinder.Navigating && !Pathfinder.AtGoal && !Player.Player.Died && !_idle)
-            {
-                _idle = true;
-                return _idleAnims.PickWeighted().Animation;
-            }
-
-            return null;
+            var nextIdle = _idleAnims.PickWeighted();
+            _idle = true;
+            _currentAnimation = nextIdle.Animation;
         }
     }
 
-    [Serializable]
+    /*[Serializable]
     public abstract class Weighted
     {
         public double Weight;
@@ -167,6 +184,6 @@ namespace OcularAnimation.New
                 }
             }
         }
-    }
+    }*/
     
 }
