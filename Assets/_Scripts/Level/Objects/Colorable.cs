@@ -273,7 +273,7 @@ namespace Level.Objects
             {
                 case OcularState.Z: return Color.white;
                 case OcularState.A: return Color.red;
-                case OcularState.AB: return new Color(1, .551f, 0);
+                case OcularState.AB: return new Color(1f, 0.55f, 0f);
                 case OcularState.B: return new Color(1, 1, 0, 1);
                 case OcularState.BC: return Color.green;
                 case OcularState.C: return Color.blue;
@@ -319,8 +319,8 @@ namespace Level.Objects
             {
                 case OcularState.Z: return Color.white;
                 case OcularState.A: ColorUtility.TryParseHtmlString("#BE5151", out newCol); return newCol;
-                case OcularState.AB: ColorUtility.TryParseHtmlString("#C99555", out newCol); return newCol;
-                case OcularState.B: ColorUtility.TryParseHtmlString("#C7C360", out newCol); return newCol;
+                case OcularState.AB: ColorUtility.TryParseHtmlString("#FF8E1B", out newCol); return newCol;
+                case OcularState.B: ColorUtility.TryParseHtmlString("#C7C43E", out newCol); return newCol;
                 case OcularState.BC: ColorUtility.TryParseHtmlString("#5BC75C", out newCol); return newCol;
                 case OcularState.C: ColorUtility.TryParseHtmlString("#6E88CE", out newCol); return newCol;
                 case OcularState.AC: ColorUtility.TryParseHtmlString("#975FBD", out newCol); return newCol;

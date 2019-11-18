@@ -1,4 +1,5 @@
-﻿using Level;
+﻿using System;
+using Level;
 using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
@@ -25,24 +26,31 @@ public class TutorialManager : MonoBehaviour
 
     public void Awake()
     {
-        LevelController.OnLevelLoaded += () =>
+        LevelController.OnLevelLoaded += OnLevelLoaded;
+    }
+
+    public void OnDestroy()
+    {
+        LevelController.OnLevelLoaded -= OnLevelLoaded;
+    }
+
+    private void OnLevelLoaded()
+    {
+        switch (_levelController.CurrentLevelInfo.InGameName)
         {
-            switch (_levelController.CurrentLevelInfo.InGameName)
-            {
-                case "A New Beginning":
-                    Instantiate(_tutorialOnePrefab, _canvas.transform);
-                    break;
-                case "The Bridge":
-                    _liveTutorialTwo = Instantiate(_tutorialTwoPrefab, _canvas.transform);
-                    break;
-                case "Midnight Stroll":
-                    _liveTutorialThree = Instantiate(_tutorialThreePrefab, _canvas.transform);
-                    break;
-                case "The Forest":
-                    Instantiate(_tutorialZoomPrefab, _canvas.transform);
-                    break;
-            }
-        };
+            case "A New Beginning":
+                Instantiate(_tutorialOnePrefab, _canvas.transform);
+                break;
+            case "The Bridge":
+                _liveTutorialTwo = Instantiate(_tutorialTwoPrefab, _canvas.transform);
+                break;
+            case "Midnight Stroll":
+                _liveTutorialThree = Instantiate(_tutorialThreePrefab, _canvas.transform);
+                break;
+            case "The Forest":
+                Instantiate(_tutorialZoomPrefab, _canvas.transform);
+                break;
+        }
     }
 
     public void DisableTutorialTwo()

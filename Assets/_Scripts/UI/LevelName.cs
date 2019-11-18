@@ -1,4 +1,5 @@
-﻿using Level;
+﻿using System;
+using Level;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -13,14 +14,21 @@ namespace UI
 
         private void Awake()
         {
-            LevelController.OnLevelLoaded += () =>
-            {
-                _animator.ResetTrigger("Show");
-                _levelNameText.transform.position += Vector3.up;
+            LevelController.OnLevelLoaded += OnLevelLoaded;
+        }
 
-                _levelNameText.text = _levelController.CurrentLevelInfo.InGameName;
-                StartCoroutine(ShowName());
-            };
+        private void OnDestroy()
+        {
+            LevelController.OnLevelLoaded -= OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded()
+        {
+            _animator.ResetTrigger("Show");
+            _levelNameText.transform.position += Vector3.up;
+
+            _levelNameText.text = _levelController.CurrentLevelInfo.InGameName;
+            StartCoroutine(ShowName());
         }
 
         private IEnumerator ShowName()
