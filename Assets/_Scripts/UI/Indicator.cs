@@ -45,8 +45,8 @@ namespace UI
                         case SlopeWalkable slope:
                             SetTransform(.26f, () => transform.localRotation = Quaternion.Euler(45, _slopeAngles[(int)slope.DirectionFacing], 0));
                             break;
-                        case ButtonWalkable _:
-                            SetTransform(0.61f);
+                        case ButtonWalkable button:
+                            SetTransform(button.State ? 0.36f : 0.5f);
                             break;
                         default:
                             SetTransform(0.55f);
