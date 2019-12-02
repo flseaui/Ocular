@@ -20,6 +20,8 @@ namespace Level
         [UsedImplicitly]
         public void SpawnPlayer()
         {
+            LevelController.Falling = false;
+
             Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                 Quaternion.identity);
         }
