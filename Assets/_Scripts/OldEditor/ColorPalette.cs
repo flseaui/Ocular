@@ -26,7 +26,9 @@ namespace OldEditor
 
         private void Start()
         {
-            _colorSwatches[0].Select();
+            _colorSwatches.Where(x => x.Color == SelectedColor).ForEach(x => x.Select());
+            _colorSwatches.Where(x => x.Color != SelectedColor).ForEach(x => x.Deselect());
+            //_colorSwatches[0].Select();
         }
     
         public void SetColor(OcularState color)

@@ -237,6 +237,7 @@ namespace OldEditor
                                     Quaternion.identity, GameObject.Find("Canvas").transform);
                                 var popup = _popup.GetComponent<ButtonColorPopup>();
                                 popup.Target = hObj.transform.parent;
+                                popup.GetComponent<ColorPalette>().SelectedColor = button.Color;
                                 popup.GetComponent<ColorPalette>().OnColorChanged = color =>
                                 {
                                     button.Color = color;
