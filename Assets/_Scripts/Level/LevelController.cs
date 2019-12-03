@@ -68,6 +68,7 @@ namespace Level
         [ValueDropdown("_allWorldLevels"), SerializeField]
         public GameObject StartingLevel;
 
+        public static bool Falling;
 
         public static Action OnLevelLoaded;
 
