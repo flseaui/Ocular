@@ -226,7 +226,7 @@ namespace OldEditor
                         }
                         if (left)
                         {
-                            if (_popup != null)
+                            if (_popup != null) 
                             {
                                 Destroy(_popup.gameObject);
                             }
