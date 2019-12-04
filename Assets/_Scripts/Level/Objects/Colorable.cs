@@ -395,6 +395,10 @@ namespace Level.Objects
         private void OnDestroy()
         {
             GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
+            foreach (var controller in _controllers)
+            {
+                ((ButtonWalkable) controller).TargetBlocks.Remove(this);
+            }
         }
     }
 }

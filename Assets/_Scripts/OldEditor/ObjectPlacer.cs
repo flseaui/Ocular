@@ -129,6 +129,7 @@ namespace OldEditor
                     }
                     
                     _tempOutlines.ForEach(x => x.enabled = false);
+                    _tempOutlines.Clear();
                     
                     if (left)
                     {
@@ -184,6 +185,7 @@ namespace OldEditor
                     }
 
                     _tempOutlines.ForEach(x => x.enabled = false);
+                    _tempOutlines.Clear();
                     
                     if (validObject)
                     {
@@ -213,16 +215,23 @@ namespace OldEditor
                     }
 
                     _tempOutlines.ForEach(x => x.enabled = false);
+                    _tempOutlines.Clear();
                     
                     if (validObject)
                     {
                         if (hObj.transform.ParentHasComponent<ButtonWalkable>(out var button))
                         {
-                            button.TargetBlocks.ForEach(x => x.gameObject.GetComponentsInChildren<Outline>().ForEach(o =>
+                            button.TargetBlocks.ForEach(x =>
                             {
-                                o.enabled = true;
-                                _tempOutlines.Add(o);
-                            }));
+                                if (x != null)
+                                {
+                                    x.gameObject.GetComponentsInChildren<Outline>().ForEach(o =>
+                                    {
+                                        o.enabled = true;
+                                        _tempOutlines.Add(o);
+                                    });
+                                }
+                            });
                         }
                         if (left)
                         {
