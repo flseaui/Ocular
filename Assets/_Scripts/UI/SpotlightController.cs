@@ -8,7 +8,12 @@ namespace UI
         public static Action SpotlightEnabled;
 
         [SerializeField] private GameObject _realSpotlight;
-        
+
+        private void OnDisable()
+        {
+            _realSpotlight.SetActive(false);
+        }
+
         public void EnableWheel()
         {
             SpotlightEnabled?.Invoke();

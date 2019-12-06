@@ -14,7 +14,8 @@ namespace Level
 
         private void Awake()
         {
-            _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
+            if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
+                _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
         }
 
         [UsedImplicitly]
@@ -22,6 +23,9 @@ namespace Level
         {
             LevelController.Falling = false;
 
+            if (_levelController == null)
+                _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
+            
             Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                 Quaternion.identity);
         }

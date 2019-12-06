@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Game;
 using Level;
 using Level.Objects;
@@ -35,6 +36,8 @@ namespace OldEditor
         [SerializeField] GameManager _gameManager;
         [SerializeField] GameObject _glassesContainer;
 
+        [SerializeField] private GameObject _colorWheel;
+        
         [ShowInInspector]
         private List<GameObject> _limitedObjects;
         private static readonly int OnScreen = Animator.StringToHash("OnScreen");
@@ -42,7 +45,7 @@ namespace OldEditor
         public static Action<bool> OnLevelPlayToggle;
 
         private readonly Vector3Int _levelDimensions = new Vector3Int(100, 100, 100);
-
+        
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
@@ -81,6 +84,9 @@ namespace OldEditor
         public void LoadLevel(GameObject level)
         {
             _level = Instantiate(level).transform.Find("MainFloor").gameObject;
+            _level.transform.parent.GetComponent<Animator>().enabled = false;
+            _gameManager.GetComponent<LevelController>().CurrentLevelInfo =
+                _level.transform.parent.GetComponent<LevelInfo>();
             GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             _level.transform.ForEachChild(x =>
             {
@@ -94,7 +100,10 @@ namespace OldEditor
         public void NewLevel(int size)
         {
             _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
+            _level.transform.parent.GetComponent<Animator>().enabled = false;
             _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
+            _gameManager.GetComponent<LevelController>().CurrentLevelInfo =
+                _level.transform.parent.GetComponent<LevelInfo>();
             GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             _level.transform.ForEachChild(x =>
             {
@@ -112,14 +121,25 @@ namespace OldEditor
             PlayerPrefs.SetInt("PlayFromEditor", 1);
             _gameManager.gameObject.SetActive(!_gameManager.gameObject.activeSelf);
             _glassesContainer.SetActive(!_glassesContainer.activeSelf);
+            _colorWheel.SetActive(!_colorWheel.activeSelf);
             if (!_glassesContainer.activeSelf)
                 _gameManager.StopPlaying();
             else
                 _gameManager.PlayLevel(_level.transform.parent.gameObject);
+            UpdatePlayer();
             _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
 
         }
 
+        public void UpdatePlayer()
+        {
+            if (_glassesContainer.activeSelf)
+                _level.transform.parent.GetComponent<EntityManager>().SpawnPlayer();
+            else
+                Destroy(_level.transform.parent.GetComponent<EntityManager>().Player);
+            
+        }
+        
         public void SaveLevel()
         {
             if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")

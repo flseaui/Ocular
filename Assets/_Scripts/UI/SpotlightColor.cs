@@ -17,6 +17,7 @@ namespace UI
             GlassesController.OnGlassesToggled += OnGlassesToggled;
         }
 
+
         private void OnDestroy()
         {
             GlassesController.OnGlassesToggled -= OnGlassesToggled;

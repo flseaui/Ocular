@@ -76,7 +76,6 @@ namespace OcularAnimation.New
             var newAnim = DetermineAnimation();
             if (newAnim != null)
             {
-                Debug.Log(newAnim.name);
                 _currentAnimation.Reset();
                 _currentAnimation = newAnim;
             }

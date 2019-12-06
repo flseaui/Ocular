@@ -88,7 +88,9 @@ namespace Game
             CurrentOcularState = _states[(index % 6 + 6) % 6];
             MapController.UpdateColorables();
             OnGlassesToggled?.Invoke();
-            UpdateMusicStreams();
+            
+            if (PlayerPrefs.GetInt("PlayFromEditor") == 0)
+                UpdateMusicStreams();
         }
 
         public void CheckForNewWorldMusic()

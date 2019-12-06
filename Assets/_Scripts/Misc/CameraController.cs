@@ -16,8 +16,12 @@ namespace Misc
 
         private LevelController _levelController;
 
+        [SerializeField] private bool _isInEditor;
+        
         private void Awake()
         {
+            if (_isInEditor) return;
+            
             _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             LevelController.OnLevelLoaded += OnLevelLoaded;
         }
@@ -75,6 +79,9 @@ namespace Misc
 
         private void Update()
         {
+            if (!GameObject.Find("GameManager"))
+                return;
+            
             if (Turning && Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 _bufferLeft = true;

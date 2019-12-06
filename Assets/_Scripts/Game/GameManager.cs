@@ -24,7 +24,6 @@ namespace Game {
         /// </summary>
         public void StopPlaying()
         {
-            Destroy(Player.gameObject);
             Destroy(_indicator.gameObject);
             _levelController.UnloadLevel();
         }
