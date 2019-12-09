@@ -13,12 +13,12 @@ namespace Level
     {
         public static (int, int) CoordinatesOf<T>(this T[,] matrix, T value)
         {
-            int w = matrix.GetLength(0);
-            int h = matrix.GetLength(1);
+            var w = matrix.GetLength(0);
+            var h = matrix.GetLength(1);
 
-            for (int x = 0; x < w; ++x)
+            for (var x = 0; x < w; ++x)
             {
-                for (int y = 0; y < h; ++y)
+                for (var y = 0; y < h; ++y)
                 {
                     if (matrix[x, y] == null) continue;
 
@@ -32,12 +32,12 @@ namespace Level
 
         public static (int, int) GetNext<T>(this T[,] matrix, (int, int) value)
         {
-            int w = matrix.GetLength(0);
-            int h = matrix.GetLength(1);
+            var w = matrix.GetLength(0);
+            var h = matrix.GetLength(1);
 
-            for (int x = value.Item1; x < w; ++x)
+            for (var x = value.Item1; x < w; ++x)
             {
-                for (int y = x == value.Item1 ? value.Item2 + 1 : 0; y < h; ++y)
+                for (var y = x == value.Item1 ? value.Item2 + 1 : 0; y < h; ++y)
                 {
                     if (!ReferenceEquals(matrix[x, y], null))
                         return (x, y);
@@ -52,20 +52,21 @@ namespace Level
     {
         [SerializeField] private List<GameObject> _worldOneLevels;
         [SerializeField] private List<GameObject> _worldTwoLevels;
+        [SerializeField] private List<GameObject> _worldThreeLevels;
 
         private List<List<GameObject>> _worlds;
 
-        private GameObject[,] _levels = new GameObject[2, 10];
+        private GameObject[,] _levels = new GameObject[3, 10];
 
         private GameObject _loadedLevel;
         private (int, int) _loadedLevelNumber;
 
-        [HideInInspector]
+        [ShowInInspector, ReadOnly]
         public LevelInfo CurrentLevelInfo;
+        
+        private List<GameObject> _allWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).Concat(_worldThreeLevels).ToList();
 
-        private List<GameObject> _allWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).ToList();
-
-        [ValueDropdown("_allWorldLevels"), SerializeField]
+        [ValueDropdown("_allWorldLevels"), ListDrawerSettings(NumberOfItemsPerPage = 10), SerializeField]
         public GameObject StartingLevel;
 
         public static bool Falling;
@@ -81,7 +82,8 @@ namespace Level
             _worlds = new List<List<GameObject>>
             {
                 _worldOneLevels,
-                _worldTwoLevels
+                _worldTwoLevels,
+                _worldThreeLevels
             };
 
             for (var i = 0; i < _worlds.Count; i++)

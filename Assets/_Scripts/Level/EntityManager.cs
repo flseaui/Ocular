@@ -12,6 +12,8 @@ namespace Level
 
         private LevelController _levelController;
 
+        public static Action OnEntitiesSpawned;
+        
         private void Awake()
         {
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
@@ -28,6 +30,8 @@ namespace Level
             
             Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                 Quaternion.identity);
+            
+            OnEntitiesSpawned?.Invoke();
         }
     }
 }

@@ -9,10 +9,20 @@ namespace Level.Objects
     public class Clone : MonoBehaviour
     {
         private GameObject _player;
-        private void Start()
+        private void Awake()
+        {
+            EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
+        }
+
+        private void OnDestroy()
+        {
+            EntityManager.OnEntitiesSpawned -= OnEntitiesSpawned;
+        }
+
+        private void OnEntitiesSpawned()
         {
             _player = GameObject.Find("GameManager").GetComponent<GameManager>().Player;
-            GetComponent<ClonePathfinder>().WalkSpeed = _player.GetComponent<Pathfinder>().WalkSpeed;
+            //GetComponent<ClonePathfinder>().WalkSpeed = _player.GetComponent<Pathfinder>().WalkSpeed;
         }
 
         private void Update()

@@ -100,6 +100,10 @@ namespace Game
 
         private void SetMusicStreams()
         {
+            // TODO REMOVE
+            if (CurrentWorld > 1)
+                return;
+            
             if (_musicStreams.Count != 0)
             {
                 _musicStreams[0].ActingVariation.FadeToVolume(0, AudioMixing.FadeOutTime);
@@ -122,6 +126,10 @@ namespace Game
 
         private void UpdateMusicStreams()
         {       
+            //TODO REMOVE
+            if (CurrentWorld > 1)
+                return;
+            
             switch (CurrentOcularState)
             {
                 case OcularState.Z:
