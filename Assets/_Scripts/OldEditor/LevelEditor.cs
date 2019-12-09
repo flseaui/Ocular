@@ -83,7 +83,7 @@ namespace OldEditor
 
         public void LoadLevel(GameObject level)
         {
-            _level = Instantiate(level).transform.Find("MainFloor").gameObject;
+            _level = ((GameObject) PrefabUtility.InstantiatePrefab(level)).transform.Find("MainFloor").gameObject;
             _level.transform.parent.GetComponent<Animator>().enabled = false;
             _gameManager.GetComponent<LevelController>().CurrentLevelInfo =
                 _level.transform.parent.GetComponent<LevelInfo>();
@@ -140,8 +140,14 @@ namespace OldEditor
             
         }
         
+        public void RemoveObject(GameObject obj)
+        {
+            obj.SetActive(false);
+        }
+        
         public void SaveLevel()
         {
+            _level.transform.parent.GetComponent<Animator>().enabled = true;
             if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
             {
                 var levelName =

@@ -167,7 +167,7 @@ namespace OldEditor
                         if (right)
                         {
                             //hObj.transform.parent.ForEachChild(x => Destroy(x.gameObject));
-                            Destroy(hObj.transform.parent.gameObject);
+                            _levelEditor.RemoveObject(hObj.transform.parent.gameObject);
                         }
                     }
 
