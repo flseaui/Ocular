@@ -321,7 +321,7 @@ namespace OldEditor
         private GameObject GetHighlightedObject(out Vector3 normal)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit,Mathf.Infinity, LayerMask.GetMask("Model")))
+            if (Physics.Raycast(ray, out var hit,Mathf.Infinity, LayerMask.GetMask("EditorTrigger")))
             {
                 normal = hit.normal;
                 return hit.collider.gameObject;

@@ -148,6 +148,7 @@ namespace OldEditor
         public void SaveLevel()
         {
             _level.transform.parent.GetComponent<Animator>().enabled = true;
+            _level.transform.parent.Find("Level").gameObject.SetActive(true);
             if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
             {
                 var levelName =
@@ -181,7 +182,7 @@ namespace OldEditor
                 {
                     var obj = theseObjects.First();
                     _limitedObjects.Remove(obj);
-                    Destroy(obj);
+                    obj.SetActive(false);
                 }
 
                 _limitedObjects.Add(element);
