@@ -324,7 +324,7 @@ namespace OldEditor
             if (Physics.Raycast(ray, out var hit,Mathf.Infinity, LayerMask.GetMask("EditorTrigger")))
             {
                 normal = hit.normal;
-                return hit.collider.gameObject;
+                return hit.collider.gameObject.transform.parent.GetChild(0).gameObject;
             }
             
             normal = Vector3.zero;

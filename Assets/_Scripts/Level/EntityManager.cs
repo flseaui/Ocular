@@ -1,6 +1,8 @@
 using System;
 using JetBrains.Annotations;
+using Level.Objects.Clones;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Level
 {
@@ -9,6 +11,7 @@ namespace Level
         [CanBeNull] [NonSerialized] public GameObject Player;
 
         [SerializeField] private GameObject _playerPrefab;
+        [SerializeField] private GameObject _clonePrefab;
 
         private LevelController _levelController;
 
@@ -16,6 +19,11 @@ namespace Level
         
         private void Awake()
         {
+            Addressables.LoadAssetAsync<GameObject>("clone_prefab").Completed += handle =>
+                {
+                    _clonePrefab = handle.Result;
+                };
+            
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
         }
@@ -30,6 +38,12 @@ namespace Level
             
             Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position,
                 Quaternion.identity);
+
+            foreach (var cloneSpawn in _levelController.CurrentLevelInfo.gameObject.transform.Find("MainFloor")
+                .GetComponentsInChildren<CloneSpawn>())
+            {
+                Instantiate(_clonePrefab, cloneSpawn.transform);
+            }
             
             OnEntitiesSpawned?.Invoke();
         }
