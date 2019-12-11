@@ -42,7 +42,7 @@ namespace Level
             foreach (var cloneSpawn in _levelController.CurrentLevelInfo.gameObject.transform.Find("MainFloor")
                 .GetComponentsInChildren<CloneSpawn>())
             {
-                Instantiate(_clonePrefab, cloneSpawn.transform);
+                Instantiate(_clonePrefab, cloneSpawn.transform.position, Quaternion.identity);
             }
             
             OnEntitiesSpawned?.Invoke();

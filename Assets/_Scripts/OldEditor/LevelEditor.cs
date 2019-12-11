@@ -148,7 +148,11 @@ namespace OldEditor
         public void SaveLevel()
         {
             _level.transform.parent.GetComponent<Animator>().enabled = true;
-            _level.transform.parent.Find("Level").gameObject.SetActive(true);
+            var levelGO = _level.transform.parent.Find("Level");
+            if (levelGO != null)
+            {
+                levelGO.gameObject.SetActive(true);
+            } 
             if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
             {
                 var levelName =

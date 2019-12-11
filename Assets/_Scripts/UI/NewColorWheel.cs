@@ -90,7 +90,7 @@ public class NewColorWheel : MonoBehaviour
         if (left) { _bufferLeft = false; } else _bufferRight = false;
         _glassesController.index -= left ? 1 : -1;
         _glassesController.UpdateOcularState();
-        _spriteIndex += left ? 1 : -1; ;
+        _spriteIndex += left ? 1 : -1;
         if (left)
         {
             if (_spriteIndex > _wheelSprites.Count - 1)
