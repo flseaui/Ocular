@@ -54,8 +54,7 @@ public class ClonePathfinder : MonoBehaviour
         
         var playerCardinal = GetCardinal(playerStart, playerEnd);
         Cardinal targetCardinal;
-        var currentWalkable = GetCurrentWalkable(out _);
-
+        var currentWalkable = GetCurrentWalkable(out var hit);
         /*
         if (playerCardinal == Cardinal.South)
             targetCardinal = Cardinal.North;
@@ -70,21 +69,24 @@ public class ClonePathfinder : MonoBehaviour
             */
 
         targetCardinal = playerCardinal;
+        if (targetCardinal == Cardinal.None)
+            return;
 
-        foreach (var neighbor in currentWalkable.Node.Neighbors)
-        {
-            if (GetCardinal(currentWalkable, neighbor.Walkable) == targetCardinal)
+        if (currentWalkable != null)
+            foreach (var neighbor in currentWalkable.Node.Neighbors)
             {
-                _currentEnd = neighbor.Walkable;
-                Navigating = true;
-                return;
+                if (GetCardinal(currentWalkable, neighbor.Walkable) == targetCardinal)
+                {
+                    _currentEnd = neighbor.Walkable;
+                    Navigating = true;
+                    return;
+                }
             }
-        }
     }
 
     private Cardinal GetCardinal(Walkable start, Walkable end)
     {
-        if (start is null || end is null)
+        if (start is null || end is null || !end.Enabled)
             return Cardinal.None;
         
         if (start.transform.position.x > end.transform.position.x)
@@ -96,13 +98,12 @@ public class ClonePathfinder : MonoBehaviour
         if (start.transform.position.z < end.transform.position.z)
             return Cardinal.North;
         
-        Debug.Log("Same as start");
         return Cardinal.None;
     }
     
     
     private Walkable GetCurrentWalkable(out RaycastHit hit) =>
-        Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2)
+        Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
             ? hit.transform.parent.GetComponent<Walkable>()
             : null;
 }

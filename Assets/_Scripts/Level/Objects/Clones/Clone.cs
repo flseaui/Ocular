@@ -79,7 +79,7 @@ namespace Level.Objects
             
             Physics.Raycast(transform.localPosition, Vector3.down, out var hit, 1.5f, LayerMask.GetMask("Model"));
             Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));
-            ActuallyFalling = hit2.collider == null;
+            //ActuallyFalling = hit2.collider == null;
             if (hit.collider == null)
             {
                 Falling = true;
