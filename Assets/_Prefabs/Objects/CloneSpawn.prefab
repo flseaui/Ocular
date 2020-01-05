@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 1931505080823607132}
   - component: {fileID: 6103462411361924615}
   - component: {fileID: 4875181593161822699}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: Colorable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,6 +119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4134777607876709539}
   - component: {fileID: 6585970631604296387}
+  - component: {fileID: 3510937846678632667}
   m_Layer: 0
   m_Name: CloneSpawn
   m_TagString: CloneSpawn
@@ -154,6 +155,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb19736d4be45faa0d9df81bfc28269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3510937846678632667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4134777607876709543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72a1c3f00dce4e10962b17135e9ecab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 0
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _ocularState: 0
+  _blockMat: {fileID: 2100000, guid: 817ccf413ef114678a968b40d03f6679, type: 2}
+  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
+  _outlineModel: {fileID: 0}
 --- !u!1001 &6074605418446902674
 PrefabInstance:
   m_ObjectHideFlags: 0

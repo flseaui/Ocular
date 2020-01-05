@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Game;
 using JetBrains.Annotations;
 using Level.Objects;
+using Level.Objects.Clones;
 using Misc;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -256,6 +257,23 @@ namespace OldEditor
                                 _mode = PlacingMode.SelectButtonTargets;
                                 break;
                             }
+
+                            /*if (hObj.transform.ParentHasComponent<CloneSpawn>(out var spawn))
+                            {
+                                _popup = Instantiate(_buttonColorPopupPrefab, hObj.transform.parent.position,
+                                    Quaternion.identity, GameObject.Find("Canvas").transform);
+                                var popup = _popup.GetComponent<ButtonColorPopup>();
+                                popup.Target = hObj.transform.parent;
+                                popup.GetComponent<ColorPalette>().SelectedColor = spawn.Color;
+                                popup.GetComponent<ColorPalette>().OnColorChanged = color =>
+                                {
+                                    button.Color = color;
+                                };
+
+                                _customizingObject = button.gameObject;
+                                _mode = PlacingMode.SelectButtonTargets;
+                                break;
+                            }*/
                         }
                     }
                     

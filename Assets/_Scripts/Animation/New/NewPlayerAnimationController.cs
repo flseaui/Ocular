@@ -17,6 +17,7 @@ namespace OcularAnimation.New
         [SerializeField] private NewVoxelAnimation _walk;
         [SerializeField] private NewVoxelAnimation _teleport;
         [SerializeField] private NewVoxelAnimation _death;
+        [SerializeField] private NewVoxelAnimation _falling;
         
         private MeshFilter[] _meshes;
 
@@ -35,7 +36,8 @@ namespace OcularAnimation.New
             _walk.Init();
             _teleport.Init();
             _death.Init();
-            
+            _falling.Init();
+
             foreach (var anim in _idleAnims)
             {
                 anim.Animation.Init();
@@ -113,6 +115,12 @@ namespace OcularAnimation.New
                 return _teleport;
             }
 
+            if (Player.Player.Falling && _currentAnimation != _falling)
+            {
+                _idle = false;
+                return _falling;
+            }
+            
             if (Pathfinder.Navigating && _currentAnimation != _walk)
             {
                 _idle = false;
