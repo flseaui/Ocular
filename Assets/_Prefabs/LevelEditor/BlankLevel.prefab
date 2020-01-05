@@ -76,11 +76,20 @@ MonoBehaviour:
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 7460232338876712322}
   Name: 
+  InGameName: 
   Animator: {fileID: 0}
   ReadyToLoad: 0
   HasCustomCamera: 0
   CameraPosition: {x: 0, y: 0, z: 0}
   CameraSize: 0
+  CameraCenter: {fileID: 0}
+  CameraStartDirection: 0
+  HasCustomFog: 0
+  FogHeightStart: 0
+  FogHeightEnd: 0
+  FogPlaneY: 0
+  HasCustomFogColor: 0
+  FogColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &7540469956283409044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 3343191074711946764, guid: a3e53fc4bd222fb4fb720d8884fe7b33,
     type: 3}
+  _clonePrefab: {fileID: 0}
 --- !u!1 &8000010285270481673
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,11 +175,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7699498802665363858}
     m_Modifications:
-    - target: {fileID: 5932606268905855981, guid: 9ac36edd8fb6b2847b433e6b4a882413,
-        type: 3}
-      propertyPath: m_Name
-      value: KillZone
-      objectReference: {fileID: 0}
     - target: {fileID: 4145478669985020160, guid: 9ac36edd8fb6b2847b433e6b4a882413,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -224,6 +229,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932606268905855981, guid: 9ac36edd8fb6b2847b433e6b4a882413,
+        type: 3}
+      propertyPath: m_Name
+      value: KillZone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ac36edd8fb6b2847b433e6b4a882413, type: 3}
@@ -300,6 +310,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8172619689411631341, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: _color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: _color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491135060777320, guid: f824e110f9a91584c88015018cc1caae,
+        type: 3}
+      propertyPath: _ocularState
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f824e110f9a91584c88015018cc1caae, type: 3}
 --- !u!4 &744238806665489678 stripped
@@ -315,11 +345,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2282274603543157118}
     m_Modifications:
-    - target: {fileID: 4134777607876709543, guid: 09d8b722f27bfe048a27335c85ad38aa,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerSpawn
-      objectReference: {fileID: 0}
     - target: {fileID: 4134777607876709539, guid: 09d8b722f27bfe048a27335c85ad38aa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -374,6 +399,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4134777607876709543, guid: 09d8b722f27bfe048a27335c85ad38aa,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerSpawn
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09d8b722f27bfe048a27335c85ad38aa, type: 3}

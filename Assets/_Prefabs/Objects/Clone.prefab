@@ -94,7 +94,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2393402491819483436, guid: 7d36a58db7607d44ba305156be49ab40, type: 3}
+  - {fileID: 2100000, guid: 9631af4dab7dbe2439ad275ffd006a31, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,9 +136,10 @@ GameObject:
   - component: {fileID: 5295215314712032960}
   - component: {fileID: -5138790563921847986}
   - component: {fileID: 1335620045909678793}
+  - component: {fileID: 2139440364115290199}
   m_Layer: 0
   m_Name: Clone
-  m_TagString: Player
+  m_TagString: Clone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,6 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b607c10de809447e859e5adce5165f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Falling: 0
+  Died: 0
 --- !u!114 &1335620045909678793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +219,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WalkSpeed: 1
   Navigating: 0
+  AtGoal: 0
+--- !u!114 &2139440364115290199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3343191074711946764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0afe5a865f4d4ce996376d994629a1a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  _idleAnims:
+  - Weight: 1
+    Animation: {fileID: 11400000, guid: b25a0916003424e91ba8b3187bea537e, type: 2}
+  - Weight: 1
+    Animation: {fileID: 11400000, guid: 4bb3b2498a07e4694abd2336c9d8f5ff, type: 2}
+  _walk: {fileID: 11400000, guid: 860c7aabeb47d43c58e5dcd076b8a9b3, type: 2}
+  _teleport: {fileID: 11400000, guid: 765189ff97f854416bd7f58bb054b2d6, type: 2}
+  _death: {fileID: 11400000, guid: bad8af2cda8c54ffe8232c17d6e7ca5f, type: 2}
+  _falling: {fileID: 11400000, guid: 916aec16d2ca949caa9e2051fa6d31bf, type: 2}
 --- !u!1 &4992500808818613998
 GameObject:
   m_ObjectHideFlags: 0

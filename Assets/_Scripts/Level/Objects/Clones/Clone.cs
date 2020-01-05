@@ -2,6 +2,7 @@ using System;
 using Game;
 using Misc;
 using Player;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level.Objects
@@ -9,6 +10,15 @@ namespace Level.Objects
     public class Clone : MonoBehaviour
     {
         private GameObject _player;
+        
+        public bool Falling;
+        public bool Died;
+
+        public void ActuallyDie()
+        {
+            
+        }
+        
         private void Awake()
         {
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;

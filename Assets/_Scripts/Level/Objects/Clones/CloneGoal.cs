@@ -1,15 +1,21 @@
-using Player;
 using UnityEngine;
 
-namespace Level.Objects
+namespace Level.Objects.Clones
 {
     public class CloneGoal : MonoBehaviour
     {
+        private void Start()
+        {
+            Goal.GoalConditions += 1;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Clone"))
             {
-                other.transform.parent.GetComponent<ClonePathfinder>().Navigating = false;
+                Goal.GoalConditionsMet += 1;
+                other.transform.GetComponent<ClonePathfinder>().AtGoal = true;
+                other.transform.GetComponent<ClonePathfinder>().Navigating = false;
             }
         }
     }

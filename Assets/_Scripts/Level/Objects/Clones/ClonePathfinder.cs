@@ -22,12 +22,16 @@ public class ClonePathfinder : MonoBehaviour
     private Walkable _currentEnd;
     public float WalkSpeed;
     public bool Navigating;
+    public bool AtGoal;
     
     private void Update()
     {
         if (Navigating)
+        {
             if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
-            {                   
+            {
+                if (AtGoal) return;
+                
                 var position = _currentEnd.transform.position;
 
                 var vec = new Vector3(position.x,
@@ -41,14 +45,18 @@ public class ClonePathfinder : MonoBehaviour
                     Navigating = false;
                 }
             }
+        }
     }
 
     public void MirrorClone(Walkable playerStart, Walkable playerEnd)
     {
+        if (AtGoal) return;
+        
         var playerCardinal = GetCardinal(playerStart, playerEnd);
         Cardinal targetCardinal;
         var currentWalkable = GetCurrentWalkable(out _);
 
+        /*
         if (playerCardinal == Cardinal.South)
             targetCardinal = Cardinal.North;
         else if (playerCardinal == Cardinal.North)
@@ -59,7 +67,9 @@ public class ClonePathfinder : MonoBehaviour
             targetCardinal = Cardinal.East;
         else
             targetCardinal = Cardinal.None;
-        
+            */
+
+        targetCardinal = playerCardinal;
 
         foreach (var neighbor in currentWalkable.Node.Neighbors)
         {
