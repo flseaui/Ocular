@@ -57,7 +57,13 @@ namespace Game {
 
         private void OnLevelLoaded()
         {
-            _entityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
+            if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
+                _entityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
+        }
+
+        public void SetEntityManager(EntityManager manager)
+        {
+            _entityManager = manager;
         }
         
         private void OnDestroy()

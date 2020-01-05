@@ -120,6 +120,7 @@ namespace OldEditor
             _objectDrawer.GetComponent<Animator>().SetBool(OnScreen, !_objectDrawer.GetComponent<Animator>().GetBool(OnScreen));
             PlayerPrefs.SetInt("PlayFromEditor", 1);
             _gameManager.gameObject.SetActive(!_gameManager.gameObject.activeSelf);
+            _gameManager.SetEntityManager(_level.transform.parent.GetComponent<EntityManager>());
             _glassesContainer.SetActive(!_glassesContainer.activeSelf);
             _colorWheel.SetActive(!_colorWheel.activeSelf);
             if (!_glassesContainer.activeSelf)

@@ -31,6 +31,7 @@ namespace Level.Objects
 
         private void OnEntitiesSpawned()
         {
+            Debug.Log(GameObject.Find("GameManager").GetComponent<GameManager>().Player);
             _player = GameObject.Find("GameManager").GetComponent<GameManager>().Player;
             //GetComponent<ClonePathfinder>().WalkSpeed = _player.GetComponent<Pathfinder>().WalkSpeed;
         }

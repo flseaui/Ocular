@@ -23,9 +23,11 @@ namespace Level
                 {
                     _clonePrefab = handle.Result;
                 };
-            
+
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
+            {
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
+            }
         }
 
         [UsedImplicitly]
