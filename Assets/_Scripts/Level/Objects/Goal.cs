@@ -1,10 +1,13 @@
 ﻿using Player;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level.Objects {
     public class Goal : MonoBehaviour
     {
+        [ShowInInspector]
         public static int GoalConditions;
+        [ShowInInspector]
         public static int GoalConditionsMet;
         
         private void OnTriggerEnter(Collider other)

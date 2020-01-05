@@ -63,10 +63,10 @@ namespace Level
 
         [ShowInInspector, ReadOnly]
         public LevelInfo CurrentLevelInfo;
-        
-        private List<GameObject> _allWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).Concat(_worldThreeLevels).ToList();
 
-        [ValueDropdown("_allWorldLevels"), ListDrawerSettings(NumberOfItemsPerPage = 10), SerializeField]
+        public List<GameObject> AllWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).Concat(_worldThreeLevels).ToList();
+
+        [ValueDropdown("AllWorldLevels"), ListDrawerSettings(NumberOfItemsPerPage = 10), SerializeField]
         public GameObject StartingLevel;
 
         public static bool Falling;

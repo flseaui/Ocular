@@ -4,7 +4,7 @@ namespace Level.Objects.Clones
 {
     public class CloneGoal : MonoBehaviour
     {
-        private void Start()
+        private void Awake()
         {
             Goal.GoalConditions += 1;
         }
