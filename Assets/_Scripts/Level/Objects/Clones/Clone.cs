@@ -12,18 +12,43 @@ namespace Level.Objects
         private GameObject _player;
         
         public bool Falling;
+        public bool ActuallyFalling;
         public bool Died;
 
+        private bool _superDead = false;
+
+        private Vector3 _spawnPoint;
+        
         public void ActuallyDie()
         {
-            
+            if (_superDead)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            transform.position = _spawnPoint;
+            GetComponent<Rigidbody>().isKinematic = false;
         }
         
         private void Awake()
         {
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
+            GameManager.OnLevelLoad += CommitDie;
+            _spawnPoint = transform.position;
         }
 
+        private void CommitDie()
+        {
+            Destroy(gameObject);
+        }
+
+        public void Death()
+        {
+            Died = true;
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+        
         private void OnDestroy()
         {
             EntityManager.OnEntitiesSpawned -= OnEntitiesSpawned;
@@ -31,16 +56,38 @@ namespace Level.Objects
 
         private void OnEntitiesSpawned()
         {
-            Debug.Log(GameObject.Find("GameManager").GetComponent<GameManager>().Player);
             _player = GameObject.Find("GameManager").GetComponent<GameManager>().Player;
             //GetComponent<ClonePathfinder>().WalkSpeed = _player.GetComponent<Pathfinder>().WalkSpeed;
         }
 
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Harmful")) Death();
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (other.gameObject.CompareTag("Harmful")) Death();
+        }
+        
         private void Update()
         {
-            if (Pathfinder.Navigating && !GetComponent<ClonePathfinder>().Navigating)
+            if (Pathfinder.Navigating && !GetComponent<ClonePathfinder>().Navigating && !Falling)
             {
                 GetComponent<ClonePathfinder>().MirrorClone(_player.GetComponent<Pathfinder>().GetCurrentWalkable(out _), _player.GetComponent<Pathfinder>()._currentEnd);
+            }
+            
+            Physics.Raycast(transform.localPosition, Vector3.down, out var hit, 1.5f, LayerMask.GetMask("Model"));
+            Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));
+            ActuallyFalling = hit2.collider == null;
+            if (hit.collider == null)
+            {
+                Falling = true;
+                GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
+            }
+            else
+            {
+                Falling = false;
             }
         }
     }

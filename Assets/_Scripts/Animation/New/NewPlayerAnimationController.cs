@@ -117,8 +117,8 @@ namespace OcularAnimation.New
 
             if (Player.Player.Falling && _currentAnimation != _falling)
             {
-                _idle = false;
-                return _falling;
+                //_idle = false;
+                //return _falling;
             }
             
             if (Pathfinder.Navigating && _currentAnimation != _walk)

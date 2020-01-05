@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6971272475126083847
 Transform:
   m_ObjectHideFlags: 0
@@ -38,8 +38,8 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 147783156409554299}
-  m_Material: {fileID: 13400000, guid: 7beb79491ebc980428d5ba9da4779e09, type: 2}
-  m_IsTrigger: 0
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.47674984
   m_Height: 1.7435951
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: -5138790563921847986}
   - component: {fileID: 1335620045909678793}
   - component: {fileID: 2139440364115290199}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Clone
   m_TagString: Clone
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3343191074711946764}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
@@ -204,6 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Falling: 0
+  ActuallyFalling: 0
   Died: 0
 --- !u!114 &1335620045909678793
 MonoBehaviour:

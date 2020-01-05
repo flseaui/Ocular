@@ -124,8 +124,8 @@ namespace OcularAnimation.New
 
             if (_clone.Falling && _currentAnimation != _falling)
             {
-                _idle = false;
-                return _falling;
+                //_idle = false;
+                //return _falling;
             }
             
             if (_pathfinder.Navigating && _currentAnimation != _walk)

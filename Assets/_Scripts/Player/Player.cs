@@ -79,15 +79,13 @@ namespace Player
         {
             if (_superDead)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
                 return;
             }
-            else
-            {
-                transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
-                    .PlayerSpawnPoint.position;
-                GetComponent<Rigidbody>().isKinematic = false;
-            }
+
+            transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
+                .PlayerSpawnPoint.position;
+            GetComponent<Rigidbody>().isKinematic = false;
         }
 
         private void OnCollisionEnter(Collision other)
