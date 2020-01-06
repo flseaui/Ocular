@@ -7,22 +7,16 @@ using Player;
 using Priority_Queue;
 using UI;
 using UnityEngine;
+using static Player.Player;
 
 public class ClonePathfinder : MonoBehaviour
 {
-    private enum Cardinal
-    {
-        North,
-        East,
-        South,
-        West,
-        None
-    }
-
     private Walkable _currentEnd;
     public float WalkSpeed;
     public bool Navigating;
     public bool AtGoal;
+
+    private Cardinal _targetCardinal;
     
     private void Update()
     {
@@ -37,8 +31,8 @@ public class ClonePathfinder : MonoBehaviour
                 var vec = new Vector3(position.x,
                     position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                     position.z);
-                transform.LookAt(vec, Vector3.up);
                 transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
+                GetComponent<Clone>().ChangeFacing(_targetCardinal);
                 if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                 {
                     transform.position = vec;
@@ -53,7 +47,6 @@ public class ClonePathfinder : MonoBehaviour
         if (AtGoal) return;
         
         var playerCardinal = GetCardinal(playerStart, playerEnd);
-        Cardinal targetCardinal;
         var currentWalkable = GetCurrentWalkable(out var hit);
         /*
         if (playerCardinal == Cardinal.South)
@@ -68,14 +61,14 @@ public class ClonePathfinder : MonoBehaviour
             targetCardinal = Cardinal.None;
             */
 
-        targetCardinal = playerCardinal;
-        if (targetCardinal == Cardinal.None)
+        _targetCardinal = playerCardinal;
+        if (_targetCardinal == Cardinal.None)
             return;
 
         if (currentWalkable != null)
             foreach (var neighbor in currentWalkable.Node.Neighbors)
             {
-                if (GetCardinal(currentWalkable, neighbor.Walkable) == targetCardinal)
+                if (GetCardinal(currentWalkable, neighbor.Walkable) == _targetCardinal)
                 {
                     _currentEnd = neighbor.Walkable;
                     Navigating = true;
