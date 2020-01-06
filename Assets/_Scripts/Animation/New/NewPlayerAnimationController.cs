@@ -115,10 +115,10 @@ namespace OcularAnimation.New
                 return _teleport;
             }
 
-            if (Player.Player.Falling && _currentAnimation != _falling)
+            if (Player.Player.Falling && _currentAnimation != _death)
             {
-                //_idle = false;
-                //return _falling;
+                _idle = false;
+                return _falling;
             }
             
             if (Pathfinder.Navigating && _currentAnimation != _walk)

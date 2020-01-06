@@ -19,6 +19,10 @@ namespace Level.Objects
         private bool _superDead = false;
 
         private Vector3 _spawnPoint;
+
+        private ClonePathfinder _pathfinder;
+        
+        private float _fallingTimer;
         
         public void ActuallyDie()
         {
@@ -34,6 +38,8 @@ namespace Level.Objects
         
         private void Awake()
         {
+            _pathfinder = GetComponent<ClonePathfinder>();
+            
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
             GameManager.OnLevelLoad += CommitDie;
             _spawnPoint = transform.position;
@@ -78,16 +84,27 @@ namespace Level.Objects
                 GetComponent<ClonePathfinder>().MirrorClone(_player.GetComponent<Pathfinder>().GetCurrentWalkable(out _), _player.GetComponent<Pathfinder>()._currentEnd);
             }
             
-            Physics.Raycast(transform.localPosition, Vector3.down, out var hit, 1.5f, LayerMask.GetMask("Model"));
-            Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));
-            //ActuallyFalling = hit2.collider == null;
-            if (hit.collider == null)
+            var walkable = _pathfinder.GetCurrentWalkable(out _);
+            RaycastHit hit;
+            if (walkable is SlopeWalkable)
             {
+                Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1.5f, LayerMask.GetMask("Model"));
+            }
+            else
+                Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1f, LayerMask.GetMask("Model"));
+
+            Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));
+            ActuallyFalling = hit2.collider == null;
+            if (hit.collider == null || walkable == null)
+            {
+                _fallingTimer += .2f;
                 Falling = true;
-                GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
+                GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + _fallingTimer) * Time.deltaTime);
+                //GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else
             {
+                _fallingTimer = 0;
                 Falling = false;
             }
         }

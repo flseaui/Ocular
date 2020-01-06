@@ -95,7 +95,7 @@ public class ClonePathfinder : MonoBehaviour
     }
     
     
-    private Walkable GetCurrentWalkable(out RaycastHit hit) =>
+    public Walkable GetCurrentWalkable(out RaycastHit hit) =>
         Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
             ? hit.transform.parent.GetComponent<Walkable>()
             : null;
