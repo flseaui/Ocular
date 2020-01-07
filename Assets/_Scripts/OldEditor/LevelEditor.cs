@@ -127,18 +127,23 @@ namespace OldEditor
                 _gameManager.StopPlaying();
             else
                 _gameManager.PlayLevel(_level.transform.parent.gameObject);
-            UpdatePlayer();
+            UpdateEntities();
             _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
 
         }
 
-        public void UpdatePlayer()
+        public void UpdateEntities()
         {
             if (_glassesContainer.activeSelf)
+            {
                 _level.transform.parent.GetComponent<EntityManager>().SpawnPlayer();
+            }
             else
+            {
                 Destroy(_level.transform.parent.GetComponent<EntityManager>().Player);
-            
+                _level.transform.parent.GetComponent<EntityManager>().ClearEntities();
+            }
+
         }
         
         public void RemoveObject(GameObject obj)
