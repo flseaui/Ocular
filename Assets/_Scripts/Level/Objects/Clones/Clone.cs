@@ -43,6 +43,13 @@ namespace Level.Objects
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
             GameManager.OnLevelLoad += CommitDie;
             _spawnPoint = transform.position;
+
+            OnDeath += OnPlayerDeath;
+        }
+
+        private void OnPlayerDeath()
+        {
+            ActuallyDie();
         }
 
         private void CommitDie()
@@ -59,6 +66,7 @@ namespace Level.Objects
         private void OnDestroy()
         {
             EntityManager.OnEntitiesSpawned -= OnEntitiesSpawned;
+            OnDeath -= OnPlayerDeath;
         }
 
         private void OnEntitiesSpawned()

@@ -66,6 +66,10 @@ namespace OcularAnimation.New
                 _meshes[i].sharedMesh = _currentAnimation.CurrentFrame.Meshes[i].sharedMesh;
                 _meshes[i].GetComponent<MeshRenderer>().sharedMaterial =
                     _currentAnimation.CurrentFrame.Meshes[i].GetComponent<MeshRenderer>().sharedMaterial;
+                /*var middle = (_meshes[i].sharedMesh.bounds.max + _meshes[i].sharedMesh.bounds.min) / 2;
+                transform.localPosition = new Vector3(transform.localPosition.x,
+                    transform.localPosition.y + middle.y,
+                    transform.localPosition.z);*/
             }
 
             _currentAnimation.NextFrame();
