@@ -32,7 +32,7 @@ namespace Player
 
         private Pathfinder _pathfinder;
 
-        private float _fallingTimer;
+        public static float FallingTimer;
         
         private void Awake()
         {
@@ -47,22 +47,26 @@ namespace Player
             if (walkable is SlopeWalkable)
             {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1.5f, LayerMask.GetMask("Model"));
+                Pathfinder.OnStairs = true;
             }
             else
+            {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1f, LayerMask.GetMask("Model"));
+                Pathfinder.OnStairs = false;
+            }
 
             Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));
             ActuallyFalling = hit2.collider == null;
             if (hit.collider == null || walkable == null)
             {
-                _fallingTimer += .2f;
+                FallingTimer += .2f;
                 Falling = true;
-                GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + _fallingTimer) * Time.deltaTime);
+                GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + FallingTimer) * Time.deltaTime);
                 //GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else
             {
-                _fallingTimer = 0;
+                FallingTimer = 0;
                 Falling = false;
             }
         }

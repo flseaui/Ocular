@@ -20,6 +20,7 @@ namespace Player
         public Walkable _currentEnd;
         private Queue<Walkable> _currentPath;
         private Walkable _currentStart;
+        [ShowInInspector] public static bool OnStairs;
         [ShowInInspector] public static bool Navigating;
         [ShowInInspector] public static bool AtGoal;
         [SerializeField] public float WalkSpeed = 5.0f;

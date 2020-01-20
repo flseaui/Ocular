@@ -15,6 +15,7 @@ namespace OcularAnimation.New
         [SerializeField] private List<WeightedAnimation> _idleAnims;
 
         [SerializeField] private NewVoxelAnimation _walk;
+        [SerializeField] private NewVoxelAnimation _stairWalk;
         [SerializeField] private NewVoxelAnimation _teleport;
         [SerializeField] private NewVoxelAnimation _death;
         [SerializeField] private NewVoxelAnimation _falling;
@@ -28,12 +29,13 @@ namespace OcularAnimation.New
         private NewVoxelAnimation CurrentIdle => _idleAnims[_idleIndex].Animation;
 
         private NewVoxelAnimation _currentAnimation;
-        
+
         private void Awake()
         {
             _meshes = transform.GetComponentsInChildren<MeshFilter>();
 
             _walk.Init();
+            _stairWalk.Init();
             _teleport.Init();
             _death.Init();
             _falling.Init();
@@ -119,10 +121,17 @@ namespace OcularAnimation.New
                 return _teleport;
             }
 
-            if (Player.Player.Falling && _currentAnimation != _death)
+            if (Player.Player.Falling && Player.Player.FallingTimer > 1.4 && _currentAnimation != _death)
             {
                 _idle = false;
                 return _falling;
+            }
+            
+            if (Pathfinder.Navigating && Pathfinder.OnStairs && _currentAnimation != _stairWalk)
+            {
+                Debug.Log("STAIRS");
+                _idle = false;
+                return _stairWalk;
             }
             
             if (Pathfinder.Navigating && _currentAnimation != _walk)

@@ -49,7 +49,8 @@ namespace Level.Objects
 
         private void OnPlayerDeath()
         {
-            ActuallyDie();
+           // ActuallyDie();
+            transform.position = _spawnPoint;
         }
 
         private void CommitDie()
