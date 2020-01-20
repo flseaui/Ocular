@@ -17,8 +17,8 @@ namespace UI
         public void EnableWheel()
         {
             SpotlightEnabled?.Invoke();
-            _realSpotlight.SetActive(true);
             gameObject.SetActive(false);
+            _realSpotlight.SetActive(true);
         }
     }
 }
