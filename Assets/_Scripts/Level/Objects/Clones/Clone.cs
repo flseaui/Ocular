@@ -31,8 +31,8 @@ namespace Level.Objects
                 Destroy(gameObject);
                 return;
             }
-
-            transform.position = _spawnPoint;
+            
+            //transform.position = _spawnPoint;
             GetComponent<Rigidbody>().isKinematic = false;
         }
         
@@ -105,9 +105,13 @@ namespace Level.Objects
             ActuallyFalling = hit2.collider == null;
             if (hit.collider == null || walkable == null)
             {
-                _fallingTimer += .2f;
-                Falling = true;
-                GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + _fallingTimer) * Time.deltaTime);
+                if (!_pathfinder.Navigating)
+                {
+                    _fallingTimer += .2f;
+                    Falling = true;
+                    GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + _fallingTimer) * Time.deltaTime);
+                }
+
                 //GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else

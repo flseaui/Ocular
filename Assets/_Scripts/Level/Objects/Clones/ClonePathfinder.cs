@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Level;
 using Level.Objects;
+using Misc;
 using Player;
 using Priority_Queue;
 using UI;
@@ -66,6 +67,7 @@ public class ClonePathfinder : MonoBehaviour
             return;
 
         if (currentWalkable != null)
+        {
             foreach (var neighbor in currentWalkable.Node.Neighbors)
             {
                 if (GetCardinal(currentWalkable, neighbor.Walkable) == _targetCardinal)
@@ -75,6 +77,7 @@ public class ClonePathfinder : MonoBehaviour
                     return;
                 }
             }
+        }
     }
 
     private Cardinal GetCardinal(Walkable start, Walkable end)

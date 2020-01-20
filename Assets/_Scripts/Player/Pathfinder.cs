@@ -60,8 +60,8 @@ namespace Player
                 _currentPath = new Queue<Walkable>(path);
 
                 _currentEnd = _currentPath.Dequeue();
-                GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
                 Navigating = true;
+                GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
             }
         }
 

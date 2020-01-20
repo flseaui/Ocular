@@ -57,7 +57,7 @@ namespace Level.Objects
         {
             if (_cooldown > 0) return;
 
-            if (!other.transform.CompareTag("Player")) return;
+            if (!(other.transform.CompareTag("Player") || other.transform.CompareTag("Clone"))) return;
 
             State = !State;
             _cooldown = 20;
