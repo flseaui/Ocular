@@ -15,6 +15,7 @@ namespace Level.Objects
         public bool Falling;
         public bool ActuallyFalling;
         public bool Died;
+        public bool Teleporting;
 
         private bool _superDead = false;
 
@@ -23,7 +24,7 @@ namespace Level.Objects
         private ClonePathfinder _pathfinder;
         
         private float _fallingTimer;
-        
+
         public void ActuallyDie()
         {
             if (_superDead)
@@ -102,6 +103,8 @@ namespace Level.Objects
             else
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1f, LayerMask.GetMask("Model"));
 
+            if (Teleporting) return;
+            
             Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));
             ActuallyFalling = hit2.collider == null;
             if (hit.collider == null || walkable == null)

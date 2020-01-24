@@ -1,3 +1,4 @@
+using OcularAnimation.New;
 using UnityEngine;
 
 namespace Level.Objects.Clones
@@ -16,6 +17,7 @@ namespace Level.Objects.Clones
                 Goal.GoalConditionsMet += 1;
                 other.transform.GetComponent<ClonePathfinder>().AtGoal = true;
                 other.transform.GetComponent<ClonePathfinder>().Navigating = false;
+                other.transform.GetComponent<CloneAnimationController>().SetCurrentGoal(this);
             }
         }
     }

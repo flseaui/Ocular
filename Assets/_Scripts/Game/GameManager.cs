@@ -10,14 +10,14 @@ namespace Game {
     {
         private GlassesController _glassesController;
         private LevelController _levelController;
-        private EntityManager _entityManager;
+        public EntityManager EntityManager;
         
         [CanBeNull] private GameObject _indicator;
         [SerializeField] private GameObject _indicatorPrefab;
 
         public static Action OnLevelLoad;
 
-        public GameObject Player => _entityManager.Player;
+        public GameObject Player => EntityManager.Player;
         
         /// <summary>
         /// Stops the current game, unloading the level and destroying entities.
@@ -58,12 +58,12 @@ namespace Game {
         private void OnLevelLoaded()
         {
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
-                _entityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
+                EntityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
         }
 
         public void SetEntityManager(EntityManager manager)
         {
-            _entityManager = manager;
+            EntityManager = manager;
         }
         
         private void OnDestroy()

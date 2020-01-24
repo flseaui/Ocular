@@ -94,6 +94,7 @@ namespace OcularAnimation.New
                 
                 if (_currentAnimation == _teleport)
                 {
+                    Player.Player.Teleporting = false;
                     _currentAnimation.Reset();
                     Pathfinder.AtGoal = false;
                     Destroy(gameObject);
@@ -118,6 +119,7 @@ namespace OcularAnimation.New
             if (Pathfinder.AtGoal && _currentAnimation != _teleport)
             {
                 _idle = false;
+                Player.Player.Teleporting = true;
                 return _teleport;
             }
 

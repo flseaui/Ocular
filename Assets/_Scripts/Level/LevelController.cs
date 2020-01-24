@@ -134,6 +134,7 @@ namespace Level
         public void RestartLevel()
         {
             LoadLevel();
+            GetComponent<GlassesController>().UpdateOcularState();
         }
 
         private void LoadLevel()

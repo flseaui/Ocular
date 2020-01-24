@@ -81,6 +81,7 @@ namespace UI
             Resume();
             var manager = GameObject.Find("GameManager");
             manager.GetComponent<GameManager>().Player.GetComponent<Player.Player>().CommitDie();
+            manager.GetComponent<GameManager>().EntityManager.ClearEntities();
             manager.GetComponent<LevelController>().RestartLevel();
         }
 

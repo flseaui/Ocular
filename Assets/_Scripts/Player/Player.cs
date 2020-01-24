@@ -33,6 +33,8 @@ namespace Player
         private Pathfinder _pathfinder;
 
         public static float FallingTimer;
+
+        public static bool Teleporting;
         
         private void Awake()
         {
@@ -42,6 +44,8 @@ namespace Player
 
         private void Update()
         {
+            if (Teleporting) return;
+            
             var walkable = _pathfinder.GetCurrentWalkable(out _);
             RaycastHit hit;
             if (walkable is SlopeWalkable)

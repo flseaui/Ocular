@@ -5,6 +5,7 @@ using System.Linq;
 using Doozy.Engine.Utils.ColorModels;
 using Game;
 using Level.Objects;
+using Level.Objects.Clones;
 using Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -33,6 +34,8 @@ namespace OcularAnimation.New
 
         private ClonePathfinder _pathfinder;
         private Clone _clone;
+
+        private CloneGoal _currentGoal;
         
         private void Awake()
         {
@@ -95,6 +98,8 @@ namespace OcularAnimation.New
                 
                 if (_currentAnimation == _teleport)
                 {
+                    _currentGoal.gameObject.SetActive(false);
+                    _clone.Teleporting = false;
                     _currentAnimation.Reset();
                     _pathfinder.AtGoal = false;
                     Destroy(gameObject);
@@ -106,6 +111,11 @@ namespace OcularAnimation.New
                     _clone.Died = false;
                 }
             }
+        }
+
+        public void SetCurrentGoal(CloneGoal goal)
+        {
+            _currentGoal = goal;
         }
         
         private NewVoxelAnimation DetermineAnimation()
@@ -119,6 +129,7 @@ namespace OcularAnimation.New
             if (_pathfinder.AtGoal && _currentAnimation != _teleport)
             {
                 _idle = false;
+                _clone.Teleporting = true;
                 return _teleport;
             }
 
