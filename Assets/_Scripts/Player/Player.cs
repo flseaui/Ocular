@@ -76,7 +76,7 @@ namespace Player
             GameManager.OnLevelLoad -= CommitDie;
         }
 
-        private void CommitDie()
+        public void CommitDie()
         {
             Destroy(gameObject);
         }

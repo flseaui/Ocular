@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using Michsky.UI.Zone;
+using Misc;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +10,24 @@ namespace UI
 {
     public class MainMenu : MonoBehaviour
     {
+        private void Start()
+        {
+            if (MenuVars.StartingPage != -1)
+            {
+                StartCoroutine(DoItInATenthSec());
+            }
+        }
+
+        private IEnumerator DoItInATenthSec()
+        {
+            yield return new WaitForSeconds(.02f);
+            GameObject.Find("Canvas")
+                .transform.Find("Main Panels")
+                .GetComponent<MainPanelManager>()
+                .PanelAnim(3);
+            GameObject.Find("ContainerManager").GetComponent<ContainerManager>().SetWorldContainer(true);
+        }
+        
         public void StartNewGame()
         {
             LoadingScreen.SceneToLoad = "Game";
@@ -15,16 +36,16 @@ namespace UI
 
         private IEnumerator LoadScene(string scene)
         {
-            var AO = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
-            AO.allowSceneActivation = false;
-            while (AO.progress < 0.9f)
+            var ao = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+            ao.allowSceneActivation = false;
+            while (ao.progress < 0.9f)
             {
                 yield return null;
             }
 
             //Fade the loading screen out here
 
-            AO.allowSceneActivation = true;
+            ao.allowSceneActivation = true;
         }
 
         public void StartMenuMusic()

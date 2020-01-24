@@ -1,5 +1,8 @@
-﻿using Game;
+﻿using System.Collections;
+using Game;
 using Level;
+using Michsky.UI.Zone;
+using Misc;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -43,6 +46,11 @@ namespace UI
                     Pause();
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Restart();
+            }
         }
 
         public void Resume()
@@ -72,10 +80,18 @@ namespace UI
             Restarting = true;
             Resume();
             var manager = GameObject.Find("GameManager");
-            manager.GetComponent<GameManager>().Player.GetComponent<Player.Player>().SuperKill();
+            manager.GetComponent<GameManager>().Player.GetComponent<Player.Player>().CommitDie();
             manager.GetComponent<LevelController>().RestartLevel();
         }
 
+        public void LevelSelect()
+        {
+            Time.timeScale = 1f;
+            GameIsPaused = false;
+            LoadingScreen.SceneToLoad = "MainMenu";
+            MenuVars.StartingPage = 3;
+            SceneManager.LoadScene("MainMenu");
+        }
         public void Settings()
         {
             Time.timeScale = 1f;

@@ -14,19 +14,19 @@ namespace Michsky.UI.Zone
         {
             if (virtualCursor == null)
             {
-                Debug.Log("Looking for Virtual Cursor automatically.");
-                virtualCursor = GameObject.Find("Virtual Cursor").GetComponent<VirtualCursor>();
+                //Debug.Log("Looking for Virtual Cursor automatically.");
+                //virtualCursor = GameObject.Find("Virtual Cursor").GetComponent<VirtualCursor>();
             }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            virtualCursor.AnimateCursorIn();
+            //virtualCursor.AnimateCursorIn();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            virtualCursor.AnimateCursorOut();
+            //virtualCursor.AnimateCursorOut();
         }
     }
 }
