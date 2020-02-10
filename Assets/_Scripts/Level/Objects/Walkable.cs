@@ -27,6 +27,8 @@ namespace Level.Objects {
         [ShowInInspector, ReadOnly]
         public int UniqueId { get; private set; }
 
+        public bool JustChangedState;
+        
         
 #if UNITY_EDITOR
         [ShowInInspector, HideInEditorMode]
@@ -34,6 +36,17 @@ namespace Level.Objects {
             Application.isPlaying ? Node.Neighbors.Select(n => n.Walkable).ToList() : new List<Walkable>();
 #endif
 
+        public void SetEnabled(bool state)
+        {
+            if (JustChangedState)
+            {
+                JustChangedState = false;
+                return;
+            }
+
+            Enabled = state;
+        }
+        
         public bool Equals(Walkable other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -60,8 +73,10 @@ namespace Level.Objects {
         {
             // Up
             if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var vHit, 1))
+            {
                 if (vHit.transform.ParentHasComponent<Walkable>())
                     Enabled = false;
+            }
 
             // Left Right Forward Back
             for (var x = -1; x < 2; x++)
@@ -81,11 +96,14 @@ namespace Level.Objects {
         {
             if (Physics.Raycast(
                 new Vector3(transform.position.x, transform.position.y - .1f, transform.position.z),
-                new Vector3(0, -1, 0), out var hit, 1, LayerMask.GetMask("Model")))
+                new Vector3(0, -1, 0), out var hit, 3, LayerMask.GetMask("Model")))
             {
                 if (hit.collider is null) return;
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
+                {
+                    walkable.JustChangedState = true;
                     walkable.Enabled = state;
+                }
             }
         }
 

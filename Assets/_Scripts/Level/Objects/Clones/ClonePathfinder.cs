@@ -49,6 +49,12 @@ public class ClonePathfinder : MonoBehaviour
         
         var playerCardinal = GetCardinal(playerStart, playerEnd);
         var currentWalkable = GetCurrentWalkable(out var hit);
+
+        if (currentWalkable != null)
+        {
+            
+        }
+        
         /*
         if (playerCardinal == Cardinal.South)
             targetCardinal = Cardinal.North;

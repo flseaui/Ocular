@@ -5,6 +5,7 @@ using System.Linq;
 using Game;
 using Player;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using Random = System.Random;
 
@@ -21,7 +22,7 @@ namespace OcularAnimation.New
         [SerializeField] private NewVoxelAnimation _falling;
         
         private MeshFilter[] _meshes;
-
+        
         private int _idleIndex;
 
         private bool _idle;
@@ -68,10 +69,9 @@ namespace OcularAnimation.New
                 _meshes[i].sharedMesh = _currentAnimation.CurrentFrame.Meshes[i].sharedMesh;
                 _meshes[i].GetComponent<MeshRenderer>().sharedMaterial =
                     _currentAnimation.CurrentFrame.Meshes[i].GetComponent<MeshRenderer>().sharedMaterial;
-                /*var middle = (_meshes[i].sharedMesh.bounds.max + _meshes[i].sharedMesh.bounds.min) / 2;
-                transform.localPosition = new Vector3(transform.localPosition.x,
-                    transform.localPosition.y + middle.y,
-                    transform.localPosition.z);*/
+
+                var localPos = _meshes[i].gameObject.transform.localPosition;
+                _meshes[i].gameObject.transform.localPosition = new Vector3(localPos.x, _currentAnimation.GlobalOffset + _currentAnimation.CurrentFrame.VoxelOffset * .1f, localPos.z);
             }
 
             _currentAnimation.NextFrame();
@@ -86,6 +86,7 @@ namespace OcularAnimation.New
             {
                 _currentAnimation.Reset();
                 _currentAnimation = newAnim;
+                Debug.Log(_currentAnimation.name);
             }
 
             if (_currentAnimation.LastFrame)

@@ -9,6 +9,8 @@ namespace OcularAnimation.New
     [CreateAssetMenu(fileName = "VoxelAnimation", menuName = "Voxel Animation", order = 0)]
     public class NewVoxelAnimation : ScriptableObject
     {
+        public float GlobalOffset;
+        
         [SerializeField] private List<VoxelFrame> _frames;
 
         public bool Looping;
@@ -54,6 +56,7 @@ namespace OcularAnimation.New
     public class VoxelFrame
     {
         public int TimingMS = 180;
+        public int VoxelOffset;
         
         [SerializeField]
         private GameObject _voxelContainer;

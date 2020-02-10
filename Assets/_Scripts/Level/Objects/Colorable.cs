@@ -93,7 +93,7 @@ namespace Level.Objects
 
                         //todo alert player of collision/death
                         if (_blockState != BlockState.Visible)
-                            if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 2,
+                            if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 3,
                                 LayerMask.GetMask("Player")))
                             {
                                 Debug.Log(hit.transform.name);
@@ -253,7 +253,7 @@ namespace Level.Objects
                                 break;
                         }
                         walkable.CheckBelow(!visible);
-                        walkable.Enabled = visible;
+                        walkable.SetEnabled(visible);
                     }
                     break;
                 case ColorableType.ColorChanging:
