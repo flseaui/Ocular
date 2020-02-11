@@ -66,7 +66,6 @@ namespace Player
                 FallingTimer += .2f;
                 Falling = true;
                 GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + FallingTimer) * Time.deltaTime);
-                //GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else
             {
@@ -89,7 +88,6 @@ namespace Player
         {
             Died = true;
             GetComponent<Rigidbody>().isKinematic = true;
-            OnDeath?.Invoke();
         }
 
         // Kill with no respawn
@@ -111,6 +109,8 @@ namespace Player
             transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
                 .PlayerSpawnPoint.position;
             GetComponent<Rigidbody>().isKinematic = false;
+            
+            OnDeath?.Invoke();
         }
 
         private void OnCollisionEnter(Collision other)

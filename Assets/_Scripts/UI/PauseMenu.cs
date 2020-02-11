@@ -77,10 +77,16 @@ namespace UI
 
         public void Restart()
         {
+            if (Restarting) return;
+            
             Restarting = true;
             Resume();
             var manager = GameObject.Find("GameManager");
-            manager.GetComponent<GameManager>().Player.GetComponent<Player.Player>().CommitDie();
+            var player = manager.GetComponent<GameManager>().Player;
+            if (player != null)
+            {
+                player.GetComponent<Player.Player>().CommitDie();
+            }
             manager.GetComponent<GameManager>().EntityManager.ClearEntities();
             manager.GetComponent<LevelController>().RestartLevel();
         }

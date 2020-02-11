@@ -6,6 +6,7 @@ using Game;
 using Misc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using OcularState = Game.GlassesController.OcularState;
@@ -96,8 +97,17 @@ namespace Level.Objects
                             if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 3,
                                 LayerMask.GetMask("Player")))
                             {
-                                Debug.Log(hit.transform.name);
-                                GameObject.FindWithTag("Player")?.GetComponent<Player.Player>().Death();
+                                //janky fix?
+                                if (PauseMenu.Restarting)
+                                    break;
+                                if (hit.transform.HasComponent<Player.Player>(out var player))
+                                {
+                                    player.Death();
+                                }
+                                else if (hit.transform.HasComponent<Clone>(out var clone))
+                                {
+                                    clone.Death();
+                                }
                             }
 
                         break;

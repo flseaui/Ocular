@@ -95,7 +95,6 @@ namespace OcularAnimation.New
             {
                 _currentAnimation.Reset();
                 _currentAnimation = newAnim;
-                Debug.Log("Clone: " + _currentAnimation.name);
             }
 
             if (_currentAnimation.LastFrame)

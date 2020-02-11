@@ -89,6 +89,8 @@ namespace Level.Objects
         
         private void Update()
         {
+            if (Died) return;
+            
             var clonePath = GetComponent<ClonePathfinder>();
             if (Pathfinder.Navigating && (!clonePath.Navigating || clonePath.StopNavNextFrame) && !Falling)
             {

@@ -31,7 +31,7 @@ public class ClonePathfinder : MonoBehaviour
     private int _newNavTimer;
     private int _framesToWaitForNav = 3;
     
-    private void Update()
+    private void FixedUpdate()
     {
         if (_newNavTimer > 0)
             _newNavTimer--;
@@ -60,7 +60,7 @@ public class ClonePathfinder : MonoBehaviour
                 var vec = new Vector3(position.x,
                     position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                     position.z);
-                transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * .1f);
+                transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
                 GetComponent<Clone>().ChangeFacing(_targetCardinal);
                 if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                 {

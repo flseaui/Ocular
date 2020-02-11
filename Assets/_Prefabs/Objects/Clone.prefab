@@ -207,6 +207,7 @@ MonoBehaviour:
   ActuallyFalling: 0
   Died: 0
   Teleporting: 0
+  FallingTimer: 0
 --- !u!114 &1335620045909678793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,9 +220,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6ba57c9172aae48baef5d9bafbfd3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WalkSpeed: 1
+  WalkSpeed: 5
   Navigating: 0
   AtGoal: 0
+  OnStairs: 0
+  StopNavNextFrame: 0
 --- !u!114 &2139440364115290199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 

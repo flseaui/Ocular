@@ -164,7 +164,6 @@ namespace Player
                                 //TODO
                                 var hit = new RaycastHit();
                                 var upRay = Physics.Raycast( _currentEnd.transform.position, Vector3.up, out hit, 1, LayerMask.GetMask("Player"));
-                                Debug.Log(hit.collider);
                                 if ((_currentEnd.GetComponent<Colorable>().Outlined && _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible) || hit.collider != null && hit.collider.CompareTag("Clone"))
                                 {
                                     Navigating = false;
