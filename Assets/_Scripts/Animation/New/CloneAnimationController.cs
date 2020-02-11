@@ -104,7 +104,7 @@ namespace OcularAnimation.New
                 
                 if (_currentAnimation == _teleport)
                 {
-                    _currentGoal.gameObject.SetActive(false);
+                    _currentGoal.transform.parent.gameObject.SetActive(false);
                     _clone.Teleporting = false;
                     _currentAnimation.Reset();
                     _pathfinder.AtGoal = false;
