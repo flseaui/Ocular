@@ -23,7 +23,7 @@ namespace Level.Objects
 
         private ClonePathfinder _pathfinder;
         
-        private float _fallingTimer;
+        public float FallingTimer;
 
         public void ActuallyDie()
         {
@@ -89,7 +89,8 @@ namespace Level.Objects
         
         private void Update()
         {
-            if (Pathfinder.Navigating && !GetComponent<ClonePathfinder>().Navigating && !Falling)
+            var clonePath = GetComponent<ClonePathfinder>();
+            if (Pathfinder.Navigating && (!clonePath.Navigating || clonePath.StopNavNextFrame) && !Falling)
             {
                 GetComponent<ClonePathfinder>().MirrorClone(_player.GetComponent<Pathfinder>().GetCurrentWalkable(out _), _player.GetComponent<Pathfinder>()._currentEnd);
             }
@@ -99,9 +100,13 @@ namespace Level.Objects
             if (walkable is SlopeWalkable)
             {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1.5f, LayerMask.GetMask("Model"));
+                _pathfinder.OnStairs = true;
             }
             else
+            {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1f, LayerMask.GetMask("Model"));
+                _pathfinder.OnStairs = false;
+            }
 
             if (Teleporting) return;
             
@@ -111,16 +116,16 @@ namespace Level.Objects
             {
                 if (!_pathfinder.Navigating)
                 {
-                    _fallingTimer += .2f;
+                    FallingTimer += .2f;
                     Falling = true;
-                    GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + _fallingTimer) * Time.deltaTime);
+                    GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + FallingTimer) * Time.deltaTime);
                 }
 
                 //GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else
             {
-                _fallingTimer = 0;
+                FallingTimer = 0;
                 Falling = false;
             }
         }

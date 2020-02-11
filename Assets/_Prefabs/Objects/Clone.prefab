@@ -94,7 +94,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9631af4dab7dbe2439ad275ffd006a31, type: 2}
+  - {fileID: -1926202238003898219, guid: a171c34cb837f422d9a6930078137f56, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -122,7 +122,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056472882659399006}
-  m_Mesh: {fileID: 406646150193402817, guid: 7d36a58db7607d44ba305156be49ab40, type: 3}
+  m_Mesh: {fileID: 1992478923265504060, guid: a171c34cb837f422d9a6930078137f56, type: 3}
 --- !u!1 &3343191074711946764
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +206,7 @@ MonoBehaviour:
   Falling: 0
   ActuallyFalling: 0
   Died: 0
+  Teleporting: 0
 --- !u!114 &1335620045909678793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,14 +244,35 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _idleAnims:
-  - Weight: 1
-    Animation: {fileID: 11400000, guid: b25a0916003424e91ba8b3187bea537e, type: 2}
-  - Weight: 1
-    Animation: {fileID: 11400000, guid: 4bb3b2498a07e4694abd2336c9d8f5ff, type: 2}
-  _walk: {fileID: 11400000, guid: 860c7aabeb47d43c58e5dcd076b8a9b3, type: 2}
-  _teleport: {fileID: 11400000, guid: 765189ff97f854416bd7f58bb054b2d6, type: 2}
-  _death: {fileID: 11400000, guid: bad8af2cda8c54ffe8232c17d6e7ca5f, type: 2}
-  _falling: {fileID: 11400000, guid: 916aec16d2ca949caa9e2051fa6d31bf, type: 2}
+  - Weight: 1.75
+    Animation: {fileID: 11400000, guid: 2277036b71d4b4a4ab01d6f8357a3a4e, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: 1ddd2be3c7bbc4098841e38a8bcec086, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: 8a7c5803c78404705a5e7c9847421e93, type: 2}
+  - Weight: 0.01
+    Animation: {fileID: 11400000, guid: 67b57a2fc4a2f4f3cae0921ec06250aa, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: e98e170a708a04f52a06e253e0b5f793, type: 2}
+  - Weight: 0.01
+    Animation: {fileID: 11400000, guid: ad27825d34cda4dc99f4193f61b64234, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: df58671ab97434e38991182402debdbe, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: 022136a26d6c9431e91d3aabde1b3b20, type: 2}
+  - Weight: 0.05
+    Animation: {fileID: 11400000, guid: 72d4b27a730a94b798ea19f08d11ed8e, type: 2}
+  - Weight: 0.02
+    Animation: {fileID: 11400000, guid: f2142e9b4424b4a94b6dff772c16aee0, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: 3fc3f48314579456191cfa9075d229d2, type: 2}
+  - Weight: 0.1
+    Animation: {fileID: 11400000, guid: b434a736f388644f9820b7b8bceea863, type: 2}
+  _walk: {fileID: 11400000, guid: b755505eebdaa4eedaedf6a139103415, type: 2}
+  _stairWalk: {fileID: 11400000, guid: 641ae173c297d4068ba2b6f6f56071e5, type: 2}
+  _teleport: {fileID: 11400000, guid: 1244f67700bc8486695cb95f10c21651, type: 2}
+  _death: {fileID: 11400000, guid: 75efb1099f4b8468f87b8ecd4370cc07, type: 2}
+  _falling: {fileID: 11400000, guid: a3326110f81764d1f9818dfc6a719ca0, type: 2}
 --- !u!1 &4992500808818613998
 GameObject:
   m_ObjectHideFlags: 0

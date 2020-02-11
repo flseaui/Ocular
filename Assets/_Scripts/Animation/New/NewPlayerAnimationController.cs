@@ -86,7 +86,7 @@ namespace OcularAnimation.New
             {
                 _currentAnimation.Reset();
                 _currentAnimation = newAnim;
-                Debug.Log(_currentAnimation.name);
+                Debug.Log("Player: " + _currentAnimation.name);
             }
 
             if (_currentAnimation.LastFrame)

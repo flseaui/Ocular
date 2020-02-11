@@ -177,7 +177,9 @@ namespace Player
                                 }
                             }
                             else
+                            {
                                 Navigating = false;
+                            }
                         }
                     }
                 }

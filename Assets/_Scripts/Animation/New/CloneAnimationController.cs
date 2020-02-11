@@ -18,6 +18,7 @@ namespace OcularAnimation.New
         [SerializeField] private List<WeightedAnimation> _idleAnims;
 
         [SerializeField] private NewVoxelAnimation _walk;
+        [SerializeField] private NewVoxelAnimation _stairWalk;
         [SerializeField] private NewVoxelAnimation _teleport;
         [SerializeField] private NewVoxelAnimation _death;
         [SerializeField] private NewVoxelAnimation _falling;
@@ -44,6 +45,7 @@ namespace OcularAnimation.New
             _meshes = transform.GetComponentsInChildren<MeshFilter>();
 
             _walk.Init();
+            _stairWalk.Init();
             _teleport.Init();
             _death.Init();
             _falling.Init();
@@ -76,6 +78,9 @@ namespace OcularAnimation.New
                 _meshes[i].sharedMesh = _currentAnimation.CurrentFrame.Meshes[i].sharedMesh;
                 _meshes[i].GetComponent<MeshRenderer>().sharedMaterial =
                     _currentAnimation.CurrentFrame.Meshes[i].GetComponent<MeshRenderer>().sharedMaterial;
+                
+                var localPos = _meshes[i].gameObject.transform.localPosition;
+                _meshes[i].gameObject.transform.localPosition = new Vector3(localPos.x, _currentAnimation.GlobalOffset + _currentAnimation.CurrentFrame.VoxelOffset * .1f, localPos.z);
             }
 
             _currentAnimation.NextFrame();
@@ -90,6 +95,7 @@ namespace OcularAnimation.New
             {
                 _currentAnimation.Reset();
                 _currentAnimation = newAnim;
+                Debug.Log("Clone: " + _currentAnimation.name);
             }
 
             if (_currentAnimation.LastFrame)
@@ -133,10 +139,16 @@ namespace OcularAnimation.New
                 return _teleport;
             }
 
-            if (_clone.Falling && _currentAnimation != _falling)
+            if (_clone.Falling && _clone.FallingTimer > 1.4 && _currentAnimation != _falling)
             {
-                //_idle = false;
-                //return _falling;
+                _idle = false;
+                return _falling;
+            }
+
+            if (_pathfinder.Navigating && _pathfinder.OnStairs && _currentAnimation != _stairWalk)
+            {
+                _idle = false;
+                return _stairWalk;
             }
             
             if (_pathfinder.Navigating && _currentAnimation != _walk)

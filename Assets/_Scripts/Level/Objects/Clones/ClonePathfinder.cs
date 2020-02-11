@@ -6,6 +6,7 @@ using Level.Objects;
 using Misc;
 using Player;
 using Priority_Queue;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 using static Player.Player;
@@ -16,12 +17,39 @@ public class ClonePathfinder : MonoBehaviour
     public float WalkSpeed;
     public bool Navigating;
     public bool AtGoal;
+    public bool OnStairs;
 
     private Cardinal _targetCardinal;
+
+    [ShowInInspector, ReadOnly]
+    public bool StopNavNextFrame;
+
+    private bool _stopNavTrigger;
+    
+    private bool _newNav;
+
+    private int _newNavTimer;
+    private int _framesToWaitForNav = 3;
     
     private void Update()
     {
-        if (Navigating)
+        if (_newNavTimer > 0)
+            _newNavTimer--;
+        
+        if (_newNavTimer <= 0 && !_newNav && StopNavNextFrame)
+        {
+            StopNavNextFrame = false;
+            Navigating = false;
+        }
+        
+        if (_newNav)
+        {
+            StopNavNextFrame = false;
+            _newNav = false;
+        }
+
+        
+        if (Navigating && !StopNavNextFrame)
         {
             if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
             {
@@ -37,7 +65,8 @@ public class ClonePathfinder : MonoBehaviour
                 if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                 {
                     transform.position = vec;
-                    Navigating = false;
+                    StopNavNextFrame = true;
+                    _newNavTimer = _framesToWaitForNav;
                 }
             }
         }
@@ -80,7 +109,8 @@ public class ClonePathfinder : MonoBehaviour
                 {
                     _currentEnd = neighbor.Walkable;
                     Navigating = true;
-                    return;
+                    _newNav = true;
+                    break;
                 }
             }
         }
