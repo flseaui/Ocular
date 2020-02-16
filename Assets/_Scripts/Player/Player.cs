@@ -65,6 +65,7 @@ namespace Player
             {
                 FallingTimer += .2f;
                 Falling = true;
+                Debug.Log("FREE FALLIN");
                 GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + FallingTimer) * Time.deltaTime);
             }
             else

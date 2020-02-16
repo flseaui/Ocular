@@ -53,10 +53,11 @@ namespace Level
         [SerializeField] private List<GameObject> _worldOneLevels;
         [SerializeField] private List<GameObject> _worldTwoLevels;
         [SerializeField] private List<GameObject> _worldThreeLevels;
+        [SerializeField] private List<GameObject> _testLevels;
 
         private List<List<GameObject>> _worlds;
 
-        private GameObject[,] _levels = new GameObject[3, 10];
+        private GameObject[,] _levels = new GameObject[4, 10];
 
         private GameObject _loadedLevel;
         private (int, int) _loadedLevelNumber;
@@ -64,7 +65,7 @@ namespace Level
         [ShowInInspector, ReadOnly]
         public LevelInfo CurrentLevelInfo;
 
-        public List<GameObject> AllWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).Concat(_worldThreeLevels).ToList();
+        public List<GameObject> AllWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).Concat(_worldThreeLevels).Concat(_testLevels).ToList();
 
         [ValueDropdown("AllWorldLevels"), ListDrawerSettings(NumberOfItemsPerPage = 10), SerializeField]
         public GameObject StartingLevel;
@@ -83,7 +84,8 @@ namespace Level
             {
                 _worldOneLevels,
                 _worldTwoLevels,
-                _worldThreeLevels
+                _worldThreeLevels,
+                _testLevels
             };
 
             for (var i = 0; i < _worlds.Count; i++)
