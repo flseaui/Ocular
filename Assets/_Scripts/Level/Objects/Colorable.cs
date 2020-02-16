@@ -71,6 +71,7 @@ namespace Level.Objects
             }
         }
 
+        [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
         public BlockState State
         {
             get => _blockState;
@@ -94,6 +95,8 @@ namespace Level.Objects
 
                         //todo alert player of collision/death
                         if (_blockState != BlockState.Visible)
+                        {
+                            Debug.Log("VISIBLE OH YAEH");
                             if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 3,
                                 LayerMask.GetMask("Player")))
                             {
@@ -102,6 +105,7 @@ namespace Level.Objects
                                     break;
                                 if (hit.transform.HasComponent<Player.Player>(out var player))
                                 {
+                                    Debug.Log("DEEZ NUTS LMAO");
                                     player.Death();
                                 }
                                 else if (hit.transform.HasComponent<Clone>(out var clone))
@@ -109,12 +113,14 @@ namespace Level.Objects
                                     clone.Death();
                                 }
                             }
+                        }
 
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
+                Debug.Log(value == BlockState.Visible ? "VISIBLATION" : "INVISIBLATION");
                 _blockState = value;
             }
         }
@@ -374,6 +380,14 @@ namespace Level.Objects
             State = BlockState.Visible;
             OcularState = OcularState;
             SetModelsState(true);
+            
+            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
+        }
+
+        private void OnDisable()
+        {
+            
+            GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
         }
 
         private void Awake()
@@ -396,15 +410,10 @@ namespace Level.Objects
                     _outlineModel = result.Result;
                 };
             }
-
-
-
-            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 
         private void OnDestroy()
         {
-            GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
             if (_controllers != null)
             {
                 foreach (var controller in _controllers)

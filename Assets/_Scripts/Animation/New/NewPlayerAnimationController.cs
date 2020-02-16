@@ -6,6 +6,7 @@ using Game;
 using Player;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UI;
 using UnityEngine;
 using Random = System.Random;
 
@@ -85,11 +86,14 @@ namespace OcularAnimation.New
             if (newAnim != null)
             {
                 _currentAnimation.Reset();
+                newAnim.Reset();
                 _currentAnimation = newAnim;
+                Debug.Log(newAnim.name);
             }
 
             if (_currentAnimation.LastFrame)
             {
+                Debug.Log("nuts");
                 _idle = false;
                 
                 if (_currentAnimation == _teleport)
@@ -136,7 +140,7 @@ namespace OcularAnimation.New
                 return _stairWalk;
             }
             
-            if (Pathfinder.Navigating && _currentAnimation != _walk)
+            if (Pathfinder.Navigating && !Pathfinder.OnStairs && _currentAnimation != _walk)
             {
                 _idle = false;
                 return _walk;
@@ -144,6 +148,7 @@ namespace OcularAnimation.New
 
             if (!Pathfinder.Navigating && !Pathfinder.AtGoal && !Player.Player.Died && !_idle)
             {
+                Debug.Log("deez");
                 _idle = true;
                 return _idleAnims.PickWeighted().Animation;
             }
