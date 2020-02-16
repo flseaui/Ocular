@@ -27,12 +27,8 @@ namespace Level.Objects
 
         public void ActuallyDie()
         {
-            if (_superDead)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            
+            Destroy(gameObject);
+
             //transform.position = _spawnPoint;
             GetComponent<Rigidbody>().isKinematic = false;
         }
