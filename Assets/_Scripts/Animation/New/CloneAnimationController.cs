@@ -138,7 +138,7 @@ namespace OcularAnimation.New
                 return _teleport;
             }
 
-            if (_clone.Falling && _clone.FallingTimer > 1.4 && _currentAnimation != _falling)
+            if (_clone.Falling && _clone.FallingTimer > 1.4 && !_pathfinder.Navigating && !_pathfinder.OnStairs && _currentAnimation != _falling)
             {
                 _idle = false;
                 return _falling;
@@ -150,7 +150,7 @@ namespace OcularAnimation.New
                 return _stairWalk;
             }
             
-            if (_pathfinder.Navigating && _currentAnimation != _walk)
+            if (_pathfinder.Navigating && !_pathfinder.OnStairs && _currentAnimation != _walk)
             {
                 _idle = false;
                 return _walk;

@@ -52,11 +52,13 @@ namespace Player
             {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1.5f, LayerMask.GetMask("Model"));
                 Pathfinder.OnStairs = true;
+                _pathfinder.WalkSpeed = 6.5f;
             }
             else
             {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1f, LayerMask.GetMask("Model"));
                 Pathfinder.OnStairs = false;
+                _pathfinder.WalkSpeed = 5f;
             }
 
             Physics.Raycast(transform.localPosition, Vector3.down, out var hit2, 1f, LayerMask.GetMask("Model"));

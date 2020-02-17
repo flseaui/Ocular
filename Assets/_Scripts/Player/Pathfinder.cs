@@ -51,6 +51,7 @@ namespace Player
                 return;
 
             if (AtGoal || Player.Died) return;
+            
             if (Navigating)
             {
                 _queuedPath = new Queue<Walkable>(path);
@@ -62,7 +63,16 @@ namespace Player
 
                 _currentEnd = _currentPath.Dequeue();
                 Navigating = true;
+                
                 GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
+                
+                Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
+                if (cloneHit.collider != null)
+                {
+                    Navigating = false;
+                    ClearPath();
+                    return;
+                }
             }
         }
 
@@ -134,6 +144,15 @@ namespace Player
         private void FixedUpdate()
         {
             if (Navigating)
+            {
+                Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
+                if (cloneHit.collider != null)
+                {
+                    Navigating = false;
+                    ClearPath();
+                    return;
+                }
+                
                 if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
                 {
                     var position = _currentEnd.transform.position;
@@ -163,8 +182,8 @@ namespace Player
                                 
                                 //TODO
                                 var hit = new RaycastHit();
-                                var upRay = Physics.Raycast( _currentEnd.transform.position, Vector3.up, out hit, 1, LayerMask.GetMask("Player"));
-                                if ((_currentEnd.GetComponent<Colorable>().Outlined && _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible) || hit.collider != null && hit.collider.CompareTag("Clone"))
+                                Physics.Raycast( _currentEnd.transform.position, Vector3.up, out hit, 2, LayerMask.GetMask("Player"));
+                                if (_currentEnd.GetComponent<Colorable>().Outlined && _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible || hit.collider != null)
                                 {
                                     Navigating = false;
                                     ClearPath();
@@ -182,6 +201,7 @@ namespace Player
                         }
                     }
                 }
+            }
         }
 
         private Player.Cardinal GetCardinal(Walkable start, Walkable end)

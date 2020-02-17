@@ -99,11 +99,13 @@ namespace Level.Objects
             {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1.5f, LayerMask.GetMask("Model"));
                 _pathfinder.OnStairs = true;
+                _pathfinder.WalkSpeed = 6.5f;
             }
             else
             {
                 Physics.Raycast(transform.localPosition, Vector3.down, out hit, 1f, LayerMask.GetMask("Model"));
                 _pathfinder.OnStairs = false;
+                _pathfinder.WalkSpeed = 5f;
             }
 
             if (Teleporting) return;
