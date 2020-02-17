@@ -41,6 +41,7 @@ namespace Player
             _currentPath = null;
             _currentEnd = null;
             _currentStart = null;
+            Debug.Log("OH YEAH OH BABY OH YEAH");
             Navigating = false;
         }
 
@@ -69,6 +70,7 @@ namespace Player
                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
                 if (cloneHit.collider != null)
                 {
+                    Debug.Log("DEEZ NUTS LLOLOLOLOLO(LOLOLOLOLOL");
                     Navigating = false;
                     ClearPath();
                     return;
@@ -146,7 +148,7 @@ namespace Player
             if (Navigating)
             {
                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
-                if (cloneHit.collider != null)
+                if (cloneHit.collider != null && cloneHit.collider.CompareTag("Clone"))
                 {
                     Navigating = false;
                     ClearPath();
