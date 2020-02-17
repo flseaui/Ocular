@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f97bf63524c1f64d98877f563681569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Satisfied: 0
 --- !u!114 &9152632903297018765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +134,7 @@ GameObject:
   - component: {fileID: 6073850517314746607}
   - component: {fileID: 8788491135060777320}
   - component: {fileID: -6461237119625300977}
+  - component: {fileID: 5320590812562301031}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Untagged
@@ -187,6 +189,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animation: {fileID: 11400000, guid: 8e769bc28164f454b88a8088d66aec5d, type: 2}
+--- !u!95 &5320590812562301031
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6073850517314746595}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 577726fb4671041f09f7fe9d11287b87, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &5552488695690369581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -194,11 +215,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6073850517314746607}
     m_Modifications:
-    - target: {fileID: 2321039254617182086, guid: ca392b9eda5ae8946a39fc6a8202da54,
-        type: 3}
-      propertyPath: m_Name
-      value: EditorTrigger
-      objectReference: {fileID: 0}
     - target: {fileID: 1334861868405669958, guid: ca392b9eda5ae8946a39fc6a8202da54,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -253,6 +269,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321039254617182086, guid: ca392b9eda5ae8946a39fc6a8202da54,
+        type: 3}
+      propertyPath: m_Name
+      value: EditorTrigger
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca392b9eda5ae8946a39fc6a8202da54, type: 3}

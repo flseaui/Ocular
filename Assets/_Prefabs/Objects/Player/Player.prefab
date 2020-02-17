@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5295215314712032960}
   - component: {fileID: 9127848833782180407}
   - component: {fileID: 8965717987664949874}
-  - component: {fileID: -6051358494179821606}
   - component: {fileID: 3683548531161209210}
   m_Layer: 11
   m_Name: Player
@@ -93,22 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f073801e8f2fb4f81ea61411a1b84a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6051358494179821606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3343191074711946764}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aab3f939ea5b48fea20e5a40a154ef9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _walk: {fileID: 11400000, guid: 219ac6a1305db76c696ca394a46da81c, type: 2}
-  _idle: {fileID: 11400000, guid: bab0d205f48356859be8609c7ef439b0, type: 2}
-  _teleport: {fileID: 11400000, guid: bad1d54957b359eb6806ddbe87a2e9cf, type: 2}
-  _death: {fileID: 11400000, guid: 420bdc25bf0f2134892de446f6c814af, type: 2}
 --- !u!114 &3683548531161209210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,8 +136,8 @@ MonoBehaviour:
     Animation: {fileID: 11400000, guid: 91bd385e048274e26a9f72c88eaab7e3, type: 2}
   - Weight: 0.1
     Animation: {fileID: 11400000, guid: fc8fa4fbe0d954302bed61c451a38aa5, type: 2}
-  - Weight: 0.1
-    Animation: {fileID: 11400000, guid: 6db8c26325e7b45e1b388460a58561f8, type: 2}
+  - Weight: 100
+    Animation: {fileID: 11400000, guid: 765189ff97f854416bd7f58bb054b2d6, type: 2}
   _walk: {fileID: 11400000, guid: 860c7aabeb47d43c58e5dcd076b8a9b3, type: 2}
   _stairWalk: {fileID: 11400000, guid: 860c7aabeb47d43c58e5dcd076b8a9b3, type: 2}
   _teleport: {fileID: 11400000, guid: 765189ff97f854416bd7f58bb054b2d6, type: 2}

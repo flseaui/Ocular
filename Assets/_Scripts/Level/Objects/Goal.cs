@@ -7,12 +7,28 @@ namespace Level.Objects {
     {
         [ShowInInspector]
         public static int GoalConditions;
-        [ShowInInspector]
-        public static int GoalConditionsMet;
+
+        [ShowInInspector] public static int GoalConditionsMet;
+
+        public bool Satisfied;
+
+        private Animator _animator;
+        private static readonly int SatisfiedProp = Animator.StringToHash("satisfied");
+
+        private void Awake()
+        {
+            _animator = transform.parent.GetComponent<Animator>();
+        }
+
+        private void Update()
+        {
+            Satisfied = GoalConditionsMet >= GoalConditions;
+            _animator.SetBool("satisfied", Satisfied);
+        }
         
         private void OnTriggerEnter(Collider other)
         {
-            if (GoalConditionsMet < GoalConditions) return;
+            if (!Satisfied) return;
             
             if (other.CompareTag("Player"))
             {
