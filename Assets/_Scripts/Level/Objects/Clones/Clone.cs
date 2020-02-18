@@ -24,14 +24,7 @@ namespace Level.Objects
         private ClonePathfinder _pathfinder;
         
         public float FallingTimer;
-
-        public void ActuallyDie()
-        {
-            Destroy(gameObject);
-
-            //transform.position = _spawnPoint;
-            GetComponent<Rigidbody>().isKinematic = false;
-        }
+        
         
         private void Awake()
         {
@@ -50,6 +43,14 @@ namespace Level.Objects
             transform.position = _spawnPoint;
         }
 
+        public void ActuallyDie()
+        {
+            Destroy(gameObject);
+
+            //transform.position = _spawnPoint;
+            GetComponent<Rigidbody>().isKinematic = false;
+        }
+        
         private void CommitDie()
         {
             Destroy(gameObject);

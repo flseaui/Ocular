@@ -91,9 +91,11 @@ namespace OcularAnimation.New
         private void Update()
         {
             var newAnim = DetermineAnimation();
-            if (newAnim != null)
+            if (newAnim != null && newAnim != _currentAnimation)
             {
+                Debug.Log("trolololololololol");
                 _currentAnimation.Reset();
+                newAnim.Reset();
                 _currentAnimation = newAnim;
             }
 
@@ -112,6 +114,7 @@ namespace OcularAnimation.New
                 }
                 else if (_currentAnimation == _death)
                 {
+                    Debug.Log("deez");
                     GetComponent<Clone>().ActuallyDie();
                     _clone.Died = false;
                 }
@@ -138,7 +141,7 @@ namespace OcularAnimation.New
                 return _teleport;
             }
 
-            if (_clone.Falling && _clone.FallingTimer > 1.4 && !_pathfinder.Navigating && !_pathfinder.OnStairs && _currentAnimation != _falling)
+            if (_clone.Falling && _clone.FallingTimer > 1.4 && !_pathfinder.Navigating && !_pathfinder.OnStairs && _currentAnimation != _falling && _currentAnimation != _death)
             {
                 _idle = false;
                 return _falling;

@@ -88,12 +88,10 @@ namespace OcularAnimation.New
                 _currentAnimation.Reset();
                 newAnim.Reset();
                 _currentAnimation = newAnim;
-                Debug.Log(newAnim.name);
             }
 
             if (_currentAnimation.LastFrame)
             {
-                Debug.Log("nuts");
                 _idle = false;
                 
                 if (_currentAnimation == _teleport)
@@ -135,7 +133,6 @@ namespace OcularAnimation.New
             
             if (Pathfinder.Navigating && Pathfinder.OnStairs && _currentAnimation != _stairWalk)
             {
-                Debug.Log("STAIRS");
                 _idle = false;
                 return _stairWalk;
             }
@@ -148,7 +145,6 @@ namespace OcularAnimation.New
 
             if (!Pathfinder.Navigating && !Pathfinder.AtGoal && !Player.Player.Died && !_idle)
             {
-                Debug.Log("deez");
                 _idle = true;
                 return _idleAnims.PickWeighted().Animation;
             }
