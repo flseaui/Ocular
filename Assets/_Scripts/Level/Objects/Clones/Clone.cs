@@ -65,6 +65,7 @@ namespace Level.Objects
         private void OnDestroy()
         {
             EntityManager.OnEntitiesSpawned -= OnEntitiesSpawned;
+            GameManager.OnLevelLoad -= CommitDie;
             OnDeath -= OnPlayerDeath;
         }
 
