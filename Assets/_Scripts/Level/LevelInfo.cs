@@ -39,7 +39,10 @@ namespace Level
         [BoxGroup("Camera")] public float CameraSize;
         [BoxGroup("Camera")] public Transform CameraCenter;
         [BoxGroup("Camera")] public Direction CameraStartDirection;
-
+        [BoxGroup("Camera")] public bool HasCustomConstants;
+        [BoxGroup("Camera")] public float ZoomConstantX;
+        [BoxGroup("Camera")] public float ZoomConstantY;
+        
 
         [BoxGroup("Fog")] public bool HasCustomFog;
         [BoxGroup("Fog")] public float FogHeightStart;

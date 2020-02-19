@@ -1,4 +1,6 @@
-﻿using Level;
+﻿using System;
+using Level;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 
@@ -11,8 +13,10 @@ namespace Misc
         private Vector3 _pos;
         private Vector3 _cameraPos;
         private float _cameraSize;
-        public float constantx = .5f;
-        public float constanty = .3f;
+        [NonSerialized, ShowInInspector]
+        public float ConstantX = .5f;
+        [NonSerialized, ShowInInspector]
+        public float ConstantY = .3f;
 
         private void Awake()
         {
@@ -56,7 +60,7 @@ namespace Misc
                     var levelx = (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) - (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
                     var levely = (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) + (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
                     Debug.Log("Angle: " + angle + " Level x: " + levelx + " Level y: " + levely);
-                    _camera.transform.localPosition = new Vector3((levelx * zoom * constantx) + _cameraPos.x, (levely * zoom * constanty) + _cameraPos.y, _cameraPos.z);
+                    _camera.transform.localPosition = new Vector3((levelx * zoom * ConstantX) + _cameraPos.x, (levely * zoom * ConstantY) + _cameraPos.y, _cameraPos.z);
                 }
                 else
                 {
@@ -71,6 +75,16 @@ namespace Misc
             _pos = levelcon.transform.Find("MainFloor").transform.position;
             _cameraPos = levelcon.CameraPosition;
             _cameraSize = levelcon.CameraSize;
+            if (levelcon.HasCustomConstants)
+            {
+                ConstantX = levelcon.ZoomConstantX;
+                ConstantY = levelcon.ZoomConstantY;
+            }
+            else
+            {
+                ConstantX = .5f;
+                ConstantY = .3f;
+            }
         }
 
         private void OnDestroy()
