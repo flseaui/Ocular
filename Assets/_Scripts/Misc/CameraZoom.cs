@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using Level;
 using Sirenix.OdinInspector;
 using UI;
@@ -36,7 +37,8 @@ namespace Misc
                 {
                     if (_camera.orthographicSize + scrollDelta < 8)
                     {
-                        _camera.orthographicSize += scrollDelta;
+                        DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
+                            _camera.orthographicSize + scrollDelta, .1f);
                     }
                     else
                     {
@@ -47,28 +49,35 @@ namespace Misc
                 {
                     if (_camera.orthographicSize + scrollDelta > 2)
                     {
-                        _camera.orthographicSize += scrollDelta;
+                        DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
+                            _camera.orthographicSize + scrollDelta, .1f);
                     }
                     else
                     {
                         _camera.orthographicSize = 2;
                     }
                 }
-                if (_camera.orthographicSize < _cameraSize) {
-                    var angle = _camera.transform.eulerAngles.y + 45;
-                    var zoom = (_cameraSize - _camera.orthographicSize) / (_cameraSize - 2);
-                    var levelx = (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) - (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
-                    var levely = (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) + (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
-                    Debug.Log("Angle: " + angle + " Level x: " + levelx + " Level y: " + levely);
-                    _camera.transform.localPosition = new Vector3((levelx * zoom * ConstantX) + _cameraPos.x, (levely * zoom * ConstantY) + _cameraPos.y, _cameraPos.z);
-                }
-                else
-                {
-                    _camera.transform.localPosition = _cameraPos;
-                }
+                RecalcZoom();
             }
         }
 
+        public void RecalcZoom()
+        {
+            if (_camera.orthographicSize < _cameraSize) {
+                var angle = _camera.transform.eulerAngles.y + 45;
+                var zoom = (_cameraSize - _camera.orthographicSize) / (_cameraSize - 2);
+                var levelx = (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) - (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
+                var levely = (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) + (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
+                Debug.Log("Angle: " + angle + " Level x: " + levelx + " Level y: " + levely);
+                _camera.transform.DOLocalMove(new Vector3((levelx * zoom * ConstantX) + _cameraPos.x,
+                    (levely * zoom * ConstantY) + _cameraPos.y, _cameraPos.z), .1f);
+            }
+            else
+            {
+                _camera.transform.DOLocalMove(_cameraPos, .1f);
+            }
+        }
+        
         private void LevelSetUp()
         {
             var levelcon = GameObject.Find("GameManager").GetComponent<Level.LevelController>().CurrentLevelInfo;

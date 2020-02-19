@@ -18,12 +18,15 @@ namespace Misc
         private LevelController _levelController;
 
         [SerializeField] private bool _isInEditor;
+
+        private CameraZoom _zoomer;
         
         private void Awake()
         {
             if (_isInEditor) return;
             
             _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
+            _zoomer = transform.GetChild(0).GetComponent<CameraZoom>();
             LevelController.OnLevelLoaded += OnLevelLoaded;
         }
 
@@ -65,7 +68,11 @@ namespace Misc
             Turning = true;
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 90, 0),
                 .3f);
-            rotate.onComplete += () => Turning = false;
+            rotate.onComplete += () =>
+            {
+                Turning = false;
+                _zoomer.RecalcZoom();
+            };
         }
 
         public void TurnRight()
@@ -75,7 +82,11 @@ namespace Misc
             Turning = true;
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, -90, 0),
                 .3f);
-            rotate.onComplete += () => Turning = false;
+            rotate.onComplete += () =>
+            {
+                Turning = false;
+                _zoomer.RecalcZoom();
+            };
         }
 
         private void Update()
