@@ -66,12 +66,12 @@ namespace Misc
             if (Turning || LevelController.Falling || Pathfinder.Navigating) return;
             TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
             Turning = true;
+            _zoomer.RecalcZoom(transform.eulerAngles.y + 135);
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 90, 0),
                 .3f);
             rotate.onComplete += () =>
             {
                 Turning = false;
-                _zoomer.RecalcZoom();
             };
         }
 
@@ -80,12 +80,12 @@ namespace Misc
             if (Turning || LevelController.Falling || Pathfinder.Navigating) return;
             TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
             Turning = true;
+            _zoomer.RecalcZoom(transform.eulerAngles.y - 45);
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, -90, 0),
                 .3f);
             rotate.onComplete += () =>
             {
                 Turning = false;
-                _zoomer.RecalcZoom();
             };
         }
 

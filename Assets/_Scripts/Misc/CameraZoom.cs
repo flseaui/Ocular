@@ -14,8 +14,9 @@ namespace Misc
         private Vector3 _pos;
         private Vector3 _cameraPos;
         private float _cameraSize;
+        private float _projectedSize;
         [NonSerialized, ShowInInspector]
-        public float ConstantX = .5f;
+        public float ConstantX = .6f;
         [NonSerialized, ShowInInspector]
         public float ConstantY = .3f;
 
@@ -39,10 +40,12 @@ namespace Misc
                     {
                         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
                             _camera.orthographicSize + scrollDelta, .1f);
+                        _projectedSize = _camera.orthographicSize + scrollDelta;
                     }
                     else
                     {
                         _camera.orthographicSize = 8;
+                        _projectedSize = 8;
                     }
                 }
                 else
@@ -51,30 +54,31 @@ namespace Misc
                     {
                         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
                             _camera.orthographicSize + scrollDelta, .1f);
+                        _projectedSize = _camera.orthographicSize + scrollDelta;
                     }
                     else
                     {
                         _camera.orthographicSize = 2;
+                        _projectedSize = 2;
                     }
                 }
-                RecalcZoom();
+                RecalcZoom(_camera.transform.eulerAngles.y + 45);
             }
         }
 
-        public void RecalcZoom()
+        public void RecalcZoom(float angle)
         {
-            if (_camera.orthographicSize < _cameraSize) {
-                var angle = _camera.transform.eulerAngles.y + 45;
-                var zoom = (_cameraSize - _camera.orthographicSize) / (_cameraSize - 2);
+            if (_projectedSize < _cameraSize) {
+                var zoom = (_cameraSize - _projectedSize) / (_cameraSize - 2);
                 var levelx = (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) - (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
                 var levely = (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) + (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
-                Debug.Log("Angle: " + angle + " Level x: " + levelx + " Level y: " + levely);
-                _camera.transform.DOLocalMove(new Vector3((levelx * zoom * ConstantX) + _cameraPos.x,
+                Debug.Log(zoom);
+                    _camera.transform.DOLocalMove(new Vector3((levelx * zoom * ConstantX) + _cameraPos.x,
                     (levely * zoom * ConstantY) + _cameraPos.y, _cameraPos.z), .1f);
             }
             else
             {
-                _camera.transform.DOLocalMove(_cameraPos, .1f);
+                    _camera.transform.DOLocalMove(_cameraPos, .1f);
             }
         }
         
@@ -84,6 +88,7 @@ namespace Misc
             _pos = levelcon.transform.Find("MainFloor").transform.position;
             _cameraPos = levelcon.CameraPosition;
             _cameraSize = levelcon.CameraSize;
+            _projectedSize = _camera.orthographicSize;
             if (levelcon.HasCustomConstants)
             {
                 ConstantX = levelcon.ZoomConstantX;
