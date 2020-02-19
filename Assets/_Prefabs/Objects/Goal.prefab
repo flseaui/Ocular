@@ -133,8 +133,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6073850517314746607}
   - component: {fileID: 8788491135060777320}
-  - component: {fileID: -6461237119625300977}
   - component: {fileID: 5320590812562301031}
+  - component: {fileID: 6730261852460613421}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Untagged
@@ -176,19 +176,6 @@ MonoBehaviour:
   _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
   _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
   _outlineModel: {fileID: 0}
---- !u!114 &-6461237119625300977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6073850517314746595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animation: {fileID: 11400000, guid: 8e769bc28164f454b88a8088d66aec5d, type: 2}
 --- !u!95 &5320590812562301031
 Animator:
   serializedVersion: 3
@@ -208,6 +195,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6730261852460613421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6073850517314746595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b722036f29843b7afcb3c92a716309e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _brokenGoal: {fileID: 11400000, guid: 41ef5fa2132a940fd8561076c2314194, type: 2}
+  _goalAnim: {fileID: 11400000, guid: 8e769bc28164f454b88a8088d66aec5d, type: 2}
+  _reforming: {fileID: 0}
 --- !u!1001 &5552488695690369581
 PrefabInstance:
   m_ObjectHideFlags: 0

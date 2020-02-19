@@ -1,4 +1,5 @@
 using System.Collections;
+using Level.Objects;
 using UnityEngine;
 
 namespace OcularAnimation.New
@@ -6,20 +7,27 @@ namespace OcularAnimation.New
     public class GoalAnimationController : MonoBehaviour
     {
         [SerializeField] private NewVoxelAnimation _brokenGoal;
-        [SerializeField] private NewVoxelAnimation _goal;
+        [SerializeField] private NewVoxelAnimation _goalAnim;
         [SerializeField] private NewVoxelAnimation _reforming;
 
         private NewVoxelAnimation _currentAnimation;
         
         private MeshFilter[] _meshes;
+
+        private Goal _goal;
         
         private void Awake()
         {
             _meshes = transform.GetComponentsInChildren<MeshFilter>();
             
             _brokenGoal.Init();
-            _goal.Init();
-            _reforming.Init();
+            _goalAnim.Init();
+            //_reforming.Init();
+            
+            _currentAnimation = _goalAnim;
+            
+            _goal = transform.GetChild(0).GetComponent<Goal>();
+            
             StartAnim();
         }
 
@@ -59,9 +67,19 @@ namespace OcularAnimation.New
                 _currentAnimation = newAnim;
             }
         }
-        
+
         private NewVoxelAnimation DetermineAnimation()
         {
+            if (_goal.Satisfied && _currentAnimation != _goalAnim)
+            {
+                return _goalAnim;
+            }
+
+            if (!_goal.Satisfied && _currentAnimation != _brokenGoal)
+            {
+                return _brokenGoal;
+            }
+
             return null;
         }
     }

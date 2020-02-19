@@ -18,12 +18,13 @@ namespace Level.Objects {
         private void Awake()
         {
             _animator = transform.parent.GetComponent<Animator>();
+            Satisfied = true;
         }
 
         private void Update()
         {
             Satisfied = GoalConditionsMet >= GoalConditions;
-            _animator.SetBool("satisfied", Satisfied);
+            _animator.SetBool(SatisfiedProp, Satisfied);
         }
         
         private void OnTriggerEnter(Collider other)
