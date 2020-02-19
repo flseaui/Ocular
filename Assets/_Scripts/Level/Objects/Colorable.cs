@@ -96,7 +96,6 @@ namespace Level.Objects
                         //todo alert player of collision/death
                         if (_blockState != BlockState.Visible)
                         {
-                            Debug.Log("VISIBLE OH YAEH");
                             if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 3,
                                 LayerMask.GetMask("Player")))
                             {
@@ -120,7 +119,6 @@ namespace Level.Objects
                         throw new ArgumentOutOfRangeException();
                 }
 
-                Debug.Log(value == BlockState.Visible ? "VISIBLATION" : "INVISIBLATION");
                 _blockState = value;
             }
         }
