@@ -11,6 +11,8 @@ namespace Misc
         private Vector3 _pos;
         private Vector3 _cameraPos;
         private float _cameraSize;
+        public float constantx = .5f;
+        public float constanty = .3f;
 
         private void Awake()
         {
@@ -48,16 +50,13 @@ namespace Misc
                         _camera.orthographicSize = 2;
                     }
                 }
-                if (_camera.orthographicSize < _cameraSize) { 
+                if (_camera.orthographicSize < _cameraSize) {
                     var angle = _camera.transform.eulerAngles.y + 45;
                     var zoom = (_cameraSize - _camera.orthographicSize) / (_cameraSize - 2);
-                    var levelx = -(Mathf.Cos(angle) * _pos.x + Mathf.Sin(angle) * _pos.z);
-                    var levely = -Mathf.Sin(angle) * _pos.x + Mathf.Cos(angle) * _pos.z;
+                    var levelx = (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) - (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
+                    var levely = (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) + (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
                     Debug.Log("Angle: " + angle + " Level x: " + levelx + " Level y: " + levely);
-                    if(angle == 90 || angle == 270)
-                        _camera.transform.localPosition = new Vector3((levelx * zoom) + _cameraPos.x, (levely * zoom) + _cameraPos.y, _cameraPos.x);
-                    else
-                        _camera.transform.localPosition = new Vector3(_cameraPos.x, (levely * zoom) + _cameraPos.y, (levelx * zoom) + _cameraPos.z);
+                    _camera.transform.localPosition = new Vector3((levelx * zoom * constantx) + _cameraPos.x, (levely * zoom * constanty) + _cameraPos.y, _cameraPos.z);
                 }
                 else
                 {
