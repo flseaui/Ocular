@@ -19,9 +19,12 @@ namespace UI
 
         public static bool Restarting;
 
+        public LevelName _levelName;
+        
         private void Awake()
         {
             _cg = _pauseMenuUI.GetComponent<CanvasGroup>();
+            _levelName = GameObject.Find("LevelNameManager").GetComponent<LevelName>();
         }
 
         private void Start()
@@ -58,6 +61,9 @@ namespace UI
             _cg.alpha = 0;
             _cg.interactable = false;
             _cg.blocksRaycasts = false;
+            
+            _levelName.HideText();
+            
             //_pauseMenuUI.SetActive(false);
             Time.timeScale = 1f;
             GameIsPaused = false;
@@ -68,6 +74,9 @@ namespace UI
             _cg.alpha = 1;
             _cg.interactable = true;
             _cg.blocksRaycasts = true;
+            
+            _levelName.ShowText();
+            
             //_pauseMenuUI.SetActive(true);
             Time.timeScale = 0f;
             GameIsPaused = true;

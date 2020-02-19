@@ -1,6 +1,7 @@
 ﻿using System;
 using Level;
 using System.Collections;
+using Doozy.Engine.Extensions;
 using TMPro;
 using UnityEngine;
 
@@ -31,6 +32,20 @@ namespace UI
             StartCoroutine(ShowName());
         }
 
+        public void ShowText()
+        {
+            _animator.enabled = false;
+            _levelNameText.rectTransform.anchoredPosition = new Vector3(0, -77.09f, 0);
+            _levelNameText.color = _levelNameText.color.Opaque();
+        }
+
+        public void HideText()
+        {
+            _levelNameText.rectTransform.anchoredPosition = new Vector3(0, 50.64978f, 0);
+            _levelNameText.color = _levelNameText.color.WithAlpha(0);
+            _animator.enabled = true;
+        }
+        
         private IEnumerator ShowName()
         {
             yield return new WaitForSeconds(1.5f);
