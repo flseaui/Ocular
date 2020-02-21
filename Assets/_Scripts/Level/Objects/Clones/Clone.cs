@@ -1,6 +1,7 @@
 using System;
 using Game;
 using Misc;
+using OcularAnimation.New;
 using Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -24,11 +25,16 @@ namespace Level.Objects
         private ClonePathfinder _pathfinder;
         
         public float FallingTimer;
-        
+
+        private CloneAnimationController _animController;
+
+        private GameObject _model;
         
         private void Awake()
         {
             _pathfinder = GetComponent<ClonePathfinder>();
+            _animController = GetComponent<CloneAnimationController>();
+            _model = transform.Find("Model").gameObject;
             
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
             GameManager.OnLevelLoad += CommitDie;
@@ -40,12 +46,34 @@ namespace Level.Objects
         private void OnPlayerDeath()
         {
            // ActuallyDie();
-            transform.position = _spawnPoint;
+           if (!_model.activeSelf)
+           {
+               Debug.Log("frickin heck");
+               gameObject.SetActive(true);
+               _animController.enabled = true;
+               //_animController.StartAnim();
+               _animController.CurrentGoal.transform.parent.gameObject.SetActive(true);
+               GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState();
+           }
+
+           transform.position = _spawnPoint;
+
+           Died = false;
+           FakeKillOrRevive(false);
         }
 
+        public void FakeKillOrRevive(bool kill)
+        {
+            _model.SetActive(!kill);
+            transform.Find("DeathTrigger").gameObject.SetActive(!kill);
+            _animController.enabled = !kill;
+        }
+        
         public void ActuallyDie()
         {
-            Destroy(gameObject);
+            FakeKillOrRevive(true);
+            //gameObject.SetActive(false);
+            //Destroy(gameObject);
 
             //transform.position = _spawnPoint;
             GetComponent<Rigidbody>().isKinematic = false;
@@ -53,7 +81,9 @@ namespace Level.Objects
         
         private void CommitDie()
         {
-            Destroy(gameObject);
+            FakeKillOrRevive(true);
+            //gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
 
         public void Death()

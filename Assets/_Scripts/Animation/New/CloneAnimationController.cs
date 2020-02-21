@@ -36,7 +36,8 @@ namespace OcularAnimation.New
         private ClonePathfinder _pathfinder;
         private Clone _clone;
 
-        private CloneGoal _currentGoal;
+        [NonSerialized]
+        public CloneGoal CurrentGoal;
         
         private void Awake()
         {
@@ -60,7 +61,7 @@ namespace OcularAnimation.New
             StartAnim();
         }
 
-        private void StartAnim()
+        public void StartAnim()
         {
             StartCoroutine(NextFrame());
         }
@@ -93,6 +94,7 @@ namespace OcularAnimation.New
             var newAnim = DetermineAnimation();
             if (newAnim != null && newAnim != _currentAnimation)
             {
+                Debug.Log($"kentucky fried your mom {newAnim.name}");
                 _currentAnimation.Reset();
                 newAnim.Reset();
                 _currentAnimation = newAnim;
@@ -104,11 +106,13 @@ namespace OcularAnimation.New
                 
                 if (_currentAnimation == _teleport)
                 {
-                    _currentGoal.transform.parent.gameObject.SetActive(false);
+                    CurrentGoal.transform.parent.gameObject.SetActive(false);
                     _clone.Teleporting = false;
                     _currentAnimation.Reset();
                     _pathfinder.AtGoal = false;
-                    Destroy(gameObject);
+                    //gameObject.SetActive(false);
+                    _clone.FakeKillOrRevive(true);
+                    //Destroy(gameObject);
                     //GameManager.OnLevelLoad?.Invoke();
                 }
                 else if (_currentAnimation == _death)
@@ -122,7 +126,7 @@ namespace OcularAnimation.New
 
         public void SetCurrentGoal(CloneGoal goal)
         {
-            _currentGoal = goal;
+            CurrentGoal = goal;
         }
         
         private NewVoxelAnimation DetermineAnimation()

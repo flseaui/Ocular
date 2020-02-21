@@ -44,7 +44,7 @@ namespace Player
 
         private void Update()
         {
-            if (Teleporting) return;
+            if (Teleporting || Died) return;
             
             var walkable = _pathfinder.GetCurrentWalkable(out _);
             RaycastHit hit;
