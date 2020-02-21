@@ -30,26 +30,27 @@ public class ButtonHighlightChecker : MonoBehaviour
             }
         }
 
-        var hObj = GetHighlightedObject(out _);
-        if (hObj)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
+            var hObj = GetHighlightedObject(out _);
 
-            if (hObj.transform.ParentHasComponent<ButtonWalkable>(out var button))
+            if (hObj)
             {
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (hObj.transform.ParentHasComponent<ButtonWalkable>(out var button))
                 {
+
                     if (!_doneItOnce)
                     {
                         _tutManager.DisableTutorialThree();
                         _doneItOnce = true;
                     }
 
-                    _lastHighlighted = button;
-
                     if (button != _lastHighlighted)
                     {
                         DisableLast();
                     }
+
+                    _lastHighlighted = button;
 
                     foreach (var target in button.TargetBlocks)
                     {
@@ -58,6 +59,7 @@ public class ButtonHighlightChecker : MonoBehaviour
                             Colorable.StateToColor(target.GetComponent<Colorable>().OcularState);
                         outlines.ForEach(x => { x.enabled = true; });
                     }
+
                 }
                 else
                 {
@@ -73,6 +75,7 @@ public class ButtonHighlightChecker : MonoBehaviour
         {
             DisableLast();
         }
+       
     }
 
     [CanBeNull]
