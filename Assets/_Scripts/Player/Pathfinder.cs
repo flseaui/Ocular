@@ -41,7 +41,6 @@ namespace Player
             _currentPath = null;
             _currentEnd = null;
             _currentStart = null;
-            Debug.Log("OH YEAH OH BABY OH YEAH");
             Navigating = false;
         }
 

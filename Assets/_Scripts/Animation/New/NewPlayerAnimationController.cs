@@ -96,6 +96,7 @@ namespace OcularAnimation.New
                 
                 if (_currentAnimation == _teleport)
                 {
+                    Debug.Log("uh oh, hinky dinky");
                     Player.Player.Teleporting = false;
                     _currentAnimation.Reset();
                     Pathfinder.AtGoal = false;
@@ -104,6 +105,7 @@ namespace OcularAnimation.New
                 }
                 else if (_currentAnimation == _death)
                 {
+                    _currentAnimation.Reset();
                     GetComponent<Player.Player>().ActuallyDie();
                     Player.Player.Died = false;
                 }

@@ -26,6 +26,7 @@ namespace OcularAnimation.New
         public void Reset()
         {
             _currentFrame = 0;
+            LastFrame = false;
         }
         
         public void Init()

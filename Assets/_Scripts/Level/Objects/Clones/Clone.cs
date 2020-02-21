@@ -52,7 +52,8 @@ namespace Level.Objects
                gameObject.SetActive(true);
                _animController.enabled = true;
                //_animController.StartAnim();
-               _animController.CurrentGoal.transform.parent.gameObject.SetActive(true);
+               if (_animController.CurrentGoal != null)
+                    _animController.CurrentGoal.transform.parent.gameObject.SetActive(true);
                GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState();
            }
 
@@ -81,9 +82,9 @@ namespace Level.Objects
         
         private void CommitDie()
         {
-            FakeKillOrRevive(true);
+            //FakeKillOrRevive(true);
             //gameObject.SetActive(false);
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
 
         public void Death()
