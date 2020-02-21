@@ -31,7 +31,8 @@ namespace Misc
             if (PauseMenu.GameIsPaused) return;
 
             var scrollDelta = Input.mouseScrollDelta.y;
-            scrollDelta = .3f * -scrollDelta;
+            scrollDelta = Math.Min(.3f * -scrollDelta, 1);
+            
             if (scrollDelta != 0)
             {
                 if (scrollDelta > 0)
@@ -44,7 +45,8 @@ namespace Misc
                     }
                     else
                     {
-                        _camera.orthographicSize = 8;
+                        DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
+                            8, .1f);
                         _projectedSize = 8;
                     }
                 }
@@ -58,7 +60,8 @@ namespace Misc
                     }
                     else
                     {
-                        _camera.orthographicSize = 2;
+                        DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
+                            2, .1f);
                         _projectedSize = 2;
                     }
                 }
@@ -78,7 +81,7 @@ namespace Misc
             }
             else
             {
-                    _camera.transform.DOLocalMove(_cameraPos, .1f);
+                    _camera.transform.DOLocalMove(_cameraPos, .01f);
             }
         }
         
