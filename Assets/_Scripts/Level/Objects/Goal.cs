@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using System;
+using Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -26,7 +27,13 @@ namespace Level.Objects {
             Satisfied = GoalConditionsMet >= GoalConditions;
             _animator.SetBool(SatisfiedProp, Satisfied);
         }
-        
+
+        private void OnDestroy()
+        {
+            GoalConditions = 0;
+            GoalConditionsMet = 0;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (!Satisfied) return;
