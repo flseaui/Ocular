@@ -105,6 +105,14 @@ namespace Michsky.UI.Zone
             selectorAnimator.Play("Previous");
         }
 
+        public void SetIndex(int newIndex)
+        {
+            index = newIndex;
+            labeHelper.text = label.text;
+            label.text = elements[index];
+            onValueChanged.Invoke();
+        }
+        
         public void ForwardClick()
         {
             labeHelper.text = label.text;
