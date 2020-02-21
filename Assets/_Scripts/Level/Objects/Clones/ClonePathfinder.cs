@@ -72,30 +72,37 @@ public class ClonePathfinder : MonoBehaviour
         }
     }
 
+    public bool CanMove(Walkable playerStart, Walkable playerEnd)
+    {
+        if (AtGoal) return false;
+        
+        var playerCardinal = GetCardinal(playerStart, playerEnd);
+        var currentWalkable = GetCurrentWalkable(out var hit);
+
+        _targetCardinal = playerCardinal;
+        if (_targetCardinal == Cardinal.None)
+            return false;
+
+        if (currentWalkable == null) return false;
+        
+        foreach (var neighbor in currentWalkable.Node.Neighbors)
+        {
+            if (GetCardinal(currentWalkable, neighbor.Walkable) == _targetCardinal)
+            {
+                Debug.Log("WE R SHMOOVIN");
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public void MirrorClone(Walkable playerStart, Walkable playerEnd)
     {
         if (AtGoal) return;
         
         var playerCardinal = GetCardinal(playerStart, playerEnd);
         var currentWalkable = GetCurrentWalkable(out var hit);
-
-        if (currentWalkable != null)
-        {
-            
-        }
-        
-        /*
-        if (playerCardinal == Cardinal.South)
-            targetCardinal = Cardinal.North;
-        else if (playerCardinal == Cardinal.North)
-            targetCardinal = Cardinal.South;
-        else if (playerCardinal == Cardinal.East)
-            targetCardinal = Cardinal.West;
-        else if (playerCardinal == Cardinal.West)
-            targetCardinal = Cardinal.East;
-        else
-            targetCardinal = Cardinal.None;
-            */
 
         _targetCardinal = playerCardinal;
         if (_targetCardinal == Cardinal.None)

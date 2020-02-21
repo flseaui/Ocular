@@ -64,11 +64,13 @@ namespace Player
 
                 _currentEnd = _currentPath.Dequeue();
                 Navigating = true;
+
+                _currentStart = GetCurrentWalkable(out _);
                 
-                GetComponent<Player>().ChangeFacing(GetCardinal(GetCurrentWalkable(out _), _currentEnd));
+                GetComponent<Player>().ChangeFacing(GetCardinal(_currentStart, _currentEnd));
                 
                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
-                if (cloneHit.collider != null)
+                if (cloneHit.collider != null && !cloneHit.transform.GetComponent<ClonePathfinder>().CanMove(_currentStart, _currentEnd))
                 {
                     Debug.Log("DEEZ NUTS LLOLOLOLOLO(LOLOLOLOLOL");
                     Navigating = false;
@@ -148,7 +150,7 @@ namespace Player
             if (Navigating)
             {
                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
-                if (cloneHit.collider != null && cloneHit.collider.CompareTag("Clone"))
+                if (cloneHit.collider != null && cloneHit.collider.CompareTag("Clone") && !cloneHit.transform.GetComponent<ClonePathfinder>().CanMove(_currentStart, _currentEnd))
                 {
                     Navigating = false;
                     ClearPath();
@@ -185,7 +187,10 @@ namespace Player
                                 //TODO
                                 var hit = new RaycastHit();
                                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out hit, 2, LayerMask.GetMask("Player"));
-                                if (_currentEnd.GetComponent<Colorable>().Outlined && _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible || hit.collider != null)
+                                if (_currentEnd.GetComponent<Colorable>().Outlined &&
+                                    _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible ||
+                                    hit.collider != null &&
+                                    !hit.transform.GetComponent<ClonePathfinder>().CanMove(_currentStart, _currentEnd))
                                 {
                                     Navigating = false;
                                     ClearPath();
