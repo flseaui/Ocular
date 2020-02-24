@@ -62,6 +62,7 @@ namespace Level
             }
             
             OnEntitiesSpawned?.Invoke();
+            LevelController.LevelTransitioning = false;
         }
     }
 }

@@ -72,6 +72,8 @@ namespace Game
 
             LevelController.OnLevelLoaded += OnLevelLoaded;
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
+
+            _currentWorldMusic = -1;
         }
 
         private void OnEntitiesSpawned()

@@ -71,7 +71,8 @@ namespace Level
         public GameObject StartingLevel;
 
         public static bool Falling;
-
+        public static bool LevelTransitioning;
+        
         public static Action OnLevelLoaded;
 
         private (int, int) _levelToLoad;
@@ -100,6 +101,7 @@ namespace Level
 
         public IEnumerator LoadNextLevel()
         {
+            LevelTransitioning = true;
             _levelToLoad = _levels.GetNext(_loadedLevelNumber);
             CurrentLevelInfo.Animator.SetTrigger("FadeOut");
 

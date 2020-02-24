@@ -50,7 +50,7 @@ namespace UI
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) && !Player.Player.Teleporting && !LevelController.LevelTransitioning)
             {
                 Restart();
             }
