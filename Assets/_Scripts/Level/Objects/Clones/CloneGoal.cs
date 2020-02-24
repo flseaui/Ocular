@@ -1,4 +1,5 @@
 using System;
+using Game;
 using OcularAnimation.New;
 using UnityEngine;
 
@@ -10,8 +11,14 @@ namespace Level.Objects.Clones
         
         private void Awake()
         {
-            Goal.GoalConditions += 1;
             Player.Player.OnDeath += OnPlayerDeath;
+            LevelController.OnLevelLoaded += OnLevelLoaded;
+        }
+
+        private void OnLevelLoaded()
+        {
+            if (!_used)
+                Goal.GoalConditions += 1;
         }
 
         private void OnDestroy()
