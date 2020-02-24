@@ -127,7 +127,7 @@ Transform:
   - {fileID: 1771341287589378205}
   - {fileID: 8346268797060222171}
   - {fileID: 4354476128223535483}
-  - {fileID: 7728767552699025616}
+  - {fileID: 4542091324352812150}
   m_Father: {fileID: 2549334795093432650}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -460,6 +460,9 @@ MonoBehaviour:
   CameraSize: 4.2699995
   CameraCenter: {fileID: 0}
   CameraStartDirection: 0
+  HasCustomConstants: 0
+  ZoomConstantX: 0
+  ZoomConstantY: 0
   HasCustomFog: 1
   FogHeightStart: -3.04
   FogHeightEnd: -0.06
@@ -604,6 +607,18 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &7696628937333135319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8370226134630239915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5d1cf72c9299a4a9186cf0019665ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &586822724551764595
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1222,7 +1237,7 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c904e82cd42f724cb303fd2ff0e7a5d, type: 3}
---- !u!4 &7728767552699025616 stripped
+--- !u!4 &4542091324352812150 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
     type: 3}
@@ -1525,6 +1540,12 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f1b8b2c72c037347baf3973fa531e70, type: 3}
+--- !u!1 &8370226134630239915 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3327680575265314836, guid: 1f1b8b2c72c037347baf3973fa531e70,
+    type: 3}
+  m_PrefabInstance: {fileID: 6487241234908419775}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1030736441650818640 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: 1f1b8b2c72c037347baf3973fa531e70,

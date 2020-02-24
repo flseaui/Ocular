@@ -94,13 +94,13 @@ namespace Misc
             if (!GameObject.Find("GameManager"))
                 return;
             
-            if (Turning && Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Turning && Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
                 _bufferLeft = true;
                 _bufferRight = false;
             }
 
-            if (Turning && Input.GetKeyDown(KeyCode.RightArrow))
+            if (Turning && Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 _bufferRight = true;
                 _bufferLeft = false;
@@ -108,12 +108,10 @@ namespace Misc
 
             if (Turning) return;
 
-            var left = Input.GetKey(KeyCode.LeftArrow);
-            var right = Input.GetKey(KeyCode.RightArrow);
+            var left = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
+            var right = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
 
             if (left && right) return;
-
-
 
             if (left || _bufferLeft)
             {

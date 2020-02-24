@@ -131,6 +131,8 @@ namespace Level.Objects
             {
                 if (value)
                 {
+                    
+                    Debug.Log("u just got outlined X3");
                     if (_runtimeOutlineModel == null)
                         _runtimeOutlineModel = Instantiate(_outlineModel, transform);
 
@@ -142,7 +144,6 @@ namespace Level.Objects
                 }
 
                 _outlined = value;
-
             }
         }
 

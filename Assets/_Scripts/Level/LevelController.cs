@@ -150,10 +150,10 @@ namespace Level
 
             CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
             _loadedLevelNumber = _levelToLoad;
+            
+            GetComponent<GlassesController>().CheckForNewWorldMusic();
             OnLevelLoaded?.Invoke();
             CurrentLevelInfo.Animator.SetTrigger("FadeIn");
-
-            GetComponent<GlassesController>().CheckForNewWorldMusic();
         }
 
         public void UnloadLevel()
