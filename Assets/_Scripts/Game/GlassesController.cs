@@ -112,6 +112,8 @@ namespace Game
             // TODO REMOVE
             if (CurrentWorld > 1)
                 currentWorld = 1;
+
+            if (_currentWorldMusic == currentWorld) return;
             
             if (_musicStreams.Count != 0)
             {

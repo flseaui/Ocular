@@ -4,7 +4,10 @@ using Michsky.UI.Zone;
 using Misc;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UI.Settings.Audio;
+using VolumeManager = UI.Settings.Audio.VolumeManager;
 
 namespace UI
 {
@@ -16,6 +19,7 @@ namespace UI
             {
                 StartCoroutine(DoItInATenthSec());
             }
+            VolumeManager.UpdateAudioSettings();
         }
 
         private IEnumerator DoItInATenthSec()

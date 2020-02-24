@@ -25,6 +25,10 @@ namespace Michsky.UI.Zone
             gameObject.AddComponent<AudioSource>();
             HoverSource.clip = hoverSound;
             ClickSource.clip = clickSound;
+            
+            //TODO hardcoded volume kinda janky
+            HoverSource.volume = .1f;
+            ClickSource.volume = .1f;
 
             HoverSource.playOnAwake = false;
             ClickSource.playOnAwake = false;
