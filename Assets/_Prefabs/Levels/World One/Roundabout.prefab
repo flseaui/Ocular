@@ -46,6 +46,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Max: 1
+--- !u!114 &5870573545346402015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1049946211525711212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animation: {fileID: 11400000, guid: d8e2740785e9e41a7bc0ef4b01cf872e, type: 2}
 --- !u!1 &1912245342187741133
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,19 +303,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5870573545346402015
+--- !u!114 &613746022159146593
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049946211525711212}
+  m_GameObject: {fileID: 4492241278690152792}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
+  m_Script: {fileID: 11500000, guid: 72a1c3f00dce4e10962b17135e9ecab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animation: {fileID: 11400000, guid: d8e2740785e9e41a7bc0ef4b01cf872e, type: 2}
+  _type: 1
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _ocularState: 0
+  _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
+  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
+  _outlineModel: {fileID: 0}
 --- !u!1 &5067679827004198292
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -371,6 +389,12 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 1, a: 1}
   - {r: 0, g: 1, b: 0, a: 1}
   ColorPreset: 0
+  BlockContrast: 0.549
+  ColorIntensity: 1.63
+  ShadowStrength: 0.536
+  ShadowTint: {r: 0, g: 0, b: 0, a: 0}
+  GoalShadowStrength: 0.543
+  GoalShadowTint: {r: 0, g: 0, b: 0, a: 0}
   LevelGlasses:
   - Color: {r: 1, g: 0, b: 0, a: 1}
     GlassesType: 0
@@ -499,24 +523,6 @@ Transform:
   m_Father: {fileID: 112484645583010321}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &613746022159146593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4492241278690152792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72a1c3f00dce4e10962b17135e9ecab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _type: 1
-  _color: {r: 1, g: 1, b: 1, a: 1}
-  _ocularState: 0
-  _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 0}
 --- !u!1 &8296342540655763716
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,15 +1936,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0cdbe3990e5f24696bc09b3349799917, type: 3}
---- !u!4 &1785151191676432302 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2565053133417867773, guid: 0cdbe3990e5f24696bc09b3349799917,
-    type: 3}
-  m_PrefabInstance: {fileID: 4278076258893612627}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1049946211525711212 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3876736389334897471, guid: 0cdbe3990e5f24696bc09b3349799917,
+    type: 3}
+  m_PrefabInstance: {fileID: 4278076258893612627}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1785151191676432302 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2565053133417867773, guid: 0cdbe3990e5f24696bc09b3349799917,
     type: 3}
   m_PrefabInstance: {fileID: 4278076258893612627}
   m_PrefabAsset: {fileID: 0}
@@ -2813,7 +2819,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
+      objectReference: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
     - target: {fileID: 7387076032865927112, guid: 758912c2cc3d1438f83db849d734dcda,
         type: 3}
       propertyPath: m_Name

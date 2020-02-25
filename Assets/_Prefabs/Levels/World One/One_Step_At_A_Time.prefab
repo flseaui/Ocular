@@ -267,7 +267,7 @@ Transform:
   - {fileID: 4556431957988300654}
   - {fileID: 6520532756952839907}
   - {fileID: 1467499362742265907}
-  - {fileID: 6925092793444016092}
+  - {fileID: 3769646930054284154}
   - {fileID: 6385146835995993075}
   - {fileID: 2558389462076501860}
   - {fileID: 2462623184517551012}
@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -565,6 +565,12 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 1, a: 1}
   - {r: 0, g: 1, b: 0, a: 1}
   ColorPreset: 0
+  BlockContrast: 0.524
+  ColorIntensity: 1.55
+  ShadowStrength: 0.53
+  ShadowTint: {r: 0, g: 0, b: 0, a: 0}
+  GoalShadowStrength: 0.48
+  GoalShadowTint: {r: 0, g: 0, b: 0, a: 0}
   LevelGlasses:
   - Color: {r: 1, g: 0, b: 0, a: 1}
     GlassesType: 0
@@ -670,19 +676,24 @@ Transform:
   m_Father: {fileID: 2950719893762815253}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &1050352461716881466
+--- !u!114 &7095312682121880409
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9118997385983776124}
+  m_GameObject: {fileID: 7198908543163878147}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
+  m_Script: {fileID: 11500000, guid: 72a1c3f00dce4e10962b17135e9ecab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animation: {fileID: 11400000, guid: b470b03fb9a014e9696270e056795302, type: 2}
+  _type: 1
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _ocularState: 0
+  _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
+  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
+  _outlineModel: {fileID: 0}
 --- !u!1 &7549350777103641221
 GameObject:
   m_ObjectHideFlags: 0
@@ -793,24 +804,6 @@ MonoBehaviour:
   _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
   _outlineModel: {fileID: 3364352014373522285, guid: 946f18c0079936c4da76719db2a2d9ae,
     type: 3}
---- !u!114 &7095312682121880409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7198908543163878147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72a1c3f00dce4e10962b17135e9ecab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _type: 1
-  _color: {r: 1, g: 1, b: 1, a: 1}
-  _ocularState: 0
-  _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 0}
 --- !u!1 &8230692573204304302
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,6 +895,19 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1050352461716881466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9118997385983776124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animation: {fileID: 11400000, guid: b470b03fb9a014e9696270e056795302, type: 2}
 --- !u!1001 &12239328717154656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3381,7 +3387,7 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c904e82cd42f724cb303fd2ff0e7a5d, type: 3}
---- !u!4 &6925092793444016092 stripped
+--- !u!4 &3769646930054284154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073850517314746607, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
     type: 3}

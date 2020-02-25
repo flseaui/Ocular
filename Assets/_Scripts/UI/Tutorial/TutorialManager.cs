@@ -20,8 +20,10 @@ public class TutorialManager : MonoBehaviour
     [SerializeField]
     private GameObject _tutorialZoomPrefab;
 
+    private GameObject _liveTutorialOne;
     private GameObject _liveTutorialTwo;
     private GameObject _liveTutorialThree;
+    private GameObject _liveTutorialFour;
 
 
     public void Awake()
@@ -36,19 +38,28 @@ public class TutorialManager : MonoBehaviour
 
     private void OnLevelLoaded()
     {
+        
         switch (_levelController.CurrentLevelInfo.InGameName)
         {
             case "A New Beginning":
-                Instantiate(_tutorialOnePrefab, _canvas.transform);
+                if (_liveTutorialOne != null)
+                    Destroy(_liveTutorialOne);
+                _liveTutorialOne = Instantiate(_tutorialOnePrefab, _canvas.transform);
                 break;
             case "The Bridge":
+                if (_liveTutorialTwo != null)
+                    Destroy(_liveTutorialTwo);
                 _liveTutorialTwo = Instantiate(_tutorialTwoPrefab, _canvas.transform);
                 break;
             case "Midnight Stroll":
+                if (_liveTutorialThree != null)
+                    Destroy(_liveTutorialThree);
                 _liveTutorialThree = Instantiate(_tutorialThreePrefab, _canvas.transform);
                 break;
             case "The Forest":
-                Instantiate(_tutorialZoomPrefab, _canvas.transform);
+                if (_liveTutorialFour != null)
+                    Destroy(_liveTutorialFour);
+                _liveTutorialFour = Instantiate(_tutorialZoomPrefab, _canvas.transform);
                 break;
         }
     }

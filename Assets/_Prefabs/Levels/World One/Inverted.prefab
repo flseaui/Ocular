@@ -236,6 +236,19 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 8dc3994b32416ae40b1e84a0b1a575e2, type: 3}
   - {fileID: 2800000, guid: a0ed678f5bb09f74d852dc4f83bec5f8, type: 3}
   - {fileID: 2800000, guid: 3309d83327d69fb4aa2e512b895e1ebd, type: 3}
+--- !u!114 &5979649002736924948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057227919184257224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animation: {fileID: 11400000, guid: 7302775f1e03e4ed68b0d7a93d62a085, type: 2}
 --- !u!1 &4357620048987809325
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +718,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3567624437812610165}
-  - {fileID: 7736011334626142273}
+  - {fileID: 4057227919184254221}
   - {fileID: 8086823768923714203}
   m_Father: {fileID: 5622409100297435673}
   m_RootOrder: 3
@@ -756,19 +769,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Max: 1
---- !u!114 &5979649002736924948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837555235249591472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57d8a85be863490d80a75c6cdd93db05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animation: {fileID: 11400000, guid: 7302775f1e03e4ed68b0d7a93d62a085, type: 2}
 --- !u!1 &8941055500404277621
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -837,6 +837,12 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 1, a: 1}
   - {r: 0, g: 1, b: 0, a: 1}
   ColorPreset: 0
+  BlockContrast: 0.53
+  ColorIntensity: 1.8
+  ShadowStrength: 0.267
+  ShadowTint: {r: 0, g: 0, b: 0, a: 1}
+  GoalShadowStrength: 0.411
+  GoalShadowTint: {r: 0, g: 0, b: 0, a: 1}
   LevelGlasses:
   - Color: {r: 1, g: 0, b: 0, a: 1}
     GlassesType: 0
@@ -3099,13 +3105,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ac15f5d40fe44e899ec4296c2efb7b6, type: 3}
---- !u!1 &8837555235249591472 stripped
+--- !u!1 &4057227919184257224 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4822060948492936610, guid: 5ac15f5d40fe44e899ec4296c2efb7b6,
     type: 3}
   m_PrefabInstance: {fileID: 4057227919184261394}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &7736011334626142273 stripped
+--- !u!4 &4057227919184254221 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5986970665218939219, guid: 5ac15f5d40fe44e899ec4296c2efb7b6,
     type: 3}

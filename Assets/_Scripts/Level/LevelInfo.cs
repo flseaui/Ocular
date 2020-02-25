@@ -3,6 +3,7 @@ using Misc;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Internal;
 
 namespace Level
 {
@@ -20,6 +21,19 @@ namespace Level
         [OnValueChanged(nameof(ApplyColorPreset))]
         public ColorSet ColorPreset;
 
+        [Range(0, 1), BoxGroup("Shading")]
+        public float BlockContrast;
+        [Range(0, 3), BoxGroup("Shading")]
+        public float ColorIntensity;
+        [Range(0, 1), BoxGroup("Shading")] 
+        public float ShadowStrength;
+        [BoxGroup("Shading")]
+        public Color ShadowTint;
+        [Range(0, 1), BoxGroup("Shading")]
+        public float GoalShadowStrength;
+        [BoxGroup("Shading")]
+        public Color GoalShadowTint;
+        
         //[OnValueChanged(nameof(CalcBlockColors))]
         public List<Glasses> LevelGlasses;
 

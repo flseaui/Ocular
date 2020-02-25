@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using Game;
 using Misc;
+using OcularAnimation.New;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UI;
@@ -30,7 +31,13 @@ namespace Level.Objects
             StateChanging,
             ColorChanging
         }
-
+        
+        private static readonly int Contrast = Shader.PropertyToID("_Contrast");
+        private static readonly int Intensity = Shader.PropertyToID("_Intensity");
+        private static readonly int ColorProp = Shader.PropertyToID("_Color");
+        private static readonly int ShadowStrength = Shader.PropertyToID("_ShadowStrength");
+        private static readonly int ShadowTint = Shader.PropertyToID("_ShadowTint");
+        
         [SerializeField] private ColorableType _type;
 
         [SerializeField, HideInInspector] private Color _color;
@@ -42,7 +49,7 @@ namespace Level.Objects
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
         private GameObject[] _models;
-        private static LevelInfo _levelInfo;
+        private LevelInfo _levelInfo;
 
         [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
         private OcularState _initialState;
@@ -65,7 +72,7 @@ namespace Level.Objects
                 foreach (var r in _renderers)
                 {
                     r.GetPropertyBlock(_propBlock);
-                    _propBlock.SetColor("_Color", _color);
+                    _propBlock.SetColor(ColorProp, _color);
                     r.SetPropertyBlock(_propBlock);
                 }
             }
@@ -124,6 +131,7 @@ namespace Level.Objects
         }
 
         private bool _outlined;
+
         public bool Outlined
         {
             get => _outlined;
@@ -379,6 +387,16 @@ namespace Level.Objects
             State = BlockState.Visible;
             OcularState = OcularState;
             SetModelsState(true);
+            
+            foreach (var r in _renderers)
+            {
+                r.GetPropertyBlock(_propBlock);
+                _propBlock.SetFloat(Contrast, _levelInfo.BlockContrast);
+                _propBlock.SetFloat(Intensity, _levelInfo.ColorIntensity);
+                _propBlock.SetFloat(ShadowStrength, transform.HasComponent<GoalAnimationController>() ? _levelInfo.GoalShadowStrength : _levelInfo.ShadowStrength);
+                _propBlock.SetColor(ShadowTint, transform.HasComponent<GoalAnimationController>() ? _levelInfo.GoalShadowTint : _levelInfo.ShadowTint);
+                r.SetPropertyBlock(_propBlock);
+            }
             
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
