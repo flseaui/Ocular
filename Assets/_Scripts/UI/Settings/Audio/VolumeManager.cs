@@ -14,20 +14,20 @@ namespace UI.Settings.Audio
         {
             // TODO
             // hardcoded default value
-            AudioMixing.MasterMusicVolume = 50.1234f / 100 / 3;
-            AudioMixing.MasterVolume = 99.443f / 100 / 3;
+            AudioMixing.MasterMusicVolume = 50.1234f / 100 / 4;
+            AudioMixing.MasterVolume = 50.1234f / 100 / 4;
 
             UpdateAudioSettings();
         }
 
         public void OnMasterVolumeChanged(float value)
         {
-            AudioMixing.MasterVolume = value / 100 / 3;
+            AudioMixing.MasterVolume = value / 100 / 4;
             UpdateAudioSettings();
         }
         public void OnMusicVolumeChanged(float value)
         {
-            AudioMixing.MasterMusicVolume = value / 100 / 3;
+            AudioMixing.MasterMusicVolume = value / 100 / 4;
             UpdateAudioSettings();
         }
 
@@ -38,7 +38,7 @@ namespace UI.Settings.Audio
         
         public void OnSFXVolumeChanged(float value)
         {
-            AudioMixing.MasterEffectVolume = value / 100 / 3;
+            AudioMixing.MasterEffectVolume = value / 100 / 4;
         }
     }
 }

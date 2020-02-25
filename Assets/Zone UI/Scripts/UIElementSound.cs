@@ -27,8 +27,8 @@ namespace Michsky.UI.Zone
             ClickSource.clip = clickSound;
             
             //TODO hardcoded volume kinda janky
-            HoverSource.volume = .1f;
-            ClickSource.volume = .1f;
+            HoverSource.volume = .05f;
+            ClickSource.volume = .05f;
 
             HoverSource.playOnAwake = false;
             ClickSource.playOnAwake = false;
