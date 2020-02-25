@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Level.Objects;
 using UnityEngine;
 
 namespace Level
@@ -145,7 +146,9 @@ namespace Level
         {
             if (_loadedLevel != null)
                 UnloadLevel();
-
+            Goal.GoalConditions = 0;
+            Goal.GoalConditionsMet = 0;
+            Debug.Log("YES YES YES YES YES YSE YSE YSEY SEY E");
             _loadedLevel = Instantiate(_levels[_levelToLoad.Item1, _levelToLoad.Item2]);
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();

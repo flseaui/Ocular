@@ -18,12 +18,16 @@ namespace Level.Objects.Clones
         private void OnLevelLoaded()
         {
             if (!_used)
+            {
                 Goal.GoalConditions += 1;
+                Debug.Log("BAPOOBA");
+            }
         }
 
         private void OnDestroy()
         {
             Player.Player.OnDeath -= OnPlayerDeath;
+            LevelController.OnLevelLoaded -= OnLevelLoaded;
         }
 
         private void OnPlayerDeath()
