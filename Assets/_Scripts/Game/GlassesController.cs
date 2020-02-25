@@ -9,6 +9,7 @@ using Player;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UI;
+using UI.Settings.Audio;
 using UnityEngine;
 
 namespace Game
@@ -76,6 +77,22 @@ namespace Game
             _currentWorldMusic = -1;
         }
 
+        private void Start()
+        {
+            StartCoroutine(UpdateVolume());
+        }
+
+        private IEnumerator UpdateVolume()
+        {
+            //TODO jank audio fix
+            
+            yield return new WaitUntil(() => MasterAudio.SoundsReady);
+            
+            MasterAudio.PauseMixer();
+            MasterAudio.MasterVolumeLevel = PersistentAudioSettings.MixerVolume.Value;
+            MasterAudio.UnpauseMixer();
+        }
+        
         private void OnEntitiesSpawned()
         {
             UpdateOcularState();
@@ -196,6 +213,10 @@ namespace Game
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            MasterAudio.PauseMixer();
+            MasterAudio.MasterVolumeLevel = PersistentAudioSettings.MixerVolume.Value;
+            MasterAudio.UnpauseMixer();
         }
     }
 }

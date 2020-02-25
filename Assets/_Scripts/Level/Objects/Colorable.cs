@@ -387,17 +387,26 @@ namespace Level.Objects
             State = BlockState.Visible;
             OcularState = OcularState;
             SetModelsState(true);
-            
-            foreach (var r in _renderers)
+
+            if (_levelInfo != null)
             {
-                r.GetPropertyBlock(_propBlock);
-                _propBlock.SetFloat(Contrast, _levelInfo.BlockContrast);
-                _propBlock.SetFloat(Intensity, _levelInfo.ColorIntensity);
-                _propBlock.SetFloat(ShadowStrength, transform.HasComponent<GoalAnimationController>() ? _levelInfo.GoalShadowStrength : _levelInfo.ShadowStrength);
-                _propBlock.SetColor(ShadowTint, transform.HasComponent<GoalAnimationController>() ? _levelInfo.GoalShadowTint : _levelInfo.ShadowTint);
-                r.SetPropertyBlock(_propBlock);
+                foreach (var r in _renderers)
+                {
+                    r.GetPropertyBlock(_propBlock);
+                    _propBlock.SetFloat(Contrast, _levelInfo.BlockContrast);
+                    _propBlock.SetFloat(Intensity, _levelInfo.ColorIntensity);
+                    _propBlock.SetFloat(ShadowStrength,
+                        transform.HasComponent<GoalAnimationController>()
+                            ? _levelInfo.GoalShadowStrength
+                            : _levelInfo.ShadowStrength);
+                    _propBlock.SetColor(ShadowTint,
+                        transform.HasComponent<GoalAnimationController>()
+                            ? _levelInfo.GoalShadowTint
+                            : _levelInfo.ShadowTint);
+                    r.SetPropertyBlock(_propBlock);
+                }
             }
-            
+
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 

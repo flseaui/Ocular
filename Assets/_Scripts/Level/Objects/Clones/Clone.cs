@@ -120,6 +120,9 @@ namespace Level.Objects
         {
             if (Died) return;
             
+            if (_player ==  null)
+                _player = GameObject.Find("GameManager").GetComponent<GameManager>().Player;
+            
             var clonePath = GetComponent<ClonePathfinder>();
             if (Pathfinder.Navigating && (!clonePath.Navigating || clonePath.StopNavNextFrame) && !Falling)
             {

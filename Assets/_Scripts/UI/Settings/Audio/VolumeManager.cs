@@ -34,6 +34,7 @@ namespace UI.Settings.Audio
         public static void UpdateAudioSettings()
         {
             PersistentAudioSettings.MusicVolume = ((AudioMixing.MasterMusicVolume * AudioMixing.MasterVolume) / 2) * 2;
+            PersistentAudioSettings.MixerVolume = PersistentAudioSettings.MusicVolume;
         }
         
         public void OnSFXVolumeChanged(float value)
