@@ -53,7 +53,7 @@
             //calculate shadow color and mix light and shadow based on the light. Then taint it based on the light color
             float3 shadowColor = s.Albedo * _ShadowTint;
             float4 color;
-            color.rgb = (lerp(shadowColor, s.Albedo, lightIntensity) * (_LightColor0.rgb)) * _ShadowStrength;
+            color.rgb = lerp(shadowColor, s.Albedo, lightIntensity) * _LightColor0.rgb * _ShadowStrength;
             color.a = s.Alpha;
             return color;
         }
