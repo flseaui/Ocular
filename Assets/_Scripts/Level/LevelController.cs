@@ -163,7 +163,7 @@ namespace Level
 
         public void UnloadLevel()
         {
-            Destroy(_loadedLevel);
+            DestroyImmediate(_loadedLevel);
             CurrentLevelInfo = null;
         }
 

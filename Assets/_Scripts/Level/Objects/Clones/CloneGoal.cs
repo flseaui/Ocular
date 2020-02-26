@@ -26,6 +26,7 @@ namespace Level.Objects.Clones
 
         private void OnDestroy()
         {
+            Debug.Log("gaming?");
             Player.Player.OnDeath -= OnPlayerDeath;
             LevelController.OnLevelLoaded -= OnLevelLoaded;
         }

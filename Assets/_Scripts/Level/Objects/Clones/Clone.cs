@@ -68,6 +68,7 @@ namespace Level.Objects
             _model.SetActive(!kill);
             transform.Find("DeathTrigger").gameObject.SetActive(!kill);
             _animController.enabled = !kill;
+            GetComponent<CapsuleCollider>().enabled = !kill;
         }
         
         public void ActuallyDie()
