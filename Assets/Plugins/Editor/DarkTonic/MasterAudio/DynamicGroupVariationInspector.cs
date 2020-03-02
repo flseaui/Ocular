@@ -62,11 +62,9 @@ public class DynamicGroupVariationInspector : Editor {
                 var randPitch = SoundGroupVariationInspector.GetRandomPreviewPitch(_variation);
                 var varVol = SoundGroupVariationInspector.GetRandomPreviewVolume(_variation);
 
-                if (_variation.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                    if (previewer != null) {
-                        MasterAudioInspector.StopPreviewer();
-                        previewer.pitch = randPitch;
-                    }
+                if (previewer != null) {
+                    MasterAudioInspector.StopPreviewer();
+                    previewer.pitch = randPitch;
                 }
 
                 var calcVolume = varVol * _variation.ParentGroup.groupMasterVolume;
@@ -89,18 +87,16 @@ public class DynamicGroupVariationInspector : Editor {
                             previewer.PlayOneShot(_variation.VarAudio.clip, calcVolume);
                         }
                         break;
-                    case MasterAudio.AudioLocation.FileOnInternet:
-                        if (!string.IsNullOrEmpty(_variation.internetFileUrl)) {
-                            Application.OpenURL(_variation.internetFileUrl);
-                        }
+#if ADDRESSABLES_ENABLED
+                    case MasterAudio.AudioLocation.Addressable:
+                        DTGUIHelper.PreviewAddressable(_variation.audioClipAddressable, previewer, calcVolume);
                         break;
+#endif
                 }
 
                 break;
             case DTGUIHelper.DTFunctionButtons.Stop:
-                if (_variation.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-                    MasterAudioInspector.StopPreviewer();
-                }
+                MasterAudioInspector.StopPreviewer();
                 break;
         }
 
@@ -115,12 +111,19 @@ public class DynamicGroupVariationInspector : Editor {
         var oldLocation = _variation.audLocation;
         EditorGUILayout.BeginHorizontal();
         var newLocation = (MasterAudio.AudioLocation)EditorGUILayout.EnumPopup("Audio Origin", _variation.audLocation);
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#AudioOrigin");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#AudioOrigin");
         EditorGUILayout.EndHorizontal();
 
         if (newLocation != oldLocation) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Audio Origin");
             _variation.audLocation = newLocation;
+        }
+
+        if (oldLocation != _variation.audLocation && oldLocation == MasterAudio.AudioLocation.Clip) {
+            if (_variation.VarAudio.clip != null) {
+                Debug.Log("Audio clip removed to prevent unnecessary memory usage.");
+            }
+            _variation.VarAudio.clip = null;
         }
 
         switch (_variation.audLocation) {
@@ -132,34 +135,19 @@ public class DynamicGroupVariationInspector : Editor {
                     _variation.VarAudio.clip = newClip;
                 }
                 break;
-            case MasterAudio.AudioLocation.FileOnInternet:
-                if (oldLocation != _variation.audLocation) {
-                    if (_variation.VarAudio.clip != null) {
-                        Debug.Log("Audio clip removed to prevent unnecessary memory usage on File On Internet Variation.");
-                    }
-                    _variation.VarAudio.clip = null;
-                }
+#if ADDRESSABLES_ENABLED
+            case MasterAudio.AudioLocation.Addressable:
+                serializedObject.Update();
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(DynamicGroupVariation.audioClipAddressable)), true);
+                serializedObject.ApplyModifiedProperties();
 
-                if (!Application.isPlaying) {
-                    var newUrl = EditorGUILayout.TextField("Internet File URL", _variation.internetFileUrl);
-                    if (newUrl != _variation.internetFileUrl) {
-                        AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Internet File URL");
-                        _variation.internetFileUrl = newUrl;
-                    }
-                }
-
-                if (string.IsNullOrEmpty(_variation.internetFileUrl)) {
-                    DTGUIHelper.ShowLargeBarAlert("You have not specified a URL for the File On Internet. This Variation will not be available to play without one.");
+                if (!DTGUIHelper.IsAddressableTypeValid(_variation.audioClipAddressable, _variation.name)) {
+                    _variation.audioClipAddressable = null;
+                    isDirty = true;
                 }
                 break;
+#endif
             case MasterAudio.AudioLocation.ResourceFile:
-                if (oldLocation != _variation.audLocation) {
-                    if (_variation.VarAudio.clip != null) {
-                        Debug.Log("Audio clip removed to prevent unnecessary memory usage on Resource file Variation.");
-                    }
-                    _variation.VarAudio.clip = null;
-                }
-
                 EditorGUILayout.BeginVertical();
                 var anEvent = Event.current;
 
@@ -261,7 +249,7 @@ public class DynamicGroupVariationInspector : Editor {
 
         EditorGUILayout.BeginHorizontal();
         var newWeight = EditorGUILayout.IntSlider("Voices (Weight)", _variation.weight, 0, 100);
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#Voices");
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/SoundGroupVariations.htm#Voices");
         EditorGUILayout.EndHorizontal();
         if (newWeight != _variation.weight) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Voices (Weight)");

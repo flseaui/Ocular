@@ -173,6 +173,7 @@ public class AudioEventInspector : Editor {
             unusedEventTypes.Add("Invisible");
         }
 
+#if PHY2D_ENABLED
         if (!_sounds.useCollision2dSound) {
             unusedEventTypes.Add("2D Collision Enter");
         }
@@ -188,7 +189,9 @@ public class AudioEventInspector : Editor {
         if (!_sounds.useTriggerExit2dSound) {
             unusedEventTypes.Add("2D Trigger Exit");
         }
+#endif
 
+#if PHY3D_ENABLED
         if (!_sounds.useCollisionSound) {
             unusedEventTypes.Add("Collision Enter");
         }
@@ -204,6 +207,8 @@ public class AudioEventInspector : Editor {
         if (!_sounds.useTriggerExitSound) {
             unusedEventTypes.Add("Trigger Exit");
         }
+#endif
+
         if (!_sounds.useParticleCollisionSound) {
             unusedEventTypes.Add("Particle Collision");
         }
@@ -371,7 +376,7 @@ public class AudioEventInspector : Editor {
 
             EditorGUILayout.BeginHorizontal();
             var newEventIndex = EditorGUILayout.Popup("Event To Activate", -1, unusedEventTypes.ToArray());
-            DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#SupportedEvents");
+            DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#SupportedEvents");
 
             EditorGUILayout.EndHorizontal();
 
@@ -916,27 +921,14 @@ public class AudioEventInspector : Editor {
 
         var state = grp.isExpanded;
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-        if (!state) {
-            GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-        } else {
-            GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-        }
+        DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
-        GUILayout.BeginHorizontal();
+        var headerStyle = new GUIStyle();
+        headerStyle.margin = new RectOffset(0, 0, 2, 0);
+        headerStyle.padding = new RectOffset(6, 0, 1, 2);
+        headerStyle.fixedHeight = 18;
 
-        text = "<b><size=11>" + text + "</size></b>";
-
-        if (state) {
-            text = "\u25BC " + text;
-        } else {
-            text = "\u25BA " + text;
-        }
-        if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-            state = !state;
-        }
-
-        GUILayout.Space(2f);
+        EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
 
         switch (eType) {
             case EventSounds.EventType.MechanimStateChanged:
@@ -1145,7 +1137,13 @@ public class AudioEventInspector : Editor {
         }
 
         GUILayout.Space(4f);
-        DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#EventSettings");
+        var topMargin = 3;
+#if UNITY_2019_3_OR_NEWER
+        topMargin = 0;
+#endif
+        DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#EventSettings", topMargin);
+
+        GUILayout.EndHorizontal();
 
         GUILayout.EndHorizontal();
         GUI.backgroundColor = Color.white;
@@ -1686,7 +1684,7 @@ public class AudioEventInspector : Editor {
                 eventGrp.retriggerLimitMode = newRetrigger;
             }
 
-            DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Retrigger");
+            DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Retrigger");
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
@@ -1738,7 +1736,7 @@ public class AudioEventInspector : Editor {
                 var buttonPressed = DTGUIHelper.AddFoldOutListItemButtonItems(j, eventGrp.SoundEvents.Count, "Action", true, false, true);
 
                 GUILayout.Space(4);
-                DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Actions");
+                DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/EventSounds.htm#Actions");
 
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.EndVertical();

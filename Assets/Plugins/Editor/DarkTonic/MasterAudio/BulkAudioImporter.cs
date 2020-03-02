@@ -34,7 +34,12 @@ public class BulkAudioImporter : EditorWindow {
     // ReSharper disable once UnusedMember.Local
     static void Init() {
         var window = GetWindow(typeof(BulkAudioImporter));
-        window.maxSize = new Vector2(938, 610);
+
+#if UNITY_2019_3_OR_NEWER
+        window.maxSize = new Vector2(949, 610);
+#else
+        window.maxSize = new Vector2(954, 610);
+#endif
         window.minSize = window.maxSize;
     }
 
@@ -173,7 +178,7 @@ public class BulkAudioImporter : EditorWindow {
             return false;
         }
 
-        if (_clipList.AudioInfor.Count == 0) { // TODO: what?
+        if (_clipList.AudioInfor.Count == 0) { 
             _clipList.AudioInfor.Clear();
         }
 
@@ -395,7 +400,7 @@ public class BulkAudioImporter : EditorWindow {
         }
 
         columnPrefix = ColumnPrefix(ClipSortColumn.ForceMono);
-        if (GUILayout.Button(new GUIContent(columnPrefix + "Force Mono", "Click to sort by Force Mono"), EditorStyles.toolbarButton, GUILayout.Width(80))) {
+        if (GUILayout.Button(new GUIContent(columnPrefix + "Force Mono", "Click to sort by Force Mono"), EditorStyles.toolbarButton, GUILayout.Width(86))) {
             ChangeSortColumn(ClipSortColumn.ForceMono);
         }
 
@@ -405,7 +410,7 @@ public class BulkAudioImporter : EditorWindow {
         }
 
         columnPrefix = ColumnPrefix(ClipSortColumn.PreloadAudio);
-        if (GUILayout.Button(new GUIContent(columnPrefix + "Preload Aud.", "Click to sort by Preload Audio Data"), EditorStyles.toolbarButton, GUILayout.Width(84))) {
+        if (GUILayout.Button(new GUIContent(columnPrefix + "Preload Aud.", "Click to sort by Preload Audio Data"), EditorStyles.toolbarButton, GUILayout.Width(90))) {
             ChangeSortColumn(ClipSortColumn.PreloadAudio);
         }
 
@@ -415,7 +420,7 @@ public class BulkAudioImporter : EditorWindow {
         }
 
         columnPrefix = ColumnPrefix(ClipSortColumn.CompressionFormat);
-        if (GUILayout.Button(new GUIContent(columnPrefix + "Comp. Format", "Click to sort by Compression Format"), EditorStyles.toolbarButton, GUILayout.Width(90))) {
+        if (GUILayout.Button(new GUIContent(columnPrefix + "Comp. Format", "Click to sort by Compression Format"), EditorStyles.toolbarButton, GUILayout.Width(96))) {
             ChangeSortColumn(ClipSortColumn.CompressionFormat);
         }
 
@@ -425,7 +430,7 @@ public class BulkAudioImporter : EditorWindow {
         }
 
         columnPrefix = ColumnPrefix(ClipSortColumn.SampleRateSetting);
-        if (GUILayout.Button(new GUIContent(columnPrefix + "Sample Rt. Setting", "Click to sort by Sample Rate Setting"), EditorStyles.toolbarButton, GUILayout.Width(110))) {
+        if (GUILayout.Button(new GUIContent(columnPrefix + "Sample Rt. Setting", "Click to sort by Sample Rate Setting"), EditorStyles.toolbarButton, GUILayout.Width(122))) {
             ChangeSortColumn(ClipSortColumn.SampleRateSetting);
         }
 
@@ -442,7 +447,11 @@ public class BulkAudioImporter : EditorWindow {
             return;
         }
 
-        _scrollPos = GUI.BeginScrollView(new Rect(0, 123, 937, 485), _scrollPos, new Rect(0, 124, 880, 24 * FilteredClips.Count + 4));
+#if UNITY_2019_3_OR_NEWER
+        _scrollPos = GUI.BeginScrollView(new Rect(0, 137, 947, 475), _scrollPos, new Rect(0, 138, 880, 24 * FilteredClips.Count - 2));
+#else
+        _scrollPos = GUI.BeginScrollView(new Rect(0, 123, 953, 485), _scrollPos, new Rect(0, 124, 880, 24 * FilteredClips.Count + 4));
+#endif
 
         foreach (var aClip in FilteredClips) {
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
@@ -451,7 +460,11 @@ public class BulkAudioImporter : EditorWindow {
             } else {
                 GUI.backgroundColor = Color.white;
             }
-            EditorGUILayout.BeginHorizontal(EditorStyles.miniButtonMid); // miniButtonMid, numberField, textField
+
+            GUIStyle style = new GUIStyle(EditorStyles.miniButtonMid) {
+                fixedHeight = 22
+            };
+            EditorGUILayout.BeginHorizontal(style); // miniButtonMid, numberField, textField
             EditorGUILayout.BeginHorizontal();
 
             var wasSelected = aClip.IsSelected;
@@ -509,7 +522,7 @@ public class BulkAudioImporter : EditorWindow {
             }
             RevertColor();
 
-            GUILayout.Space(36);
+            GUILayout.Space(42);
             MaybeShowChangedColors(isLoadInBGChanged);
             var newLoadBG = GUILayout.Toggle(aClip.LoadBG, "", GUILayout.Width(40));
             if (newLoadBG != aClip.LoadBG) {
@@ -523,7 +536,7 @@ public class BulkAudioImporter : EditorWindow {
             }
             RevertColor();
 
-            GUILayout.Space(38);
+            GUILayout.Space(40);
             MaybeShowChangedColors(isPreloadAudioChanged);
             var newPreload = GUILayout.Toggle(aClip.Preload, "", GUILayout.Width(40));
             if (newPreload != aClip.Preload) {
@@ -537,7 +550,7 @@ public class BulkAudioImporter : EditorWindow {
             }
             RevertColor();
 
-            GUILayout.Space(6);
+            GUILayout.Space(12);
             MaybeShowChangedColors(isLoadTypeChanged);
             var newLoad = (AudioClipLoadType)EditorGUILayout.EnumPopup(aClip.LoadType, GUILayout.Width(84));
             if (newLoad != aClip.LoadType) {
@@ -551,7 +564,7 @@ public class BulkAudioImporter : EditorWindow {
             }
             RevertColor();
 
-            GUILayout.Space(4);
+            GUILayout.Space(8);
             MaybeShowChangedColors(isCompFormatChanged);
             var newComp = (AudioCompressionFormat)EditorGUILayout.EnumPopup(aClip.CompressionFormat, GUILayout.Width(82));
             if (newComp != aClip.CompressionFormat) {
@@ -565,7 +578,7 @@ public class BulkAudioImporter : EditorWindow {
             }
             RevertColor();
 
-            GUILayout.Space(4);
+            GUILayout.Space(8);
             if (usesQuality) {
                 MaybeShowChangedColors(isQualityChanged);
                 var newQuality = EditorGUILayout.FloatField(aClip.Quality, GUILayout.Width(57));
@@ -588,7 +601,7 @@ public class BulkAudioImporter : EditorWindow {
 
             GUILayout.Space(4);
             MaybeShowChangedColors(isSampleRateSettingChanged);
-            var newSample = (AudioSampleRateSetting)EditorGUILayout.EnumPopup(aClip.SampleRateSetting, GUILayout.Width(102));
+            var newSample = (AudioSampleRateSetting)EditorGUILayout.EnumPopup(aClip.SampleRateSetting, GUILayout.Width(112));
             if (newSample != aClip.SampleRateSetting) {
                 aClip.IsSelected = true;
                 SelectClip(aClip);

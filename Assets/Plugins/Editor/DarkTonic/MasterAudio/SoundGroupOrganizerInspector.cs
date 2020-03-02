@@ -460,15 +460,13 @@ public class SoundGroupOrganizerInspector : Editor {
 
         EditorGUI.indentLevel = 0;
 
-        GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-
-
         if (_organizer.itemType == SoundGroupOrganizer.MAItemType.SoundGroups) {
             // ReSharper disable once ConvertToConstant.Local
             var text = "Group Control";
-            GUILayout.BeginHorizontal();
-            text = "<b><size=11>" + text + "</size></b>";
-            GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f));
+
+            var collapsed = true;
+
+            DTGUIHelper.ShowCollapsibleSection(ref collapsed, text, false);
             EditorGUILayout.EndHorizontal();
 
             DTGUIHelper.BeginGroupedControls();
@@ -478,7 +476,7 @@ public class SoundGroupOrganizerInspector : Editor {
                 _organizer.curDragGroupMode = newDragMode;
             }
 
-            var bulkMode = DTGUIHelper.GetRestrictedAudioLocation("Variation Create Mode", _organizer.bulkVariationMode);
+            var bulkMode = (MasterAudio.AudioLocation)EditorGUILayout.EnumPopup("Variation Create Mode", _organizer.bulkVariationMode);
             if (bulkMode != _organizer.bulkVariationMode) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _organizer, "change Variation Mode");
                 _organizer.bulkVariationMode = bulkMode;
@@ -613,6 +611,8 @@ public class SoundGroupOrganizerInspector : Editor {
                 }
             }
 
+            GUI.color = Color.white;
+
             if (_groups.Count == 0) {
                 DTGUIHelper.ShowLargeBarAlert("You currently have no Sound Groups created.");
             } else {
@@ -682,7 +682,34 @@ public class SoundGroupOrganizerInspector : Editor {
             }
 
             if (indexToDelete.HasValue) {
-                AudioUndoHelper.DestroyForUndo(filteredGroups[indexToDelete.Value].gameObject);
+                var groupToDelete = filteredGroups[indexToDelete.Value];
+#if UNITY_2018_2_OR_NEWER
+                var wasDestroyed = false;
+
+                if (PrefabUtility.IsPartOfPrefabInstance(_organizer)) {
+                    var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(_organizer);
+                    GameObject prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
+
+                    var deadTrans = prefabRoot.transform.Find(groupToDelete.name);
+
+                    if (deadTrans != null) {
+                        // Destroy child objects or components on rootGO
+                        DestroyImmediate(deadTrans.gameObject); // can't undo
+                        wasDestroyed = true;
+                    }
+
+                    PrefabUtility.SaveAsPrefabAsset(prefabRoot, prefabPath);
+                    PrefabUtility.UnloadPrefabContents(prefabRoot);
+                } 
+                
+                if (!wasDestroyed) {
+                    // delete variation from Hierarchy
+                    AudioUndoHelper.DestroyForUndo(groupToDelete.gameObject);
+                }
+#else
+                AudioUndoHelper.DestroyForUndo(groupToDelete.gameObject);
+#endif
+            
             }
 
             if (filteredGroups.Count > 0) {
@@ -709,11 +736,10 @@ public class SoundGroupOrganizerInspector : Editor {
 
             // ReSharper disable once ConvertToConstant.Local
             var text = "Custom Event Control";
-            GUILayout.BeginHorizontal();
-            text = "<b><size=11>" + text + "</size></b>";
-            GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f));
-            EditorGUILayout.EndHorizontal();
+            var collapsed = true;
 
+            DTGUIHelper.ShowCollapsibleSection(ref collapsed, text, false);
+            EditorGUILayout.EndHorizontal();
 
             var catNames = new List<string>(_organizer.customEventCategories.Count);
             // ReSharper disable once ForCanBeConvertedToForeach
@@ -744,7 +770,7 @@ public class SoundGroupOrganizerInspector : Editor {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Space(4);
             GUI.contentColor = DTGUIHelper.BrightButtonColor;
-            if (GUILayout.Button("Create New Event", EditorStyles.toolbarButton, GUILayout.Width(100))) {
+            if (GUILayout.Button("Create New Event", EditorStyles.toolbarButton, GUILayout.Width(110))) {
                 CreateCustomEvent(_organizer.newEventName, defaultCat);
             }
             GUILayout.Space(10);
@@ -819,7 +845,7 @@ public class SoundGroupOrganizerInspector : Editor {
             CustomEvent eventToDelete = null;
             CustomEvent eventRenaming = null;
 
-            DTGUIHelper.StartGroupHeader(1, true);
+            DTGUIHelper.StartGroupHeader(1);
 
             for (var c = 0; c < _organizer.customEventCategories.Count; c++) {
                 var cat = _organizer.customEventCategories[c];
@@ -834,8 +860,6 @@ public class SoundGroupOrganizerInspector : Editor {
 
                 var hasItems = matchingItems.Count > 0;
 
-                EditorGUILayout.BeginHorizontal();
-
                 if (!cat.IsEditing || Application.isPlaying) {
                     var catName = cat.CatName;
 
@@ -844,25 +868,7 @@ public class SoundGroupOrganizerInspector : Editor {
                     var state2 = cat.IsExpanded;
                     var text2 = catName;
 
-                    // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                    if (!state2) {
-                        GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-                    } else {
-                        GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
-                    }
-
-                    text2 = "<b><size=11>" + text2 + "</size></b>";
-
-                    if (state2) {
-                        text2 = "\u25BC " + text2;
-                    } else {
-                        text2 = "\u25BA " + text2;
-                    }
-                    if (!GUILayout.Toggle(true, text2, "dragtab", GUILayout.MinWidth(20f))) {
-                        state2 = !state2;
-                    }
-
-                    GUILayout.Space(2f);
+                    DTGUIHelper.ShowCollapsibleSectionInline(ref state2, text2);
 
                     if (state2 != cat.IsExpanded) {
                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _organizer, "toggle expand Custom Event Category");
@@ -880,6 +886,13 @@ public class SoundGroupOrganizerInspector : Editor {
                         catItemsCollapsed = false;
                         break;
                     }
+
+                    var headerStyle = new GUIStyle();
+                    headerStyle.margin = new RectOffset(0, 0, 0, 0);
+                    headerStyle.padding = new RectOffset(0, 0, 0, 0);
+                    headerStyle.fixedHeight = 20;
+
+                    EditorGUILayout.BeginHorizontal(headerStyle, GUILayout.MaxWidth(50));
 
                     GUI.backgroundColor = Color.white;
 
@@ -923,18 +936,18 @@ public class SoundGroupOrganizerInspector : Editor {
                                              GUILayout.Height(16))) {
                             catEditing = cat;
                         }
-                        GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                        if (GUILayout.Button(new GUIContent("Delete", "Click to delete Category"),
-                                             EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                        if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Category"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                        {
                             catToDelete = cat;
                         }
-
-                        GUILayout.Space(2);
                     } else {
                         GUILayout.Space(4);
                     }
 
+                    EditorGUILayout.EndHorizontal();
                 } else {
+                    EditorGUILayout.BeginHorizontal();
+
                     GUI.backgroundColor = DTGUIHelper.BrightTextColor;
                     var tex = EditorGUILayout.TextField("", cat.ProspectiveName);
                     if (tex != cat.ProspectiveName) {
@@ -1021,9 +1034,8 @@ public class SoundGroupOrganizerInspector : Editor {
                                     eventEditing = anEvent;
                                 }
 
-                                GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
-                                if (GUILayout.Button(new GUIContent("Delete", "Click to delete Event"),
-                                                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+                                if (GUILayout.Button(new GUIContent(MasterAudioInspectorResources.DeleteTexture, "Click to delete Event"), EditorStyles.toolbarButton, GUILayout.MaxWidth(36)))
+                                {
                                     eventToDelete = anEvent;
                                 }
                             }
@@ -1378,15 +1390,6 @@ public class SoundGroupOrganizerInspector : Editor {
             return;
         }
 
-        var resourceFileName = string.Empty;
-        var useLocalization = false;
-        if (_organizer.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-            resourceFileName = DTGUIHelper.GetResourcePath(aClip, ref useLocalization);
-            if (string.IsNullOrEmpty(resourceFileName)) {
-                resourceFileName = aClip.name;
-            }
-        }
-
         var clipName = UtilStrings.TrimSpace(aClip.name);
 
         var myGroup = aGroup.GetComponent<DynamicSoundGroup>();
@@ -1405,13 +1408,27 @@ public class SoundGroupOrganizerInspector : Editor {
         spawnedVar.transform.parent = aGroup;
 
         var dynamicVar = spawnedVar.GetComponent<DynamicGroupVariation>();
+        dynamicVar.audLocation = _organizer.bulkVariationMode;
 
-        if (_organizer.bulkVariationMode == MasterAudio.AudioLocation.ResourceFile) {
-            dynamicVar.audLocation = MasterAudio.AudioLocation.ResourceFile;
-            dynamicVar.resourceFileName = resourceFileName;
-            dynamicVar.useLocalization = useLocalization;
-        } else {
-            dynamicVar.VarAudio.clip = aClip;
+        switch (_organizer.bulkVariationMode) {
+            case MasterAudio.AudioLocation.Clip:
+                dynamicVar.VarAudio.clip = aClip;
+                break;
+            case MasterAudio.AudioLocation.ResourceFile:
+                var useLocalization = false;
+                var resourceFileName = DTGUIHelper.GetResourcePath(aClip, ref useLocalization);
+                if (string.IsNullOrEmpty(resourceFileName)) {
+                    resourceFileName = aClip.name;
+                }
+
+                dynamicVar.resourceFileName = resourceFileName;
+                dynamicVar.useLocalization = useLocalization;
+                break;
+#if ADDRESSABLES_ENABLED
+            case MasterAudio.AudioLocation.Addressable:
+                dynamicVar.audioClipAddressable = AddressableEditorHelper.CreateAssetReferenceFromObject(aClip);
+                break;
+#endif
         }
     }
 
@@ -1456,11 +1473,9 @@ public class SoundGroupOrganizerInspector : Editor {
         var randPitch = SoundGroupVariationInspector.GetRandomPreviewPitch(rndVar);
         var varVol = SoundGroupVariationInspector.GetRandomPreviewVolume(rndVar);
 
-        if (rndVar.audLocation != MasterAudio.AudioLocation.FileOnInternet) {
-            if (previewer != null) {
-                MasterAudioInspector.StopPreviewer();
-                previewer.pitch = randPitch;
-            }
+        if (previewer != null) {
+            MasterAudioInspector.StopPreviewer();
+            previewer.pitch = randPitch;
         }
 
         var calcVolume = varVol * aGroup.groupMasterVolume;
@@ -1483,11 +1498,11 @@ public class SoundGroupOrganizerInspector : Editor {
                     previewer.PlayOneShot(rndVar.VarAudio.clip, calcVolume);
                 }
                 break;
-            case MasterAudio.AudioLocation.FileOnInternet:
-                if (!string.IsNullOrEmpty(rndVar.internetFileUrl)) {
-                    Application.OpenURL(rndVar.internetFileUrl);
-                }
+#if ADDRESSABLES_ENABLED
+            case MasterAudio.AudioLocation.Addressable: 
+                DTGUIHelper.PreviewAddressable(rndVar.audioClipAddressable, previewer, calcVolume);
                 break;
+#endif
         }
     }
 
@@ -1649,9 +1664,11 @@ public class SoundGroupOrganizerInspector : Editor {
                     variation.resourceFileName = aVariation.resourceFileName;
                     variation.useLocalization = aVariation.useLocalization;
                     break;
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    variation.internetFileUrl = aVariation.internetFileUrl;
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    variation.audioClipAddressable = aVariation.audioClipAddressable;
                     break;
+#endif
             }
 
             ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
@@ -1761,10 +1778,12 @@ public class SoundGroupOrganizerInspector : Editor {
 
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
-        groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
         groupScript.logSound = aGroup.logSound;
         groupScript.comments = aGroup.comments;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
+#if ADDRESSABLES_ENABLED
+        groupScript.addressableUnusedSecondsLifespan = aGroup.addressableUnusedSecondsLifespan;
+#endif
 
         var dyn = aGroup.GetComponentInParent<DynamicSoundGroupCreator>();
         if (aGroup.busIndex > 0) {
@@ -1814,9 +1833,11 @@ public class SoundGroupOrganizerInspector : Editor {
                     variation.resourceFileName = aVariation.resourceFileName;
                     variation.useLocalization = aVariation.useLocalization;
                     break;
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    variation.internetFileUrl = aVariation.internetFileUrl;
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    variation.audioClipAddressable = aVariation.audioClipAddressable;
                     break;
+#endif
             }
 
             ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
@@ -1923,12 +1944,15 @@ public class SoundGroupOrganizerInspector : Editor {
 
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
-        groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
         groupScript.comments = aGroup.comments;
         groupScript.logSound = aGroup.logSound;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
+#if ADDRESSABLES_ENABLED
+        groupScript.addressableUnusedSecondsLifespan = aGroup.addressableUnusedSecondsLifespan;
+#endif
 
-        var dyn = aGroup.GetComponentInParent<MasterAudio>();
+
+    var dyn = aGroup.GetComponentInParent<MasterAudio>();
         if (aGroup.busIndex > 0) {
             groupScript.busName = dyn.groupBuses[aGroup.busIndex - MasterAudio.HardCodedBusOptions].busName;
         }
@@ -1976,9 +2000,11 @@ public class SoundGroupOrganizerInspector : Editor {
                     variation.resourceFileName = aVariation.resourceFileName;
                     variation.useLocalization = aVariation.useLocalization;
                     break;
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    variation.internetFileUrl = aVariation.internetFileUrl;
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    variation.audioClipAddressable = aVariation.audioClipAddressable;
                     break;
+#endif
             }
 
             ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
@@ -2088,12 +2114,14 @@ public class SoundGroupOrganizerInspector : Editor {
 
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
-        groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
         groupScript.comments = aGroup.comments;
         groupScript.logSound = aGroup.logSound;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
+#if ADDRESSABLES_ENABLED
+        groupScript.addressableUnusedSecondsLifespan = aGroup.addressableUnusedSecondsLifespan;
+#endif
 
-        var dyn = groupScript.GetComponentInParent<DynamicSoundGroupCreator>();
+    var dyn = groupScript.GetComponentInParent<DynamicSoundGroupCreator>();
         if (!string.IsNullOrEmpty(aGroup.busName)) {
             var busIndex = -1;
 
@@ -2173,9 +2201,11 @@ public class SoundGroupOrganizerInspector : Editor {
                     variation.resourceFileName = aVariation.resourceFileName;
                     variation.useLocalization = aVariation.useLocalization;
                     break;
-                case MasterAudio.AudioLocation.FileOnInternet:
-                    variation.internetFileUrl = aVariation.internetFileUrl;
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    variation.audioClipAddressable = aVariation.audioClipAddressable;
                     break;
+#endif
             }
 
             ResonanceAudioHelper.CopyResonanceAudioSource(aVariation, variation);
@@ -2288,10 +2318,12 @@ public class SoundGroupOrganizerInspector : Editor {
 
         groupScript.isUsingOcclusion = aGroup.isUsingOcclusion;
 
-        groupScript.resourceClipsAllLoadAsync = aGroup.resourceClipsAllLoadAsync;
         groupScript.comments = aGroup.comments;
         groupScript.logSound = aGroup.logSound;
         groupScript.alwaysHighestPriority = aGroup.alwaysHighestPriority;
+#if ADDRESSABLES_ENABLED
+        groupScript.addressableUnusedSecondsLifespan = aGroup.addressableUnusedSecondsLifespan;
+#endif
 
         var dyn = groupScript.GetComponentInParent<MasterAudio>();
         if (!string.IsNullOrEmpty(aGroup.busName)) {

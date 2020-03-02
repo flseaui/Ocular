@@ -336,20 +336,28 @@ namespace DarkTonic.MasterAudio {
                 GrpVariation.LowPassFilter = newFilter;
             }
 
+#if PHY2D_ENABLED
             var oldQueriesStart = Physics2D.queriesStartInColliders;
             if (is2DRaycast) {
                 Physics2D.queriesStartInColliders = _maThisFrame.occlusionIncludeStartRaycast2DCollider;
             }
+#endif
 
+#if PHY2D_ENABLED || PHY3D_ENABLED
             var oldRaycastsHitTriggers = true;
+#endif
 
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
             if (is2DRaycast) {
+#if PHY2D_ENABLED
                 oldRaycastsHitTriggers = Physics2D.queriesHitTriggers;
                 Physics2D.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
+#endif
             } else {
+#if PHY3D_ENABLED
                 oldRaycastsHitTriggers = Physics.queriesHitTriggers;
                 Physics.queriesHitTriggers = _maThisFrame.occlusionRaycastsHitTriggers;
+#endif
             }
 
             var hitPoint = Vector3.zero;
@@ -359,52 +367,60 @@ namespace DarkTonic.MasterAudio {
             if (_maThisFrame.occlusionUseLayerMask) {
                 switch (_maThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics3D:
+#if PHY3D_ENABLED
                         RaycastHit hitObject;
                         if (Physics.Raycast(raycastOrigin, direction, out hitObject, distanceToListener, _maThisFrame.occlusionLayerMask.value)) {
                             isHit = true;
                             hitPoint = hitObject.point;
                             hitDistance = hitObject.distance;
                         }
-
+#endif
                         break;
                     case MasterAudio.RaycastMode.Physics2D:
+#if PHY2D_ENABLED
                         var castHit2D = Physics2D.Raycast(raycastOrigin, direction, distanceToListener, _maThisFrame.occlusionLayerMask.value);
                         if (castHit2D.transform != null) {
                             isHit = true;
                             hitPoint = castHit2D.point;
                             hitDistance = castHit2D.distance;
                         }
-
+#endif
                         break;
                 }
             } else {
                 switch (_maThisFrame.occlusionRaycastMode) {
                     case MasterAudio.RaycastMode.Physics3D:
+#if PHY3D_ENABLED
                         RaycastHit hitObject;
                         if (Physics.Raycast(raycastOrigin, direction, out hitObject, distanceToListener)) {
                             isHit = true;
                             hitPoint = hitObject.point;
                             hitDistance = hitObject.distance;
                         }
-
+#endif
                         break;
                     case MasterAudio.RaycastMode.Physics2D:
+#if PHY2D_ENABLED
                         var castHit2D = Physics2D.Raycast(raycastOrigin, direction, distanceToListener);
                         if (castHit2D.transform != null) {
                             isHit = true;
                             hitPoint = castHit2D.point;
                             hitDistance = castHit2D.distance;
                         }
-
+#endif
                         break;
                 }
             }
 
             if (is2DRaycast) {
+#if PHY2D_ENABLED
                 Physics2D.queriesStartInColliders = oldQueriesStart;
                 Physics2D.queriesHitTriggers = oldRaycastsHitTriggers;
+#endif
             } else {
+#if PHY3D_ENABLED
                 Physics.queriesHitTriggers = oldRaycastsHitTriggers;
+#endif
             }
 
             if (_maThisFrame.occlusionShowRaycasts) {
@@ -463,7 +479,16 @@ namespace DarkTonic.MasterAudio {
 
             VarAudio.PlayScheduled(startTime);
 
-            AudioUtil.ClipPlayed(VarAudio.clip, GrpVariation.GameObj);
+            switch (GrpVariation.audLocation) {
+#if ADDRESSABLES_ENABLED
+                case MasterAudio.AudioLocation.Addressable:
+                    AudioAddressableOptimizer.AddAddressablePlayingClip(GrpVariation.audioClipAddressable, VarAudio);
+                    break;
+#endif
+                default:
+                    AudioUtil.ClipPlayed(VarAudio.clip, GrpVariation.GameObj);
+                    break;
+            }
 
             if (GrpVariation.useRandomStartTime) {
                 VarAudio.time = ClipStartPosition;
@@ -666,9 +691,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region MonoBehavior events
+#region MonoBehavior events
 
         // ReSharper disable once UnusedMember.Local
         private void OnEnable() {
@@ -813,9 +838,9 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         public float ClipStartPosition {
             get {
@@ -955,7 +980,7 @@ namespace DarkTonic.MasterAudio {
                 return false;
             }
         }
-        #endregion
+#endregion
     }
 }
 /*! \endcond */

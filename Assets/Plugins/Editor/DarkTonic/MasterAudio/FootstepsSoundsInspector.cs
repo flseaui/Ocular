@@ -68,16 +68,32 @@ public class FootstepsSoundsInspector : Editor {
 
         DTGUIHelper.VerticalSpace(3);
 
+#if !PHY3D_ENABLED
+        switch (_sounds.footstepEvent) {
+            case FootstepSounds.FootstepTriggerMode.OnCollision:
+            case FootstepSounds.FootstepTriggerMode.OnTriggerEnter:
+                DTGUIHelper.ShowRedError("You cannot use Physics3D events because you do not have the Physics3D package installed. This script will not work.");
+                return;
+        }
+#endif
+#if !PHY2D_ENABLED
+        switch (_sounds.footstepEvent) {
+            case FootstepSounds.FootstepTriggerMode.OnCollision2D:
+            case FootstepSounds.FootstepTriggerMode.OnTriggerEnter2D:
+                DTGUIHelper.ShowRedError("You cannot use Physics2D events because you do not have the Physics2D package installed. This script will not work.");
+                return;
+        }
+#endif
+
         EditorGUILayout.BeginHorizontal();
         GUI.contentColor = DTGUIHelper.BrightButtonColor;
-        GUILayout.Space(10);
         if (GUILayout.Button("Add Footstep Sound", EditorStyles.toolbarButton, GUILayout.Width(125))) {
             AddFootstepSound();
         }
 
         if (_sounds.footstepGroups.Count > 0) {
             GUILayout.Space(10);
-            if (GUILayout.Button(new GUIContent("Delete Footstep Sound", "Delete the bottom Footstep Sound"), EditorStyles.toolbarButton, GUILayout.Width(125))) {
+            if (GUILayout.Button(new GUIContent("Delete Footstep Sound", "Delete the bottom Footstep Sound"), EditorStyles.toolbarButton, GUILayout.Width(140))) {
                 DeleteFootstepSound();
             }
             var buttonText = "Collapse All";
@@ -146,37 +162,17 @@ public class FootstepsSoundsInspector : Editor {
             var state = step.isExpanded;
             var text = "Footstep Sound #" + (f + 1);
 
-            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-            if (!state) {
-                GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
-            } else {
-                GUI.backgroundColor = DTGUIHelper.ActiveHeaderColor;
-            }
-
-            GUILayout.BeginHorizontal();
-
-            text = "<b><size=11>" + text + "</size></b>";
-
-            if (state) {
-                text = "\u25BC " + text;
-            } else {
-                text = "\u25BA " + text;
-            }
-            if (!GUILayout.Toggle(true, text, "dragtab", GUILayout.MinWidth(20f))) {
-                state = !state;
-            }
+            DTGUIHelper.ShowCollapsibleSection(ref state, text);
 
             GUI.backgroundColor = Color.white;
-            if (!state) {
-                GUILayout.Space(3f);
-            }
+            GUILayout.Space(3f);
 
             if (state != step.isExpanded) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Expand Variation");
                 step.isExpanded = state;
             }
 
-            DTGUIHelper.AddHelpIcon("http://www.dtdevtools.com/docs/masteraudio/FootstepSounds.htm#FootstepSound");
+            DTGUIHelper.AddHelpIconNoStyle("http://www.dtdevtools.com/docs/masteraudio/FootstepSounds.htm#FootstepSound");
 
             EditorGUILayout.EndHorizontal();
 
@@ -208,7 +204,6 @@ public class FootstepsSoundsInspector : Editor {
                     step.matchingLayers[i] = newLayer;
                 }
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Space(10);
 
                 GUI.contentColor = DTGUIHelper.BrightButtonColor;
                 if (GUILayout.Button(new GUIContent("Add", "Click to add a layer match at the end"), EditorStyles.toolbarButton, GUILayout.Width(60))) {

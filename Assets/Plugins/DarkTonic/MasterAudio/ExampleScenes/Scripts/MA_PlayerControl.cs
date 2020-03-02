@@ -18,8 +18,12 @@ public class MA_PlayerControl : MonoBehaviour {
     void Awake() {
         useGUILayout = false;
         _trans = transform;
+#if !PHY3D_ENABLED
+        Debug.LogError("MA_PlayerControl and this example Scene will not work properly without Physics3D package installed.");
+#endif
     }
 
+#if PHY3D_ENABLED
     // ReSharper disable once UnusedMember.Local
     void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.name.StartsWith("Enemy(")) {
@@ -27,6 +31,7 @@ public class MA_PlayerControl : MonoBehaviour {
         }
 
    }
+#endif
 
     // ReSharper disable UnusedMember.Local
     void OnDisable() {

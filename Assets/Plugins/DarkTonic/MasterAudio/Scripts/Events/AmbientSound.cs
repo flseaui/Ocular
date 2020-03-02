@@ -40,7 +40,7 @@ namespace DarkTonic.MasterAudio {
 
         // ReSharper disable once UnusedMember.Local
         void OnEnable() {
-            StartTrackers();
+            MasterAudio.SetupAmbientNextFrame(this);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -57,6 +57,11 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
+            MasterAudio.RemoveDelayedAmbient(this); // make sure it doesn't start playing or have trackers if it hasn't yet (< 1 frame since enabling).
+            StopTrackers();
+        }
+
+        private void StopTrackers() {
             var grp = MasterAudio.GrabGroup(AmbientSoundGroup, false); // script execution order thing with DGSC. Need to check so warnings don't get logged.
             if (grp != null) {
                 switch (exitMode) {
@@ -72,8 +77,8 @@ namespace DarkTonic.MasterAudio {
             RuntimeFollower = null;
         }
 
-		/*! \cond PRIVATE */
-		public void CalculateRadius() {
+        /*! \cond PRIVATE */
+        public void CalculateRadius() {
             var aud = GetNamedOrFirstAudioSource();
 
             if (aud == null) {
@@ -196,18 +201,24 @@ namespace DarkTonic.MasterAudio {
             Gizmos.DrawWireSphere(transform.position, colliderMaxDistance);
         }
 
-        private void StartTrackers() {
+        public void StartTrackers() {
             if (!IsValidSoundGroup) {
                 return;
             }
 
+#if !PHY3D_ENABLED
+            MasterAudio.LogWarningIfNeverLogged("Ambient Sounds script will not function because you do not have Physics package installed.", MasterAudio.PHYSICS_DISABLED);
+#else
             var shouldIgnoreCollisions = Physics.GetIgnoreLayerCollision(AmbientUtil.IgnoreRaycastLayerNumber, AmbientUtil.IgnoreRaycastLayerNumber);
             if (shouldIgnoreCollisions) {
                 MasterAudio.LogWarningIfNeverLogged("You have disabled collisions between Ignore Raycast layer and itself on the Physics Layer Collision matrix. This must be turned back on or Ambient Sounds script will not function.", MasterAudio.ERROR_MA_LAYER_COLLISIONS_DISABLED);
+                return;
             }
+#endif
 
             var isListenerFollowerAvailable = AmbientUtil.InitListenerFollower();
             if (!isListenerFollowerAvailable) {
+                MasterAudio.LogWarning("Your Ambient Sound script on Game Object '" + name + "' will not function because you have no Audio Listener component in any active Game Object in the Scene.");
                 return; // don't bother creating the follower because there's no Listener to collide with.
             }
 
