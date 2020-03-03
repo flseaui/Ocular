@@ -1,6 +1,6 @@
 using System;
 using Game;
-using OcularAnimation.New;
+using OcularAnimation;
 using UnityEngine;
 
 namespace Level.Objects.Clones

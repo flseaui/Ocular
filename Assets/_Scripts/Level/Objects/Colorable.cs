@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using Game;
 using Misc;
-using OcularAnimation.New;
+using OcularAnimation;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UI;

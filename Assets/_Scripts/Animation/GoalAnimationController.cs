@@ -1,53 +1,86 @@
+using System.Collections;
+using Level.Objects;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
-namespace OcularAnimation 
+namespace OcularAnimation
 {
-    public class GoalAnimationController : MonoBehaviour 
+    public class GoalAnimationController : MonoBehaviour
     {
-        [SerializeField]
-        private VoxelAnimation _goalAnimation;
-        
-        private AnimFrame _currentFrame;
-        [ShowInInspector] [ReadOnly] private VoxelAnimation _currentAnimation;
-        private bool _loopAnimation;
-        private bool _resolvingFrame;
-        private float _timeRemaining;
+        [SerializeField] private NewVoxelAnimation _brokenGoal;
+        [SerializeField] private NewVoxelAnimation _goalAnim;
+        [SerializeField] private NewVoxelAnimation _reforming;
 
-        private void Start()
+        private NewVoxelAnimation _currentAnimation;
+        
+        private MeshFilter[] _meshes;
+
+        private Goal _goal;
+        
+        private void Awake()
         {
-            _currentAnimation = _goalAnimation;
-            _resolvingFrame = false;
+            _meshes = transform.GetComponentsInChildren<MeshFilter>();
+            
+            _brokenGoal.Init();
+            _goalAnim.Init();
+            //_reforming.Init();
+            
+            _currentAnimation = _goalAnim;
+            
+            _goal = transform.GetChild(0).GetComponent<Goal>();
+            
+            StartAnim();
+        }
+
+        private void StartAnim()
+        {
+            StartCoroutine(NextFrame());
+        }
+
+        private void StopAnim()
+        {
+            StopCoroutine(NextFrame());
+        }
+
+        private IEnumerator NextFrame()
+        {
+            yield return new WaitForSeconds(_currentAnimation.CurrentFrame.TimingMS / 1000f);
+            for (var i = 0; i < _meshes.Length; ++i)
+            {
+                _meshes[i].sharedMesh = _currentAnimation.CurrentFrame.Meshes[i].sharedMesh;
+                _meshes[i].GetComponent<MeshRenderer>().sharedMaterial =
+                    _currentAnimation.CurrentFrame.Meshes[i].GetComponent<MeshRenderer>().sharedMaterial;
+            }
+
+            _currentAnimation.NextFrame();
+
+            StartCoroutine(NextFrame());
         }
 
         private void Update()
         {
-            if (_resolvingFrame)
+            var newAnim = DetermineAnimation();
+            
+            if (newAnim != null && newAnim != _currentAnimation)
             {
-                _timeRemaining -= Time.deltaTime;
-                if (_timeRemaining <= 0) _resolvingFrame = false;
-                return;               
+                _currentAnimation.Reset();
+                newAnim.Reset();
+                _currentAnimation = newAnim;
             }
-            _currentAnimation = DetermineAnimation();
-            PlayAnimation(_currentAnimation, _loopAnimation);
         }
 
-        private VoxelAnimation DetermineAnimation()
+        private NewVoxelAnimation DetermineAnimation()
         {
-            _loopAnimation = true;
-            return _goalAnimation;
-        }
+            if (_goal.Satisfied && _currentAnimation != _goalAnim)
+            {
+                return _goalAnim;
+            }
 
-        private void PlayAnimation(VoxelAnimation anim, bool loop)
-        {
-            if (!transform.GetChild(0).gameObject.activeSelf)
-                return; 
-            _currentFrame = loop ? anim.Loop(): anim.Play();
-            if (ReferenceEquals(_currentFrame, null)) return;
-            GetComponentInChildren<MeshFilter>().mesh = _currentFrame._mesh;
-            GetComponentInChildren<MeshRenderer>().sharedMaterial = _currentFrame._material;
-            _timeRemaining = anim.CurrentFrameLength() * .00001f;
-            _resolvingFrame = true;
+            if (!_goal.Satisfied && _currentAnimation != _brokenGoal)
+            {
+                return _brokenGoal;
+            }
+
+            return null;
         }
     }
 }

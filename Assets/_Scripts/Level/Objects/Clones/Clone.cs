@@ -1,7 +1,7 @@
 using System;
 using Game;
 using Misc;
-using OcularAnimation.New;
+using OcularAnimation;
 using Player;
 using Sirenix.OdinInspector;
 using UnityEngine;

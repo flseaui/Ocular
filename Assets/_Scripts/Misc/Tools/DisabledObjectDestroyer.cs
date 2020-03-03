@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Game;
 using Level;
 using Level.Objects;
-using OldEditor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
