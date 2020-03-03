@@ -20,6 +20,12 @@ namespace Level.Objects {
         {
             _animator = transform.parent.GetComponent<Animator>();
             Satisfied = false;
+            Player.Player.OnDeath += ResetConditions;
+        }
+
+        private void OnDestroy()
+        {
+            Player.Player.OnDeath -= ResetConditions;
         }
 
         private void Update()
@@ -28,6 +34,11 @@ namespace Level.Objects {
             _animator.SetBool(SatisfiedProp, Satisfied);
         }
 
+        private void ResetConditions()
+        {
+            GoalConditionsMet = 0;
+        }
+        
         private void OnTriggerEnter(Collider other)
         {
             if (!Satisfied) return;

@@ -148,8 +148,9 @@ namespace Player
         {
             if (Navigating)
             {
+                var curWalk = GetCurrentWalkable(out _);
                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
-                if (cloneHit.collider != null && cloneHit.collider.CompareTag("Clone") && !cloneHit.transform.GetComponent<ClonePathfinder>().CanMove(_currentStart, _currentEnd))
+                if ((curWalk == null || !curWalk.Enabled) || (cloneHit.collider != null && cloneHit.collider.CompareTag("Clone") && !cloneHit.transform.GetComponent<ClonePathfinder>().CanMove(curWalk, _currentEnd)))
                 {
                     Navigating = false;
                     ClearPath();
@@ -167,7 +168,6 @@ namespace Player
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
-                        var curWalk = GetCurrentWalkable(out _);
                         if (_queuedPath != null && _queuedPath.Count > 0)
                         {
                             ClearPath();
@@ -189,7 +189,7 @@ namespace Player
                                 if (_currentEnd.GetComponent<Colorable>().Outlined &&
                                     _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible ||
                                     (hit.collider != null && hit.transform.CompareTag("Clone") &&
-                                    !hit.transform.GetComponent<ClonePathfinder>().CanMove(_currentStart, _currentEnd)))
+                                    !hit.transform.GetComponent<ClonePathfinder>().CanMove(curWalk, _currentEnd)))
                                 {
                                     Navigating = false;
                                     ClearPath();

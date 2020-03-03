@@ -119,7 +119,6 @@ namespace OcularAnimation.New
                 {
                     Debug.Log("deez");
                     GetComponent<Clone>().ActuallyDie();
-                    _clone.Died = false;
                 }
             }
         }

@@ -95,12 +95,14 @@ namespace Level.Objects {
         public void CheckBelow(bool state)
         {
             if (Physics.Raycast(
-                new Vector3(transform.position.x, transform.position.y - .1f, transform.position.z),
+                new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z),
                 new Vector3(0, -1, 0), out var hit, 3, LayerMask.GetMask("Model")))
             {
                 if (hit.collider is null) return;
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
                 {
+                    if (this is SlopeWalkable)
+                        Debug.Log($"so it appears dat we have hit {walkable.UniqueId}");
                     walkable.JustChangedState = true;
                     walkable.Enabled = state;
                 }
