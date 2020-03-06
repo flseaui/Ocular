@@ -57,7 +57,7 @@ namespace Level.Objects
         private BlockState _blockState;
         private GameObject _runtimeOutlineModel;
 
-        private List<IController> _controllers;
+        public List<IController> Controllers;
 
         [DisableInPlayMode, ShowInInspector]
         public OcularState OcularState
@@ -168,7 +168,7 @@ namespace Level.Objects
 
         public void RegisterController(IController controller)
         {
-            _controllers.Add(controller);
+            Controllers.Add(controller);
         }
 
         public void UpdateState() => InternalOnGlassesToggled();
@@ -190,9 +190,9 @@ namespace Level.Objects
             // ATM This code assumes controller is button bc thats the only implemented controller
             // TODO Come up with better controller solution
 
-            if (_controllers.Count > 0)
+            if (Controllers.Count > 0)
             {
-                if (((MonoBehaviour)_controllers[0]).GetComponent<Colorable>().State != BlockState.Visible)
+                if (((MonoBehaviour)Controllers[0]).GetComponent<Colorable>().State != BlockState.Visible)
                 {
                     Outlined = false;
                     return visible
@@ -218,9 +218,9 @@ namespace Level.Objects
 
             if (OcularState == _initialState)
             {
-                if (IsColorVisible(((ButtonWalkable)_controllers[0]).Color))
+                if (IsColorVisible(((ButtonWalkable)Controllers[0]).Color))
                 {
-                    return (((ButtonWalkable)_controllers[0]).Color, BlockState.Invisible);
+                    return (((ButtonWalkable)Controllers[0]).Color, BlockState.Invisible);
                 }
 
                 return (OcularState, BlockState.Invisible);
@@ -247,14 +247,14 @@ namespace Level.Objects
                             if (OcularState != _initialState)
                                 _propBlock.SetColor("_Color", StateToColor(_initialState));
                             else
-                                _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
+                                _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)Controllers[0]).Color));
                         }
                         else
                         {
                             if (OcularState != _initialState)
                                 _propBlock.SetColor("_Color", StateToColor(_initialState));
                             else
-                                _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)_controllers[0]).Color));
+                                _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)Controllers[0]).Color));
                         }
                         r.SetPropertyBlock(_propBlock);
 
@@ -420,7 +420,7 @@ namespace Level.Objects
         {
             if (!Application.isPlaying) return;
 
-            _controllers = new List<IController>();
+            Controllers = new List<IController>();
 
             if (transform.HasComponent<SlopeWalkable>())
             {
@@ -440,9 +440,9 @@ namespace Level.Objects
 
         private void OnDestroy()
         {
-            if (_controllers != null)
+            if (Controllers != null)
             {
-                foreach (var controller in _controllers)
+                foreach (var controller in Controllers)
                 {
                     ((ButtonWalkable) controller).TargetBlocks.Remove(this);
                 }

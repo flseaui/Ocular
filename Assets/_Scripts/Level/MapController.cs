@@ -12,13 +12,13 @@ namespace Level {
 
         private Walkable[] _walkables;
         private Colorable[] _colorables;
-        private IController[] _controllers;
+        public IController[] Controllers;
         
         private void Awake()
         {
             _walkables = transform.GetComponentsInChildren<Walkable>();
             _colorables = transform.GetComponentsInChildren<Colorable>();
-            _controllers = transform.GetComponentsInChildren<IController>();
+            Controllers = transform.GetComponentsInChildren<IController>();
         }
         
         public void FindNeighbors()
@@ -37,7 +37,7 @@ namespace Level {
         public void UpdateColorables()
         {
             var controllers = new List<GameObject>();
-            foreach (var controller in _controllers)
+            foreach (var controller in Controllers)
             {
                 if (((MonoBehaviour) controller).transform.HasComponent<Colorable>(out var c))
                     c.UpdateState();

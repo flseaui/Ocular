@@ -8,7 +8,8 @@ using UnityEngine;
 public class ButtonHighlightChecker : MonoBehaviour
 {
 
-    private ButtonWalkable _lastHighlighted;
+    private ButtonWalkable _lastHighlightedButton;
+    private Colorable _lastHighlightedOutline;
 
     [SerializeField] private Camera _mainCamera;
 
@@ -18,11 +19,11 @@ public class ButtonHighlightChecker : MonoBehaviour
 
     private void Update()
     {
-        void DisableLast()
+        void DisableLastButton()
         {
-            if (_lastHighlighted != null)
+            if (_lastHighlightedButton != null)
             {
-                foreach (var target in _lastHighlighted.TargetBlocks)
+                foreach (var target in _lastHighlightedButton.TargetBlocks)
                 {
                     var outlines = target.transform.GetComponentsInChildren<Outline>();
                     outlines.ForEach(x => { x.enabled = false; });
@@ -30,6 +31,18 @@ public class ButtonHighlightChecker : MonoBehaviour
             }
         }
 
+        void DisableLastOutline()
+        {
+            if (_lastHighlightedOutline != null)
+            {
+                foreach (var controller in _lastHighlightedOutline.Controllers)
+                {
+                    var outlines = ((ButtonWalkable) controller).transform.GetComponentsInChildren<Outline>();
+                    outlines.ForEach(x => { x.enabled = false; });
+                }
+            }
+        }
+        
         if (Input.GetKey(KeyCode.LeftShift))
         {
             var hObj = GetHighlightedObject(out _);
@@ -45,12 +58,12 @@ public class ButtonHighlightChecker : MonoBehaviour
                         _doneItOnce = true;
                     }
 
-                    if (button != _lastHighlighted)
+                    if (button != _lastHighlightedButton)
                     {
-                        DisableLast();
+                        DisableLastButton();
                     }
 
-                    _lastHighlighted = button;
+                    _lastHighlightedButton = button;
 
                     foreach (var target in button.TargetBlocks)
                     {
@@ -61,19 +74,46 @@ public class ButtonHighlightChecker : MonoBehaviour
                     }
 
                 }
+                else if (hObj.transform.parent.CompareTag("Outline"))
+                {
+                    var colorable = hObj.transform.parent.parent.GetComponent<Colorable>();
+
+                    if (colorable != _lastHighlightedOutline)
+                    {
+                        DisableLastOutline();
+                    }
+
+                    _lastHighlightedOutline = colorable;
+                    
+                    foreach (var controller in _lastHighlightedOutline.Controllers)
+                    {
+                        var buttonWalkable = (ButtonWalkable) controller;
+                        var outlines = buttonWalkable.transform.GetComponentsInChildren<Outline>();
+                        outlines.ForEach(x =>
+                        {
+                            _mainCamera.GetComponent<OutlineEffect>().lineColor0 =
+                                Colorable.StateToColor(buttonWalkable.GetComponent<Colorable>().OcularState);
+                            x.enabled = true;
+                        });
+                    }
+
+                }
                 else
                 {
-                    DisableLast();
+                    DisableLastButton();
+                    DisableLastOutline();
                 }
             }
             else
             {
-                DisableLast();
+                DisableLastButton();
+                DisableLastOutline();
             }
         }
         else
         {
-            DisableLast();
+            DisableLastButton();
+            DisableLastOutline();
         }
        
     }
