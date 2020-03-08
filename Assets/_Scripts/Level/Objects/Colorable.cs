@@ -43,8 +43,7 @@ namespace Level.Objects
         [SerializeField, HideInInspector] private Color _color;
         [SerializeField, HideInInspector] private OcularState _ocularState;
         [SerializeField] private Material _blockMat;
-        [SerializeField] private Material _outlineMat;
-        [SerializeField] private GameObject _outlineModel;
+        private GameObject _outlineModel;
 
         private MaterialPropertyBlock _propBlock;
         private Renderer[] _renderers;
@@ -56,6 +55,7 @@ namespace Level.Objects
 
         private BlockState _blockState;
         private GameObject _runtimeOutlineModel;
+        private bool _firstTimeOutlined;
 
         public List<IController> Controllers;
 
@@ -242,6 +242,19 @@ namespace Level.Objects
                     {
                         var r = _runtimeOutlineModel.transform.GetChild(0).GetComponent<Renderer>();
                         r.GetPropertyBlock(_propBlock);
+
+                        if (_firstTimeOutlined)
+                        {
+                            _firstTimeOutlined = false;
+                            if (_levelInfo != null)
+                            {
+                                _propBlock.SetFloat(Contrast, _levelInfo.BlockContrast);
+                                _propBlock.SetFloat(Intensity, _levelInfo.ColorIntensity);
+                                _propBlock.SetFloat(ShadowStrength, _levelInfo.ShadowStrength);
+                                _propBlock.SetColor(ShadowTint, _levelInfo.ShadowTint);
+                            }
+                        }
+                        
                         if (State != BlockState.Visible)
                         {
                             if (OcularState != _initialState)
@@ -407,6 +420,8 @@ namespace Level.Objects
                 }
             }
 
+            _firstTimeOutlined = true;
+            
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 
