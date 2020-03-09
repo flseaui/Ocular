@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game;
@@ -82,22 +83,22 @@ namespace LevelEditor
             _level.transform.parent.GetComponent<Animator>().enabled = false;
             EditorLevelInfo = _level.GetComponentInParent<LevelInfo>();
             _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
-            GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             _level.transform.ForEachChild(x =>
             {
                 if (x.HasComponent<MaxCount>())
                     _limitedObjects.Add(x.gameObject);
             });
-            Camera.main.GetComponent<EditorCameraCenter>().LevelInfo = EditorLevelInfo;
+            var editorCam = Camera.main.GetComponent<EditorCameraCenter>();
+            editorCam.LevelInfo = EditorLevelInfo;
+            editorCam.Init();
         }
 
         public void NewLevel(int size)
         {
             _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
             _level.transform.parent.GetComponent<Animator>().enabled = false;
-            _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
+            _level.transform.parent.name = "BlankLevel";
             _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
-                GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             _level.transform.ForEachChild(x =>
             {
                 if (x.HasComponent<MaxCount>())
@@ -146,27 +147,37 @@ namespace LevelEditor
         
         public void SaveLevel()
         {
-            _level.transform.parent.GetComponent<Animator>().enabled = true;
             var levelGO = _level.transform.parent.Find("Level");
             if (levelGO != null)
             {
                 levelGO.gameObject.SetActive(true);
             } 
-            if (EditorLevelInfo.Name == "BlankLevel")
+            
+            HiResScreenshot.TakeHiResShot(_level.transform.parent.name);
+
+            StartCoroutine(FinishSave());
+        }
+
+        private IEnumerator FinishSave()
+        {
+            yield return new WaitUntil(() => !HiResScreenshot.TakingShot);
+            
+            _level.transform.parent.GetComponent<Animator>().enabled = true;
+            
+            if (EditorLevelInfo.name == "BlankLevel")
             {
                 var levelName =
                     $"Assets/_Prefabs/Levels/Level{_level.GetHashCode()}.prefab";
-                EditorLevelInfo.Name = levelName;
                 PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, levelName);
             }
             else
             {
-                var level = PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, EditorLevelInfo.Name);
+                var path = PlayerPrefs.GetString("LevelToLoad");
+                PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, path);
             }
-            HiResScreenshot.TakeHiResShot($"Level{_level.GetHashCode()}");
             SceneManager.LoadSceneAsync("EditorMenu");
         }
-
+        
         public void PlaceElement(Vector3 position, Orientation orientation, Direction direction)
         {
             var element = (GameObject)PrefabUtility.InstantiatePrefab(_currentObject, _level.transform);

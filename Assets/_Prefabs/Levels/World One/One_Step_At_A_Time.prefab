@@ -103,6 +103,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -338,6 +339,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -444,6 +446,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -580,7 +583,6 @@ MonoBehaviour:
     GlassesType: 2
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 9047335057094302999}
-  Name: Assets/_Prefabs/Levels/One_Step_At_A_Time.prefab
   InGameName: One Step At A Time
   Animator: {fileID: 5683868652666594106}
   ReadyToLoad: 0
@@ -643,7 +645,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 3343191074711946764, guid: a3e53fc4bd222fb4fb720d8884fe7b33,
     type: 3}
-  _clonePrefab: {fileID: 0}
+  _clonePrefab: {fileID: 3343191074711946764, guid: 2ed8ac000dd5551478838f831eb9f0bc,
+    type: 3}
 --- !u!1 &6707539420991138279
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,8 +695,6 @@ MonoBehaviour:
   _color: {r: 1, g: 1, b: 1, a: 1}
   _ocularState: 0
   _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 0}
 --- !u!1 &7549350777103641221
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,9 +802,6 @@ MonoBehaviour:
   _color: {r: 0.43137255, g: 0.53333336, b: 0.80784315, a: 1}
   _ocularState: 5
   _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 3364352014373522285, guid: 946f18c0079936c4da76719db2a2d9ae,
-    type: 3}
 --- !u!1 &8230692573204304302
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,8 +841,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8230692573204304302}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.71676934, b: 0.6933962, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -3352,6 +3351,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6508647152425180106, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: Satisfied
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754425631139287885, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.038915344
       objectReference: {fileID: 0}
     - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}

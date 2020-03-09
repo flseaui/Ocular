@@ -9,8 +9,6 @@ namespace LevelEditor
     public class CameraOrbit : MonoBehaviour
     {
         private CameraZoom _zoomer;
-        
-        [NonSerialized] public Transform Target;
 
         [SerializeField] private float _rotateSpeed;
 

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Level;
 using TMPro;
 using UnityEditor;
@@ -20,7 +21,8 @@ namespace LevelEditor
         private void Start()
         {
             CustomCursor.SetCursor(null);
-            var prefabs = Directory.GetFiles("Assets/_Prefabs/Levels", "*.prefab", SearchOption.AllDirectories);
+            var prefabs = Directory.GetFiles("Assets/_Prefabs/Levels", "*.prefab", SearchOption.AllDirectories)
+                .OrderBy(Path.GetFileName).ToList();
             foreach(var file in prefabs)
             {
                 var assetPath = file.Replace(Application.dataPath, "").Replace('\\', '/');
@@ -53,7 +55,6 @@ namespace LevelEditor
                         AssetDatabase.RenameAsset(assetPath, text);
                         source.name = text;
                         assetPath = AssetDatabase.GetAssetPath(source);
-                        source.GetComponent<LevelInfo>().Name = assetPath;
                         banner.transform.Find("LevelName").GetComponent<TextMeshProUGUI>().text = text;
                         if (File.Exists(oldFile))
                             File.Move(oldFile, $"Assets/_Prefabs/Levels/Thumbnails/thumb_{source.name}.png");

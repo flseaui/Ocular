@@ -13,7 +13,7 @@ namespace LevelEditor
 
         public LevelInfo LevelInfo;
 
-        private void Start()
+        public void Init()
         {
             if (LevelInfo.HasCustomCamera)
             {

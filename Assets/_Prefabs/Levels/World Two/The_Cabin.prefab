@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -276,9 +276,8 @@ MonoBehaviour:
     GlassesType: 2
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 6794673750937102896}
-  Name: Assets/_Prefabs/Levels/World Two/Campfire.prefab
   InGameName: The Cabin
-  Animator: {fileID: 0}
+  Animator: {fileID: 7521657952760695084}
   ReadyToLoad: 0
   HasCustomCamera: 1
   CameraPosition: {x: -0.00000018924474, y: 0.45, z: -10}
@@ -339,7 +338,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 3343191074711946764, guid: a3e53fc4bd222fb4fb720d8884fe7b33,
     type: 3}
-  _clonePrefab: {fileID: 0}
+  _clonePrefab: {fileID: 3343191074711946764, guid: 2ed8ac000dd5551478838f831eb9f0bc,
+    type: 3}
 --- !u!1 &7495681201619891219
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,11 +1175,35 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1952843274833086143, guid: 30a7bd40cd46f40adab444466e4ac3f3,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2960270605223767779, guid: cde8b12f0b9e2435d83fe83004a88d26,
+        type: 3}
     - target: {fileID: 2465773480188729371, guid: 30a7bd40cd46f40adab444466e4ac3f3,
         type: 3}
       propertyPath: m_Name
       value: ocular 2-7--anim-00
       objectReference: {fileID: 0}
+    - target: {fileID: 7005006088093400019, guid: 30a7bd40cd46f40adab444466e4ac3f3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 7036966344591006910, guid: cde8b12f0b9e2435d83fe83004a88d26,
+        type: 3}
+    - target: {fileID: 8329436333999488500, guid: 30a7bd40cd46f40adab444466e4ac3f3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 7036966344591006910, guid: cde8b12f0b9e2435d83fe83004a88d26,
+        type: 3}
+    - target: {fileID: 8998101614833808991, guid: 30a7bd40cd46f40adab444466e4ac3f3,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 9218620875489449691, guid: cde8b12f0b9e2435d83fe83004a88d26,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30a7bd40cd46f40adab444466e4ac3f3, type: 3}
 --- !u!4 &26853236314350262 stripped
@@ -1896,6 +1920,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6508647152425180106, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: Satisfied
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754425631139287885, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.18916129
       objectReference: {fileID: 0}
     - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}

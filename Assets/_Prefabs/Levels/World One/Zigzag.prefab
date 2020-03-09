@@ -48,9 +48,6 @@ MonoBehaviour:
   _color: {r: 1, g: 1, b: 1, a: 1}
   _ocularState: 0
   _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 3364352014373522285, guid: 946f18c0079936c4da76719db2a2d9ae,
-    type: 3}
 --- !u!1 &1426195649869381091
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +131,6 @@ MonoBehaviour:
     GlassesType: 2
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 9157587506287438793}
-  Name: Assets/_Prefabs/Levels/Zigzag.prefab
   InGameName: Zigzag
   Animator: {fileID: 1920194335046180470}
   ReadyToLoad: 0
@@ -247,6 +243,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -416,9 +413,6 @@ MonoBehaviour:
   _color: {r: 0.78039217, g: 0.76862746, b: 0.24313726, a: 1}
   _ocularState: 3
   _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 3364352014373522285, guid: 946f18c0079936c4da76719db2a2d9ae,
-    type: 3}
 --- !u!1 &2577076916835417250
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,9 +510,6 @@ MonoBehaviour:
   _color: {r: 0.5921569, g: 0.37254903, b: 0.7411765, a: 1}
   _ocularState: 6
   _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 34305213192609639, guid: 29c35d26f5c9ac94793a302fcf0ace92,
-    type: 3}
 --- !u!1 &2788757805783299012
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +556,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -853,8 +845,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4807619367415627943}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.66616535, b: 0.3066038, a: 1}
   m_Intensity: 1.27
   m_Range: 10
@@ -951,10 +944,11 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -95845874298409905, guid: f16ef6cc90ca24427aba99c803356ebe, type: 3}
+  - {fileID: -1315957401443314927, guid: 68ae6fbad1d7b4889b5c2ae694f6a559, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -982,7 +976,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5014741740833147295}
-  m_Mesh: {fileID: -1481679179985450891, guid: f16ef6cc90ca24427aba99c803356ebe, type: 3}
+  m_Mesh: {fileID: -5479507908400676299, guid: 68ae6fbad1d7b4889b5c2ae694f6a559, type: 3}
 --- !u!1 &5083729787508980039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,6 +1033,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1146,6 +1141,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1317,6 +1313,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4039,13 +4036,13 @@ PrefabInstance:
     - target: {fileID: 7754425631139287885, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0707891
+      value: 0.00006622076
       objectReference: {fileID: 0}
     - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 140020993782536977, guid: 5c7c44338ff31d145bb5dcfdea89b62a,
+      objectReference: {fileID: 4080515400595741023, guid: 1c99cbda8af4396408867f118d0f2408,
         type: 3}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}

@@ -14,6 +14,8 @@ namespace LevelEditor
         private static bool _takeHiResShot;
 
         private static string _name;
+
+        public static bool TakingShot;
         
         public static string ScreenShotName(int width, int height) {
             return
@@ -24,6 +26,7 @@ namespace LevelEditor
         {
             _name = name;
             _takeHiResShot = true;
+            TakingShot = true;
         }
 
         private void LateUpdate() {
@@ -53,6 +56,7 @@ namespace LevelEditor
                 //System.IO.File.WriteAllBytes(filename, bytes);
                 Debug.Log($"Took screenshot to: {filename}");
                 _takeHiResShot = false;
+                TakingShot = false;
             }
         }
     }

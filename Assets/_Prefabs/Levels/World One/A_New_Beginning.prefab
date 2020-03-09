@@ -55,9 +55,6 @@ MonoBehaviour:
   _color: {r: 1, g: 1, b: 1, a: 1}
   _ocularState: 0
   _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 3364352014373522285, guid: 946f18c0079936c4da76719db2a2d9ae,
-    type: 3}
 --- !u!1 &4550372844241529319
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,6 +111,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -203,8 +201,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4584594713501821746}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 0.7764706, g: 0.8686969, b: 1, a: 1}
   m_Intensity: 2.47
   m_Range: 10
@@ -372,7 +371,6 @@ MonoBehaviour:
     GlassesType: 2
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 8716777737508296209}
-  Name: Assets/_Prefabs/Levels/1-1.prefab
   InGameName: A New Beginning
   Animator: {fileID: 4762847220926760851}
   ReadyToLoad: 0
@@ -1063,15 +1061,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 685644ff7e3bd469d9db9dadd6f849ed, type: 3}
---- !u!1 &7302389105288230442 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6217727347123409100, guid: 685644ff7e3bd469d9db9dadd6f849ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 3683524652806104806}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2087378531278680046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3452389069454215432, guid: 685644ff7e3bd469d9db9dadd6f849ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 3683524652806104806}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7302389105288230442 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6217727347123409100, guid: 685644ff7e3bd469d9db9dadd6f849ed,
     type: 3}
   m_PrefabInstance: {fileID: 3683524652806104806}
   m_PrefabAsset: {fileID: 0}
@@ -1397,7 +1395,7 @@ PrefabInstance:
     - target: {fileID: 7754425631139287885, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.007734984
+      value: 0.12984996
       objectReference: {fileID: 0}
     - target: {fileID: 8172619689411631341, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
@@ -1408,7 +1406,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4080515400595741023, guid: 1c99cbda8af4396408867f118d0f2408,
+      objectReference: {fileID: 140020993782536977, guid: 5c7c44338ff31d145bb5dcfdea89b62a,
         type: 3}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}

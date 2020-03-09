@@ -56,6 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -145,8 +146,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825720055133302300}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.43817383, b: 0.3160377, a: 1}
   m_Intensity: 2.37
   m_Range: 10
@@ -323,9 +325,8 @@ MonoBehaviour:
     GlassesType: 2
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 6361042713951826674}
-  Name: Assets/_Prefabs/Levels/Up_And_Over.prefab
   InGameName: Up And Over
-  Animator: {fileID: 0}
+  Animator: {fileID: 672663318983853079}
   ReadyToLoad: 0
   HasCustomCamera: 1
   CameraPosition: {x: 0, y: 0.8400025, z: -10}
@@ -386,7 +387,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 3343191074711946764, guid: a3e53fc4bd222fb4fb720d8884fe7b33,
     type: 3}
-  _clonePrefab: {fileID: 0}
+  _clonePrefab: {fileID: 3343191074711946764, guid: 2ed8ac000dd5551478838f831eb9f0bc,
+    type: 3}
 --- !u!1 &4477509773484374448
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,6 +445,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1812,6 +1815,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6508647152425180106, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: Satisfied
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754425631139287885, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.03541859
+      objectReference: {fileID: 0}
+    - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 140020993782536977, guid: 5c7c44338ff31d145bb5dcfdea89b62a,
+        type: 3}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: _color.r
@@ -1852,11 +1871,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: ocular 1-2.1--anim-00
       objectReference: {fileID: 0}
+    - target: {fileID: 2336145699866401773, guid: c8efabd2b4fd443ec8d9e37d49851616,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2465175354249802668, guid: 53442a2cd34f04a0fafdd86ddd9cfe71,
+        type: 3}
     - target: {fileID: 3299821027454243267, guid: c8efabd2b4fd443ec8d9e37d49851616,
         type: 3}
       propertyPath: m_ReceiveShadows
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3299821027454243267, guid: c8efabd2b4fd443ec8d9e37d49851616,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 4828354757610218388, guid: 53442a2cd34f04a0fafdd86ddd9cfe71,
+        type: 3}
     - target: {fileID: 4503096832084606641, guid: c8efabd2b4fd443ec8d9e37d49851616,
         type: 3}
       propertyPath: m_IsActive
@@ -1872,6 +1903,12 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6414222663292258459, guid: c8efabd2b4fd443ec8d9e37d49851616,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 4828354757610218388, guid: 53442a2cd34f04a0fafdd86ddd9cfe71,
+        type: 3}
     - target: {fileID: 6428683392120605936, guid: c8efabd2b4fd443ec8d9e37d49851616,
         type: 3}
       propertyPath: m_IsActive
@@ -1882,6 +1919,12 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 7786881114567863200, guid: c8efabd2b4fd443ec8d9e37d49851616,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -6903289687193396308, guid: 53442a2cd34f04a0fafdd86ddd9cfe71,
+        type: 3}
     - target: {fileID: 8646181616987530155, guid: c8efabd2b4fd443ec8d9e37d49851616,
         type: 3}
       propertyPath: m_LocalPosition.x

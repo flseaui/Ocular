@@ -41,7 +41,6 @@ namespace Level
 
         public Transform PlayerSpawnPoint;
 
-        public string Name;
         public string InGameName;
 
         public Animator Animator;

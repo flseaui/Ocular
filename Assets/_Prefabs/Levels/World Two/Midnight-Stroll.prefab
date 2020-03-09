@@ -39,8 +39,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123243830307683156}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 0, g: 0.74793315, b: 1, a: 1}
   m_Intensity: 0.1
   m_Range: 10
@@ -214,8 +215,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5221732912560561850}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 2
+  m_Shape: 0
   m_Color: {r: 1, g: 0.69719803, b: 0, a: 1}
   m_Intensity: 5.16
   m_Range: 5
@@ -322,6 +324,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -457,7 +460,6 @@ MonoBehaviour:
     GlassesType: 2
   NumConcurrentGlasses: 2
   PlayerSpawnPoint: {fileID: 6248238059880041176}
-  Name: Assets/_Prefabs/Levels/World Two/Midnight-Stroll.prefab
   InGameName: Midnight Stroll
   Animator: {fileID: 1337774940298823060}
   ReadyToLoad: 0
@@ -561,8 +563,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7115963926556130187}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 2
+  m_Shape: 0
   m_Color: {r: 1, g: 0.69719803, b: 0, a: 1}
   m_Intensity: 4.4
   m_Range: 5
@@ -620,7 +623,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8370226134630239915}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f5d1cf72c9299a4a9186cf0019665ed, type: 3}
   m_Name: 
@@ -743,6 +746,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 383733362489870139}
     m_Modifications:
+    - target: {fileID: 950423030257685900, guid: d955f091cd0d24970b358f863d3009ab,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2272952676780105823, guid: 88c4ba4cc0ca74306924dcbb5049f924,
+        type: 3}
     - target: {fileID: 4349420920829003397, guid: d955f091cd0d24970b358f863d3009ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -803,6 +812,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: ocular 2-3.1--anim-00
       objectReference: {fileID: 0}
+    - target: {fileID: 9083713809425753058, guid: d955f091cd0d24970b358f863d3009ab,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 6675351415629440702, guid: 88c4ba4cc0ca74306924dcbb5049f924,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d955f091cd0d24970b358f863d3009ab, type: 3}
 --- !u!1 &4657667843006402008 stripped
@@ -1207,13 +1222,13 @@ PrefabInstance:
     - target: {fileID: 7754425631139287885, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.107350655
+      value: 0.19751905
       objectReference: {fileID: 0}
     - target: {fileID: 8393413790636794488, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -6569053861450811915, guid: c42058fe4ce73df4fbf82c7d14014352,
+      objectReference: {fileID: 4080515400595741023, guid: 1c99cbda8af4396408867f118d0f2408,
         type: 3}
     - target: {fileID: 8788491135060777320, guid: 6c904e82cd42f724cb303fd2ff0e7a5d,
         type: 3}
