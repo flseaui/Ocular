@@ -57,6 +57,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -172,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 058aba7a41d7ea74c90e8602a18eface, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  JustChangedState: 0
 --- !u!114 &8788491135060777320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,11 +187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 0
-  _color: {r: 1, g: 0.59607846, b: 0.29803923, a: 1}
-  _ocularState: 2
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _ocularState: 0
   _blockMat: {fileID: 2100000, guid: 16e2bbc3cce05dc4391f5df7f9f1808a, type: 2}
-  _outlineMat: {fileID: 2100000, guid: c6fcd237139e4e442a2dc69fd3fc03d5, type: 2}
-  _outlineModel: {fileID: 0}
 --- !u!1001 &4120259387040617706
 PrefabInstance:
   m_ObjectHideFlags: 0

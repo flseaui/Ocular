@@ -16,7 +16,7 @@ namespace LevelEditor
 
         public void Select()
         {
-            GetComponent<Image>().color = Color.yellow;
+            GetComponent<Image>().color = Color.green;
             _objectDrawer.SetObject(Object);
         }
 
