@@ -4,12 +4,12 @@ using Level;
 using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Misc
 {
     public class CameraZoom : MonoBehaviour
     {
-
         private Camera _camera;
         private Vector3 _pos;
         private Vector3 _cameraPos;
@@ -23,7 +23,20 @@ namespace Misc
         private void Awake()
         {
             _camera = GetComponent<Camera>();
-            Level.LevelController.OnLevelLoaded += LevelSetUp;
+            LevelController.OnLevelLoaded += LevelSetUp;
+        }
+
+        private void Start()
+        {
+            if (SceneManager.GetActiveScene().name.Equals("NewEditor"))
+            {
+                LevelSetUp(true);
+            }
+        }
+
+        private void LevelSetUp()
+        {
+            LevelSetUp(false);
         }
 
         private void Update()
@@ -65,37 +78,50 @@ namespace Misc
                         _projectedSize = 2;
                     }
                 }
-                RecalcZoom(_camera.transform.eulerAngles.y + 45);
+                RecalcZoom(_camera.transform.eulerAngles.y + 45, true);
             }
         }
 
-        public void RecalcZoom(float angle)
+        public void RecalcZoom(float angle, bool smooth)
         {
-            if (_projectedSize < _cameraSize) {
+            if (_projectedSize < _cameraSize)
+            {
                 var zoom = (_cameraSize - _projectedSize) / (_cameraSize - 2);
-                var levelx = (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) - (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
-                var levely = (Mathf.Sin((angle * Mathf.PI) / 180) * (_pos.x + _pos.z)) + (Mathf.Cos((angle * Mathf.PI) / 180) * (_pos.z - _pos.x));
+                var levelX = Mathf.Cos(angle * Mathf.PI / 180) * (_pos.x + _pos.z) - Mathf.Sin(angle * Mathf.PI / 180) * (_pos.z - _pos.x);
+                var levelY = Mathf.Sin(angle * Mathf.PI / 180) * (_pos.x + _pos.z) + Mathf.Cos(angle * Mathf.PI / 180) * (_pos.z - _pos.x);
+                
                 Debug.Log(zoom);
-                    _camera.transform.DOLocalMove(new Vector3((levelx * zoom * ConstantX) + _cameraPos.x,
-                    (levely * zoom * ConstantY) + _cameraPos.y, _cameraPos.z), .1f);
+                
+                if (smooth)
+                    _camera.transform.DOLocalMove(new Vector3(levelX * zoom * ConstantX + _cameraPos.x,
+                        levelY * zoom * ConstantY + _cameraPos.y, _cameraPos.z), .1f);
+                else
+                    _camera.transform.localPosition = new Vector3(levelX * zoom * ConstantX + _cameraPos.x,
+                        levelY * zoom * ConstantY + _cameraPos.y, _cameraPos.z);
             }
             else
             {
+                if (smooth)
                     _camera.transform.DOLocalMove(_cameraPos, .01f);
+                else
+                    _camera.transform.localPosition = _cameraPos;
             }
         }
         
-        private void LevelSetUp()
+        private void LevelSetUp(bool inEditor)
         {
-            var levelcon = GameObject.Find("GameManager").GetComponent<Level.LevelController>().CurrentLevelInfo;
-            _pos = levelcon.transform.Find("MainFloor").transform.position;
-            _cameraPos = levelcon.CameraPosition;
-            _cameraSize = levelcon.CameraSize;
+            var levelInfo = inEditor
+                ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
+                : GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+
+            _pos = levelInfo.transform.Find("MainFloor").transform.position;
+            _cameraPos = levelInfo.CameraPosition;
+            _cameraSize = levelInfo.CameraSize;
             _projectedSize = _camera.orthographicSize;
-            if (levelcon.HasCustomConstants)
+            if (levelInfo.HasCustomConstants)
             {
-                ConstantX = levelcon.ZoomConstantX;
-                ConstantY = levelcon.ZoomConstantY;
+                ConstantX = levelInfo.ZoomConstantX;
+                ConstantY = levelInfo.ZoomConstantY;
             }
             else
             {
@@ -106,7 +132,7 @@ namespace Misc
 
         private void OnDestroy()
         {
-            Level.LevelController.OnLevelLoaded -= LevelSetUp;
+            LevelController.OnLevelLoaded -= LevelSetUp;
         }
 
     }

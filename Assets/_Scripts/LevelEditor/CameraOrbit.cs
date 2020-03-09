@@ -1,20 +1,25 @@
 #if UNITY_EDITOR
 
 using System;
+using Misc;
 using UnityEngine;
 
 namespace LevelEditor
 {
     public class CameraOrbit : MonoBehaviour
     {
-        [NonSerialized] public Transform Target;
+        private CameraZoom _zoomer;
         
+        [NonSerialized] public Transform Target;
+
         [SerializeField] private float _rotateSpeed;
 
         private bool _canRotate;
         
         private void Awake()
         {
+            _zoomer = transform.GetChild(0).GetComponent<CameraZoom>();
+            
             LevelEditor.OnLevelPlayToggle += ToggleControl;
         }
 
@@ -45,12 +50,16 @@ namespace LevelEditor
             {
                 if (Input.GetKey(KeyCode.E))
                 {
-                    transform.RotateAround(Target.position, Vector3.up, _rotateSpeed * Time.deltaTime);
+                    var newRot = transform.localRotation.eulerAngles + new Vector3(0, _rotateSpeed * Time.deltaTime, 0);
+                    _zoomer.RecalcZoom(newRot.y + 45, false);
+                    transform.localRotation = Quaternion.Euler(newRot);
                 }
 
                 if (Input.GetKey(KeyCode.Q))
                 {
-                    transform.RotateAround(Target.position, -Vector3.up, _rotateSpeed * Time.deltaTime);
+                    var newRot = transform.localRotation.eulerAngles - new Vector3(0, _rotateSpeed * Time.deltaTime, 0);
+                    _zoomer.RecalcZoom(newRot.y + 45, false);
+                    transform.localRotation = Quaternion.Euler(newRot);
                 }
             }
         }

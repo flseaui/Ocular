@@ -16,8 +16,6 @@ namespace LevelEditor
 {
     public class LevelEditor : MonoBehaviour
     {
-        public GameObject[,,] _currentLevel;
-
         private ColorPalette _colorPalette;
         private ObjectDrawer _objectDrawer;
         private GameObject _currentObject;
@@ -43,16 +41,14 @@ namespace LevelEditor
 
         public static Action<bool> OnLevelPlayToggle;
 
-        private readonly Vector3Int _levelDimensions = new Vector3Int(100, 100, 100);
+        public LevelInfo EditorLevelInfo;
         
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
-            _currentLevel = new GameObject[_levelDimensions.x, _levelDimensions.y, _levelDimensions.z];
             _colorPalette = GameObject.Find("ColorPalette").GetComponent<ColorPalette>();
             _objectDrawer = GameObject.Find("ObjectDrawer").GetComponent<ObjectDrawer>();
             ObjectDrawer.OnObjectSelectionChanged += @object => { _currentObject = @object; };
-
         }
 
         private void Start()
@@ -84,16 +80,15 @@ namespace LevelEditor
         {
             _level = ((GameObject) PrefabUtility.InstantiatePrefab(level)).transform.Find("MainFloor").gameObject;
             _level.transform.parent.GetComponent<Animator>().enabled = false;
-            _gameManager.GetComponent<LevelController>().CurrentLevelInfo =
-                _level.transform.parent.GetComponent<LevelInfo>();
+            EditorLevelInfo = _level.GetComponentInParent<LevelInfo>();
+            _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
             GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             _level.transform.ForEachChild(x =>
             {
                 if (x.HasComponent<MaxCount>())
                     _limitedObjects.Add(x.gameObject);
             });
-            Camera.main.GetComponent<EditorCameraCenter>().LevelInfo =
-                _level.transform.parent.GetComponent<LevelInfo>();
+            Camera.main.GetComponent<EditorCameraCenter>().LevelInfo = EditorLevelInfo;
         }
 
         public void NewLevel(int size)
@@ -101,9 +96,8 @@ namespace LevelEditor
             _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
             _level.transform.parent.GetComponent<Animator>().enabled = false;
             _level.transform.parent.GetComponent<LevelInfo>().Name = "BlankLevel";
-            _gameManager.GetComponent<LevelController>().CurrentLevelInfo =
-                _level.transform.parent.GetComponent<LevelInfo>();
-            GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
+            _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
+                GameObject.Find("Main Camera").GetComponent<CameraOrbit>().Target = _level.transform;
             _level.transform.ForEachChild(x =>
             {
                 if (x.HasComponent<MaxCount>())
@@ -158,16 +152,16 @@ namespace LevelEditor
             {
                 levelGO.gameObject.SetActive(true);
             } 
-            if (_level.transform.parent.GetComponent<LevelInfo>().Name == "BlankLevel")
+            if (EditorLevelInfo.Name == "BlankLevel")
             {
                 var levelName =
                     $"Assets/_Prefabs/Levels/Level{_level.GetHashCode()}.prefab";
-                _level.transform.parent.GetComponent<LevelInfo>().Name = levelName;
+                EditorLevelInfo.Name = levelName;
                 PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, levelName);
             }
             else
             {
-                var level = PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, _level.transform.parent.GetComponent<LevelInfo>().Name);
+                var level = PrefabUtility.SaveAsPrefabAsset(_level.transform.parent.gameObject, EditorLevelInfo.Name);
             }
             HiResScreenshot.TakeHiResShot($"Level{_level.GetHashCode()}");
             SceneManager.LoadSceneAsync("EditorMenu");
@@ -181,7 +175,7 @@ namespace LevelEditor
             if (element.transform.HasComponent<SlopeWalkable>(out var slope))
                 slope.MatchRotation(orientation, direction);
             else if (element.CompareTag("PlayerSpawn"))
-                _level.GetComponentInParent<LevelInfo>().PlayerSpawnPoint = element.transform.Find("Model").transform;
+                EditorLevelInfo.PlayerSpawnPoint = element.transform.Find("Model").transform;
 
             if (element.transform.HasComponent<MaxCount>(out var max))
             {
@@ -199,15 +193,6 @@ namespace LevelEditor
 
             if (element.transform.HasComponent<Colorable>(out var colorable))
                 colorable.OcularState = _colorPalette.SelectedColor;
-
-            var pos = new Vector3Int
-            (
-                (int) (_levelDimensions.x / 2 + position.x),
-                (int) (_levelDimensions.y / 2 + position.y),
-                (int) (_levelDimensions.z / 2 + position.z)
-            );
-
-            _currentLevel[pos.x, pos.y, pos.z] = element;
         }
     }
 }

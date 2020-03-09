@@ -66,7 +66,7 @@ namespace Misc
             if (Turning || LevelController.Falling || Pathfinder.Navigating) return;
             TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
             Turning = true;
-            _zoomer.RecalcZoom(transform.eulerAngles.y + 135);
+            _zoomer.RecalcZoom(transform.eulerAngles.y + 135, true);
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, 90, 0),
                 .3f);
             rotate.onComplete += () =>
@@ -80,7 +80,7 @@ namespace Misc
             if (Turning || LevelController.Falling || Pathfinder.Navigating) return;
             TweenerCore<Quaternion, Vector3, QuaternionOptions> rotate;
             Turning = true;
-            _zoomer.RecalcZoom(transform.eulerAngles.y - 45);
+            _zoomer.RecalcZoom(transform.eulerAngles.y - 45, true);
             rotate = transform.DOLocalRotate(transform.localRotation.eulerAngles + new Vector3(0, -90, 0),
                 .3f);
             rotate.onComplete += () =>
@@ -91,6 +91,7 @@ namespace Misc
 
         private void Update()
         {
+            // TODO janky method to check if in editor and not testing
             if (!GameObject.Find("GameManager"))
                 return;
             
