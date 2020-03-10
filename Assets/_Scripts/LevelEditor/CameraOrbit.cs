@@ -33,12 +33,6 @@ namespace LevelEditor
         
         private void ToggleControl(bool state)
         {
-            if (state)
-            {
-                transform.localRotation = Quaternion.Euler(Vector3.zero);
-                transform.localPosition = new Vector3(0, 0, -10);
-            }
-
             _canRotate = !state;
         }
         

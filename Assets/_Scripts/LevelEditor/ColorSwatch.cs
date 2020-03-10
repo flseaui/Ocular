@@ -16,19 +16,25 @@ namespace LevelEditor
         [OnValueChanged(nameof(ColorChanged))]
         public OcularState Color;
 
+        private Sprite _initialSprite;
+
+        private Image _image;
+        
         private void ColorChanged()
         {
-            GetComponent<Image>().color = Colorable.StateToColor(Color);
+            _image.color = Colorable.StateToColor(Color);
         }
     
         public void Deselect()
         {
-            GetComponent<Image>().sprite = null;
+            _image.sprite = _initialSprite;
         }
     
         private void Awake()
         {
             _palette = GetComponentInParent<ColorPalette>();
+            _image = GetComponent<Image>();
+            _initialSprite = _image.sprite;
         }
     
         public void OnPointerDown(PointerEventData eventData)
@@ -38,7 +44,7 @@ namespace LevelEditor
 
         public void Select()
         {
-            GetComponent<Image>().sprite = _selectedSprite;
+            _image.sprite = _selectedSprite;
             _palette.SetColor(Color);
         }
     

@@ -11,6 +11,7 @@ using Sirenix.Utilities;
 using UI;
 using UI.Settings.Audio;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game
 {
@@ -79,7 +80,8 @@ namespace Game
 
         private void Start()
         {
-            StartCoroutine(UpdateVolume());
+            if (SceneManager.GetActiveScene().name != "NewEditor")
+                StartCoroutine(UpdateVolume());
         }
 
         private IEnumerator UpdateVolume()

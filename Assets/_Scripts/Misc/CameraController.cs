@@ -20,12 +20,16 @@ namespace Misc
         [SerializeField] private bool _isInEditor;
 
         private CameraZoom _zoomer;
-        
+
+        private LevelInfo LevelInfo => _isInEditor
+            ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
+            : _levelController.CurrentLevelInfo;
+
         private void Awake()
         {
-            if (_isInEditor) return;
+            if (!_isInEditor)
+                _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             
-            _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             _zoomer = transform.GetChild(0).GetComponent<CameraZoom>();
             LevelController.OnLevelLoaded += OnLevelLoaded;
         }
@@ -39,7 +43,7 @@ namespace Misc
         {
             LevelController.Falling = true;
             var lr = transform.rotation.eulerAngles;
-            switch (_levelController.CurrentLevelInfo.CameraStartDirection)
+            switch (LevelInfo.CameraStartDirection)
             {
                 case Direction.Forward:
                     transform.rotation = Quaternion.Euler(lr.x, 45, lr.z);
