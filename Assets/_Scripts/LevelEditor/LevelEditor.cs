@@ -71,15 +71,36 @@ namespace LevelEditor
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                var model = _level.transform.parent.Find("Level").gameObject;
+                var parent = _level.transform.parent;
+                var model = parent.Find("Level").gameObject;
+                var killZone = parent.Find("KillZone").gameObject;
+                
                 if (model != null)
                     model.SetActive(!model.activeSelf);
+                if (killZone != null)
+                    killZone.SetActive(!killZone.activeSelf);
             }
         }
 
         public void LoadLevel(GameObject level)
         {
             _level = ((GameObject) PrefabUtility.InstantiatePrefab(level)).transform.Find("MainFloor").gameObject;
+            SetupLevel();
+        }
+
+        public void NewLevel(int size)
+        {
+            _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
+            _level.transform.parent.name = "BlankLevel";
+            SetupLevel();
+            EditorLevelInfo.BlockContrast = .5f;
+            EditorLevelInfo.ColorIntensity = 1.5f;
+            EditorLevelInfo.ShadowStrength = .3f;
+            EditorLevelInfo.ShadowTint = Color.white;
+        }
+
+        private void SetupLevel()
+        {
             _level.transform.parent.GetComponent<Animator>().enabled = false;
             EditorLevelInfo = _level.GetComponentInParent<LevelInfo>();
             _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
@@ -91,21 +112,15 @@ namespace LevelEditor
             var editorCam = Camera.main.GetComponent<EditorCameraCenter>();
             editorCam.LevelInfo = EditorLevelInfo;
             editorCam.Init();
-        }
-
-        public void NewLevel(int size)
-        {
-            _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
-            _level.transform.parent.GetComponent<Animator>().enabled = false;
-            _level.transform.parent.name = "BlankLevel";
-            _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
-            _level.transform.ForEachChild(x =>
+            _level.transform.parent.ForEachChild(child =>
             {
-                if (x.HasComponent<MaxCount>())
-                    _limitedObjects.Add(x.gameObject);
+                if (child.CompareTag("LevelLight"))
+                {
+                    child.GetComponent<Light>().enabled = false;
+                }
             });
         }
-
+        
         public void TestLevel()
         {
             OnLevelPlayToggle?.Invoke(!_glassesContainer.activeSelf);
@@ -163,6 +178,13 @@ namespace LevelEditor
             yield return new WaitUntil(() => !HiResScreenshot.TakingShot);
             
             _level.transform.parent.GetComponent<Animator>().enabled = true;
+            _level.transform.parent.ForEachChild(child =>
+            {
+                if (child.CompareTag("LevelLight"))
+                {
+                    child.GetComponent<Light>().enabled = true;
+                }
+            });
             
             if (EditorLevelInfo.name == "BlankLevel")
             {
