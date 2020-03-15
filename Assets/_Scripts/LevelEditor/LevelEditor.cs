@@ -56,6 +56,9 @@ namespace LevelEditor
         {
             var level = PlayerPrefs.GetString("LevelToLoad");
             var size = PlayerPrefs.GetInt("LevelSize");
+            
+            PlayerPrefs.SetInt("PlayFromEditor", 1);
+            
             if (level == "New")
             {
                 NewLevel(size);
@@ -94,7 +97,7 @@ namespace LevelEditor
             _level.transform.parent.name = "BlankLevel";
             SetupLevel();
             EditorLevelInfo.BlockContrast = .5f;
-            EditorLevelInfo.ColorIntensity = 1.5f;
+            EditorLevelInfo.ColorIntensity = 1.2f;
             EditorLevelInfo.ShadowStrength = .3f;
             EditorLevelInfo.ShadowTint = Color.white;
         }
@@ -127,7 +130,6 @@ namespace LevelEditor
             //TODO Refactor the rest of these into their own scripts invoked by OnLevelPlayToggle
             _colorPalette.GetComponent<Animator>().SetBool(OnScreen, !_colorPalette.GetComponent<Animator>().GetBool(OnScreen));
             _objectDrawer.GetComponent<Animator>().SetBool(OnScreen, !_objectDrawer.GetComponent<Animator>().GetBool(OnScreen));
-            PlayerPrefs.SetInt("PlayFromEditor", 1);
             _gameManager.gameObject.SetActive(!_gameManager.gameObject.activeSelf);
             _gameManager.SetEntityManager(_level.transform.parent.GetComponent<EntityManager>());
             _glassesContainer.SetActive(!_glassesContainer.activeSelf);
@@ -225,7 +227,7 @@ namespace LevelEditor
             }
 
             if (element.transform.HasComponent<Colorable>(out var colorable))
-                colorable.OcularState = _colorPalette.SelectedColor;
+                colorable.QueueOcularStateChange(_colorPalette.SelectedColor);
         }
     }
 }

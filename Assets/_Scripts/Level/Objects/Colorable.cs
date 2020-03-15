@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -158,7 +159,7 @@ namespace Level.Objects
         public void Initialize()
         {
             if (OcularState == OcularState.Z) return;
-            State = BlockState.Invisible;
+            QueueStateChange(BlockState.Invisible);
             if (transform.HasComponent<Walkable>(out var walkable))
             {
                 walkable.CheckBelow(walkable.Enabled);
@@ -172,6 +173,13 @@ namespace Level.Objects
         }
 
         public void UpdateState() => InternalOnGlassesToggled();
+
+        public IEnumerator UpdateStateWhenPossible()
+        {
+            yield return new WaitUntil(() => _models != null);
+            
+            UpdateState();
+        }
 
         /// <summary>
         /// Calculates the color and visibility of the <c>Colorable</c> based on its properties and environment.
@@ -378,8 +386,40 @@ namespace Level.Objects
             _initialState = OcularState;
         }
 
-        private void OnEnable()
+        private OcularState _queuedOcularState;
+        
+        public void QueueOcularStateChange(OcularState newState)
         {
+            _queuedOcularState = newState;
+            StartCoroutine(InternalQueueOcularStateChange());
+        }
+
+        private IEnumerator InternalQueueOcularStateChange()
+        {
+            yield return new WaitUntil(() => _renderers != null);
+
+            OcularState = _queuedOcularState;
+        }
+        
+        private BlockState _queuedState;
+        
+        public void QueueStateChange(BlockState newState)
+        {
+            _queuedState = newState;
+            StartCoroutine(InternalQueueStateChange());
+        }
+
+        private IEnumerator InternalQueueStateChange()
+        {
+            yield return new WaitUntil(() => _models != null);
+
+            State = _queuedState;
+        }
+        
+        private IEnumerator SetupColorable()
+        {
+            yield return null;
+            
             var temp = new List<GameObject>();
             foreach (Transform child in transform)
                 if (child.CompareTag("Colorable"))
@@ -423,6 +463,11 @@ namespace Level.Objects
             _firstTimeOutlined = true;
             
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
+        }
+        
+        private void OnEnable()
+        {
+            StartCoroutine(SetupColorable());
         }
 
         private void OnDisable()

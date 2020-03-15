@@ -10,14 +10,14 @@ namespace Level
     public class EntityManager : MonoBehaviour
     {
         [CanBeNull] [NonSerialized] public GameObject Player;
-
+        
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private GameObject _clonePrefab;
-
+        
         private LevelController _levelController;
-
+        
         public static Action OnEntitiesSpawned;
-
+        
         private List<GameObject> _entities;
         
         private void Awake()
@@ -25,16 +25,17 @@ namespace Level
             _entities = new List<GameObject>();
             
             Addressables.LoadAssetAsync<GameObject>("clone_prefab").Completed += handle =>
-                {
-                    _clonePrefab = handle.Result;
-                };
-
+            {
+                _clonePrefab = handle.Result;
+            };
+        
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
             {
+                Debug.Log("whoa whoa whoa who said we could have this much epic around");
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             }
         }
-
+        
         public void ClearEntities()
         {
             foreach (var entity in _entities)
@@ -43,7 +44,7 @@ namespace Level
             }
             _entities.Clear();
         }
-
+        
         [UsedImplicitly]
         public void SpawnPlayer()
         {

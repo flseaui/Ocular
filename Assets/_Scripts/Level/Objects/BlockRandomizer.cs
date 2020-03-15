@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Doozy.Engine.Utils.ColorModels;
 using Misc;
 using UnityEngine;
 using Random = System.Random;
@@ -14,6 +16,13 @@ namespace Level.Objects
     
         public void OnEnable()
         {
+            StartCoroutine(RandomizeMat());
+        }
+
+        private IEnumerator RandomizeMat()
+        {
+            yield return null;
+            
             var renderer = GetComponent<Renderer>();
             var tempMat = new Material(renderer.sharedMaterial)
             {
