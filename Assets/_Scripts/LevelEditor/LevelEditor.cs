@@ -8,6 +8,7 @@ using Level.Objects;
 using Misc;
 using Sirenix.OdinInspector;
 using UnityEditor;
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,7 +76,10 @@ namespace LevelEditor
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 var parent = _level.transform.parent;
-                var model = parent.Find("Level").gameObject;
+                var level = parent.Find("Level");
+                GameObject model = null;
+                if (level) model = level.gameObject;
+
                 var killZone = parent.Find("KillZone").gameObject;
                 
                 if (model != null)
@@ -89,19 +93,52 @@ namespace LevelEditor
         {
             _level = ((GameObject) PrefabUtility.InstantiatePrefab(level)).transform.Find("MainFloor").gameObject;
             SetupLevel();
+            SaveLevelInfo();
+            DefaultLevelInfo();
         }
 
+        private float? _savedBlockContrast,
+            _savedColorIntensity,
+            _savedShadowStrength;
+
+        private Color? _savedShadowTint;
+        
         public void NewLevel(int size)
         {
             _level = Instantiate(_levelBasePrefabs[size]).transform.Find("MainFloor").gameObject;
             _level.transform.parent.name = "BlankLevel";
             SetupLevel();
+            DefaultLevelInfo();
+        }
+
+        private void DefaultLevelInfo()
+        {
             EditorLevelInfo.BlockContrast = .5f;
             EditorLevelInfo.ColorIntensity = 1.2f;
             EditorLevelInfo.ShadowStrength = .3f;
             EditorLevelInfo.ShadowTint = Color.white;
         }
 
+        private void SaveLevelInfo()
+        {
+            _savedBlockContrast = EditorLevelInfo.BlockContrast;
+            _savedColorIntensity = EditorLevelInfo.ColorIntensity;
+            _savedShadowStrength = EditorLevelInfo.ShadowStrength;
+            _savedShadowTint = EditorLevelInfo.ShadowTint;
+        }
+        
+        private void RestoreLevelInfo()
+        {
+            if (_savedBlockContrast.HasValue)
+                EditorLevelInfo.BlockContrast = _savedBlockContrast.Value;
+            if (_savedColorIntensity.HasValue)
+                EditorLevelInfo.ColorIntensity = _savedColorIntensity.Value;
+            if (_savedShadowStrength.HasValue)
+                EditorLevelInfo.ShadowStrength = _savedShadowStrength.Value;
+            if (_savedShadowTint.HasValue)
+                EditorLevelInfo.ShadowTint = _savedShadowTint.Value;
+        }
+        
         private void SetupLevel()
         {
             _level.transform.parent.GetComponent<Animator>().enabled = false;
@@ -164,6 +201,8 @@ namespace LevelEditor
         
         public void SaveLevel()
         {
+            RestoreLevelInfo();
+            
             var levelGO = _level.transform.parent.Find("Level");
             if (levelGO != null)
             {
