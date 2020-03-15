@@ -209,7 +209,7 @@ namespace LevelEditor
                 levelGO.gameObject.SetActive(true);
             } 
             
-            HiResScreenshot.TakeHiResShot(_level.transform.parent.name);
+            HiResScreenshot.TakeHiResShot("Level"+ _level.GetHashCode());
 
             StartCoroutine(FinishSave());
         }
