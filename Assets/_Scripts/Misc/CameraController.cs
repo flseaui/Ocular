@@ -21,9 +21,19 @@ namespace Misc
 
         private CameraZoom _zoomer;
 
-        private LevelInfo LevelInfo => _isInEditor
-            ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
-            : _levelController.CurrentLevelInfo;
+        private LevelInfo LevelInfo
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return _isInEditor
+                    ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
+                    : _levelController.CurrentLevelInfo;
+#else
+                return _levelController.CurrentLevelInfo;
+#endif
+            }
+        }
 
         private void Awake()
         {

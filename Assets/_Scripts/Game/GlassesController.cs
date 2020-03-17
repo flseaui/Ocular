@@ -91,7 +91,8 @@ namespace Game
             yield return new WaitUntil(() => MasterAudio.SoundsReady);
             
             MasterAudio.PauseMixer();
-            MasterAudio.MasterVolumeLevel = PersistentAudioSettings.MixerVolume.Value;
+            if (PersistentAudioSettings.MixerVolume.HasValue)
+                MasterAudio.MasterVolumeLevel = PersistentAudioSettings.MixerVolume.Value;
             MasterAudio.UnpauseMixer();
         }
         
@@ -217,7 +218,8 @@ namespace Game
             }
             
             MasterAudio.PauseMixer();
-            MasterAudio.MasterVolumeLevel = PersistentAudioSettings.MixerVolume.Value;
+            if (PersistentAudioSettings.MixerVolume.HasValue)
+                MasterAudio.MasterVolumeLevel = PersistentAudioSettings.MixerVolume.Value;
             MasterAudio.UnpauseMixer();
         }
     }

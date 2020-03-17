@@ -110,9 +110,13 @@ namespace Misc
         
         private void LevelSetUp(bool inEditor)
         {
+#if UNITY_EDITOR
             var levelInfo = inEditor
                 ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
                 : GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+#else
+            var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+#endif
 
             _pos = levelInfo.transform.Find("MainFloor").transform.position;
             _cameraPos = levelInfo.CameraPosition;
