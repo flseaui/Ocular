@@ -53,10 +53,10 @@ namespace Level
             if (_levelController == null)
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             
-            Player = Instantiate(_playerPrefab, _levelController.CurrentLevelInfo.PlayerSpawnPoint.transform.position + new Vector3(0, .1f, 0),
+            Player = Instantiate(_playerPrefab, _levelController.LevelInfo.PlayerSpawnPoint.transform.position + new Vector3(0, .1f, 0),
                 Quaternion.identity);
 
-            foreach (var cloneSpawn in _levelController.CurrentLevelInfo.gameObject.transform.Find("MainFloor")
+            foreach (var cloneSpawn in _levelController.LevelInfo.gameObject.transform.Find("MainFloor")
                 .GetComponentsInChildren<CloneSpawn>())
             {
                 _entities.Add(Instantiate(_clonePrefab, cloneSpawn.transform.position + new Vector3(0, .65f, 0), Quaternion.identity));

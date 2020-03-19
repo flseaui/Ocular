@@ -39,7 +39,7 @@ public class TutorialManager : MonoBehaviour
     private void OnLevelLoaded()
     {
         
-        switch (_levelController.CurrentLevelInfo.InGameName)
+        switch (_levelController.LevelInfo.InGameName)
         {
             case "A New Beginning":
                 if (_liveTutorialOne != null)

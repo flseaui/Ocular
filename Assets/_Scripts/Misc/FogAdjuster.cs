@@ -28,12 +28,12 @@ namespace Misc
 
         private void OnLevelLoaded()
         {
-            if (_levelController.CurrentLevelInfo.HasCustomFog)
+            if (_levelController.LevelInfo.HasCustomFog)
             {
-                DOTween.To(() => _fog.fogHeightEnd, x => _fog.fogHeightEnd = x, _levelController.CurrentLevelInfo.FogHeightEnd, 1.3f);
-                DOTween.To(() => _fog.fogHeightStart, x => _fog.fogHeightStart = x, _levelController.CurrentLevelInfo.FogHeightStart, 1.3f);
+                DOTween.To(() => _fog.fogHeightEnd, x => _fog.fogHeightEnd = x, _levelController.LevelInfo.FogHeightEnd, 1.3f);
+                DOTween.To(() => _fog.fogHeightStart, x => _fog.fogHeightStart = x, _levelController.LevelInfo.FogHeightStart, 1.3f);
 
-                var position = _fogPlane.DOMoveY(_levelController.CurrentLevelInfo.FogPlaneY, 1.3f);
+                var position = _fogPlane.DOMoveY(_levelController.LevelInfo.FogPlaneY, 1.3f);
             }
             else
             {
@@ -45,9 +45,9 @@ namespace Misc
                 _fogPlane.position = position;
             }
 
-            if (_levelController.CurrentLevelInfo.HasCustomFogColor)
+            if (_levelController.LevelInfo.HasCustomFogColor)
             {
-                DOTween.To(() => _fog.fogColor, x => _fog.fogColor = x, _levelController.CurrentLevelInfo.FogColor, 1.3f);
+                DOTween.To(() => _fog.fogColor, x => _fog.fogColor = x, _levelController.LevelInfo.FogColor, 1.3f);
             }
             else
             {

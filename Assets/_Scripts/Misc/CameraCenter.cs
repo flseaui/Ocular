@@ -24,7 +24,7 @@ namespace Misc
 
         private void OnLevelLoaded()
         {
-            var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+            var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo;
 
             if (levelInfo.HasCustomCamera)
             {

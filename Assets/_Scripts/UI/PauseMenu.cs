@@ -90,14 +90,16 @@ namespace UI
             
             Restarting = true;
             Resume();
-            var manager = GameObject.Find("GameManager");
-            var player = manager.GetComponent<GameManager>().Player;
+            var controller = GameObject.Find("GameManager").GetComponent<LevelController>();
+            var player = controller.EntityManager.Player;
+            
             if (player != null)
             {
                 player.GetComponent<Player.Player>().CommitDie();
             }
-            manager.GetComponent<GameManager>().EntityManager.ClearEntities();
-            manager.GetComponent<LevelController>().RestartLevel();
+            
+            controller.EntityManager.ClearEntities();
+            controller.RestartLevel();
         }
 
         public void LevelSelect()

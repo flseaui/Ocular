@@ -103,7 +103,7 @@ namespace Game
         
         private void OnLevelLoaded()
         {
-            _mapController = GetComponent<LevelController>().CurrentLevelInfo.GetComponent<MapController>();
+            _mapController = GetComponent<LevelController>().LevelInfo.GetComponent<MapController>();
             //UpdateOcularState();
         }
 

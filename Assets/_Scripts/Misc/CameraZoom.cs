@@ -113,7 +113,7 @@ namespace Misc
 #if UNITY_EDITOR
             var levelInfo = inEditor
                 ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
-                : GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+                : GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo;
 #else
             var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
 #endif

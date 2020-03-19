@@ -103,8 +103,7 @@ namespace Level.Objects
 
         private void OnEntitiesSpawned()
         {
-            _player = GameObject.Find("GameManager").GetComponent<GameManager>().Player;
-            //GetComponent<ClonePathfinder>().WalkSpeed = _player.GetComponent<Pathfinder>().WalkSpeed;
+            _player = GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager.Player;
         }
 
         private void OnCollisionEnter(Collision other)
@@ -121,8 +120,8 @@ namespace Level.Objects
         {
             if (Died) return;
             
-            if (_player ==  null)
-                _player = GameObject.Find("GameManager").GetComponent<GameManager>().Player;
+            if (_player == null)
+                _player = GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager.Player;
             
             var clonePath = GetComponent<ClonePathfinder>();
             if (Pathfinder.Navigating && (!clonePath.Navigating || clonePath.StopNavNextFrame) && !Falling)

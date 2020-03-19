@@ -10,9 +10,9 @@ using UnityEngine;
 namespace Level
 {
 
-    public static class Extensions
+    public static class MatrixExtensions
     {
-        public static (int, int) CoordinatesOf<T>(this T[,] matrix, T value)
+        public static (int, int) CoordinatesOf<T>(this T[,] matrix, T value) where T : class
         {
             var w = matrix.GetLength(0);
             var h = matrix.GetLength(1);
@@ -23,7 +23,7 @@ namespace Level
                 {
                     if (matrix[x, y] == null) continue;
 
-                    if (matrix[x, y].Equals(value))
+                    if (matrix[x, y] == value)
                         return (x, y);
                 }
             }
@@ -31,16 +31,17 @@ namespace Level
             return (-1, -1);
         }
 
-        public static (int, int) GetNext<T>(this T[,] matrix, (int, int) value)
+        public static (int, int) GetNext<T>(this T[,] matrix, (int, int) value) where T : class
         {
             var w = matrix.GetLength(0);
             var h = matrix.GetLength(1);
 
-            for (var x = value.Item1; x < w; ++x)
+            var (startX, startY) = value;
+            for (var x = startX; x < w; ++x)
             {
-                for (var y = x == value.Item1 ? value.Item2 + 1 : 0; y < h; ++y)
+                for (var y = x == startX ? startY + 1 : 0; y < h; ++y)
                 {
-                    if (!ReferenceEquals(matrix[x, y], null))
+                    if (matrix[x, y] != null)
                         return (x, y);
                 }
             }
@@ -64,8 +65,10 @@ namespace Level
         private (int, int) _loadedLevelNumber;
 
         [ShowInInspector, ReadOnly]
-        public LevelInfo CurrentLevelInfo;
+        public LevelInfo LevelInfo;
 
+        public EntityManager EntityManager;
+        
         public List<GameObject> AllWorldLevels => _worldOneLevels.Concat(_worldTwoLevels).Concat(_worldThreeLevels).Concat(_testLevels).ToList();
 
         [ValueDropdown("AllWorldLevels"), ListDrawerSettings(NumberOfItemsPerPage = 10), SerializeField]
@@ -104,11 +107,11 @@ namespace Level
         {
             LevelTransitioning = true;
             _levelToLoad = _levels.GetNext(_loadedLevelNumber);
-            CurrentLevelInfo.Animator.SetTrigger("FadeOut");
+            LevelInfo.Animator.SetTrigger("FadeOut");
 
-            yield return new WaitUntil(() => CurrentLevelInfo.ReadyToLoad);
+            yield return new WaitUntil(() => LevelInfo.ReadyToLoad);
 
-            CurrentLevelInfo.ReadyToLoad = false;
+            LevelInfo.ReadyToLoad = false;
             LoadLevel();
 
             GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState();
@@ -132,7 +135,9 @@ namespace Level
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
 
-            CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
+            LevelInfo = _loadedLevel.GetComponent<LevelInfo>();
+            EntityManager = _loadedLevel.GetComponent<EntityManager>();
+            
             OnLevelLoaded?.Invoke();
         }
 
@@ -148,23 +153,25 @@ namespace Level
                 UnloadLevel();
             Goal.GoalConditions = 0;
             Goal.GoalConditionsMet = 0;
-            Debug.Log("YES YES YES YES YES YSE YSE YSEY SEY E");
+            
             _loadedLevel = Instantiate(_levels[_levelToLoad.Item1, _levelToLoad.Item2]);
             _loadedLevel.gameObject.SetActive(true);
             _loadedLevel.GetComponent<MapController>().FindNeighbors();
 
-            CurrentLevelInfo = _loadedLevel.GetComponent<LevelInfo>();
+            LevelInfo = _loadedLevel.GetComponent<LevelInfo>();
+            EntityManager = _loadedLevel.GetComponent<EntityManager>();
+            
             _loadedLevelNumber = _levelToLoad;
             
             GetComponent<GlassesController>().CheckForNewWorldMusic();
             OnLevelLoaded?.Invoke();
-            CurrentLevelInfo.Animator.SetTrigger("FadeIn");
+            LevelInfo.Animator.SetTrigger("FadeIn");
         }
 
         public void UnloadLevel()
         {
             DestroyImmediate(_loadedLevel);
-            CurrentLevelInfo = null;
+            LevelInfo = null;
         }
 
         public int GetCurrentWorld()

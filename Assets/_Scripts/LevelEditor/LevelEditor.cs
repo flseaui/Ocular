@@ -142,7 +142,7 @@ namespace LevelEditor
         {
             _level.transform.parent.GetComponent<Animator>().enabled = false;
             EditorLevelInfo = _level.GetComponentInParent<LevelInfo>();
-            _gameManager.GetComponent<LevelController>().CurrentLevelInfo = EditorLevelInfo;
+            _gameManager.GetComponent<LevelController>().LevelInfo = EditorLevelInfo;
             _level.transform.ForEachChild(x =>
             {
                 if (x.HasComponent<MaxCount>())
@@ -167,7 +167,6 @@ namespace LevelEditor
             _colorPalette.GetComponent<Animator>().SetBool(OnScreen, !_colorPalette.GetComponent<Animator>().GetBool(OnScreen));
             _objectDrawer.GetComponent<Animator>().SetBool(OnScreen, !_objectDrawer.GetComponent<Animator>().GetBool(OnScreen));
             _gameManager.gameObject.SetActive(!_gameManager.gameObject.activeSelf);
-            _gameManager.SetEntityManager(_level.transform.parent.GetComponent<EntityManager>());
             _glassesContainer.SetActive(!_glassesContainer.activeSelf);
             _colorWheel.SetActive(!_colorWheel.activeSelf);
             if (!_glassesContainer.activeSelf)

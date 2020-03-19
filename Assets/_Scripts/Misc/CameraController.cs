@@ -28,7 +28,7 @@ namespace Misc
 #if UNITY_EDITOR
                 return _isInEditor
                     ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
-                    : _levelController.CurrentLevelInfo;
+                    : _levelController.LevelInfo;
 #else
                 return _levelController.CurrentLevelInfo;
 #endif

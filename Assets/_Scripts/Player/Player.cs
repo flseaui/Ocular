@@ -108,7 +108,7 @@ namespace Player
                 return;
             }
 
-            transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
+            transform.position = GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo
                 .PlayerSpawnPoint.position;
             GetComponent<Rigidbody>().isKinematic = false;
             

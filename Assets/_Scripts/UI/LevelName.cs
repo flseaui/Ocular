@@ -28,7 +28,7 @@ namespace UI
             _animator.ResetTrigger("Show");
             _levelNameText.transform.position += Vector3.up;
 
-            _levelNameText.text = _levelController.CurrentLevelInfo.InGameName;
+            _levelNameText.text = _levelController.LevelInfo.InGameName;
             StartCoroutine(ShowName());
         }
 

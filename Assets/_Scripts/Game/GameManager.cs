@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Security.Cryptography;
 using JetBrains.Annotations;
 using Level;
 using UnityEngine;
@@ -8,16 +6,30 @@ using UnityEngine;
 namespace Game {
     public class GameManager : MonoBehaviour
     {
-        private GlassesController _glassesController;
         private LevelController _levelController;
-        public EntityManager EntityManager;
         
         [CanBeNull] private GameObject _indicator;
         [SerializeField] private GameObject _indicatorPrefab;
 
         public static Action OnLevelLoad;
 
-        public GameObject Player => EntityManager.Player;
+        private void Awake()
+        {
+            _levelController = GetComponent<LevelController>();
+
+            OnLevelLoad += OnLoad;
+        }
+
+        private void Start()
+        {
+            // If NOT playing from editor
+            if (PlayerPrefs.GetInt("PlayFromEditor") == 0)
+            {
+                _levelController.LoadFirstLevel();
+                
+                Instantiate(_indicatorPrefab);
+            }
+        } 
         
         /// <summary>
         /// Stops the current game, unloading the level and destroying entities.
@@ -40,48 +52,15 @@ namespace Game {
             _indicator = Instantiate(_indicatorPrefab);
         }
         
-        private void Awake()
-        {
-            _levelController = GetComponent<LevelController>();
-            _glassesController = GetComponent<GlassesController>();
-
-            OnLevelLoad += OnLoad;
-
-            LevelController.OnLevelLoaded += OnLevelLoaded;
-        }
-
         private void OnLoad()
         {
             StartCoroutine(_levelController.LoadNextLevel());
         }
 
-        private void OnLevelLoaded()
-        {
-            if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
-                EntityManager = _levelController.CurrentLevelInfo.GetComponent<EntityManager>();
-        }
-
-        public void SetEntityManager(EntityManager manager)
-        {
-            EntityManager = manager;
-        }
-        
         private void OnDestroy()
         {
             OnLevelLoad -= OnLoad;
-            LevelController.OnLevelLoaded -= OnLevelLoaded;
 
         }
-
-        private void Start()
-        {
-            // If NOT playing from editor
-            if (PlayerPrefs.GetInt("PlayFromEditor") == 0)
-            {
-                _levelController.LoadFirstLevel();
-                
-                Instantiate(_indicatorPrefab);
-            }
-        }        
     }
 }

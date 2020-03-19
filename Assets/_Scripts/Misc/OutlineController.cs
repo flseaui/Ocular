@@ -20,7 +20,7 @@ namespace Misc
 
         private void OnLevelLoad()
         {
-            _controllers = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo
+            _controllers = GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo
                 .GetComponent<MapController>().Controllers;
         }
         
