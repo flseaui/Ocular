@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace Level
 {
-
     public static class MatrixExtensions
     {
         public static (int, int) CoordinatesOf<T>(this T[,] matrix, T value) where T : class
@@ -78,6 +77,7 @@ namespace Level
         public static bool LevelTransitioning;
         
         public static Action OnLevelLoaded;
+        public static Action OnLevelBeginUnload;
 
         private (int, int) _levelToLoad;
 
@@ -90,8 +90,8 @@ namespace Level
                 _worldOneLevels,
                 _worldTwoLevels,
                 _worldThreeLevels,
-                _testLevels
-            };
+                _testLevels 
+            }; 
 
             for (var i = 0; i < _worlds.Count; i++)
             {
@@ -101,8 +101,20 @@ namespace Level
                     _levels[i, j] = world[j];
                 }
             }
+            
+            OnLevelBeginUnload += StartLoadNextLevel;
         }
 
+        private void OnDestroy()
+        {
+            OnLevelBeginUnload -= StartLoadNextLevel;
+        }
+
+        private void StartLoadNextLevel()
+        {
+            StartCoroutine(LoadNextLevel());
+        }
+        
         public IEnumerator LoadNextLevel()
         {
             LevelTransitioning = true;
@@ -164,7 +176,9 @@ namespace Level
             _loadedLevelNumber = _levelToLoad;
             
             GetComponent<GlassesController>().CheckForNewWorldMusic();
+            
             OnLevelLoaded?.Invoke();
+            
             LevelInfo.Animator.SetTrigger("FadeIn");
         }
 
@@ -178,6 +192,5 @@ namespace Level
         {
             return _loadedLevelNumber.Item1;
         }
-
     }
 }

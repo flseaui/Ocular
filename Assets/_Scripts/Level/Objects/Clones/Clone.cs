@@ -37,7 +37,7 @@ namespace Level.Objects
             _model = transform.Find("Model").gameObject;
             
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
-            GameManager.OnLevelLoad += CommitDie;
+            LevelController.OnLevelBeginUnload += CommitDie;
             _spawnPoint = transform.position;
 
             OnDeath += OnPlayerDeath;
@@ -97,7 +97,7 @@ namespace Level.Objects
         private void OnDestroy()
         {
             EntityManager.OnEntitiesSpawned -= OnEntitiesSpawned;
-            GameManager.OnLevelLoad -= CommitDie;
+            LevelController.OnLevelBeginUnload -= CommitDie;
             OnDeath -= OnPlayerDeath;
         }
 

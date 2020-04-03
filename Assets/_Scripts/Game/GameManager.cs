@@ -11,13 +11,9 @@ namespace Game {
         [CanBeNull] private GameObject _indicator;
         [SerializeField] private GameObject _indicatorPrefab;
 
-        public static Action OnLevelLoad;
-
         private void Awake()
         {
             _levelController = GetComponent<LevelController>();
-
-            OnLevelLoad += OnLoad;
         }
 
         private void Start()
@@ -50,17 +46,6 @@ namespace Game {
         {
             _levelController.LoadLevelFromObj(level);
             _indicator = Instantiate(_indicatorPrefab);
-        }
-        
-        private void OnLoad()
-        {
-            StartCoroutine(_levelController.LoadNextLevel());
-        }
-
-        private void OnDestroy()
-        {
-            OnLevelLoad -= OnLoad;
-
         }
     }
 }

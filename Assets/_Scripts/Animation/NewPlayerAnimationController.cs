@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game;
+using Level;
 using Player;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -101,7 +102,7 @@ namespace OcularAnimation
                     _currentAnimation.Reset();
                     Pathfinder.AtGoal = false;
                     Destroy(gameObject);
-                    GameManager.OnLevelLoad?.Invoke();
+                    LevelController.OnLevelBeginUnload?.Invoke();
                 }
                 else if (_currentAnimation == _death)
                 {

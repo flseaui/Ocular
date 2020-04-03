@@ -1,4 +1,5 @@
 ﻿using Game;
+using Level;
 using UnityEngine;
 
 namespace Misc
@@ -7,7 +8,7 @@ namespace Misc
     {
         public void NextLevel()
         {
-            GameManager.OnLevelLoad?.Invoke();
+            LevelController.OnLevelBeginUnload?.Invoke();
         }
     }
 }

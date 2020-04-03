@@ -39,7 +39,7 @@ namespace Player
         private void Awake()
         {
             _pathfinder = GetComponent<Pathfinder>();
-            GameManager.OnLevelLoad += CommitDie;
+            LevelController.OnLevelBeginUnload += CommitDie;
         }
 
         private void Update()
@@ -78,7 +78,7 @@ namespace Player
 
         private void OnDestroy()
         {
-            GameManager.OnLevelLoad -= CommitDie;
+            LevelController.OnLevelBeginUnload -= CommitDie;
         }
 
         public void CommitDie()

@@ -69,7 +69,7 @@ namespace UI
             GameIsPaused = false;
         }
 
-        private void Pause()
+        public void Pause()
         {
             _cg.alpha = 1;
             _cg.interactable = true;
