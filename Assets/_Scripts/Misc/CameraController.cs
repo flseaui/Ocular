@@ -30,7 +30,7 @@ namespace Misc
                     ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
                     : _levelController.LevelInfo;
 #else
-                return _levelController.CurrentLevelInfo;
+                return _levelController.LevelInfo;
 #endif
             }
         }

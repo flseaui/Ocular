@@ -115,7 +115,7 @@ namespace Misc
                 ? GameObject.Find("LevelEditor").GetComponent<LevelEditor.LevelEditor>().EditorLevelInfo
                 : GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo;
 #else
-            var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().CurrentLevelInfo;
+            var levelInfo = GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo;
 #endif
 
             _pos = levelInfo.transform.Find("MainFloor").transform.position;
