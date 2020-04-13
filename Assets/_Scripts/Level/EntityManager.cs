@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Level.Objects;
 using Level.Objects.Clones;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -46,7 +47,7 @@ namespace Level
         }
         
         [UsedImplicitly]
-        public void SpawnPlayer()
+        public void SpawnEntities()
         {
             LevelController.Falling = false;
 
@@ -59,7 +60,11 @@ namespace Level
             foreach (var cloneSpawn in _levelController.LevelInfo.gameObject.transform.Find("MainFloor")
                 .GetComponentsInChildren<CloneSpawn>())
             {
-                _entities.Add(Instantiate(_clonePrefab, cloneSpawn.transform.position + new Vector3(0, .65f, 0), Quaternion.identity));
+                var clone = Instantiate(_clonePrefab, cloneSpawn.transform.position + new Vector3(0, .65f, 0),
+                    Quaternion.identity);
+                
+                clone.GetComponent<Colorable>().QueueOcularStateChange(cloneSpawn.GetComponent<Colorable>().OcularState);
+                _entities.Add(clone);
             }
             
             OnEntitiesSpawned?.Invoke();

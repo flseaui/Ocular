@@ -182,7 +182,7 @@ namespace LevelEditor
         {
             if (_glassesContainer.activeSelf)
             {
-                _level.transform.parent.GetComponent<EntityManager>().SpawnPlayer();
+                _level.transform.parent.GetComponent<EntityManager>().SpawnEntities();
             }
             else
             {

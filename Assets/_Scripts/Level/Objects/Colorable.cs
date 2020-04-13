@@ -43,11 +43,13 @@ namespace Level.Objects
 
         [SerializeField, HideInInspector] private Color _color;
         [SerializeField, HideInInspector] private OcularState _ocularState;
+        [SerializeField] private bool _entity;
+        [SerializeField] private bool _dontUseBlockMat;
         [SerializeField] private Material _blockMat;
         private GameObject _outlineModel;
 
         private MaterialPropertyBlock _propBlock;
-        private Renderer[] _renderers;
+        private MeshRenderer[] _renderers;
         private GameObject[] _models;
         private LevelInfo _levelInfo;
 
@@ -70,6 +72,11 @@ namespace Level.Objects
                 _ocularState = reset ? _initialState : value;
                 _color = InternalStateToColor(reset ? _initialState : value);
 
+                if (_renderers == null)
+                {
+                    Debug.Log($"AWESOME {name} is null");
+                }
+                
                 foreach (var r in _renderers)
                 {
                     r.GetPropertyBlock(_propBlock);
@@ -93,12 +100,16 @@ namespace Level.Objects
                         SetModelsState(false);
                         break;
                     case BlockState.Visible:
-                        _renderers.ForEach(r =>
+                        if (!_dontUseBlockMat)
                         {
-                            var tex = r.material.mainTexture;
-                            r.material = _blockMat;
-                            r.material.mainTexture = tex;
-                        });
+                            _renderers.ForEach(r =>
+                            {
+                                var tex = r.material.mainTexture;
+                                r.material = _blockMat;
+                                r.material.mainTexture = tex;
+                            });
+                        }
+
                         SetModelsState(true);
 
                         //todo alert player of collision/death
@@ -425,15 +436,21 @@ namespace Level.Objects
                 if (child.CompareTag("Colorable"))
                     temp.Add(child.gameObject);
 
+            Debug.Log($"{name} is getting da wrenderers");
+            
             _models = temp.ToArray();
             _renderers = _models.Select(m => m.GetComponent<MeshRenderer>()).ToArray();
+            
             if (Application.isPlaying)
             {
-                _levelInfo = transform.parent.parent.GetComponent<LevelInfo>();
+                _levelInfo = _entity
+                    ? GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo
+                    : transform.parent.parent.GetComponent<LevelInfo>();
             }
 
             //#if UNITY_EDITOR
-            _renderers.ForEach(r => r.sharedMaterial = _blockMat);
+            if (!_dontUseBlockMat)
+                _renderers.ForEach(r => r.sharedMaterial = _blockMat);
             //#endif
 
             _propBlock = new MaterialPropertyBlock();
