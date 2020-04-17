@@ -100,7 +100,16 @@ namespace Level.Objects
                 switch (value)
                 {
                     case BlockState.Invisible:
-                        SetModelsState(false);
+                        if (_entity)
+                        {
+                            //TODO un hard code for clone
+                            GetComponent<Clone>().ActuallyDie();
+                        }
+                        else
+                        {
+                            SetModelsState(false);
+                        }
+
                         break;
                     case BlockState.Visible:
                         if (!_dontUseBlockMat)
@@ -115,13 +124,27 @@ namespace Level.Objects
 
                         if (_firstRealTimeVisible)
                         {
+#if UNITY_EDITOR
+                            if (CompareTag("CloneSpawn") && LevelEditor.LevelEditor.InTestMode)
+                                GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
+                                    .SpawnClone(this);
+#else
                             if (CompareTag("CloneSpawn"))
                                 GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
                                     .SpawnClone(this);
+#endif
                             _firstRealTimeVisible = false;
                         }
 
-                        SetModelsState(true);
+                        if (_entity)
+                        {
+                            //TODO un hard code for clone
+                            GetComponent<Clone>().ActuallyUnDieIfNotDead();
+                        }
+                        else
+                        {
+                            SetModelsState(true);
+                        }
 
                         //todo alert player of collision/death
                         if (_blockState != BlockState.Visible)

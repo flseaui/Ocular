@@ -16,6 +16,7 @@ namespace Level.Objects
         public bool Falling;
         public bool ActuallyFalling;
         public bool Died;
+        public bool Invisible;
         public bool Teleporting;
 
         private bool _superDead = false;
@@ -60,9 +61,18 @@ namespace Level.Objects
            transform.position = _spawnPoint;
 
            Died = false;
-           FakeKillOrRevive(false);
+           
+           if (!Invisible) 
+               FakeKillOrRevive(false);
         }
-
+        
+        /// <summary>
+        /// Fake kill or revive the clone
+        /// </summary>
+        /// <param name="kill">
+        ///    true = kill
+        ///    false = revive
+        /// </param>
         public void FakeKillOrRevive(bool kill)
         {
             _model.SetActive(!kill);
@@ -70,15 +80,20 @@ namespace Level.Objects
             _animController.enabled = !kill;
             GetComponent<CapsuleCollider>().enabled = !kill;
         }
+
+        public void ActuallyUnDieIfNotDead()
+        {
+            if (Died) return;
+            FakeKillOrRevive(false);
+            GetComponent<Rigidbody>().isKinematic = false;
+            Invisible = false;
+        }
         
         public void ActuallyDie()
         {
             FakeKillOrRevive(true);
-            //gameObject.SetActive(false);
-            //Destroy(gameObject);
-
-            //transform.position = _spawnPoint;
             GetComponent<Rigidbody>().isKinematic = false;
+            Invisible = true;
         }
         
         private void CommitDie()
@@ -118,7 +133,7 @@ namespace Level.Objects
         
         private void Update()
         {
-            if (Died) return;
+            if (Died || Invisible) return;
             
             if (_player == null)
                 _player = GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager.Player;

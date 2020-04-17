@@ -46,6 +46,8 @@ namespace LevelEditor
 
         public LevelInfo EditorLevelInfo;
 
+        public static bool InTestMode;
+
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
@@ -178,7 +180,8 @@ namespace LevelEditor
                 _gameManager.PlayLevel(_level.transform.parent.gameObject);
             UpdateEntities();
             _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
-
+            
+            InTestMode = _glassesContainer.activeSelf;
         }
 
         public void UpdateEntities()
