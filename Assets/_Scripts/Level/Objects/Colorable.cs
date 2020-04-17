@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Game;
+using Level.Objects.Clones;
 using Misc;
 using OcularAnimation;
 using Sirenix.OdinInspector;
@@ -60,6 +61,8 @@ namespace Level.Objects
         private GameObject _runtimeOutlineModel;
         private bool _firstTimeOutlined;
 
+        private bool _firstRealTimeVisible;
+
         public List<IController> Controllers;
 
         [DisableInPlayMode, ShowInInspector]
@@ -110,6 +113,14 @@ namespace Level.Objects
                             });
                         }
 
+                        if (_firstRealTimeVisible)
+                        {
+                            if (CompareTag("CloneSpawn"))
+                                GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
+                                    .SpawnClone(this);
+                            _firstRealTimeVisible = false;
+                        }
+
                         SetModelsState(true);
 
                         //todo alert player of collision/death
@@ -128,7 +139,8 @@ namespace Level.Objects
                                 }
                                 else if (hit.transform.HasComponent<Clone>(out var clone))
                                 {
-                                    clone.Death();
+                                    if (!_entity && !GetComponent<CloneSpawn>())
+                                        clone.Death();
                                 }
                             }
                         }
@@ -283,6 +295,14 @@ namespace Level.Objects
                         }
                         else
                         {
+                            if (GlassesController.FirstToggle)
+                                if (CompareTag("CloneSpawn"))
+                                {
+                                    GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
+                                        .SpawnClone(this);
+                                    _firstRealTimeVisible = true;
+                                }
+
                             if (OcularState != _initialState)
                                 _propBlock.SetColor("_Color", StateToColor(_initialState));
                             else
@@ -436,8 +456,6 @@ namespace Level.Objects
                 if (child.CompareTag("Colorable"))
                     temp.Add(child.gameObject);
 
-            Debug.Log($"{name} is getting da wrenderers");
-            
             _models = temp.ToArray();
             _renderers = _models.Select(m => m.GetComponent<MeshRenderer>()).ToArray();
             
@@ -478,10 +496,11 @@ namespace Level.Objects
             }
 
             _firstTimeOutlined = true;
-            
+            _firstRealTimeVisible = true;
+
             GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
-        
+
         private void OnEnable()
         {
             StartCoroutine(SetupColorable());

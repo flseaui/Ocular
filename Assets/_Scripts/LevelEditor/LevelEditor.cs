@@ -33,8 +33,10 @@ namespace LevelEditor
 
         [SerializeField] GameManager _gameManager;
         [SerializeField] GameObject _glassesContainer;
-
+        
         [SerializeField] private GameObject _colorWheel;
+
+        private LevelController _levelController;
         
         [ShowInInspector]
         private List<GameObject> _limitedObjects;
@@ -43,7 +45,7 @@ namespace LevelEditor
         public static Action<bool> OnLevelPlayToggle;
 
         public LevelInfo EditorLevelInfo;
-        
+
         private void Awake()
         {
             _limitedObjects = new List<GameObject>();
@@ -142,7 +144,8 @@ namespace LevelEditor
         {
             _level.transform.parent.GetComponent<Animator>().enabled = false;
             EditorLevelInfo = _level.GetComponentInParent<LevelInfo>();
-            _gameManager.GetComponent<LevelController>().LevelInfo = EditorLevelInfo;
+            _levelController = _gameManager.GetComponent<LevelController>();
+            _levelController.LevelInfo = EditorLevelInfo;
             _level.transform.ForEachChild(x =>
             {
                 if (x.HasComponent<MaxCount>())
@@ -182,12 +185,12 @@ namespace LevelEditor
         {
             if (_glassesContainer.activeSelf)
             {
-                _level.transform.parent.GetComponent<EntityManager>().SpawnEntities();
+                _levelController.EntityManager.SpawnEntities();
             }
             else
             {
-                Destroy(_level.transform.parent.GetComponent<EntityManager>().Player);
-                _level.transform.parent.GetComponent<EntityManager>().ClearEntities();
+                _levelController.EntityManager.ClearEntities();
+                _levelController.EntityManager.DespawnPlayer();
             }
 
         }

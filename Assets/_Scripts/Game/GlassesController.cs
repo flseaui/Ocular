@@ -42,6 +42,7 @@ namespace Game
         };
     
         public static Action OnGlassesToggled;
+        public static bool FirstToggle;
 
         [ShowInInspector, ReadOnly]
         public static OcularState CurrentOcularState;
@@ -58,6 +59,8 @@ namespace Game
 
         private int _currentWorldMusic;
 
+        private bool _firstUpdate;
+        
         public void BlankState()
         {
             CurrentOcularState = OcularState.Z;
@@ -70,7 +73,7 @@ namespace Game
             index = 0;
             _musicStreams = new List<PlaySoundResult>();
 
-            SpotlightController.SpotlightEnabled += UpdateOcularState;
+            SpotlightController.SpotlightEnabled += SpotlightEnabled;
 
             LevelController.OnLevelLoaded += OnLevelLoaded;
             EntityManager.OnEntitiesSpawned += OnEntitiesSpawned;
@@ -84,6 +87,21 @@ namespace Game
                 StartCoroutine(UpdateVolume());
         }
 
+        private void SpotlightEnabled()
+        {
+            FirstToggle = true;
+            UpdateOcularState();
+
+            StartCoroutine(DisableFirstToggle());
+        }
+
+        private IEnumerator DisableFirstToggle()
+        {
+            yield return new WaitForSeconds(.05f);
+
+            FirstToggle = false;
+        }
+        
         private IEnumerator UpdateVolume()
         {
             //TODO jank audio fix
@@ -116,6 +134,7 @@ namespace Game
         {
             CurrentOcularState = _states[(index % 6 + 6) % 6];
             MapController.UpdateColorables();
+            
             OnGlassesToggled?.Invoke();
             
             if (PlayerPrefs.GetInt("PlayFromEditor") == 0)

@@ -24,7 +24,7 @@ namespace Level
         private void Awake()
         {
             _entities = new List<GameObject>();
-            
+
             Addressables.LoadAssetAsync<GameObject>("clone_prefab").Completed += handle =>
             {
                 _clonePrefab = handle.Result;
@@ -39,11 +39,27 @@ namespace Level
         
         public void ClearEntities()
         {
+            Debug.Log($"cleawin {_entities.Count} entities!");
             foreach (var entity in _entities)
             {
-                Destroy(entity);
+                Debug.Log(entity.name + " is getting pwnd");
+                Destroy(entity.gameObject);
             }
             _entities.Clear();
+        }
+
+        public void DespawnPlayer()
+        {
+            Destroy(Player);
+        }
+        
+        public void SpawnClone(Colorable spawn)
+        {
+            var clone = Instantiate(_clonePrefab, spawn.transform.position + new Vector3(0, .65f, 0),
+                Quaternion.identity);
+
+            clone.GetComponent<Colorable>().QueueOcularStateChange(spawn.OcularState);
+            _entities.Add(clone);
         }
         
         [UsedImplicitly]
@@ -57,16 +73,6 @@ namespace Level
             Player = Instantiate(_playerPrefab, _levelController.LevelInfo.PlayerSpawnPoint.transform.position + new Vector3(0, .65f, 0),
                 Quaternion.identity);
 
-            foreach (var cloneSpawn in _levelController.LevelInfo.gameObject.transform.Find("MainFloor")
-                .GetComponentsInChildren<CloneSpawn>())
-            {
-                var clone = Instantiate(_clonePrefab, cloneSpawn.transform.position + new Vector3(0, .65f, 0),
-                    Quaternion.identity);
-                
-                clone.GetComponent<Colorable>().QueueOcularStateChange(cloneSpawn.GetComponent<Colorable>().OcularState);
-                _entities.Add(clone);
-            }
-            
             OnEntitiesSpawned?.Invoke();
             LevelController.LevelTransitioning = false;
         }
