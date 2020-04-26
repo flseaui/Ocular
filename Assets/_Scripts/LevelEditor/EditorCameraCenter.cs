@@ -1,6 +1,7 @@
 ﻿using Level;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Unity.Mathematics;
 
 namespace LevelEditor
 {
@@ -9,7 +10,7 @@ namespace LevelEditor
         [ShowInInspector]
         private Transform _centerParent;
 
-        private Vector3 _center;
+        private float3 _center;
 
         public LevelInfo LevelInfo;
 

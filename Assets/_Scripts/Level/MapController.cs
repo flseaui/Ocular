@@ -40,13 +40,13 @@ namespace Level {
             foreach (var controller in Controllers)
             {
                 if (((MonoBehaviour) controller).transform.HasComponent<Colorable>(out var c))
-                    StartCoroutine(c.UpdateStateWhenPossible());
+                    c.UpdateState();
                 controllers.Add(((MonoBehaviour) controller).gameObject);
             }
 
             foreach (var colorable in _colorables.Where(c => !controllers.Contains(c.gameObject)))
             {
-                StartCoroutine(colorable.UpdateStateWhenPossible());
+                colorable.UpdateState();
             }
         }
     }

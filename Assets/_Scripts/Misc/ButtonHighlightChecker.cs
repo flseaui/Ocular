@@ -69,7 +69,7 @@ public class ButtonHighlightChecker : MonoBehaviour
                     {
                         var outlines = target.transform.GetComponentsInChildren<Outline>();
                         _mainCamera.GetComponent<OutlineEffect>().lineColor0 =
-                            Colorable.StateToColor(target.GetComponent<Colorable>().OcularState);
+                            Colorable.StateToColor(target.GetComponent<Colorable>().OcularColor);
                         outlines.ForEach(x => { x.enabled = true; });
                     }
 
@@ -92,7 +92,7 @@ public class ButtonHighlightChecker : MonoBehaviour
                         outlines.ForEach(x =>
                         {
                             _mainCamera.GetComponent<OutlineEffect>().lineColor0 =
-                                Colorable.StateToColor(buttonWalkable.GetComponent<Colorable>().OcularState);
+                                Colorable.StateToColor(buttonWalkable.GetComponent<Colorable>().OcularColor);
                             x.enabled = true;
                         });
                     }

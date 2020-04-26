@@ -270,7 +270,7 @@ namespace LevelEditor
             }
 
             if (element.transform.HasComponent<Colorable>(out var colorable))
-                colorable.QueueOcularStateChange(_colorPalette.SelectedColor);
+                colorable.OcularColor = _colorPalette.SelectedColor;
         }
     }
 }

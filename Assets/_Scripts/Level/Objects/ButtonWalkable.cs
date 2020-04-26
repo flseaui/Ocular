@@ -50,7 +50,7 @@ namespace Level.Objects
                 _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
                 TargetBlocks.ForEach(t =>
                 {
-                    t.OcularState = Color;
+                    t.OcularColor = Color;
                     t.UpdateState();
                 });
             }
@@ -60,7 +60,7 @@ namespace Level.Objects
                 _buttonModel.transform.localPosition = _initialPosition;
                 TargetBlocks.ForEach(t =>
                 {
-                    t.OcularState = GlassesController.OcularState.Null;
+                    t.OcularColor = GlassesController.OcularState.Null;
                     t.UpdateState();
                 });
             }

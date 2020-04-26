@@ -38,7 +38,7 @@ namespace Misc.Tools
                     var model = child.Find("Model");
                     if (name.StartsWith("Floor"))
                     {
-                        if (child.GetComponent<Colorable>().OcularState == GlassesController.OcularState.Z)
+                        if (child.GetComponent<Colorable>().OcularColor == GlassesController.OcularState.Z)
                         {
                             var spawn = Spawn.transform.GetChild(0);
                         

@@ -55,7 +55,7 @@ namespace Level
             var clone = Instantiate(_clonePrefab, spawn.transform.position + new Vector3(0, .65f, 0),
                 Quaternion.identity);
 
-            clone.GetComponent<Colorable>().QueueOcularStateChange(spawn.OcularState);
+            clone.GetComponent<Colorable>().OcularColor = spawn.OcularColor;
             _entities.Add(clone);
         }
         

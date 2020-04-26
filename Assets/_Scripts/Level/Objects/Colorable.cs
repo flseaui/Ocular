@@ -8,10 +8,12 @@ using Level.Objects.Clones;
 using Misc;
 using OcularAnimation;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 using OcularState = Game.GlassesController.OcularState;
 
 namespace Level.Objects
@@ -22,7 +24,7 @@ namespace Level.Objects
     [ExecuteInEditMode]
     public class Colorable : MonoBehaviour
     {
-        public enum BlockState
+        public enum BlockStateEnum
         {
             Visible,
             Invisible
@@ -43,7 +45,7 @@ namespace Level.Objects
         [SerializeField] private ColorableType _type;
 
         [SerializeField, HideInInspector] private Color _color;
-        [SerializeField, HideInInspector] private OcularState _ocularState;
+        [SerializeField, HideInInspector] private OcularState _ocularColor;
         [SerializeField] private bool _entity;
         [SerializeField] private bool _dontUseBlockMat;
         [SerializeField] private Material _blockMat;
@@ -55,9 +57,9 @@ namespace Level.Objects
         private LevelInfo _levelInfo;
 
         [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
-        private OcularState _initialState;
+        private OcularState _initialColor;
 
-        private BlockState _blockState;
+        private BlockStateEnum _blockState;
         private GameObject _runtimeOutlineModel;
         private bool _firstTimeOutlined;
 
@@ -66,17 +68,19 @@ namespace Level.Objects
         public List<IController> Controllers;
 
         [DisableInPlayMode, ShowInInspector]
-        public OcularState OcularState
+        public OcularState OcularColor
         {
-            get => _ocularState;
+            get => _ocularColor;
             set
             {
                 var reset = value == OcularState.Null;
-                _ocularState = reset ? _initialState : value;
-                _color = InternalStateToColor(reset ? _initialState : value);
-                
-                foreach (var r in _renderers)
+                _ocularColor = reset ? _initialColor : value;
+                _color = InternalStateToColor(reset ? _initialColor : value);
+
+                var rendererCount = _renderers.Length;
+                for (var i = 0; i < rendererCount; i++)
                 {
+                    var r = _renderers[i];
                     r.GetPropertyBlock(_propBlock);
                     _propBlock.SetColor(ColorProp, _color);
                     r.SetPropertyBlock(_propBlock);
@@ -85,7 +89,7 @@ namespace Level.Objects
         }
 
         [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
-        public BlockState State
+        public BlockStateEnum BlockState
         {
             get => _blockState;
             set
@@ -94,7 +98,7 @@ namespace Level.Objects
                     return;
                 switch (value)
                 {
-                    case BlockState.Invisible:
+                    case BlockStateEnum.Invisible:
                         if (_entity)
                         {
                             //TODO un hard code for clone
@@ -106,7 +110,7 @@ namespace Level.Objects
                         }
 
                         break;
-                    case BlockState.Visible:
+                    case BlockStateEnum.Visible:
                         if (!_dontUseBlockMat)
                         {
                             _renderers.ForEach(r =>
@@ -142,7 +146,7 @@ namespace Level.Objects
                         }
 
                         //todo alert player of collision/death
-                        if (_blockState != BlockState.Visible)
+                        if (_blockState != BlockStateEnum.Visible)
                         {
                             if (Physics.Raycast(transform.position + (Vector3.up * 3), Vector3.down, out var hit, 3,
                                 LayerMask.GetMask("Player")))
@@ -180,7 +184,6 @@ namespace Level.Objects
             {
                 if (value)
                 {
-                    
                     if (_runtimeOutlineModel == null)
                         _runtimeOutlineModel = Instantiate(_outlineModel, transform);
 
@@ -197,9 +200,9 @@ namespace Level.Objects
 
         public void Initialize()
         {
-            if (OcularState == OcularState.Z) return;
-            
-            QueueStateChange(BlockState.Invisible);
+            if (OcularColor == OcularState.Z) return;
+
+            BlockState = BlockStateEnum.Invisible;
 
             if (!transform.HasComponent<Walkable>(out var walkable)) return;
             
@@ -214,13 +217,6 @@ namespace Level.Objects
 
         public void UpdateState() => InternalOnGlassesToggled();
 
-        public IEnumerator UpdateStateWhenPossible()
-        {
-            yield return new WaitUntil(() => _models != null);
-            
-            UpdateState();
-        }
-
         /// <summary>
         /// Calculates the color and visibility of the <c>Colorable</c> based on its properties and environment.
         /// </summary>
@@ -228,24 +224,24 @@ namespace Level.Objects
         /// A tuple containing the color and state of a colorable.
         /// </returns>
         // TODO Only calculate once per color then update all colorables, continue using custom logic for controlled blocks
-        private (OcularState color, BlockState state) CalculateVisibility()
+        private (OcularState color, BlockStateEnum state) CalculateVisibility()
         {
-            if (OcularState == OcularState.Z)
-                return (OcularState.Z, BlockState.Visible);
+            if (OcularColor == OcularState.Z)
+                return (OcularState.Z, BlockStateEnum.Visible);
 
-            var visible = IsColorVisible(OcularState);
+            var visible = IsColorVisible(OcularColor);
 
             // ATM This code assumes controller is button bc thats the only implemented controller
             // TODO Come up with better controller solution
 
             if (Controllers.Count > 0)
             {
-                if (((MonoBehaviour)Controllers[0]).GetComponent<Colorable>().State != BlockState.Visible)
+                if (((MonoBehaviour)Controllers[0]).GetComponent<Colorable>().BlockState != BlockStateEnum.Visible)
                 {
                     Outlined = false;
                     return visible
-                        ? (_state: OcularState, BlockState.Visible)
-                        : (_state: OcularState, BlockState.Invisible);
+                        ? (_state: OcularColor, BlockStateEnum.Visible)
+                        : (_state: OcularColor, BlockStateEnum.Invisible);
                 }
                 else
                 {
@@ -255,26 +251,26 @@ namespace Level.Objects
             else
             {
                 return visible
-                    ? (_state: OcularState, BlockState.Visible)
-                    : (_state: OcularState, BlockState.Invisible);
+                    ? (_state: OcularColor, BlockStateEnum.Visible)
+                    : (_state: OcularColor, BlockStateEnum.Invisible);
             }
 
             if (visible)
             {
-                return (OcularState, BlockState.Visible);
+                return (OcularColor, BlockStateEnum.Visible);
             }
 
-            if (OcularState == _initialState)
+            if (OcularColor == _initialColor)
             {
                 if (IsColorVisible(((ButtonWalkable)Controllers[0]).Color))
                 {
-                    return (((ButtonWalkable)Controllers[0]).Color, BlockState.Invisible);
+                    return (((ButtonWalkable)Controllers[0]).Color, BlockStateEnum.Invisible);
                 }
 
-                return (OcularState, BlockState.Invisible);
+                return (OcularColor, BlockStateEnum.Invisible);
             }
 
-            return (OcularState, BlockState.Invisible);
+            return (OcularColor, BlockStateEnum.Invisible);
         }
 
         private void InternalOnGlassesToggled()
@@ -284,7 +280,7 @@ namespace Level.Objects
                 case ColorableType.StateChanging:
                     var (color, state) = CalculateVisibility();
 
-                    State = state;
+                    BlockState = state;
 
                     if (_runtimeOutlineModel != null)
                     {
@@ -303,10 +299,10 @@ namespace Level.Objects
                             }
                         }
                         
-                        if (State != BlockState.Visible)
+                        if (BlockState != BlockStateEnum.Visible)
                         {
-                            if (OcularState != _initialState)
-                                _propBlock.SetColor("_Color", StateToColor(_initialState));
+                            if (OcularColor != _initialColor)
+                                _propBlock.SetColor("_Color", StateToColor(_initialColor));
                             else
                                 _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)Controllers[0]).Color));
                         }
@@ -320,8 +316,8 @@ namespace Level.Objects
                                     _firstRealTimeVisible = true;
                                 }
 
-                            if (OcularState != _initialState)
-                                _propBlock.SetColor("_Color", StateToColor(_initialState));
+                            if (OcularColor != _initialColor)
+                                _propBlock.SetColor("_Color", StateToColor(_initialColor));
                             else
                                 _propBlock.SetColor("_Color", StateToColor(((ButtonWalkable)Controllers[0]).Color));
                         }
@@ -331,7 +327,7 @@ namespace Level.Objects
 
                     if (transform.HasComponent<Walkable>(out var walkable))
                     {
-                        var visible = _blockState == BlockState.Visible;
+                        var visible = _blockState == BlockStateEnum.Visible;
 
                         //if custom disable behavior gets overly complex, move into child classes
                         switch (walkable)
@@ -349,7 +345,7 @@ namespace Level.Objects
                     }
                     break;
                 case ColorableType.ColorChanging:
-                    OcularState = GlassesController.CurrentOcularState;
+                    OcularColor = GlassesController.CurrentOcularState;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -403,7 +399,7 @@ namespace Level.Objects
         private Color InternalStateToColor(OcularState ocularState)
         {
             if (ocularState == OcularState.Null)
-                return InternalStateToColor(_initialState);
+                return InternalStateToColor(_initialColor);
 
             Color newCol;
 
@@ -424,108 +420,95 @@ namespace Level.Objects
 
         private void SetModelsState(bool state)
         {
-            foreach (var model in _models)
-                model.SetActive(state);
-
+            var count = _models.Length;
+            for (var i = 0; i < count; i++)
+            {           
+                _models[i].SetActive(state);
+            }
         }
 
         private void Start()
         {
-            _initialState = OcularState;
-        }
-
-        private OcularState _queuedOcularState;
-        
-        public void QueueOcularStateChange(OcularState newState)
-        {
-            _queuedOcularState = newState;
-            StartCoroutine(InternalQueueOcularStateChange());
-        }
-
-        private IEnumerator InternalQueueOcularStateChange()
-        {
-            yield return new WaitUntil(() => _renderers != null);
-
-            OcularState = _queuedOcularState;
+            _initialColor = OcularColor;
         }
         
-        private BlockState _queuedState;
-        
-        public void QueueStateChange(BlockState newState)
+        private void OnEnable()
         {
-            _queuedState = newState;
-            StartCoroutine(InternalQueueStateChange());
-        }
-
-        private IEnumerator InternalQueueStateChange()
-        {
-            yield return new WaitUntil(() => _models != null);
-
-            State = _queuedState;
-        }
-        
-        private IEnumerator SetupColorable()
-        {
-            yield return null;
-            
-            var temp = new List<GameObject>();
-            foreach (Transform child in transform)
-                if (child.CompareTag("Colorable"))
-                    temp.Add(child.gameObject);
-
-            _models = temp.ToArray();
-            _renderers = _models.Select(m => m.GetComponent<MeshRenderer>()).ToArray();
-            
             if (Application.isPlaying)
             {
                 _levelInfo = _entity
                     ? GameObject.Find("GameManager").GetComponent<LevelController>().LevelInfo
                     : transform.parent.parent.GetComponent<LevelInfo>();
             }
-
-            //#if UNITY_EDITOR
-            if (!_dontUseBlockMat)
-                _renderers.ForEach(r => r.sharedMaterial = _blockMat);
-            //#endif
-
-            _propBlock = new MaterialPropertyBlock();
-            State = BlockState.Visible;
-            OcularState = OcularState;
-            SetModelsState(true);
-
-            if (_levelInfo != null)
+            
+            var childCount = transform.childCount;
+            var temp = new List<GameObject>();
+            for (var i = 0; i < childCount; ++i)
             {
-                foreach (var r in _renderers)
+                var child = transform.GetChild(i);
+                if (child.CompareTag("Colorable"))
+                   temp.Add(child.gameObject);
+            }
+            _models = temp.ToArray();
+
+            if (_models.Length != 0)
+            {
+                var numModels = _models.Length;
+                _renderers = new MeshRenderer[numModels];
+                for (var i = 0; i < numModels; ++i)
                 {
-                    r.GetPropertyBlock(_propBlock);
-                    _propBlock.SetFloat(Contrast, _levelInfo.BlockContrast);
-                    _propBlock.SetFloat(Intensity, _levelInfo.ColorIntensity);
-                    _propBlock.SetFloat(ShadowStrength,
-                        transform.HasComponent<GoalAnimationController>()
-                            ? _levelInfo.GoalShadowStrength
-                            : _levelInfo.ShadowStrength);
-                    _propBlock.SetColor(ShadowTint,
-                        transform.HasComponent<GoalAnimationController>()
-                            ? _levelInfo.GoalShadowTint
-                            : _levelInfo.ShadowTint);
-                    r.SetPropertyBlock(_propBlock);
+                    _renderers[i] = _models[i].GetComponent<MeshRenderer>();
+                }
+
+                if (!_dontUseBlockMat)
+                {
+                    var count = _renderers.Length;
+                    for (var i = 0; i < count; ++i)
+                    {
+                        _renderers[i].sharedMaterial = _blockMat;
+                    }
+                }
+                
+                _propBlock = new MaterialPropertyBlock();
+                
+                if (_levelInfo != null)
+                {
+                    var rendererCount = _renderers.Length;
+                    for (var i = 0; i < rendererCount; ++i)
+                    {
+                        var r = _renderers[i];
+                        r.GetPropertyBlock(_propBlock);
+                        _propBlock.SetFloat(Contrast, _levelInfo.BlockContrast);
+                        _propBlock.SetFloat(Intensity, _levelInfo.ColorIntensity);
+                        _propBlock.SetFloat(ShadowStrength,
+                            transform.HasComponent<GoalAnimationController>()
+                                ? _levelInfo.GoalShadowStrength
+                                : _levelInfo.ShadowStrength);
+                        _propBlock.SetColor(ShadowTint,
+                            transform.HasComponent<GoalAnimationController>()
+                                ? _levelInfo.GoalShadowTint
+                                : _levelInfo.ShadowTint);
+                        r.SetPropertyBlock(_propBlock);
+                    }
                 }
             }
+            else
+            {
+                // This shouldn't really ever happen
+                Debug.Log(name + " has no colorable models but is tagged as colorable!");
+            }
+
+            //if (!Application.isPlaying)
+            //{
+                OcularColor = _ocularColor;
+            //eee}
 
             _firstTimeOutlined = true;
             _firstRealTimeVisible = true;
-
-            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
-        }
-
-        private void OnEnable()
-        {
-            StartCoroutine(SetupColorable());
         }
 
         private void OnDisable()
         {
-            
             GlassesController.OnGlassesToggled -= InternalOnGlassesToggled;
         }
 
@@ -549,16 +532,18 @@ namespace Level.Objects
                     _outlineModel = result.Result;
                 };
             }
+            
+            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 
         private void OnDestroy()
         {
-            if (Controllers != null)
+            if (Controllers == null) return;
+            
+            var count = Controllers.Count; 
+            for (var i = 0; i < count; i++)
             {
-                foreach (var controller in Controllers)
-                {
-                    ((ButtonWalkable) controller).TargetBlocks.Remove(this);
-                }
+                ((ButtonWalkable) Controllers[i]).TargetBlocks.Remove(this);
             }
         }
     }

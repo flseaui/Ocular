@@ -186,7 +186,7 @@ namespace Player
                                 var hit = new RaycastHit();
                                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out hit, 2, LayerMask.GetMask("Player"));
                                 if (_currentEnd.GetComponent<Colorable>().Outlined &&
-                                    _currentEnd.GetComponent<Colorable>().State == Colorable.BlockState.Invisible ||
+                                    _currentEnd.GetComponent<Colorable>().BlockState == Colorable.BlockStateEnum.Invisible ||
                                     (hit.collider != null && hit.transform.CompareTag("Clone") &&
                                     !hit.transform.GetComponent<ClonePathfinder>().CanMove(curWalk, _currentEnd)))
                                 {

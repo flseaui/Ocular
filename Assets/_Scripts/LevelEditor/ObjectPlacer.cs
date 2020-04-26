@@ -72,7 +72,7 @@ namespace LevelEditor
         {
             if (_selectedObjects.Count < 1) return;
 
-            _selectedObjects.ForEach(x => x.transform.parent.GetComponent<Colorable>().OcularState = color);
+            _selectedObjects.ForEach(x => x.transform.parent.GetComponent<Colorable>().OcularColor = color);
         }
         
         private void Update()
