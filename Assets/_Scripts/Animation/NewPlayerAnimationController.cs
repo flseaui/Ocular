@@ -97,7 +97,6 @@ namespace OcularAnimation
                 
                 if (_currentAnimation == _teleport)
                 {
-                    Debug.Log("uh oh, hinky dinky");
                     Player.Player.Teleporting = false;
                     _currentAnimation.Reset();
                     Pathfinder.AtGoal = false;

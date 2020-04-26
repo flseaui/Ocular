@@ -49,7 +49,6 @@ namespace Level.Objects
            // ActuallyDie();
            if (!_model.activeSelf)
            {
-               Debug.Log("frickin heck");
                gameObject.SetActive(true);
                _animController.enabled = true;
                //_animController.StartAnim();

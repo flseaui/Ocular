@@ -170,7 +170,6 @@ namespace UI
 
         public void SwitchWorlds(int worldIndex)
         {
-            Debug.Log(worldIndex);
             WorldIndex = worldIndex;
 
             if (_prevWorldIndex != -1)

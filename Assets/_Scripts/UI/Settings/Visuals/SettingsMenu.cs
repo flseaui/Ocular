@@ -6,7 +6,6 @@ namespace UI.Settings.Visuals
     {
         public void ChangeDisplayMode(string mode)
         {
-            Debug.Log(mode);
             // GetComponent<HorizontalSelector>().
         }
     }

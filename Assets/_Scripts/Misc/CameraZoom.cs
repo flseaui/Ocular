@@ -90,8 +90,6 @@ namespace Misc
                 var levelX = Mathf.Cos(angle * Mathf.PI / 180) * (_pos.x + _pos.z) - Mathf.Sin(angle * Mathf.PI / 180) * (_pos.z - _pos.x);
                 var levelY = Mathf.Sin(angle * Mathf.PI / 180) * (_pos.x + _pos.z) + Mathf.Cos(angle * Mathf.PI / 180) * (_pos.z - _pos.x);
                 
-                Debug.Log(zoom);
-                
                 if (smooth)
                     _camera.transform.DOLocalMove(new Vector3(levelX * zoom * ConstantX + _cameraPos.x,
                         levelY * zoom * ConstantY + _cameraPos.y, _cameraPos.z), .1f);

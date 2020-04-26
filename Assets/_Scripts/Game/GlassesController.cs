@@ -91,7 +91,7 @@ namespace Game
         {
             FirstToggle = true;
             UpdateOcularState();
-
+            
             StartCoroutine(DisableFirstToggle());
         }
 

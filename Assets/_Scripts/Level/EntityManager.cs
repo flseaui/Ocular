@@ -32,17 +32,14 @@ namespace Level
         
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
             {
-                Debug.Log("whoa whoa whoa who said we could have this much epic around");
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             }
         }
         
         public void ClearEntities()
         {
-            Debug.Log($"cleawin {_entities.Count} entities!");
             foreach (var entity in _entities)
             {
-                Debug.Log(entity.name + " is getting pwnd");
                 Destroy(entity.gameObject);
             }
             _entities.Clear();

@@ -89,8 +89,6 @@ public class ClonePathfinder : MonoBehaviour
         {
             if (GetCardinal(currentWalkable, neighbor.Walkable) == _targetCardinal)
             {
-                Debug.Log($"DA PLAYA BE GOING FROM {playerStart.UniqueId} TO {playerEnd.UniqueId} GOING {playerCardinal}");
-                Debug.Log($"WE R SHMOOVIN FROM {currentWalkable.UniqueId} TO {neighbor.Walkable.UniqueId} GOING {_targetCardinal}");
                 return true;
             }
         }

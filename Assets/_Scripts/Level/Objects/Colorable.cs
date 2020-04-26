@@ -74,11 +74,6 @@ namespace Level.Objects
                 var reset = value == OcularState.Null;
                 _ocularState = reset ? _initialState : value;
                 _color = InternalStateToColor(reset ? _initialState : value);
-
-                if (_renderers == null)
-                {
-                    Debug.Log($"AWESOME {name} is null");
-                }
                 
                 foreach (var r in _renderers)
                 {
@@ -157,7 +152,6 @@ namespace Level.Objects
                                     break;
                                 if (hit.transform.HasComponent<Player.Player>(out var player))
                                 {
-                                    Debug.Log("DEEZ NUTS LMAO");
                                     player.Death();
                                 }
                                 else if (hit.transform.HasComponent<Clone>(out var clone))
@@ -187,7 +181,6 @@ namespace Level.Objects
                 if (value)
                 {
                     
-                    Debug.Log("u just got outlined X3");
                     if (_runtimeOutlineModel == null)
                         _runtimeOutlineModel = Instantiate(_outlineModel, transform);
 
@@ -205,12 +198,13 @@ namespace Level.Objects
         public void Initialize()
         {
             if (OcularState == OcularState.Z) return;
+            
             QueueStateChange(BlockState.Invisible);
-            if (transform.HasComponent<Walkable>(out var walkable))
-            {
-                walkable.CheckBelow(walkable.Enabled);
-                walkable.Enabled = false;
-            }
+
+            if (!transform.HasComponent<Walkable>(out var walkable)) return;
+            
+            walkable.CheckBelow(walkable.Enabled);
+            walkable.Enabled = false;
         }
 
         public void RegisterController(IController controller)

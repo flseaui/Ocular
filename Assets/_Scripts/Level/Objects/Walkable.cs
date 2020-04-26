@@ -101,8 +101,6 @@ namespace Level.Objects {
                 if (hit.collider is null) return;
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
                 {
-                    if (this is SlopeWalkable)
-                        Debug.Log($"so it appears dat we have hit {walkable.UniqueId}");
                     walkable.JustChangedState = true;
                     walkable.Enabled = state;
                 }

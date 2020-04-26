@@ -71,7 +71,6 @@ namespace Player
                 Physics.Raycast( _currentEnd.transform.position, Vector3.up, out var cloneHit, 2, LayerMask.GetMask("Player"));
                 if (cloneHit.collider != null && !cloneHit.transform.GetComponent<ClonePathfinder>().CanMove(_currentStart, _currentEnd))
                 {
-                    Debug.Log("DEEZ NUTS LLOLOLOLOLO(LOLOLOLOLOL");
                     Navigating = false;
                     ClearPath();
                     return;
@@ -224,7 +223,6 @@ namespace Player
             if (start.transform.position.z < end.transform.position.z)
                 return Player.Cardinal.North;
 
-            Debug.Log("Same as start");
             return Player.Cardinal.None;
         }
 

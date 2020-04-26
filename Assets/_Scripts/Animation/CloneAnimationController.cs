@@ -94,7 +94,6 @@ namespace OcularAnimation
             var newAnim = DetermineAnimation();
             if (newAnim != null && newAnim != _currentAnimation)
             {
-                Debug.Log($"kentucky fried your mom {newAnim.name}");
                 _currentAnimation.Reset();
                 newAnim.Reset();
                 _currentAnimation = newAnim;
@@ -117,7 +116,6 @@ namespace OcularAnimation
                 }
                 else if (_currentAnimation == _death)
                 {
-                    Debug.Log("deez");
                     GetComponent<Clone>().ActuallyDie();
                 }
             }
