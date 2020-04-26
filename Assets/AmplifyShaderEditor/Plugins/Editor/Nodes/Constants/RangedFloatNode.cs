@@ -382,6 +382,7 @@ namespace AmplifyShaderEditor
 
 			sliderValRect.width = 10;
 			float percent = ( value - m_min) / ( m_max-m_min );
+			percent = Mathf.Clamp01( percent );
 			sliderValRect.x += percent * (sliderBackRect.width - 10 * drawInfo.InvertedZoom );
 			GUI.Label( sliderValRect, string.Empty, UIUtils.RangedFloatSliderThumbStyle );
 		}

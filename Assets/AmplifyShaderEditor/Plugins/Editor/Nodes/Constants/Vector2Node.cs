@@ -34,6 +34,7 @@ namespace AmplifyShaderEditor
 			m_insideSize.Set(50,20);
 			m_selectedLocation = PreviewLocation.BottomCenter;
 			AddOutputVectorPorts( WirePortDataType.FLOAT2, "XY" );
+			m_availableAttribs.Add( new PropertyAttributes( "Remap Sliders", "[RemapSliders]" ) );
 			m_previewShaderGUID = "88b4191eb06084d4da85d1dd2f984085";
 			m_srpBatcherCompatible = true;
 		}

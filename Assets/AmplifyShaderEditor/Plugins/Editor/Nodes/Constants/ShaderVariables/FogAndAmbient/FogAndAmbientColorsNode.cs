@@ -93,6 +93,20 @@ namespace AmplifyShaderEditor
 		public override string GenerateShaderForOutput( int outputId, ref MasterNodeDataCollector dataCollector, bool ignoreLocalvar )
 		{
 			base.GenerateShaderForOutput( outputId, ref dataCollector, ignoreLocalvar );
+			if( dataCollector.IsTemplate && dataCollector.CurrentSRPType == TemplateSRPType.HD )
+			{
+				switch( m_selectedType )
+				{
+					case BuiltInFogAndAmbientColors.unity_AmbientSky:
+					return "_Ambient_ColorSky";
+					case BuiltInFogAndAmbientColors.unity_AmbientEquator:
+					return "_Ambient_Equator";
+					case BuiltInFogAndAmbientColors.unity_AmbientGround:
+					return "_Ambient_Ground";
+					case BuiltInFogAndAmbientColors.unity_FogColor:
+					return "_FogColor";
+				}
+			}
 			return m_selectedType.ToString();
 		}
 

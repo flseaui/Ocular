@@ -181,6 +181,7 @@ namespace AmplifyShaderEditor
 		private Rect m_titleClickArea;
 
 		protected bool m_srpBatcherCompatible = false;
+		protected bool m_excludeUniform = false;
 
 		[SerializeField]
 		private bool m_addGlobalToSRPBatcher = false;
@@ -1222,7 +1223,7 @@ namespace AmplifyShaderEditor
 						}
 						else
 						{
-							dataCollector.AddToUniforms( UniqueId, dataType, dataName, m_srpBatcherCompatible );
+							dataCollector.AddToUniforms( UniqueId, dataType, dataName, m_srpBatcherCompatible, m_excludeUniform );
 						}
 					}
 					//dataCollector.AddToUniforms( m_uniqueId, GetUniformValue() );
@@ -1251,7 +1252,7 @@ namespace AmplifyShaderEditor
 						}
 						else
 						{
-							dataCollector.AddToUniforms( UniqueId, dataType, dataName, m_addGlobalToSRPBatcher );
+							dataCollector.AddToUniforms( UniqueId, dataType, dataName, m_addGlobalToSRPBatcher, m_excludeUniform );
 						}
 					}
 					//dataCollector.AddToUniforms( m_uniqueId, GetUniformValue() );

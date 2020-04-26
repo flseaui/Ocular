@@ -40,10 +40,10 @@ namespace AmplifyShaderEditor
 		private readonly string OutlineBodyStructDefault = "\thalf filler;";
 		private readonly string OutlineBodyStructEnd = "};";
 
-		private readonly string OutlineDefaultUniformColor = "uniform half4 _ASEOutlineColor;";
-		private readonly string OutlineDefaultUniformWidth = "uniform half _ASEOutlineWidth;";
+		private readonly string OutlineDefaultUniformColor = "half4 _ASEOutlineColor;";
+		private readonly string OutlineDefaultUniformWidth = "half _ASEOutlineWidth;";
 		private readonly string OutlineDefaultUniformColorInstanced = "UNITY_DEFINE_INSTANCED_PROP( half4, _ASEOutlineColor )";
-		private readonly string OutlineDefaultUniformWidthInstanced = "UNITY_DEFINE_INSTANCED_PROP(half, _ASEOutlineWidth)";
+		private readonly string OutlineDefaultUniformWidthInstanced = "UNITY_DEFINE_INSTANCED_PROP( half, _ASEOutlineWidth )";
 
 		private readonly string OutlineDefaultVertexHeader = "void outlineVertexDataFunc( inout appdata_full v, out Input o )\n\t\t{";
 		private readonly string OutlineTessVertexHeader = "void outlineVertexDataFunc( inout appdata_full v )\n\t\t{";
@@ -287,7 +287,7 @@ namespace AmplifyShaderEditor
 			}
 
 		}
-		public string[] OutlineFunctionBody( ref MasterNodeDataCollector dataCollector, bool instanced, bool isShadowCaster, string shaderName, string[] billboardInfo, ref TessellationOpHelper tessOpHelper, string target )
+		public string[] OutlineFunctionBody( ref MasterNodeDataCollector dataCollector, bool instanced, bool isShadowCaster, string shaderName, string[] billboardInfo, ref TessellationOpHelper tessOpHelper, string target, PrecisionType precision )
 		{
 			List<string> body = new List<string>();
 			body.Add( ModeTags[ dataCollector.CustomOutlineSelectedAlpha ] );
@@ -422,10 +422,10 @@ namespace AmplifyShaderEditor
 					body.Add( string.Format( IOUtils.InstancedPropertiesBegin, shaderName ) );
 
 				if( !dataCollector.UsingCustomOutlineColor )
-					body.Add( OutlineDefaultUniformColorInstanced );
+					body.Add( precision == PrecisionType.Float ? OutlineDefaultUniformColorInstanced.Replace( "half", "float" ) : OutlineDefaultUniformColorInstanced );
 
 				if( !dataCollector.UsingCustomOutlineWidth )
-					body.Add( OutlineDefaultUniformWidthInstanced );
+					body.Add( precision == PrecisionType.Float ? OutlineDefaultUniformWidthInstanced.Replace( "half", "float" ) : OutlineDefaultUniformWidthInstanced );
 
 				body.Add( IOUtils.InstancedPropertiesEnd );
 
@@ -515,10 +515,10 @@ namespace AmplifyShaderEditor
 				}
 
 				if( !dataCollector.UsingCustomOutlineColor )
-					body.Add( OutlineDefaultUniformColor );
+					body.Add( precision == PrecisionType.Float ? OutlineDefaultUniformColor.Replace( "half", "float" ) : OutlineDefaultUniformColor );
 
 				if( !dataCollector.UsingCustomOutlineWidth )
-					body.Add( OutlineDefaultUniformWidth );
+					body.Add( precision == PrecisionType.Float ? OutlineDefaultUniformWidth.Replace( "half", "float" ) : OutlineDefaultUniformWidth );
 
 				//Functions
 				if( customOutline && !isShadowCaster )

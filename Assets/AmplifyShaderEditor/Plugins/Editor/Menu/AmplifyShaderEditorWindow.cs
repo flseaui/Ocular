@@ -593,6 +593,8 @@ namespace AmplifyShaderEditor
 		{
 			base.OnEnable();
 
+			Preferences.LoadDefaults();
+
 #if UNITY_2018_3_OR_NEWER
 			ASEPackageManagerHelper.RequestInfo();
 			ASEPackageManagerHelper.Update();
@@ -1043,6 +1045,7 @@ namespace AmplifyShaderEditor
 			{
 				return false;
 			}
+			Preferences.LoadDefaults();
 #if UNITY_2018_3_OR_NEWER
 			ASEPackageManagerHelper.RequestInfo();
 			ASEPackageManagerHelper.Update();
@@ -5163,6 +5166,7 @@ namespace AmplifyShaderEditor
 
 		void OnInspectorUpdate()
 		{
+			Preferences.LoadDefaults();
 #if UNITY_2018_3_OR_NEWER
 			ASEPackageManagerHelper.Update();
 #endif

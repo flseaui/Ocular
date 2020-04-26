@@ -16,7 +16,6 @@ namespace UI
 
         public void EnableWheel()
         {
-            Debug.Log("TESUTOSETOSIETOSIEJTOISEJTOSIEJTOSIEJTOSIEJTOSIEJ");
             SpotlightEnabled?.Invoke();
             gameObject.SetActive(false);
             _realSpotlight.SetActive(true);

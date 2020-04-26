@@ -822,12 +822,12 @@ namespace AmplifyShaderEditor
 			}
 		}
 
-		public void AddToUniforms( int nodeId, string dataType, string dataName, bool checkSRPBatch = false )
+		public void AddToUniforms( int nodeId, string dataType, string dataName, bool checkSRPBatch = false, bool excludeUniform = false )
 		{
 			if( string.IsNullOrEmpty( dataName ) || string.IsNullOrEmpty( dataType ) )
 				return;
 
-			string value = UIUtils.GenerateUniformName( IsSRP, dataType, dataName );
+			string value = UIUtils.GenerateUniformName( IsSRP || excludeUniform, dataType, dataName );
 			if( !m_uniformsDict.ContainsKey( value ) && !m_uniformsDict.ContainsKey( dataName ) )
 			{
 				m_uniformsDict.Add( value, new PropertyDataCollector( nodeId, value ) );

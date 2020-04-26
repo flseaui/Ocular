@@ -229,10 +229,13 @@ namespace AmplifyShaderEditor
 
 		public override void ReleaseResources()
 		{
+			// Internal template resources ( for inline properties) are released by first node on the list
+			// As it's also registered that way
+			if( IsLODMainFirstPass )
+				m_containerGraph.ClearInternalTemplateNodes();
+
 			if( !IsLODMainMasterNode )
 				return;
-
-			m_containerGraph.ClearInternalTemplateNodes();
 			TemplateMultiPass template = ( m_templateMultiPass == null ) ? m_containerGraph.ParentWindow.TemplatesManagerInstance.GetTemplate( m_templateGUID ) as TemplateMultiPass : m_templateMultiPass;
 			//Maintained the logic of being the main master node to unregister since this method is being called
 			//over the main master node in multiple places

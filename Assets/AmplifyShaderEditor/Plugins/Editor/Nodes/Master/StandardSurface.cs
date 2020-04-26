@@ -1671,11 +1671,11 @@ namespace AmplifyShaderEditor
 							{
 								string clipIn = "\t\t\tclip( ";
 								string clipOut = " - " + m_inlineOpacityMaskClipValue.GetValueOrProperty( IOUtils.MaskClipValueName, false ) + " );\n";
-								if( ( m_alphaToCoverage || m_inlineAlphaToCoverage.Active ) && m_castShadows )
-								{
-									clipIn = "\t\t\t#if UNITY_PASS_SHADOWCASTER\n" + clipIn;
-									clipOut = clipOut + "\t\t\t#endif\n";
-								}
+								//if( ( m_alphaToCoverage || m_inlineAlphaToCoverage.Active ) && m_castShadows )
+								//{
+								//	clipIn = "\t\t\t#if UNITY_PASS_SHADOWCASTER\n" + clipIn;
+								//	clipOut = clipOut + "\t\t\t#endif\n";
+								//}
 								CreateInstructionsForPort( sortedPorts[ i ], Constants.OutputVarStr + "." + sortedPorts[ i ].DataName, true, clipIn, clipOut, false, normalIsConnected );
 							}
 						}
@@ -1901,7 +1901,7 @@ namespace AmplifyShaderEditor
 					if( m_outlineHelper.EnableOutline || ( m_currentDataCollector.UsingCustomOutlineColor || m_currentDataCollector.CustomOutlineSelectedAlpha > 0 || m_currentDataCollector.UsingCustomOutlineWidth ) )
 					{
 						if( !usingDebugPort )
-							AddMultilineBody( ref ShaderBody, m_outlineHelper.OutlineFunctionBody( ref m_currentDataCollector, isInstancedShader, m_customShadowCaster, UIUtils.RemoveInvalidCharacters( ShaderName ), ( m_billboardOpHelper.IsBillboard && !usingDebugPort ? m_billboardOpHelper.GetInternalMultilineInstructions() : null ), ref m_tessOpHelper, ShaderModelTypeArr[ m_shaderModelIdx ] ) );
+							AddMultilineBody( ref ShaderBody, m_outlineHelper.OutlineFunctionBody( ref m_currentDataCollector, isInstancedShader, m_customShadowCaster, UIUtils.RemoveInvalidCharacters( ShaderName ), ( m_billboardOpHelper.IsBillboard && !usingDebugPort ? m_billboardOpHelper.GetInternalMultilineInstructions() : null ), ref m_tessOpHelper, ShaderModelTypeArr[ m_shaderModelIdx ], CurrentPrecisionType ) );
 					}
 
 					//Add SubShader tags

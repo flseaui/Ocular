@@ -595,7 +595,7 @@ namespace AmplifyShaderEditor
 			{ WirePortDataType.FLOAT3x3,	new Color(0.5f,1f,0.5f,1f)},
 			{ WirePortDataType.FLOAT4x4,	new Color(0.5f,1f,0.5f,1f)},
 			{ WirePortDataType.COLOR,		new Color(1f,0,1f,1f)},
-			{ WirePortDataType.INT,			Color.gray},
+			{ WirePortDataType.INT,         Color.white},
 			{ WirePortDataType.SAMPLER1D,	new Color(1f,0.5f,0f,1f)},
 			{ WirePortDataType.SAMPLER2D,	new Color(1f,0.5f,0f,1f)},
 			{ WirePortDataType.SAMPLER3D,	new Color(1f,0.5f,0f,1f)},
@@ -999,6 +999,8 @@ namespace AmplifyShaderEditor
 			RangedFloatSliderThumbStyle.active.background = null;
 			RangedFloatSliderThumbStyle.hover.background = null;
 			RangedFloatSliderThumbStyle.focused.background = null;
+			RangedFloatSliderThumbStyle.overflow = new RectOffset( 1, 1, -4, 4 );
+			RangedFloatSliderThumbStyle.margin = RectOffsetZero;
 
 			SwitchNodePopUp = new GUIStyle( (GUIStyle)"Popup" );
 			// RectOffset cannot be initiliazed on constructor

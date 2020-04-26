@@ -86,6 +86,7 @@ namespace AmplifyShaderEditor
 		private const string DependenciesStr = "Dependencies";
 
 		private const string VarRegexReplacer = @"\b{0}\b";
+		private readonly string[] PrecisionLabelsExtraLocal = { "Float", "Half", "Inherit Local" };
 
 		private readonly string[] AvailableWireTypesStr =
 		{
@@ -239,7 +240,7 @@ namespace AmplifyShaderEditor
 		{
 			base.CommonInit( uniqueId );
 			AddInputPort( WirePortDataType.FLOAT, false, "In0" );
-			m_items.Add( new CustomExpressionInputItem( PrecisionType.Float, VariableQualifiers.In, string.Empty, false, true, string.Empty/*"[0]"*/ ) );
+			m_items.Add( new CustomExpressionInputItem( PrecisionType.Inherit, VariableQualifiers.In, string.Empty, false, true, string.Empty/*"[0]"*/ ) );
 			AddOutputPort( WirePortDataType.FLOAT, "Out" );
 			m_textLabelWidth = 97;
 			m_customPrecision = true;
@@ -450,7 +451,9 @@ namespace AmplifyShaderEditor
 			{
 				int portIdx = i + m_firstAvailablePort;
 				string qualifier = m_items[ i ].Qualifier == VariableQualifiers.In ? string.Empty : UIUtils.QualifierToCg( m_items[ i ].Qualifier ) + " ";
-				PrecisionType precision = ( (int)m_items[ i ].Precision > (int)CurrentPrecisionType ) ? m_items[ i ].Precision : CurrentPrecisionType;
+				PrecisionType precision = m_items[ i ].Precision;
+				if( precision == PrecisionType.Inherit )
+					precision = CurrentPrecisionType;
 				string dataType = ( m_inputPorts[ portIdx ].DataType == WirePortDataType.OBJECT ) ? m_items[ i ].CustomType : UIUtils.PrecisionWirePortToCgType( precision, m_inputPorts[ portIdx ].DataType );
 				functionBody += qualifier + dataType + " " + m_inputPorts[ portIdx ].Name;
 				if( i < ( count - 1 ) )
@@ -863,7 +866,7 @@ namespace AmplifyShaderEditor
 
 								// Precision
 								rect.y += lineSpacing;
-								m_items[ index ].Precision = (PrecisionType)EditorGUIPopup( rect, PrecisionContent.text, (int)m_items[ index ].Precision, PrecisionLabels );
+								m_items[ index ].Precision = (PrecisionType)EditorGUIPopup( rect, PrecisionContent.text, (int)m_items[ index ].Precision, PrecisionLabelsExtraLocal );
 								// Type
 								rect.y += lineSpacing;
 								int typeIdx = WireToIdx[ m_inputPorts[ portIdx ].DataType ];
@@ -1049,7 +1052,7 @@ namespace AmplifyShaderEditor
 		void AddPortAt( int idx )
 		{
 			AddInputPortAt( idx, WirePortDataType.FLOAT, false, GetFirstAvailableName() );
-			m_items.Insert( idx - m_firstAvailablePort, new CustomExpressionInputItem( PrecisionType.Float, VariableQualifiers.In, string.Empty, false, true, string.Empty/* "[" + idx + "]"*/ ) );
+			m_items.Insert( idx - m_firstAvailablePort, new CustomExpressionInputItem( PrecisionType.Inherit, VariableQualifiers.In, string.Empty, false, true, string.Empty/* "[" + idx + "]"*/ ) );
 			m_repopulateNameDictionary = true;
 			RecalculateInOutOutputPorts();
 		}

@@ -75,7 +75,8 @@ namespace AmplifyShaderEditor
 		INSTANCE_ID,
 		OTHER,
 		VFACE,
-		SHADOWCOORDS
+		SHADOWCOORDS,
+		VERTEXID
 	}
 
 	public enum TemplateShaderPropertiesIdx
@@ -529,6 +530,7 @@ namespace AmplifyShaderEditor
 			{WirePortDataType.FLOAT4x4,0 },
 			{WirePortDataType.COLOR,4 },
 			{WirePortDataType.INT,1 },
+			{WirePortDataType.UINT,1 },
 			{WirePortDataType.SAMPLER1D,0 },
 			{WirePortDataType.SAMPLER2D,0 },
 			{WirePortDataType.SAMPLER3D,0 },
@@ -588,7 +590,8 @@ namespace AmplifyShaderEditor
 		{
 			{"p"    ,TemplateInfoOnSematics.POSITION },
 			{"sp"   ,TemplateInfoOnSematics.CLIP_POS },
-			{"spn"   ,TemplateInfoOnSematics.SCREEN_POSITION_NORMALIZED },
+			{"spu"  ,TemplateInfoOnSematics.SCREEN_POSITION },
+			{"spn"  ,TemplateInfoOnSematics.SCREEN_POSITION_NORMALIZED },
 			{"c"    ,TemplateInfoOnSematics.COLOR },
 			{"uv0"  ,TemplateInfoOnSematics.TEXTURE_COORDINATES0 },
 			{"uv1"  ,TemplateInfoOnSematics.TEXTURE_COORDINATES1 },
@@ -614,6 +617,7 @@ namespace AmplifyShaderEditor
 		{
 			{TemplateInfoOnSematics.POSITION ,"ASE_NEEDS_FRAG_POSITION"},
 			{TemplateInfoOnSematics.CLIP_POS ,"ASE_NEEDS_FRAG_CLIP_POS"},
+			{TemplateInfoOnSematics.SCREEN_POSITION,"ASE_NEEDS_FRAG_SCREEN_POSITION" },
 			{TemplateInfoOnSematics.SCREEN_POSITION_NORMALIZED,"ASE_NEEDS_FRAG_SCREEN_POSITION_NORMALIZED" },
 			{TemplateInfoOnSematics.COLOR, "ASE_NEEDS_FRAG_COLOR"},
 			{TemplateInfoOnSematics.TEXTURE_COORDINATES0,"ASE_NEEDS_FRAG_TEXTURE_COORDINATES0" },
@@ -640,6 +644,7 @@ namespace AmplifyShaderEditor
 		{
 			{TemplateInfoOnSematics.POSITION ,"ASE_NEEDS_VERT_POSITION"},
 			{TemplateInfoOnSematics.CLIP_POS ,"ASE_NEEDS_VERT_CLIP_POS"},
+			{TemplateInfoOnSematics.SCREEN_POSITION,"ASE_NEEDS_VERT_SCREEN_POSITION" },
 			{TemplateInfoOnSematics.SCREEN_POSITION_NORMALIZED,"ASE_NEEDS_VERT_SCREEN_POSITION_NORMALIZED" },
 			{TemplateInfoOnSematics.COLOR, "ASE_NEEDS_VERT_COLOR"},
 			{TemplateInfoOnSematics.TEXTURE_COORDINATES0,"ASE_NEEDS_VERT_TEXTURE_COORDINATES0" },
@@ -2124,11 +2129,15 @@ namespace AmplifyShaderEditor
 
 		public static bool CheckIfTemplate( string assetPath )
 		{
-			Shader shader = AssetDatabase.LoadAssetAtPath<Shader>( assetPath );
-			if( shader != null )
+			Type type = AssetDatabase.GetMainAssetTypeAtPath( assetPath );
+			if( type == typeof( Shader ) )
 			{
-				string body = IOUtils.LoadTextFileFromDisk( assetPath );
-				return ( body.IndexOf( TemplatesManager.TemplateShaderNameBeginTag ) > -1 );
+				Shader shader = AssetDatabase.LoadAssetAtPath<Shader>( assetPath );
+				if( shader != null )
+				{
+					string body = IOUtils.LoadTextFileFromDisk( assetPath );
+					return ( body.IndexOf( TemplatesManager.TemplateShaderNameBeginTag ) > -1 );
+				}
 			}
 			return false;
 		}

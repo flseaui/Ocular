@@ -1,4 +1,113 @@
 Release Notes:
+v1.8.0 rev 00:
+* New Shader Functions:
+    * Bacteria
+    * Bricks Pattern
+    * Dots Pattern
+    * Grid
+    * Herringbone
+    * Hex Lattice
+    * Houndstooth
+    * Smooth Wave
+    * Spiral
+    * Stripes
+    * Truchet
+    * Whirl
+    * Zig Zag
+
+* Improvements:
+    * Updated some shader functions to expose their internal data
+
+* Fixes:
+    * Fixed default value for start screen option
+    * Fixed context menu showing shader templates not yet imported on first install
+    * Fixed drawing issues with slider in 'Float' node in the new Unity UI
+
+v1.7.9 rev 02:
+* Improvements:
+    * Added Refraction option with respective ports to URP that works like the built-in Refraction port
+    * Added versioning to templates so that they can track changes and import new versions if necessary
+
+* Fixes:
+    * Fixed issue with start screen showing the wrong change log
+    * Fixed issue with start screen not always respecting the selected option
+    * Fixed issue with 'Fresnel' node when loading a shader from an older version of ASE
+    * Fixed loop detection check for 'Get' node in certain situations
+    * Fixed menu listing for templates with duplicated names
+    * Fixed 'VertexID' node for HDRP causing errors due to motion vectors
+    * Fixed inline properties being broken on certain template internal pass ordering
+
+v1.7.9 rev 01:
+* Improvements:
+    * Start screen option is now a dropdown to allow for more control of how it behaves
+    * Added more options to the preference window
+        * Option to prevent automatic import of SRP templates
+        * Option to force the use of Unity's macros for sampling
+        * Option to allow or prevent the use of ASE define symbol
+
+* Fixes:
+    * Included missing files for 'Diffusion Profile' node from last release which prevented the use of the new default inspector option
+    * Fixed issue with 'Gradient Sample' node that was not generating the component channel correctly
+
+v1.7.9 rev 00:
+* New Start Screen:
+    * New window that will popup when on a new session starts and/or if a new version is released (can be dismissed)
+    * Provides easy start up links for the wiki and contact channels
+    * Streamlines the process of importing ASE samples for each rendering pipeline
+    * Automatically tracks the release of new versions
+
+* New Preferences Entry:
+    * Currently only controls the start screen settings but in the future it will contain many more options that are currently hidden
+
+* New Shader Function:
+    * Random Range
+        * Returns random value between a minimum and maximum range values
+
+* Improvements:
+    * Removed alpha to coverage alpha test check for consistency between pipeline and setups
+    * Added check to custom shader inspector and updated missing features like keywords popups and other small changes that came with unity 2019.3
+    * Added new option to 'Diffusion Profile' node to be able to create the unity default profile inspector for users that need to share their shaders
+    * Changed the color of Int ports to white for proper differentiation between Float and Int
+
+* Fixes:
+    * Depth texture is now uses proper macros even when using global texture samplers to prevent duplication errors
+    * Added infinite loop detection to 'Get Local Var' nodes to prevent the case where you can change the 'Get Local Var' node reference to itself
+    * Fixed Issue with diffusion profile drawer not being able to change profiles if ASE window wasn't open
+    * Fixed issue with outline in surface shaders not respecting the selected precision type
+
+v1.7.8 rev 02:
+* New Property Attributes:
+    * Remap Sliders attribute for Vector2 node that creates a min-max slider in the 0-1 range
+    * Single Line Texture attribute for texture properties nodes that minimizes texture object field into single line fields
+
+* Fixes:
+    * Fixed fog color and ambient color node values in HDRP
+    * Fixed issue with Fabric and Hair HDRP templates not correctly writing to depth offset in all shader passes
+    * Fixed custom expression precision types that didn't respect the selected choice in all cases and added a new Inherit option
+    * Fixed possible issue with saving files when path is null
+
+* Improvements:
+    * Improved loading of shaders by preventing unnecessary loads of other types of assets
+    * Added warning with fix button to diffusion profile property drawer for when profile isn't present in the profile list
+    * Shader functions names now have automatic spacing when searched in the palette
+    * Added a direct dependency check for shader function files that allows to search which shaders and shader function are currently directly using it
+    * Templates context entry generation is now done by name to prevent random sorting
+
+v1.7.8 rev 01:
+* New HDRP Templates:
+    * Hair
+    * Fabric
+
+* New Shader Function:
+    * Inverse Lerp
+        * Inverse operation of the 'Lerp' node
+
+* Improvements:
+    * Update HD templates to v.7.1.8 and above 
+
+* Fixes:
+    * Fixed issue with 'Component Mask' node preview not correctly showing alpha channel in all situations
+
 v1.7.8 rev 00:
 * Fixes:
     * Fixed issues with 'Function Switch' node incorrectly displaying reference nodes and not properly ordering when in Reference mode

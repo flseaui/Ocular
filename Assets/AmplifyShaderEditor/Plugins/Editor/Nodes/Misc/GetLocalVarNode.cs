@@ -4,6 +4,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Collections.Generic;
 
 namespace AmplifyShaderEditor
 {
@@ -31,6 +32,7 @@ namespace AmplifyShaderEditor
 		private string m_previousLabel = string.Empty;
 
 		private bool m_refSelect = false;
+		private int m_prevReferenceId = -1;
 
 		protected override void CommonInit( int uniqueId )
 		{
@@ -145,9 +147,33 @@ namespace AmplifyShaderEditor
 			}
 		}
 
+		void CheckForLoops()
+		{
+			if( CurrentSelected != null && UIUtils.DetectNodeLoopsFrom( CurrentSelected, new Dictionary<int, int>() ) )
+			{
+				CurrentSelected = UIUtils.GetLocalVarNode( m_prevReferenceId );
+				if( CurrentSelected == null || UIUtils.DetectNodeLoopsFrom( CurrentSelected, new Dictionary<int, int>() ) )
+				{
+					m_referenceId = -1;
+					m_prevReferenceId = -1;
+					CurrentSelected = null;
+					m_outputPorts[ 0 ].Locked = true;
+					SetAdditonalTitleText( "" );
+					UIUtils.ShowMessage( "Infinite Loop detected, disabled selection" );
+				}
+				else
+				{
+					m_referenceId = m_prevReferenceId;
+					UIUtils.ShowMessage( "Infinite Loop detected, reverted to previous selection" );
+				}
+			}
+		}
+
 		void UpdateFromSelected()
 		{
 			CurrentSelected = UIUtils.GetLocalVarNode( m_referenceId );
+			CheckForLoops();
+
 			if( m_currentSelected != null )
 			{
 				m_nodeId = m_currentSelected.UniqueId;
@@ -163,6 +189,7 @@ namespace AmplifyShaderEditor
 
 			m_sizeIsDirty = true;
 			m_isDirty = true;
+			m_prevReferenceId = m_referenceId;
 		}
 
 		void UpdateLocalVar()
@@ -323,6 +350,8 @@ namespace AmplifyShaderEditor
 					m_nodeId = m_currentSelected.UniqueId;
 				}
 			}
+
+			CheckForLoops();
 
 			if( m_currentSelected != null )
 			{

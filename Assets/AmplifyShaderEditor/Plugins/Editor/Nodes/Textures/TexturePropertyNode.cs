@@ -127,6 +127,7 @@ namespace AmplifyShaderEditor
 			m_longNameSize = 225;
 			m_availableAttribs.Add( new PropertyAttributes( "No Scale Offset", "[NoScaleOffset]" ) );
 			m_availableAttribs.Add( new PropertyAttributes( "Normal", "[Normal]" ) );
+			m_availableAttribs.Add( new PropertyAttributes( "Single Line Texture", "[SingleLineTexture]" ) );
 			m_showPreview = true;
 			m_drawPreviewExpander = false;
 			m_drawPreview = false;
@@ -381,7 +382,10 @@ namespace AmplifyShaderEditor
 
 			}
 
-			return "uniform sampler2D " + PropertyName + ";";
+			if( PropertyName == "_CameraDepthTexture" )
+				return Constants.CameraDepthTextureValue;
+			else
+				return "uniform sampler2D " + PropertyName + ";";
 		}
 
 		//Texture3D
@@ -1034,6 +1038,7 @@ namespace AmplifyShaderEditor
 
 		public override bool GetUniformData( out string dataType, out string dataName, ref bool fullValue )
 		{
+			m_excludeUniform = false;
 			ParentGraph outsideGraph = UIUtils.CurrentWindow.OutsideGraph;
 			if( outsideGraph.SamplingThroughMacros )
 			{
@@ -1060,6 +1065,14 @@ namespace AmplifyShaderEditor
 					fullValue = true;
 					return true;
 				}
+			}
+
+			if( PropertyName == "_CameraDepthTexture" )
+			{
+				m_excludeUniform = true;
+				dataType = "UNITY_DECLARE_DEPTH_TEXTURE(";
+				dataName = m_propertyName + " )";
+				return true;
 			}
 
 			if( m_currentType == TextureType.Texture2DArray )
