@@ -80,19 +80,24 @@ namespace Level.Objects
             GetComponent<CapsuleCollider>().enabled = !kill;
         }
 
-        public void ActuallyUnDieIfNotDead()
+        public void GoVisible()
         {
             if (Died) return;
             FakeKillOrRevive(false);
             GetComponent<Rigidbody>().isKinematic = false;
             Invisible = false;
         }
+
+        public void GoInvisible()
+        {
+            ActuallyDie();
+            Invisible = true; 
+        }
         
         public void ActuallyDie()
         {
             FakeKillOrRevive(true);
             GetComponent<Rigidbody>().isKinematic = false;
-            Invisible = true;
         }
         
         private void CommitDie()

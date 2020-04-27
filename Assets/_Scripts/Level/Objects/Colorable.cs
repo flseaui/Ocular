@@ -63,8 +63,6 @@ namespace Level.Objects
         private GameObject _runtimeOutlineModel;
         private bool _firstTimeOutlined;
 
-        private bool _firstRealTimeVisible;
-
         public List<IController> Controllers;
 
         [DisableInPlayMode, ShowInInspector]
@@ -102,7 +100,7 @@ namespace Level.Objects
                         if (_entity)
                         {
                             //TODO un hard code for clone
-                            GetComponent<Clone>().ActuallyDie();
+                            GetComponent<Clone>().GoInvisible();
                         }
                         else
                         {
@@ -113,32 +111,20 @@ namespace Level.Objects
                     case BlockStateEnum.Visible:
                         if (!_dontUseBlockMat)
                         {
-                            _renderers.ForEach(r =>
+                            var rendererCount = _renderers.Length;
+                            for (var i = 0; i < rendererCount; ++i)
                             {
+                                var r = _renderers[i];
                                 var tex = r.material.mainTexture;
                                 r.material = _blockMat;
                                 r.material.mainTexture = tex;
-                            });
-                        }
-
-                        if (_firstRealTimeVisible)
-                        {
-#if UNITY_EDITOR
-                            if (CompareTag("CloneSpawn") && LevelEditor.LevelEditor.InTestMode)
-                                GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
-                                    .SpawnClone(this);
-#else
-                            if (CompareTag("CloneSpawn"))
-                                GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
-                                    .SpawnClone(this);
-#endif
-                            _firstRealTimeVisible = false;
+                            }
                         }
 
                         if (_entity)
                         {
                             //TODO un hard code for clone
-                            GetComponent<Clone>().ActuallyUnDieIfNotDead();
+                            GetComponent<Clone>().GoVisible();
                         }
                         else
                         {
@@ -308,14 +294,6 @@ namespace Level.Objects
                         }
                         else
                         {
-                            if (GlassesController.FirstToggle)
-                                if (CompareTag("CloneSpawn"))
-                                {
-                                    GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager
-                                        .SpawnClone(this);
-                                    _firstRealTimeVisible = true;
-                                }
-
                             if (OcularColor != _initialColor)
                                 _propBlock.SetColor("_Color", StateToColor(_initialColor));
                             else
@@ -498,13 +476,11 @@ namespace Level.Objects
                 Debug.Log(name + " has no colorable models but is tagged as colorable!");
             }
 
-            //if (!Application.isPlaying)
-            //{
-                OcularColor = _ocularColor;
-            //eee}
+            OcularColor = _ocularColor;
 
             _firstTimeOutlined = true;
-            _firstRealTimeVisible = true;
+
+            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 
         private void OnDisable()
@@ -532,8 +508,6 @@ namespace Level.Objects
                     _outlineModel = result.Result;
                 };
             }
-            
-            GlassesController.OnGlassesToggled += InternalOnGlassesToggled;
         }
 
         private void OnDestroy()

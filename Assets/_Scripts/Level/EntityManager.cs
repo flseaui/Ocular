@@ -16,6 +16,7 @@ namespace Level
         [SerializeField] private GameObject _clonePrefab;
         
         private LevelController _levelController;
+        private MapController _mapController;
         
         public static Action OnEntitiesSpawned;
         
@@ -34,6 +35,8 @@ namespace Level
             {
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
             }
+
+            _mapController = GetComponent<MapController>();
         }
         
         public void ClearEntities()
@@ -50,15 +53,6 @@ namespace Level
             Destroy(Player);
         }
         
-        public void SpawnClone(Colorable spawn)
-        {
-            var clone = Instantiate(_clonePrefab, spawn.transform.position + new Vector3(0, .65f, 0),
-                Quaternion.identity);
-
-            clone.GetComponent<Colorable>().OcularColor = spawn.OcularColor;
-            _entities.Add(clone);
-        }
-        
         [UsedImplicitly]
         public void SpawnEntities()
         {
@@ -66,7 +60,18 @@ namespace Level
 
             if (_levelController == null)
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
-            
+
+            var cloneSpawnCount = _mapController.CloneSpawns.Count;
+            for (var i = 0; i < cloneSpawnCount; ++i)
+            {
+                var spawn = _mapController.CloneSpawns[i];
+                var clone = Instantiate(_clonePrefab, spawn.transform.position + new Vector3(0, .65f, 0),
+                    Quaternion.identity);
+
+                clone.GetComponent<Colorable>().OcularColor = spawn.GetComponent<Colorable>().OcularColor;
+                _entities.Add(clone);
+            }
+   
             Player = Instantiate(_playerPrefab, _levelController.LevelInfo.PlayerSpawnPoint.transform.position + new Vector3(0, .65f, 0),
                 Quaternion.identity);
 

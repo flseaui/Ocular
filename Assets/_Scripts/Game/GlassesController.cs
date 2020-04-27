@@ -42,7 +42,6 @@ namespace Game
         };
     
         public static Action OnGlassesToggled;
-        public static bool FirstToggle;
 
         [ShowInInspector, ReadOnly]
         public static OcularState CurrentOcularState;
@@ -89,7 +88,6 @@ namespace Game
 
         private void SpotlightEnabled()
         {
-            FirstToggle = true;
             UpdateOcularState();
             
             StartCoroutine(DisableFirstToggle());
@@ -98,8 +96,6 @@ namespace Game
         private IEnumerator DisableFirstToggle()
         {
             yield return new WaitForSeconds(.05f);
-
-            FirstToggle = false;
         }
         
         private IEnumerator UpdateVolume()
