@@ -102,9 +102,10 @@ namespace LevelEditor
 
         private float? _savedBlockContrast,
             _savedColorIntensity,
-            _savedShadowStrength;
+            _savedShadowStrength,
+            _savedGoalShadowStrength;
 
-        private Color? _savedShadowTint;
+        private Color? _savedShadowTint, _savedGoalShadowTint;
         
         public void NewLevel(int size)
         {
@@ -120,6 +121,8 @@ namespace LevelEditor
             EditorLevelInfo.ColorIntensity = 1.2f;
             EditorLevelInfo.ShadowStrength = .3f;
             EditorLevelInfo.ShadowTint = Color.white;
+            EditorLevelInfo.GoalShadowStrength = .3f;
+            EditorLevelInfo.GoalShadowTint = Color.white;
         }
 
         private void SaveLevelInfo()
@@ -128,6 +131,8 @@ namespace LevelEditor
             _savedColorIntensity = EditorLevelInfo.ColorIntensity;
             _savedShadowStrength = EditorLevelInfo.ShadowStrength;
             _savedShadowTint = EditorLevelInfo.ShadowTint;
+            _savedGoalShadowStrength = EditorLevelInfo.GoalShadowStrength;
+            _savedGoalShadowTint = EditorLevelInfo.GoalShadowTint;
         }
         
         private void RestoreLevelInfo()
@@ -140,6 +145,10 @@ namespace LevelEditor
                 EditorLevelInfo.ShadowStrength = _savedShadowStrength.Value;
             if (_savedShadowTint.HasValue)
                 EditorLevelInfo.ShadowTint = _savedShadowTint.Value;
+            if (_savedGoalShadowStrength.HasValue)
+                EditorLevelInfo.GoalShadowStrength = _savedGoalShadowStrength.Value;
+            if (_savedGoalShadowTint.HasValue)
+                EditorLevelInfo.GoalShadowTint = _savedGoalShadowTint.Value;
         }
         
         private void SetupLevel()
@@ -171,6 +180,9 @@ namespace LevelEditor
             //TODO Refactor the rest of these into their own scripts invoked by OnLevelPlayToggle
             _colorPalette.GetComponent<Animator>().SetBool(OnScreen, !_colorPalette.GetComponent<Animator>().GetBool(OnScreen));
             _objectDrawer.GetComponent<Animator>().SetBool(OnScreen, !_objectDrawer.GetComponent<Animator>().GetBool(OnScreen));
+            
+            _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
+            
             _gameManager.gameObject.SetActive(!_gameManager.gameObject.activeSelf);
             _glassesContainer.SetActive(!_glassesContainer.activeSelf);
             _colorWheel.SetActive(!_colorWheel.activeSelf);
@@ -179,7 +191,6 @@ namespace LevelEditor
             else
                 _gameManager.PlayLevel(_level.transform.parent.gameObject);
             UpdateEntities();
-            _level.transform.parent.gameObject.SetActive(!_level.transform.parent.gameObject.activeSelf);
             
             InTestMode = _glassesContainer.activeSelf;
         }

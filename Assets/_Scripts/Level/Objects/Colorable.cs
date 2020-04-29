@@ -187,7 +187,7 @@ namespace Level.Objects
         public void Initialize()
         {
             if (OcularColor == OcularState.Z) return;
-
+            
             BlockState = BlockStateEnum.Invisible;
 
             if (!transform.HasComponent<Walkable>(out var walkable)) return;
