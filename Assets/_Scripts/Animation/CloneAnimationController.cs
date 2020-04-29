@@ -110,7 +110,7 @@ namespace OcularAnimation
                     _currentAnimation.Reset();
                     _pathfinder.AtGoal = false;
                     //gameObject.SetActive(false);
-                    _clone.FakeKillOrRevive(true);
+                    _clone.ActuallyDie(true);
                     //Destroy(gameObject);
                     //GameManager.OnLevelLoad?.Invoke();
                 }

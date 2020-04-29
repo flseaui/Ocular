@@ -94,16 +94,17 @@ namespace Level.Objects
             Invisible = true; 
         }
         
-        public void ActuallyDie()
+        public void ActuallyDie(bool setDeadAfter = false)
         {
             FakeKillOrRevive(true);
             GetComponent<Rigidbody>().isKinematic = false;
+
+            if (setDeadAfter)
+                Died = true;
         }
         
         private void CommitDie()
         {
-            //FakeKillOrRevive(true);
-            //gameObject.SetActive(false);
             Destroy(gameObject);
         }
 
