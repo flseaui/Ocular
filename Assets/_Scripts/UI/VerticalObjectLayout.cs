@@ -1,4 +1,5 @@
 ﻿using Misc;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace UI
@@ -13,7 +14,7 @@ namespace UI
             var count = 0;
             transform.ForEachChild(child =>
             {
-                child.localPosition = new Vector3(0, count * -18, 0);
+                child.localPosition = new float3(0, count * -18, 0);
                 count++;
             });
         }

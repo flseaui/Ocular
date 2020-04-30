@@ -5,6 +5,7 @@ using Misc;
 using Player;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Level.Objects {
@@ -72,7 +73,7 @@ namespace Level.Objects {
         public virtual void CheckForNeighbors()
         {
             // Up
-            if (Physics.Raycast(transform.position, new Vector3(0, 1, 0), out var vHit, 1))
+            if (Physics.Raycast(transform.position, new float3(0, 1, 0), out var vHit, 1))
             {
                 if (vHit.transform.ParentHasComponent<Walkable>())
                     Enabled = false;
@@ -84,7 +85,7 @@ namespace Level.Objects {
                 for (var z = -1; z < 2; z++)
                 {
                     if (Math.Abs(x) == Math.Abs(z)) continue;
-                    var ray = new Ray(transform.position, new Vector3(x, 0, z));
+                    var ray = new Ray(transform.position, new float3(x, 0, z));
                     if (!Physics.Raycast(ray, out var hHit, 1, LayerMask.GetMask("Model"))) continue;
 
                     if (hHit.transform.ParentHasComponent<Walkable>(out var walkable)) AddNeighbor(walkable);
@@ -95,8 +96,8 @@ namespace Level.Objects {
         public void CheckBelow(bool state)
         {
             if (Physics.Raycast(
-                new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z),
-                new Vector3(0, -1, 0), out var hit, 3, LayerMask.GetMask("Model")))
+                new float3(transform.position.x, transform.position.y - .5f, transform.position.z),
+                new float3(0, -1, 0), out var hit, 3, LayerMask.GetMask("Model")))
             {
                 if (hit.collider is null) return;
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
@@ -138,7 +139,7 @@ namespace Level.Objects {
             {
                 if (neighbor is null) continue;
                 
-                Gizmos.DrawCube(neighbor.Walkable.transform.position, new Vector3(.5f, .5f, .5f));
+                Gizmos.DrawCube(neighbor.Walkable.transform.position, new float3(.5f, .5f, .5f));
             }
         }
 

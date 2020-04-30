@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +14,7 @@ public class LoadingScreen : MonoBehaviour
     private bool _isLoading;
 
     [SerializeField] private RectTransform barFillRectTransform;
-    private Vector3 _barFillLocalScale;
+    private float3 _barFillLocalScale;
 
     [SerializeField] private TextMeshProUGUI percentLoadedText;
 

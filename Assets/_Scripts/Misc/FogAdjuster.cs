@@ -1,6 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 using Level;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Misc
@@ -41,7 +42,7 @@ namespace Misc
                 _fog.fogHeightStart = -2.8f;
 
                 var position = _fogPlane.position;
-                position = new Vector3(position.x, -2.86f, position.z);
+                position = new float3(position.x, -2.86f, position.z);
                 _fogPlane.position = position;
             }
 

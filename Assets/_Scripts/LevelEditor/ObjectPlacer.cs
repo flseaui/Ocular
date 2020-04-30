@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Level.Objects;
 using Misc;
 using Sirenix.Utilities;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -113,7 +114,7 @@ namespace LevelEditor
             }
             else
             {
-                transform.position = new Vector3(1000, 1000, 1000);
+                transform.position = new float3(1000, 1000, 1000);
             }
 
             var currentMode = _mode;
@@ -159,7 +160,7 @@ namespace LevelEditor
                         
                         if (left)
                         {
-                            var gridPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                            var gridPosition = new float3(transform.position.x, transform.position.y, transform.position.z);
                             _levelEditor.PlaceElement(gridPosition, _orientation, _direction);
                         }
 
@@ -334,7 +335,7 @@ namespace LevelEditor
         /// The currently highlighted GameObject.
         /// </returns>
         [CanBeNull]
-        private GameObject GetHighlightedObject(out Vector3 normal)
+        private GameObject GetHighlightedObject(out float3 normal)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var hit,Mathf.Infinity, LayerMask.GetMask("EditorTrigger")))

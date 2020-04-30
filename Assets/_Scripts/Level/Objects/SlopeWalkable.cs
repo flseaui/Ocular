@@ -1,4 +1,5 @@
 ﻿using Misc;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Level.Objects {
@@ -12,7 +13,7 @@ namespace Level.Objects {
             Direction.Right
         };
 
-        private readonly Vector3[] _directionsVector =
+        private readonly float3[] _directionsVector =
         {
             Vector3.forward,
             Vector3.left,
@@ -26,10 +27,10 @@ namespace Level.Objects {
 
         private Direction OppositeDirection => _directionsClockwise[((int) DirectionFacing + 2) % 4];
 
-        private Vector3 RelativeForward => _directionsVector[(int) DirectionFacing];
-        private Vector3 RelativeBack => RelativeForward * -1;
-        private Vector3 RelativeLeft => _directionsVector[((int) DirectionFacing + 1) % 4];
-        private Vector3 RelativeRight => RelativeLeft * -1;
+        private float3 RelativeForward => _directionsVector[(int) DirectionFacing];
+        private float3 RelativeBack => RelativeForward * -1;
+        private float3 RelativeLeft => _directionsVector[((int) DirectionFacing + 1) % 4];
+        private float3 RelativeRight => RelativeLeft * -1;
 
         public void MatchRotation(Orientation orientation, Direction direction)
         {
@@ -46,7 +47,7 @@ namespace Level.Objects {
                     Enabled = false;
 
             // Back & Down
-            if (Physics.Raycast(transform.position + RelativeBack, new Vector3(0, -1, 0), out hit, 1f))
+            if (Physics.Raycast(new float3(transform.position) + RelativeBack, new Vector3(0, -1, 0), out hit, 1f))
                 if (hit.transform.ParentHasComponent<Walkable>(out var walkable))
                 {
                     AddNeighbor(walkable);
@@ -54,7 +55,7 @@ namespace Level.Objects {
                 }
 
             // Forward
-            if (Physics.Raycast(transform.position + RelativeForward / 4, RelativeForward, out hit, 1))
+            if (Physics.Raycast(new float3(transform.position) + RelativeForward / 4, RelativeForward, out hit, 1))
             {
                 if (hit.transform.ParentHasComponent<SlopeWalkable>(out var slope))
                 {

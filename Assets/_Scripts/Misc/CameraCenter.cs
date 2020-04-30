@@ -1,6 +1,7 @@
 ﻿using System;
 using Level;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Misc
@@ -10,7 +11,7 @@ namespace Misc
         [ShowInInspector]
         private Transform _centerParent;
 
-        private Vector3 _center;
+        private float3 _center;
 
         private void Awake()
         {
@@ -42,8 +43,8 @@ namespace Misc
                 GetComponent<Camera>().orthographicSize = 5;
 
                 var bounds = _centerParent.GetComponentInChildren<MeshRenderer>().bounds;
-                transform.position = new Vector3(bounds.center.x, bounds.center.y + 3, bounds.center.z);
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
+                transform.position = new float3(bounds.center.x, bounds.center.y + 3, bounds.center.z);
+                transform.localPosition = new float3(transform.localPosition.x, transform.localPosition.y, -10);
             }
         }
     }

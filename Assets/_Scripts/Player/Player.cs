@@ -3,6 +3,7 @@ using Level;
 using Sirenix.OdinInspector;
 using System;
 using Level.Objects;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Player
@@ -131,28 +132,28 @@ namespace Player
             switch (newDirection)
             {
                 case Cardinal.North:
-                    gameObject.transform.eulerAngles = new Vector3(
+                    gameObject.transform.eulerAngles = new float3(
                         rot.x,
                         270,
                         rot.z
                     );
                     break;
                 case Cardinal.East:
-                    gameObject.transform.eulerAngles = new Vector3(
+                    gameObject.transform.eulerAngles = new float3(
                         rot.x,
                         0,
                         rot.z
                     );
                     break;
                 case Cardinal.South:
-                    gameObject.transform.eulerAngles = new Vector3(
+                    gameObject.transform.eulerAngles = new float3(
                         rot.x,
                         90,
                         rot.z
                     );
                     break;
                 case Cardinal.West:
-                    gameObject.transform.eulerAngles = new Vector3(
+                    gameObject.transform.eulerAngles = new float3(
                         rot.x,
                         180,
                         rot.z

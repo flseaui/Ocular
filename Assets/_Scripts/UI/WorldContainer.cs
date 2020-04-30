@@ -2,6 +2,7 @@
 using Michsky.UI.Zone;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace UI
@@ -29,8 +30,8 @@ namespace UI
             if (_worldIndex > _worlds.Count - 1)
                 _worldIndex = 0;
             var nextWorld = _worlds[_worldIndex].transform.localPosition;
-            transform.DOMove(new Vector3(-nextWorld.x, transform.localPosition.y, -nextWorld.z), .5f);
-            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
+            transform.DOMove(new float3(-nextWorld.x, transform.localPosition.y, -nextWorld.z), .5f);
+            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new float3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
             _worldTitle.text = _worlds[_worldIndex].name;
         }
@@ -43,8 +44,8 @@ namespace UI
             if (_worldIndex < 0)
                 _worldIndex = _worlds.Count - 1;
             var prevWorld = _worlds[_worldIndex].transform.localPosition;
-            transform.DOMove(new Vector3(-prevWorld.x, transform.localPosition.y, -prevWorld.z), .5f);
-            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
+            transform.DOMove(new float3(-prevWorld.x, transform.localPosition.y, -prevWorld.z), .5f);
+            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new float3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
             _worldTitle.text = _worlds[_worldIndex].name;
         }
@@ -68,7 +69,7 @@ namespace UI
 
         private void Start()
         {
-            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
+            _currentTween = _worlds[_worldIndex].transform.DOLocalRotate(new float3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
             _worldTitle.text = _worlds[_worldIndex].name;
         }

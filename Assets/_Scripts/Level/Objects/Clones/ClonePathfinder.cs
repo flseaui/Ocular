@@ -8,6 +8,7 @@ using Player;
 using Priority_Queue;
 using Sirenix.OdinInspector;
 using UI;
+using Unity.Mathematics;
 using UnityEngine;
 using static Player.Player;
 
@@ -57,7 +58,7 @@ public class ClonePathfinder : MonoBehaviour
                 
                 var position = _currentEnd.transform.position;
 
-                var vec = new Vector3(position.x,
+                var vec = new float3(position.x,
                     position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                     position.z);
                 transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
@@ -141,7 +142,7 @@ public class ClonePathfinder : MonoBehaviour
     
     
     public Walkable GetCurrentWalkable(out RaycastHit hit) =>
-        Physics.Raycast(transform.localPosition, new Vector3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
+        Physics.Raycast(transform.localPosition, new float3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
             ? hit.transform.parent.GetComponent<Walkable>()
             : null;
 }

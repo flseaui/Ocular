@@ -4,6 +4,7 @@ using Misc;
 using OcularAnimation;
 using Player;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 using static Player.Player;
 
@@ -21,7 +22,7 @@ namespace Level.Objects
 
         private bool _superDead = false;
 
-        private Vector3 _spawnPoint;
+        private float3 _spawnPoint;
 
         private ClonePathfinder _pathfinder;
         
@@ -46,12 +47,10 @@ namespace Level.Objects
 
         private void OnPlayerDeath()
         {
-           // ActuallyDie();
            if (!_model.activeSelf)
            {
                gameObject.SetActive(true);
                _animController.enabled = true;
-               //_animController.StartAnim();
                if (_animController.CurrentGoal != null)
                     _animController.CurrentGoal.transform.parent.gameObject.SetActive(true);
                GameObject.Find("GameManager").GetComponent<GlassesController>().UpdateOcularState();
@@ -176,8 +175,6 @@ namespace Level.Objects
                     Falling = true;
                     GetComponent<Rigidbody>().position += Vector3.down * ((2.5f + FallingTimer) * Time.deltaTime);
                 }
-
-                //GetComponent<Rigidbody>().AddForce(Vector3.down * 5);
             }
             else
             {

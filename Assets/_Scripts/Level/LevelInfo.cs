@@ -2,6 +2,7 @@
 using Misc;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Internal;
 
@@ -48,7 +49,7 @@ namespace Level
         public bool ReadyToLoad;
 
         [BoxGroup("Camera")] public bool HasCustomCamera;
-        [BoxGroup("Camera")] public Vector3 CameraPosition;
+        [BoxGroup("Camera")] public float3 CameraPosition;
         [BoxGroup("Camera")] public float CameraSize;
         [BoxGroup("Camera")] public Transform CameraCenter;
         [BoxGroup("Camera")] public Direction CameraStartDirection;

@@ -3,6 +3,7 @@ using Misc;
 using OcularAnimation;
 using System;
 using OcularAnimation;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace UI
@@ -33,7 +34,7 @@ namespace UI
             }
             else
             {
-                transform.position = new Vector3(-1000, -1000, -1000);
+                transform.position = new float3(-1000, -1000, -1000);
             }
 
 
@@ -67,7 +68,7 @@ namespace UI
                     rotation();
 
                 var hitPos = hit.transform.position;
-                transform.position = new Vector3(hitPos.x, hitPos.y + yShift, hitPos.z);
+                transform.position = new float3(hitPos.x, hitPos.y + yShift, hitPos.z);
             }
         }
     }

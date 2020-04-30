@@ -3,6 +3,7 @@ using Level;
 using System.Collections;
 using Doozy.Engine.Extensions;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace UI
@@ -35,13 +36,13 @@ namespace UI
         public void ShowText()
         {
             _animator.enabled = false;
-            _levelNameText.rectTransform.anchoredPosition = new Vector3(0, -77.09f, 0);
+            _levelNameText.rectTransform.anchoredPosition = new float2(0, -77.09f);
             _levelNameText.color = _levelNameText.color.Opaque();
         }
 
         public void HideText()
         {
-            _levelNameText.rectTransform.anchoredPosition = new Vector3(0, 50.64978f, 0);
+            _levelNameText.rectTransform.anchoredPosition = new float2(0, 50.64978f);
             _levelNameText.color = _levelNameText.color.WithAlpha(0);
             _animator.enabled = true;
         }

@@ -2,6 +2,7 @@
 
 using System;
 using Misc;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace LevelEditor
@@ -42,9 +43,11 @@ namespace LevelEditor
             {
                 if (Input.GetKey(KeyCode.E))
                 {
-                    var newRot = transform.localRotation.eulerAngles + new Vector3(0, _rotateSpeed * Time.deltaTime, 0);
+                    var localRotation = transform.localRotation;
+                    var newRot = localRotation.eulerAngles + new Vector3(0, _rotateSpeed * Time.deltaTime, 0);
                     _zoomer.RecalcZoom(newRot.y + 45, false);
-                    transform.localRotation = Quaternion.Euler(newRot);
+                    localRotation = Quaternion.Euler(newRot);
+                    transform.localRotation = localRotation;
                 }
 
                 if (Input.GetKey(KeyCode.Q))

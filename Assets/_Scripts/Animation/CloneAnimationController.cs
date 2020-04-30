@@ -8,6 +8,7 @@ using Level.Objects;
 using Level.Objects.Clones;
 using Player;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = System.Random;
 
@@ -51,9 +52,10 @@ namespace OcularAnimation
             _death.Init();
             _falling.Init();
 
-            foreach (var anim in _idleAnims)
+            var idleCount = _idleAnims.Count;
+            for (var i = 0; i < idleCount; ++i)
             {
-                anim.Animation.Init();
+                _idleAnims[i].Animation.Init();
             }
 
             _currentAnimation = _idleAnims[0].Animation;
@@ -81,7 +83,7 @@ namespace OcularAnimation
                     _currentAnimation.CurrentFrame.Meshes[i].GetComponent<MeshRenderer>().sharedMaterial;
                 
                 var localPos = _meshes[i].gameObject.transform.localPosition;
-                _meshes[i].gameObject.transform.localPosition = new Vector3(localPos.x, _currentAnimation.GlobalOffset + _currentAnimation.CurrentFrame.VoxelOffset * .1f, localPos.z);
+                _meshes[i].gameObject.transform.localPosition = new float3(localPos.x, _currentAnimation.GlobalOffset + _currentAnimation.CurrentFrame.VoxelOffset * .1f, localPos.z);
             }
 
             _currentAnimation.NextFrame();

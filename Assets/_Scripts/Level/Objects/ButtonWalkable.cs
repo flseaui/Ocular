@@ -1,5 +1,6 @@
 ﻿using Game;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Level.Objects
@@ -13,7 +14,7 @@ namespace Level.Objects
 
         [SerializeField] public GlassesController.OcularState Color;
 
-        private Vector3 _initialPosition;
+        private float3 _initialPosition;
 
         /// <summary>
         /// The blocks that will be modified when the button is pressed.
@@ -47,7 +48,7 @@ namespace Level.Objects
             if (_buttonModel.State)
             {
                 // Press button
-                _buttonModel.transform.localPosition = _initialPosition - new Vector3(0, .1f, 0);
+                _buttonModel.transform.localPosition = _initialPosition - new float3(0, .1f, 0);
                 TargetBlocks.ForEach(t =>
                 {
                     t.OcularColor = Color;

@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Level.Objects;
 using Misc;
 using Sirenix.Utilities;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class ButtonHighlightChecker : MonoBehaviour
@@ -119,7 +120,7 @@ public class ButtonHighlightChecker : MonoBehaviour
     }
 
     [CanBeNull]
-    private GameObject GetHighlightedObject(out Vector3 normal)
+    private GameObject GetHighlightedObject(out float3 normal)
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity, LayerMask.GetMask("Model")))

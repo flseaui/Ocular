@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace UI
@@ -25,7 +26,7 @@ namespace UI
         [ShowInInspector, ReadOnly]
         private int _selectedIndex;
 
-        private Vector3 _topPos, _middlePos, _bottomPos;
+        private float3 _topPos, _middlePos, _bottomPos;
 
         private Tween _currentTween;
 
@@ -67,7 +68,7 @@ namespace UI
                 for (var i = 2; i < worldLevels.Count; ++i)
                 {
                     var pos = worldLevels[i].transform.position;
-                    worldLevels[i].transform.position = new Vector3(pos.x, pos.y - 20 * i, pos.z);
+                    worldLevels[i].transform.position = new float3(pos.x, pos.y - 20 * i, pos.z);
                 }
             }
 
@@ -75,7 +76,7 @@ namespace UI
             _middleText.text = "";
             _bottomText.text = "";
 
-            _currentTween = worldLevels[0].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
+            _currentTween = worldLevels[0].transform.DOLocalRotate(new float3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                 .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
         }
 
@@ -157,7 +158,7 @@ namespace UI
 
                 _currentTween.Kill();
                 _initialRot = worldLevels[_selectedIndex].transform.rotation;
-                _currentTween = worldLevels[_selectedIndex].transform.DOLocalRotate(new Vector3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
+                _currentTween = worldLevels[_selectedIndex].transform.DOLocalRotate(new float3(0, 360, 0), 10, RotateMode.LocalAxisAdd)
                     .SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
             }
         }

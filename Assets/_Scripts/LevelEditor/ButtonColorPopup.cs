@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace LevelEditor
@@ -11,7 +12,7 @@ namespace LevelEditor
         private void Update()
         {
             var pos = Camera.main.WorldToScreenPoint(Target.position);
-            transform.position = new Vector3(pos.x, pos.y + 90, pos.z);
+            transform.position = new float3(pos.x, pos.y + 90, pos.z);
         }
     }
 }

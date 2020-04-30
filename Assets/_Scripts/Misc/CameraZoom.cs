@@ -3,6 +3,7 @@ using DG.Tweening;
 using Level;
 using Sirenix.OdinInspector;
 using UI;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,8 +12,8 @@ namespace Misc
     public class CameraZoom : MonoBehaviour
     {
         private Camera _camera;
-        private Vector3 _pos;
-        private Vector3 _cameraPos;
+        private float3 _pos;
+        private float3 _cameraPos;
         private float _cameraSize;
         private float _projectedSize;
         [NonSerialized, ShowInInspector]
@@ -91,10 +92,10 @@ namespace Misc
                 var levelY = Mathf.Sin(angle * Mathf.PI / 180) * (_pos.x + _pos.z) + Mathf.Cos(angle * Mathf.PI / 180) * (_pos.z - _pos.x);
                 
                 if (smooth)
-                    _camera.transform.DOLocalMove(new Vector3(levelX * zoom * ConstantX + _cameraPos.x,
+                    _camera.transform.DOLocalMove(new float3(levelX * zoom * ConstantX + _cameraPos.x,
                         levelY * zoom * ConstantY + _cameraPos.y, _cameraPos.z), .1f);
                 else
-                    _camera.transform.localPosition = new Vector3(levelX * zoom * ConstantX + _cameraPos.x,
+                    _camera.transform.localPosition = new float3(levelX * zoom * ConstantX + _cameraPos.x,
                         levelY * zoom * ConstantY + _cameraPos.y, _cameraPos.z);
             }
             else

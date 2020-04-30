@@ -9,6 +9,7 @@ using Misc;
 using Priority_Queue;
 using Sirenix.OdinInspector;
 using UI;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -83,7 +84,7 @@ namespace Player
             if (start == null) return null;
             if (start == destination) return null;
 
-            float Heuristic(Vector3 a, Vector3 b) => Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
+            float Heuristic(float3 a, float3 b) => Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
 
             float MovementCost(Node a, Node b) => 1;
 
@@ -160,7 +161,7 @@ namespace Player
                 {
                     var position = _currentEnd.transform.position;
 
-                    var vec = new Vector3(position.x,
+                    var vec = new float3(position.x,
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
                     //transform.LookAt(vec, Vector3.up);
