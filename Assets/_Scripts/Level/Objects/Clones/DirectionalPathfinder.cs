@@ -1,11 +1,12 @@
-﻿using Sirenix.OdinInspector;
+using System;
+using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 using static Player.Player;
 
 namespace Level.Objects.Clones
 {
-    public class ClonePathfinder : MonoBehaviour
+    public class DirectionalPathfinder : MonoBehaviour
     {
         private Walkable _currentEnd;
         public float WalkSpeed;
@@ -55,7 +56,7 @@ namespace Level.Objects.Clones
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
-                    GetComponent<Clone>().ChangeFacing(_targetCardinal);
+                    GetComponent<DirectionalClone>().ChangeFacing(_targetCardinal);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
                         transform.position = vec;
@@ -66,23 +67,22 @@ namespace Level.Objects.Clones
             }
         }
 
-        public bool CanMove(Walkable playerStart, Walkable playerEnd)
+        public bool CanMove(out Walkable target)
         {
+            target = null;
+            
             if (AtGoal) return false;
         
-            var playerCardinal = GetCardinal(playerStart, playerEnd);
-            var currentWalkable = GetCurrentWalkable(out var hit);
+            var currentWalkable = GetCurrentWalkable();
 
-            _targetCardinal = playerCardinal;
-            if (_targetCardinal == Cardinal.None)
+            if (_targetCardinal == Cardinal.None || currentWalkable == null)
                 return false;
-
-            if (currentWalkable == null) return false;
         
             foreach (var neighbor in currentWalkable.Node.Neighbors)
             {
                 if (GetCardinal(currentWalkable, neighbor.Walkable) == _targetCardinal)
                 {
+                    target = neighbor.Walkable;
                     return true;
                 }
             }
@@ -90,29 +90,42 @@ namespace Level.Objects.Clones
             return false;
         }
     
-        public void MirrorClone(Walkable playerStart, Walkable playerEnd)
+        public void Step()
         {
-            if (AtGoal) return;
-        
-            var playerCardinal = GetCardinal(playerStart, playerEnd);
-            var currentWalkable = GetCurrentWalkable(out var hit);
-
-            _targetCardinal = playerCardinal;
-            if (_targetCardinal == Cardinal.None)
-                return;
-
-            if (currentWalkable != null)
+            if (CanMove(out var target))
             {
-                foreach (var neighbor in currentWalkable.Node.Neighbors)
+                _currentEnd = target;
+                Navigating = true;
+                _newNav = true;
+            }
+            else
+            {
+                _targetCardinal = FlipCardinal(_targetCardinal);
+                if (CanMove(out target))
                 {
-                    if (GetCardinal(currentWalkable, neighbor.Walkable) == _targetCardinal)
-                    {
-                        _currentEnd = neighbor.Walkable;
-                        Navigating = true;
-                        _newNav = true;
-                        break;
-                    }
+                    _currentEnd = target;
+                    Navigating = true;
+                    _newNav = true;
                 }
+            }
+        }
+
+        private Cardinal FlipCardinal(Cardinal cardinal)
+        {
+            switch (cardinal)
+            {
+                case Cardinal.North:
+                    return Cardinal.South;
+                case Cardinal.East:
+                    return Cardinal.West;
+                case Cardinal.South:
+                    return Cardinal.North;
+                case Cardinal.West:
+                    return Cardinal.East;
+                case Cardinal.None:
+                    return Cardinal.None;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cardinal), cardinal, null);
             }
         }
 
@@ -132,8 +145,10 @@ namespace Level.Objects.Clones
         
             return Cardinal.None;
         }
-    
-    
+
+
+        public Walkable GetCurrentWalkable() => GetCurrentWalkable(out _);
+        
         public Walkable GetCurrentWalkable(out RaycastHit hit) =>
             Physics.Raycast(transform.localPosition, new float3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
                 ? hit.transform.parent.GetComponent<Walkable>()

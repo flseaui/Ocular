@@ -16,6 +16,7 @@ namespace Level {
         private GameObject[] _controllerObjects;
         public IController[] Controllers;
         public List<CloneSpawn> CloneSpawns;
+        public List<DirectionalCloneSpawn> DirectionalCloneSpawns;
         
         private void Awake()
         {
@@ -31,6 +32,7 @@ namespace Level {
             }
             
             CloneSpawns = new List<CloneSpawn>();
+            DirectionalCloneSpawns = new List<DirectionalCloneSpawn>();
         }
         
         public void FindNeighbors()
@@ -45,7 +47,13 @@ namespace Level {
             foreach (var colorable in _colorables)
             {
                 if (colorable.CompareTag("CloneSpawn"))
-                    CloneSpawns.Add(colorable.GetComponent<CloneSpawn>());
+                {
+                    if (colorable.transform.HasComponent<DirectionalCloneSpawn>(out var spawn))
+                        DirectionalCloneSpawns.Add(spawn);
+                    else
+                        CloneSpawns.Add(colorable.GetComponent<CloneSpawn>());
+                }
+
                 colorable.Initialize();
             }
         }

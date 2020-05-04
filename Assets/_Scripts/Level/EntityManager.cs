@@ -14,6 +14,7 @@ namespace Level
         
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private GameObject _clonePrefab;
+        [SerializeField] private GameObject _directionalClonePrefab;
         
         private LevelController _levelController;
         private MapController _mapController;
@@ -29,6 +30,11 @@ namespace Level
             Addressables.LoadAssetAsync<GameObject>("clone_prefab").Completed += handle =>
             {
                 _clonePrefab = handle.Result;
+            };
+
+            Addressables.LoadAssetAsync<GameObject>("directional_clone_prefab").Completed += handle =>
+            {
+                _directionalClonePrefab = handle.Result;
             };
         
             if (PlayerPrefs.GetInt("PlayFromEditor") != 1)
@@ -61,11 +67,24 @@ namespace Level
             if (_levelController == null)
                 _levelController = GameObject.Find("GameManager").GetComponent<LevelController>();
 
+            // Spawn clones
             var cloneSpawnCount = _mapController.CloneSpawns.Count;
             for (var i = 0; i < cloneSpawnCount; ++i)
             {
                 var spawn = _mapController.CloneSpawns[i];
                 var clone = Instantiate(_clonePrefab, spawn.transform.position + new Vector3(0, .65f, 0),
+                    Quaternion.identity);
+
+                clone.GetComponent<Colorable>().OcularColor = spawn.GetComponent<Colorable>().OcularColor;
+                _entities.Add(clone);
+            }
+            
+            // Spawn directional clones
+            var directionalCloneSpawnCount = _mapController.DirectionalCloneSpawns.Count;
+            for (var i = 0; i < directionalCloneSpawnCount; ++i)
+            {
+                var spawn = _mapController.DirectionalCloneSpawns[i];
+                var clone = Instantiate(_directionalClonePrefab, spawn.transform.position + new Vector3(0, .65f, 0),
                     Quaternion.identity);
 
                 clone.GetComponent<Colorable>().OcularColor = spawn.GetComponent<Colorable>().OcularColor;
