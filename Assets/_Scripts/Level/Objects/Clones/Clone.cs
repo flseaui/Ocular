@@ -21,7 +21,7 @@ namespace Level.Objects.Clones
 
         private float3 _spawnPoint;
 
-        private ClonePathfinder _pathfinder;
+        private AClonePathfinder _pathfinder;
         
         public float FallingTimer;
 
@@ -31,7 +31,7 @@ namespace Level.Objects.Clones
         
         private void Awake()
         {
-            _pathfinder = GetComponent<ClonePathfinder>();
+            _pathfinder = GetComponent<AClonePathfinder>();
             _animController = GetComponent<CloneAnimationController>();
             _model = transform.Find("Model").gameObject;
             
@@ -139,10 +139,10 @@ namespace Level.Objects.Clones
             if (_player == null)
                 _player = GameObject.Find("GameManager").GetComponent<LevelController>().EntityManager.Player;
             
-            var clonePath = GetComponent<ClonePathfinder>();
+            var clonePath = GetComponent<AClonePathfinder>();
             if (Pathfinder.Navigating && (!clonePath.Navigating || clonePath.StopNavNextFrame) && !Falling)
             {
-                GetComponent<ClonePathfinder>().MirrorClone(_player.GetComponent<Pathfinder>().GetCurrentWalkable(out _), _player.GetComponent<Pathfinder>()._currentEnd);
+                GetComponent<AClonePathfinder>().Step(_player.GetComponent<Pathfinder>().GetCurrentWalkable(out _), _player.GetComponent<Pathfinder>()._currentEnd);
             }
             
             var walkable = _pathfinder.GetCurrentWalkable(out _);

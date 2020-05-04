@@ -5,18 +5,11 @@ using static Player.Player;
 
 namespace Level.Objects.Clones
 {
-    public class ClonePathfinder : MonoBehaviour
+    public class ClonePathfinder : AClonePathfinder
     {
         private Walkable _currentEnd;
-        public float WalkSpeed;
-        public bool Navigating;
-        public bool AtGoal;
-        public bool OnStairs;
 
         private Cardinal _targetCardinal;
-
-        [ShowInInspector, ReadOnly]
-        public bool StopNavNextFrame;
 
         private bool _stopNavTrigger;
     
@@ -66,8 +59,8 @@ namespace Level.Objects.Clones
             }
         }
 
-        public bool CanMove(Walkable playerStart, Walkable playerEnd)
-        {
+         public override bool CanMove(Walkable playerStart, Walkable playerEnd)
+         {
             if (AtGoal) return false;
         
             var playerCardinal = GetCardinal(playerStart, playerEnd);
@@ -90,7 +83,7 @@ namespace Level.Objects.Clones
             return false;
         }
     
-        public void MirrorClone(Walkable playerStart, Walkable playerEnd)
+        public override void Step(Walkable playerStart, Walkable playerEnd)
         {
             if (AtGoal) return;
         
@@ -132,11 +125,5 @@ namespace Level.Objects.Clones
         
             return Cardinal.None;
         }
-    
-    
-        public Walkable GetCurrentWalkable(out RaycastHit hit) =>
-            Physics.Raycast(transform.localPosition, new float3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
-                ? hit.transform.parent.GetComponent<Walkable>()
-                : null;
     }
 }

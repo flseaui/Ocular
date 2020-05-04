@@ -34,7 +34,7 @@ namespace OcularAnimation
 
         private NewVoxelAnimation _currentAnimation;
 
-        private ClonePathfinder _pathfinder;
+        private AClonePathfinder _pathfinder;
         private Clone _clone;
 
         [NonSerialized]
@@ -43,7 +43,7 @@ namespace OcularAnimation
         private void Awake()
         {
             _clone = GetComponent<Clone>();
-            _pathfinder = GetComponent<ClonePathfinder>();
+            _pathfinder = GetComponent<AClonePathfinder>();
             _meshes = transform.GetComponentsInChildren<MeshFilter>();
 
             _walk.Init();

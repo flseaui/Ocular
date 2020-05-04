@@ -6,18 +6,11 @@ using static Player.Player;
 
 namespace Level.Objects.Clones
 {
-    public class DirectionalPathfinder : MonoBehaviour
+    public class DirectionalPathfinder : AClonePathfinder
     {
         private Walkable _currentEnd;
-        public float WalkSpeed;
-        public bool Navigating;
-        public bool AtGoal;
-        public bool OnStairs;
 
         private Cardinal _targetCardinal;
-
-        [ShowInInspector, ReadOnly]
-        public bool StopNavNextFrame;
 
         private bool _stopNavTrigger;
     
@@ -43,7 +36,6 @@ namespace Level.Objects.Clones
                 _newNav = false;
             }
 
-        
             if (Navigating && !StopNavNextFrame)
             {
                 if (Vector3.Distance(transform.position, _currentEnd.transform.position) > Vector3.kEpsilon)
@@ -56,7 +48,7 @@ namespace Level.Objects.Clones
                         position.y + .5f + transform.GetComponent<CapsuleCollider>().height / 2,
                         position.z);
                     transform.position = Vector3.MoveTowards(transform.position, vec, WalkSpeed * Time.fixedDeltaTime);
-                    GetComponent<DirectionalClone>().ChangeFacing(_targetCardinal);
+                    GetComponent<Clone>().ChangeFacing(_targetCardinal);
                     if (Vector3.Distance(transform.position, vec) < Vector3.kEpsilon)
                     {
                         transform.position = vec;
@@ -67,6 +59,11 @@ namespace Level.Objects.Clones
             }
         }
 
+        public override bool CanMove(Walkable playerStart, Walkable playerEnd)
+        {
+            return true;
+        }
+        
         public bool CanMove(out Walkable target)
         {
             target = null;
@@ -90,7 +87,7 @@ namespace Level.Objects.Clones
             return false;
         }
     
-        public void Step()
+        public override void Step(Walkable start, Walkable end)
         {
             if (CanMove(out var target))
             {
@@ -148,10 +145,6 @@ namespace Level.Objects.Clones
 
 
         public Walkable GetCurrentWalkable() => GetCurrentWalkable(out _);
-        
-        public Walkable GetCurrentWalkable(out RaycastHit hit) =>
-            Physics.Raycast(transform.localPosition, new float3(0, -1, 0), out hit, 2, LayerMask.GetMask("Model"))
-                ? hit.transform.parent.GetComponent<Walkable>()
-                : null;
+
     }
 }

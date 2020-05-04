@@ -136,9 +136,9 @@ GameObject:
   - component: {fileID: 3343191074711946767}
   - component: {fileID: 5295215314712032960}
   - component: {fileID: 2292749235933814158}
-  - component: {fileID: 809949889553191804}
   - component: {fileID: 5101880038351251949}
-  - component: {fileID: 5269447405351133212}
+  - component: {fileID: 5962748106157816947}
+  - component: {fileID: 3988675682861773141}
   m_Layer: 11
   m_Name: DirectionalClone
   m_TagString: Clone
@@ -211,24 +211,6 @@ MonoBehaviour:
   _entity: 1
   _dontUseBlockMat: 1
   _blockMat: {fileID: 2100000, guid: 22684f76203f641d3838d6022ab263cb, type: 2}
---- !u!114 &809949889553191804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3343191074711946764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff245b70b06446c6a333535406c1c33c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Falling: 0
-  ActuallyFalling: 0
-  Died: 0
-  Invisible: 0
-  Teleporting: 0
-  FallingTimer: 0
 --- !u!114 &5101880038351251949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +228,7 @@ MonoBehaviour:
   AtGoal: 0
   OnStairs: 0
   StopNavNextFrame: 0
---- !u!114 &5269447405351133212
+--- !u!114 &5962748106157816947
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,7 +237,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3343191074711946764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 391ad68da6654826b719a127d62d0316, type: 3}
+  m_Script: {fileID: 11500000, guid: 0afe5a865f4d4ce996376d994629a1a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -297,6 +279,24 @@ MonoBehaviour:
   _teleport: {fileID: 11400000, guid: 1244f67700bc8486695cb95f10c21651, type: 2}
   _death: {fileID: 11400000, guid: 75efb1099f4b8468f87b8ecd4370cc07, type: 2}
   _falling: {fileID: 11400000, guid: a3326110f81764d1f9818dfc6a719ca0, type: 2}
+--- !u!114 &3988675682861773141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3343191074711946764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b607c10de809447e859e5adce5165f70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Falling: 0
+  ActuallyFalling: 0
+  Died: 0
+  Invisible: 0
+  Teleporting: 0
+  FallingTimer: 0
 --- !u!1 &4992500808818613998
 GameObject:
   m_ObjectHideFlags: 0
