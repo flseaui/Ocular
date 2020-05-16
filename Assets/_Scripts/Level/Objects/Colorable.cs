@@ -45,8 +45,9 @@ namespace Level.Objects
         [SerializeField] private ColorableType _type;
 
         [SerializeField, HideInInspector] private Color _color;
-        [SerializeField, HideInInspector] private OcularState _ocularColor;
+        [SerializeField, HideInInspector, FormerlySerializedAs("_ocularState")] private OcularState _ocularColor;
         [SerializeField] private bool _entity;
+        [SerializeField] private bool _alwaysVisible;
         [SerializeField] private bool _dontUseBlockMat;
         [SerializeField] private Material _blockMat;
         private GameObject _outlineModel;
@@ -186,7 +187,7 @@ namespace Level.Objects
 
         public void Initialize()
         {
-            if (OcularColor == OcularState.Z) return;
+            if (OcularColor == OcularState.Z || _type == ColorableType.ColorChanging) return;
             
             BlockState = BlockStateEnum.Invisible;
 
@@ -266,7 +267,7 @@ namespace Level.Objects
                 case ColorableType.StateChanging:
                     var (color, state) = CalculateVisibility();
 
-                    BlockState = state;
+                    BlockState = _alwaysVisible ? BlockStateEnum.Visible : state;
 
                     if (_runtimeOutlineModel != null)
                     {

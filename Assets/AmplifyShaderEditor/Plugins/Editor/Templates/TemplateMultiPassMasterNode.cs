@@ -2026,6 +2026,17 @@ namespace AmplifyShaderEditor
 				m_currentDataCollector.InstancedPropertiesList.Add( new PropertyDataCollector( -1, cBufferEnd ) );
 				m_currentDataCollector.UniformsList.AddRange( m_currentDataCollector.InstancedPropertiesList );
 			}
+			
+			if( m_currentDataCollector.DotsPropertiesList.Count > 0 )
+			{
+				m_currentDataCollector.DotsPropertiesList.Insert( 0, new PropertyDataCollector( -1, "UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)" ) );
+				m_currentDataCollector.DotsPropertiesList.Insert( 0, new PropertyDataCollector( -1, "#ifdef UNITY_DOTS_INSTANCING_ENABLED" ) );
+				m_currentDataCollector.DotsPropertiesList.Insert( 0, new PropertyDataCollector( -1, "" ) );
+				m_currentDataCollector.DotsPropertiesList.Add( new PropertyDataCollector( -1, "UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)" ) );
+				m_currentDataCollector.DotsDefinesList.Add( new PropertyDataCollector( -1, "#endif" ) );
+				m_currentDataCollector.UniformsList.AddRange( m_currentDataCollector.DotsPropertiesList );
+				m_currentDataCollector.UniformsList.AddRange( m_currentDataCollector.DotsDefinesList );
+			}
 
 			TemplateShaderModelModule shaderModelModule = m_isMainOutputNode ? m_subShaderModule.ShaderModelHelper : m_mainMasterNodeRef.SubShaderModule.ShaderModelHelper;
 			string shaderModel = string.Empty;
@@ -2070,6 +2081,21 @@ namespace AmplifyShaderEditor
 							{
 								string newPropertyValue = data.CreatePropertyForValue( actionItems[ actionIdx ].ActionBuffer );
 								CurrentTemplate.IdManager.SetReplacementText( data.FullValue, newPropertyValue );
+							}
+						}
+					}
+
+					if( options[ optionIdx ].Options.Type == AseOptionsType.Field )
+					{
+						foreach( var item in CurrentTemplate.IdManager.RegisteredTags )
+						{
+							if( item.Output.Equals( options[ optionIdx ].Options.FieldInlineName ) )
+							{
+								var node = options[ optionIdx ].Options.FieldValue.GetPropertyNode();
+								if( node != null && ( node.IsConnected || node.AutoRegister ) && options[ optionIdx ].Options.FieldValue.Active )
+								{
+									item.Replacement = node.PropertyName;
+								}
 							}
 						}
 					}
@@ -2159,7 +2185,9 @@ namespace AmplifyShaderEditor
 					SetPassCustomOptionsInfo( this );
 				}
 
-				m_templateMultiPass.SetPassData( TemplateModuleDataType.PassVertexData, m_subShaderIdx, m_passIdx, m_currentDataCollector.VertexInputList.ToArray() );
+				var inputArray = m_currentDataCollector.VertexInputList.ToArray();
+
+				m_templateMultiPass.SetPassData( TemplateModuleDataType.PassVertexData, m_subShaderIdx, m_passIdx, inputArray );
 				m_templateMultiPass.SetPassData( TemplateModuleDataType.PassInterpolatorData, m_subShaderIdx, m_passIdx, m_currentDataCollector.InterpolatorList.ToArray() );
 				SetHDInfoOnPass();
 				List<PropertyDataCollector> afterNativesIncludePragmaDefineList = new List<PropertyDataCollector>();
@@ -2201,6 +2229,15 @@ namespace AmplifyShaderEditor
 
 				m_templateMultiPass.SetPassData( TemplateModuleDataType.ModuleInputVert, m_subShaderIdx, m_passIdx, m_currentDataCollector.TemplateDataCollectorInstance.VertexInputParamsStr );
 				m_templateMultiPass.SetPassData( TemplateModuleDataType.ModuleInputFrag, m_subShaderIdx, m_passIdx, m_currentDataCollector.TemplateDataCollectorInstance.FragInputParamsStr );
+
+				if( m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessVControlTag != null && m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessVControlTag.IsValid )
+					m_templateMultiPass.SetPassData( TemplateModuleDataType.VControl, m_subShaderIdx, m_passIdx, inputArray );
+
+				if( m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessControlData != null && m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessControlData.IsValid )
+					m_templateMultiPass.SetPassData( TemplateModuleDataType.ControlData, m_subShaderIdx, m_passIdx, m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessControlData.GenerateControl( m_currentDataCollector.TemplateDataCollectorInstance.VertexDataDict, m_currentDataCollector.VertexInputList ) );
+
+				if( m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessDomainData != null && m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessDomainData.IsValid )
+					m_templateMultiPass.SetPassData( TemplateModuleDataType.DomainData, m_subShaderIdx, m_passIdx, m_templateMultiPass.SubShaders[ m_subShaderIdx ].Passes[ m_passIdx ].TessDomainData.GenerateDomain( m_currentDataCollector.TemplateDataCollectorInstance.VertexDataDict, m_currentDataCollector.VertexInputList ) );
 
 				afterNativesIncludePragmaDefineList.Clear();
 				afterNativesIncludePragmaDefineList = null;

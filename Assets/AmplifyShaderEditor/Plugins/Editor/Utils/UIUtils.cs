@@ -194,7 +194,7 @@ namespace AmplifyShaderEditor
 		SurfaceData,
 		Textures,
 		Time,
-		TrignometryOperators,
+		TrigonometryOperators,
 		UVCoordinates,
 		VectorOperators,
 		VertexData
@@ -427,7 +427,7 @@ namespace AmplifyShaderEditor
 			"Surface Data",
 			"Textures",
 			"Time",
-			"Trignometry Operators",
+			"Trigonometry Operators",
 			"UV Coordinates",
 			"Vector Operators",
 			"Vertex Data"

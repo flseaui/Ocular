@@ -3,6 +3,8 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System;
 
 namespace AmplifyShaderEditor
 {
@@ -1973,6 +1975,22 @@ namespace AmplifyShaderEditor
 			m_fullSrpBatcherPropertiesList.Clear();
 			if( m_srpBatcherPropertiesList.Count > 0 )
 			{
+				var regex = new Regex( @"(\d)\s+\b" );
+				m_srpBatcherPropertiesList.Sort( ( a, b ) =>
+				{
+					var matchA = regex.Match( a.PropertyName );
+					int sizeA = 0;
+					if( matchA.Groups.Count > 1 && matchA.Groups[ 1 ].Value.Length > 0 )
+						sizeA = Convert.ToInt32( matchA.Groups[ 1 ].Value, System.Globalization.CultureInfo.InvariantCulture );
+
+					var matchB = regex.Match( b.PropertyName );
+					int sizeB = 0;
+					if( matchB.Groups.Count > 1 && matchB.Groups[ 1 ].Value.Length > 0 )
+						sizeB = Convert.ToInt32( matchB.Groups[ 1 ].Value, System.Globalization.CultureInfo.InvariantCulture );
+
+					return sizeB.CompareTo( sizeA );
+				} );
+
 				m_fullSrpBatcherPropertiesList.Insert(0, new PropertyDataCollector( nodeId, IOUtils.SRPCBufferPropertiesBegin ));
 				m_fullSrpBatcherPropertiesList.AddRange( m_srpBatcherPropertiesList );
 				m_fullSrpBatcherPropertiesList.Add( new PropertyDataCollector( nodeId, IOUtils.SRPCBufferPropertiesEnd ) );
@@ -2033,5 +2051,6 @@ namespace AmplifyShaderEditor
 		public List<PropertyDataCollector> LateDirectivesList { get { return m_lateDirectivesList; } }
 		public List<PropertyDataCollector> SrpBatcherPropertiesList { get { return m_srpBatcherPropertiesList; } }
 		public List<PropertyDataCollector> FullSrpBatcherPropertiesList { get { return m_fullSrpBatcherPropertiesList; } }
+		public Dictionary<TemplateSemantics, TemplateVertexData> VertexDataDict { get { return m_vertexDataDict; } }
 	}
 }
