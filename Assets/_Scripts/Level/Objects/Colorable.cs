@@ -309,7 +309,7 @@ namespace Level.Objects
                         var visible = _blockState == BlockStateEnum.Visible;
 
                         //if custom disable behavior gets overly complex, move into child classes
-                        switch (walkable)
+                        /*switch (walkable)
                         {
                             case ButtonWalkable button:
                                 if (!visible)
@@ -318,7 +318,7 @@ namespace Level.Objects
                                 }
 
                                 break;
-                        }
+                        }*/
                         walkable.CheckBelow(!visible);
                         walkable.SetEnabled(visible);
                     }
