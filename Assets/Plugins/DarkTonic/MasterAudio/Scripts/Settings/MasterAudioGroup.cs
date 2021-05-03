@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
@@ -17,8 +16,14 @@ namespace DarkTonic.MasterAudio {
 
         public int busIndex = -1;
 
+#if DISABLE_3D_SOUND
+        public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo2D;
+#else
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo3D;
+#endif
         public float spatialBlend = 1f;
+
+        public MasterAudio.DefaultGroupPlayType groupPlayType = MasterAudio.DefaultGroupPlayType.Always;
 
         public bool isSelected = false;
         public bool isExpanded = true;
@@ -26,6 +31,12 @@ namespace DarkTonic.MasterAudio {
         public int retriggerPercentage = 100;
         public VariationMode curVariationMode = VariationMode.Normal;
         public bool alwaysHighestPriority = false;
+
+        public bool ignoreListenerPause = false;
+
+        [Range(0f, 10f)]
+        public int importance = 5;
+        public bool isUninterruptible;
 
         public float chainLoopDelayMin;
         public float chainLoopDelayMax;
@@ -91,10 +102,11 @@ namespace DarkTonic.MasterAudio {
         public int frames = 0;
         // ReSharper restore InconsistentNaming
 
-        private List<int> _activeAudioSourcesIds;
+        private List<int> _activeAudioSourcesIds = new List<int>();
         private string _objectName = string.Empty;
         private Transform _trans;
         private float _originalVolume = 1;
+        private readonly List<int> _actorInstanceIds = new List<int>();
 
         public enum TargetDespawnedBehavior {
             None,
@@ -123,6 +135,7 @@ namespace DarkTonic.MasterAudio {
             FrameBased,
             TimeBased
         }
+
         // ReSharper restore InconsistentNaming
 
         // ReSharper disable once UnusedMember.Local
@@ -160,8 +173,26 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
+        public void AddActorInstanceId(int instanceId)
+        {
+            if (_actorInstanceIds.Contains(instanceId))
+            {
+                return;
+            }
+
+            _actorInstanceIds.Add(instanceId);
+        }
+
+        public void RemoveActorInstanceId(int instanceId)
+        {
+            _actorInstanceIds.Remove(instanceId);
+        }
+
         public float SpatialBlendForGroup {
             get {
+#if DISABLE_3D_SOUND
+                return MasterAudio.SpatialBlend_2DValue;
+#else
                 switch (MasterAudio.Instance.mixerSpatialBlendType) {
                     case MasterAudio.AllMixerSpatialBlendType.ForceAllTo2D:
                         return MasterAudio.SpatialBlend_2DValue;
@@ -185,11 +216,12 @@ namespace DarkTonic.MasterAudio {
                                 return UseCurveSpatialBlend;
                         }
                 }
+#endif
             }
         }
         /*! \endcond */
 
-        #region public properties
+#region public properties
         /// <summary>
         /// This property will return the number of Activate voices in this Sound Group.
         /// </summary>
@@ -289,13 +321,41 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
+        public MasterAudio.GroupPlayType GroupPlayType {
+            get {
+                if (MasterAudio.Instance.groupPlayType != MasterAudio.GroupPlayType.AllowDifferentPerGroup)
+                {
+                    return MasterAudio.Instance.groupPlayType;
+                }
+
+                switch (groupPlayType)
+                {
+                    case MasterAudio.DefaultGroupPlayType.Always:
+                        return MasterAudio.GroupPlayType.Always;
+                    case MasterAudio.DefaultGroupPlayType.WhenActorInAudibleRange:
+                        return MasterAudio.GroupPlayType.WhenActorInAudibleRange;
+                    default:
+                        throw new System.Exception("Illegal Group Play Type: " + groupPlayType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// This property returns the number of live actors (Dynamic Sound Group Creators) still in the Scene.
+        /// </summary>
+        public bool HasLiveActors {
+            get {
+                return _actorInstanceIds.Count > 0;
+            }
+        }
+
         public bool UsesNoRepeat {
             get { return curVariationSequence == VariationSequence.Randomized && groupVariations.Count >= MinNoRepeatVariations && useNoRepeatRefill; }
         }
 
-        #endregion
+#endregion
 
-        #region private properties
+#region private properties
         private Transform Trans {
             get {
                 if (_trans != null) {
@@ -317,7 +377,7 @@ namespace DarkTonic.MasterAudio {
                 return _activeAudioSourcesIds;
             }
         }
-        #endregion
+#endregion
         /*! \endcond */
     }
 }

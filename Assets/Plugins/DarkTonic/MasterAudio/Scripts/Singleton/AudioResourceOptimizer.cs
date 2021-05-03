@@ -143,6 +143,9 @@ namespace DarkTonic.MasterAudio {
                     playlistName + "' has 'Preload Audio Data' turned off, which can cause audio glitches. Resource files should always Preload Audio Data. Please turn it on.");
             }
 
+            // set the name equal to the full path so Jukebox display will work.
+            resAudioClip.name = songResourceName;
+            
             FinishRecordingPlaylistClip(controller.ControllerName, resAudioClip);
 
             controller.FinishLoadingNewSong(songSetting, resAudioClip, playType);

@@ -25,6 +25,9 @@ namespace AmplifyShaderEditor
 		private const double TagNameCheckMaxInterval = 1.5;
 
 		[SerializeField]
+		private bool m_foldout = false;
+
+		[SerializeField]
 		private List<CustomTagData> m_availableTags = new List<CustomTagData>();
 
 		private Dictionary<string, CustomTagData> m_availableTagsDict = new Dictionary<string, CustomTagData>();
@@ -65,9 +68,9 @@ namespace AmplifyShaderEditor
 
 		public override void ShowUnreadableDataMessage( ParentNode owner )
 		{
-			bool foldout = owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags;
-			NodeUtils.DrawPropertyGroup( ref foldout, CustomTagsStr, base.ShowUnreadableDataMessage );
-			owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags = foldout;
+			//bool foldout = owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags;
+			NodeUtils.DrawPropertyGroup( ref m_foldout, CustomTagsStr, base.ShowUnreadableDataMessage );
+			//owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags = foldout;
 		}
 
 		public void OnLogicUpdate()
@@ -85,6 +88,10 @@ namespace AmplifyShaderEditor
 					{
 						m_availableTags[ m_tagNameCheckItemId ].SpecialTag = TemplateSpecialTags.RenderType;
 					}
+					else if( m_availableTags[ m_tagNameCheckItemId ].TagName.Equals( Constants.DisableBatchingHelperStr ) )
+					{
+						m_availableTags[ m_tagNameCheckItemId ].SpecialTag = TemplateSpecialTags.DisableBatching;
+					}
 					else
 					{
 						m_availableTags[ m_tagNameCheckItemId ].SpecialTag = TemplateSpecialTags.None;
@@ -96,16 +103,16 @@ namespace AmplifyShaderEditor
 		public override void Draw( UndoParentNode owner, bool style = true )
 		{
 			m_currentOwner = owner;
-			bool foldout = owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags;
+			//bool foldout = owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags;
 			if( style )
 			{
-				NodeUtils.DrawPropertyGroup( ref foldout, CustomTagsStr, DrawMainBody, DrawButtons );
+				NodeUtils.DrawPropertyGroup( ref m_foldout, CustomTagsStr, DrawMainBody, DrawButtons );
 			}
 			else
 			{
-				NodeUtils.DrawNestedPropertyGroup( ref foldout, CustomTagsStr, DrawMainBody, DrawButtons );
+				NodeUtils.DrawNestedPropertyGroup( ref m_foldout, CustomTagsStr, DrawMainBody, DrawButtons );
 			}
-			owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags = foldout;
+			//owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedCustomTags = foldout;
 		}
 
 		void DrawButtons()
@@ -165,6 +172,12 @@ namespace AmplifyShaderEditor
 						//Tag Value
 						switch( m_availableTags[ i ].SpecialTag )
 						{
+							case TemplateSpecialTags.DisableBatching:
+							{
+								m_availableTags[ i ].Batching = (DisableBatching)m_currentOwner.EditorGUILayoutEnumPopup( RenderTypeLabelStr, m_availableTags[ i ].Batching );
+								m_availableTags[ i ].TagValue = m_availableTags[ i ].Batching.ToString();
+							}
+							break;
 							case TemplateSpecialTags.RenderType:
 							{
 								m_availableTags[ i ].RenderType = (RenderType)m_currentOwner.EditorGUILayoutEnumPopup( RenderTypeLabelStr, m_availableTags[ i ].RenderType );
@@ -254,6 +267,11 @@ namespace AmplifyShaderEditor
 				{
 					switch( tag )
 					{
+						case TemplateSpecialTags.DisableBatching:
+						{
+							m_availableTags[ i ].Batching = TemplateHelperFunctions.StringToDisableBatching[ item.ActionData ];
+							return;
+						}
 						case TemplateSpecialTags.RenderType:
 						{
 							m_availableTags[ i ].RenderType = TemplateHelperFunctions.StringToRenderType[ item.ActionData ];
@@ -274,6 +292,13 @@ namespace AmplifyShaderEditor
 			CustomTagData data = new CustomTagData();
 			switch( tag )
 			{
+				case TemplateSpecialTags.DisableBatching:
+				{
+					data.SpecialTag = TemplateSpecialTags.DisableBatching;
+					data.TagName = "DisableBatching";
+					data.Batching = TemplateHelperFunctions.StringToDisableBatching[ item.ActionData ];
+				}
+				break;
 				case TemplateSpecialTags.RenderType:
 				{
 					data.SpecialTag = TemplateSpecialTags.RenderType;

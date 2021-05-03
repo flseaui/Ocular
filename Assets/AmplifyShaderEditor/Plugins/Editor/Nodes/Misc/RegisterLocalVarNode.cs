@@ -52,6 +52,7 @@ namespace AmplifyShaderEditor
 			base.CommonInit( uniqueId );
 			AddInputPort( WirePortDataType.FLOAT, false, Constants.EmptyPortValue );
 			AddOutputPort( WirePortDataType.FLOAT, Constants.EmptyPortValue );
+			m_inputPorts[ 0 ].SetFreeForAll();
 			m_textLabelWidth = 85;
 			m_customPrecision = true;
 
@@ -81,6 +82,11 @@ namespace AmplifyShaderEditor
 			base.OnConnectedOutputNodeChanges( outputPortId, otherNodeId, otherPortId, name, type );
 			m_inputPorts[ 0 ].MatchPortToConnection();
 			m_outputPorts[ 0 ].ChangeType( m_inputPorts[ 0 ].DataType, false );
+
+			for( int i = 0 ; i < m_registeredGetLocalVars.Count ; i++ )
+			{
+				m_registeredGetLocalVars[ i ].UpdateLocalVar();
+			}
 		}
 
 		void UpdateTitle()

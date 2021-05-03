@@ -5,11 +5,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 400000}
-  - 82: {fileID: 8200000}
-  - 114: {fileID: 11400000}
+  - component: {fileID: 400000}
+  - component: {fileID: 8200000}
+  - component: {fileID: 11400000}
   m_Layer: 0
   m_Name: DynamicGroupVariation
   m_TagString: Untagged
@@ -24,11 +24,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.00294518, y: -2.8900001, z: 0}
+  m_LocalPosition: {x: -3.0029452, y: -2.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 1
@@ -36,13 +37,16 @@ AudioSource:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
   MinDistance: 10
@@ -55,63 +59,87 @@ AudioSource:
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: .0199999996
+    - serializedVersion: 2
+      time: 0.02
       value: 1
-      inSlope: -50.0199242
-      outSlope: -50.0199242
+      inSlope: -50.019924
+      outSlope: -50.019924
       tangentMode: 0
-    - time: .0399999991
-      value: .5
+    - serializedVersion: 2
+      time: 0.04
+      value: 0.5
       inSlope: -12.504981
       outSlope: -12.504981
       tangentMode: 0
-    - time: .0799999982
-      value: .25
-      inSlope: -3.12624526
-      outSlope: -3.12624526
+    - serializedVersion: 2
+      time: 0.08
+      value: 0.25
+      inSlope: -3.1262453
+      outSlope: -3.1262453
       tangentMode: 0
-    - time: .159999996
-      value: .125
-      inSlope: -.781561315
-      outSlope: -.781561315
+    - serializedVersion: 2
+      time: 0.16
+      value: 0.125
+      inSlope: -0.7815613
+      outSlope: -0.7815613
       tangentMode: 0
-    - time: .319999993
-      value: .0625
-      inSlope: -.195390329
-      outSlope: -.195390329
+    - serializedVersion: 2
+      time: 0.32
+      value: 0.0625
+      inSlope: -0.19539033
+      outSlope: -0.19539033
       tangentMode: 0
-    - time: .639999986
-      value: .03125
-      inSlope: -.0488475822
-      outSlope: -.0488475822
+    - serializedVersion: 2
+      time: 0.64
+      value: 0.03125
+      inSlope: -0.048847582
+      outSlope: -0.048847582
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 0
-      inSlope: -.0200079847
-      outSlope: -.0200079847
+      inSlope: -0.020007985
+      outSlope: -0.020007985
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -123,6 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe737f362f2da5d4ebabefe8c9165162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  probabilityToPlay: 100
+  importance: 5
+  isUninterruptible: 0
   useLocalization: 0
   useRandomPitch: 0
   randomPitchMode: 0
@@ -133,21 +164,24 @@ MonoBehaviour:
   randomVolumeMin: 0
   randomVolumeMax: 0
   weight: 1
+  clipAlias: 
   audLocation: 0
   resourceFileName: 
-  internetFileUrl: 
   isExpanded: 1
   isChecked: 1
-  fxTailTime: 0
   useFades: 0
   fadeInTime: 0
   fadeOutTime: 0
+  useCustomLooping: 0
+  minCustomLoops: 1
+  maxCustomLoops: 5
   useIntroSilence: 0
   introSilenceMin: 0
   introSilenceMax: 0
   useRandomStartTime: 0
   randomStartMinPercent: 0
   randomStartMaxPercent: 0
+  randomEndPercent: 100
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -159,4 +193,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

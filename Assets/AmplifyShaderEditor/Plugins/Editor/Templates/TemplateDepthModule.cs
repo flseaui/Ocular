@@ -150,6 +150,9 @@ namespace AmplifyShaderEditor
 		void DrawBlock( UndoParentNode owner )
 		{
 			EditorGUI.BeginChangeCheck();
+			var cache = EditorGUIUtility.labelWidth;
+			EditorGUIUtility.labelWidth = EditorGUIUtility.labelWidth - 20;
+
 			Color cachedColor = GUI.color;
 			GUI.color = new Color( cachedColor.r, cachedColor.g, cachedColor.b, ( EditorGUIUtility.isProSkin ? 0.5f : 0.25f ) );
 			//EditorGUILayout.BeginVertical( UIUtils.MenuItemBackgroundStyle );
@@ -176,11 +179,12 @@ namespace AmplifyShaderEditor
 				}
 			}
 			EditorGUILayout.Separator();
-
+			EditorGUIUtility.labelWidth = cache;
 			//EditorGUILayout.EndVertical();
 			if( EditorGUI.EndChangeCheck() )
 			{
 				m_isDirty = true;
+				CustomEdited = true;
 			}
 		}
 
@@ -252,6 +256,7 @@ namespace AmplifyShaderEditor
 
 		public override void ReadFromString( ref uint index, ref string[] nodeParams )
 		{
+			base.ReadFromString( ref index, ref nodeParams );
 			ReadZWriteFromString( ref index, ref nodeParams );
 			ReadZTestFromString( ref index, ref nodeParams );
 			ReadOffsetFromString( ref index, ref nodeParams );
@@ -259,6 +264,7 @@ namespace AmplifyShaderEditor
 
 		public void WriteZWriteToString( ref string nodeInfo )
 		{
+			base.WriteToString( ref nodeInfo );
 			IOUtils.AddFieldValueToString( ref nodeInfo, m_validZWrite );
 			if( m_validZWrite )
 				m_zWriteMode.WriteToString( ref nodeInfo );

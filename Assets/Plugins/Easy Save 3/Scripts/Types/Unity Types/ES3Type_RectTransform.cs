@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace ES3Types
 {
@@ -27,13 +28,16 @@ namespace ES3Types
 			writer.WriteProperty("localPosition", instance.localPosition, ES3Type_Vector3.Instance);
 			writer.WriteProperty("localRotation", instance.localRotation, ES3Type_Quaternion.Instance);
 			writer.WriteProperty("localScale", instance.localScale, ES3Type_Vector3.Instance);
-			writer.WriteProperty("parent", instance.parent, ES3Type_Transform.Instance);
+			writer.WritePropertyByRef("parent", instance.parent);
 			writer.WriteProperty("hideFlags", instance.hideFlags);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)
 		{
-			var instance = (UnityEngine.RectTransform)obj;
+            if (obj.GetType() == typeof(UnityEngine.Transform))
+                obj = ((Transform)obj).gameObject.AddComponent<RectTransform>();
+
+                var instance = (UnityEngine.RectTransform)obj;
 			foreach(string propertyName in reader.Properties)
 			{
 				switch(propertyName)

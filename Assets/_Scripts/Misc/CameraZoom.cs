@@ -61,6 +61,7 @@ namespace Misc
                     {
                         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x,
                             8, .1f);
+                        
                         _projectedSize = 8;
                     }
                 }

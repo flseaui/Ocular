@@ -35,6 +35,7 @@ namespace DarkTonic.MasterAudio {
         private float _fadeInOutOutFactor;
 
         // fade out early vars
+        private System.Action _fadeOutEarlyCompletionCallback;
         private int _fadeOutEarlyTotalFrames;
         private float _fadeOutEarlyFrameVolChange;
         private int _fadeOutEarlyFrameNumber;
@@ -44,6 +45,7 @@ namespace DarkTonic.MasterAudio {
         private float _fadeToTargetFrameVolChange;
         private int _fadeToTargetFrameNumber;
         private float _fadeToTargetOrigVol;
+        private System.Action _fadeToTargetCompletionCallback;
         private int _fadeToTargetTotalFrames;
         private float _fadeToTargetVolume;
         private bool _fadeOutStarted;
@@ -97,7 +99,7 @@ namespace DarkTonic.MasterAudio {
             _glideToPitchCompletionCallback = completionCallback;
         }
 
-        public void FadeOverTimeToVolume(float targetVolume, float fadeTime) {
+        public void FadeOverTimeToVolume(float targetVolume, float fadeTime, System.Action completionCallback = null) {
             GrpVariation.curFadeMode = SoundGroupVariation.FadeMode.GradualFade;
 
             var volDiff = targetVolume - VarAudio.volume;
@@ -115,9 +117,10 @@ namespace DarkTonic.MasterAudio {
             _fadeToTargetFrameNumber = 0;
             _fadeToTargetOrigVol = VarAudio.volume;
             _fadeToTargetVolume = targetVolume;
+            _fadeToTargetCompletionCallback = completionCallback;
         }
 
-        public void FadeOutEarly(float fadeTime) {
+        public void FadeOutEarly(float fadeTime, System.Action completionCallback = null) {
             GrpVariation.curFadeMode = SoundGroupVariation.FadeMode.FadeOutEarly;
             // cancel the FadeInOut loop, if it's going.
 
@@ -131,6 +134,7 @@ namespace DarkTonic.MasterAudio {
                 frameTime = AudioUtil.FixedDeltaTime;
             }
 
+            _fadeOutEarlyCompletionCallback = completionCallback;
             _fadeOutEarlyTotalFrames = (int)(fadeTime / frameTime);
             _fadeOutEarlyFrameVolChange = -VarAudio.volume / _fadeOutEarlyTotalFrames;
             _fadeOutEarlyFrameNumber = 0;
@@ -532,12 +536,11 @@ namespace DarkTonic.MasterAudio {
 
             // sound play worked! Duck music if a ducking sound and sound is not silent.
             if (!isSilent) {
-                MasterAudio.DuckSoundGroup(ParentGroup.GameObjectName, VarAudio);
+                MasterAudio.DuckSoundGroup(ParentGroup.GameObjectName, VarAudio, this);
             }
         }
 
         private void StopOrChain() {
-            //Debug.Log("stop or chain: " + name);
             var playSnd = GrpVariation.PlaySoundParm;
 
             var wasPlaying = playSnd.IsPlaying;
@@ -558,6 +561,7 @@ namespace DarkTonic.MasterAudio {
         public void Pause() {
             _isPaused = true;
             _pauseTime = AudioSettings.dspTime;
+            MasterAudio.EndDucking(this);
         }
 
         public void Unpause() {
@@ -672,6 +676,10 @@ namespace DarkTonic.MasterAudio {
                     if (_fadeOutEarlyFrameNumber >= _fadeOutEarlyTotalFrames) {
                         GrpVariation.curFadeMode = SoundGroupVariation.FadeMode.None;
                         GrpVariation.Stop();
+                        if (_fadeOutEarlyCompletionCallback != null)
+                        {
+                            _fadeOutEarlyCompletionCallback();
+                        }
                     }
 
                     break;
@@ -684,6 +692,10 @@ namespace DarkTonic.MasterAudio {
                     if (_fadeToTargetFrameNumber >= _fadeToTargetTotalFrames) {
                         VarAudio.volume = _fadeToTargetVolume;
                         StopFading();
+                        if (_fadeToTargetCompletionCallback != null)
+                        {
+                            _fadeToTargetCompletionCallback();
+                        }
                     } else {
                         VarAudio.volume = (_fadeToTargetFrameNumber * _fadeToTargetFrameVolChange) + _fadeToTargetOrigVol;
                     }
@@ -768,7 +780,7 @@ namespace DarkTonic.MasterAudio {
                                 GrpVariation.Stop();
                                 break;
                             case MasterAudioGroup.TargetDespawnedBehavior.FadeOut:
-                                GrpVariation.FadeOutNow(ParentGroup.despawnFadeTime);
+                                GrpVariation.FadeOutNowAndStop(ParentGroup.despawnFadeTime);
                                 break;
                         }
 

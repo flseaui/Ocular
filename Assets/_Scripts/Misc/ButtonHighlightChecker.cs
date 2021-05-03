@@ -130,6 +130,6 @@ public class ButtonHighlightChecker : MonoBehaviour
         }
 
         normal = Vector3.zero;
-        return null;
+        return null;    
     }
 }

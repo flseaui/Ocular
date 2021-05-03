@@ -24,6 +24,9 @@ namespace AmplifyShaderEditor
 		private bool[] m_colorMask = { true, true, true, true };
 
 		[SerializeField]
+		private string m_target = string.Empty;
+
+		[SerializeField]
 		private InlineProperty m_inlineColorMask = new InlineProperty();
 
 		public void CopyFrom( TemplateColorMaskModule other, bool allData )
@@ -35,6 +38,9 @@ namespace AmplifyShaderEditor
 			{
 				m_colorMask[ i ] = other.ColorMask[ i ];
 			}
+
+			m_target = other.Target;
+
 			m_inlineColorMask.CopyFrom( other.InlineColorMask );
 		}
 
@@ -44,6 +50,7 @@ namespace AmplifyShaderEditor
 			if( newValidData && m_validData != newValidData )
 			{
 				m_independentModule = data.IndependentModule;
+				m_target = data.Target;
 				if( string.IsNullOrEmpty( data.InlineData ) )
 				{
 					for( int i = 0; i < 4; i++ )
@@ -65,12 +72,13 @@ namespace AmplifyShaderEditor
 		{
 			EditorGUI.BeginChangeCheck();
 			{
-				m_inlineColorMask.CustomDrawer( ref owner, DrawColorMaskControls, ColorMaskContent.text );
+				m_inlineColorMask.CustomDrawer( ref owner, DrawColorMaskControls, ColorMaskContent.text + m_target );
 			}
 
 			if( EditorGUI.EndChangeCheck() )
 			{
 				m_isDirty = true;
+				CustomEdited = true;
 			}
 		}
 
@@ -92,7 +100,7 @@ namespace AmplifyShaderEditor
 			}
 
 			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField( ColorMaskContent, GUILayout.Width( 90 ) );
+			EditorGUILayout.LabelField( "Color Mask"+ m_target, GUILayout.Width( EditorGUIUtility.labelWidth - 3 ) );
 
 			m_colorMask[ 0 ] = owner.GUILayoutToggle( m_colorMask[ 0 ], "R", m_leftToggleColorMask );
 			m_colorMask[ 1 ] = owner.GUILayoutToggle( m_colorMask[ 1 ], "G", m_middleToggleColorMask );
@@ -105,7 +113,7 @@ namespace AmplifyShaderEditor
 		public override string GenerateShaderData( bool isSubShader )
 		{
 			if( m_inlineColorMask.IsValid )
-				return ColorMaskOp + m_inlineColorMask.GetValueOrProperty();
+				return ColorMaskOp + m_inlineColorMask.GetValueOrProperty() + Target;
 
 			int count = 0;
 			string colorMask = string.Empty;
@@ -120,14 +128,15 @@ namespace AmplifyShaderEditor
 
 			if( count != m_colorMask.Length )
 			{
-				return ColorMaskOp + ( ( count == 0 ) ? "0" : colorMask );
+				return ColorMaskOp + ( ( count == 0 ) ? "0" : colorMask ) + Target;
 			}
 
-			return ColorMaskOff;
+			return ColorMaskOff + Target;
 		}
 
 		public override void ReadFromString( ref uint index, ref string[] nodeParams )
 		{
+			base.ReadFromString( ref index, ref  nodeParams );
 			bool validDataOnMeta = m_validData;
 			if( UIUtils.CurrentShaderVersion() > TemplatesManager.MPShaderVersion )
 			{
@@ -150,6 +159,7 @@ namespace AmplifyShaderEditor
 
 		public override void WriteToString( ref string nodeInfo )
 		{
+			base.WriteToString( ref nodeInfo );
 			IOUtils.AddFieldValueToString( ref nodeInfo, m_validData );
 			if( m_validData )
 			{
@@ -169,6 +179,12 @@ namespace AmplifyShaderEditor
 				m_colorMask = value;
 				m_inlineColorMask.Active = false;
 			}
+		}
+
+		public string Target
+		{
+			get { return m_target; }
+			set { m_target = value; }
 		}
 
 		public override void Destroy()

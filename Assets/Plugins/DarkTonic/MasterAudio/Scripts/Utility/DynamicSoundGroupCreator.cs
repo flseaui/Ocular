@@ -50,6 +50,7 @@ namespace DarkTonic.MasterAudio {
         private bool _hasCreated;
         private readonly List<Transform> _groupsToRemove = new List<Transform>();
         private Transform _trans;
+        private int _instanceId = -1;
 
         public enum CreateItemsWhen {
             FirstEnableOnly,
@@ -119,34 +120,111 @@ namespace DarkTonic.MasterAudio {
                     continue; // don't delete!
                 }
 
+                var existingBus = MasterAudio.GrabBusByName(aBus.busName);
+                if (existingBus != null && !existingBus.isTemporary)
+                {
+                    continue; // don't delete, it was an existing bus you used because it already existed and you couldn't create it.
+                }
+
+                if (existingBus != null)
+                {
+                    existingBus.RemoveActorInstanceId(InstanceId);
+                    if (existingBus.HasLiveActors)
+                    {
+                        continue;
+                    }
+                }
+
                 MasterAudio.DeleteBusByName(aBus.busName);
             }
 
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < _groupsToRemove.Count; i++) {
                 var groupName = _groupsToRemove[i].name;
+
+                var grp = MasterAudio.GrabGroup(groupName, false);
+                if (grp == null)
+                {
+                    continue;
+                }
+
+                grp.RemoveActorInstanceId(InstanceId);
+                if (grp.HasLiveActors)
+                {
+                    continue;
+                }
+
                 MasterAudio.RemoveSoundGroupFromDuckList(groupName);
                 MasterAudio.DeleteSoundGroup(groupName);
             }
             _groupsToRemove.Clear();
 
+
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < customEventsToCreate.Count; i++) {
                 var anEvent = customEventsToCreate[i];
+
+                var matchingEvent = MasterAudio.Instance.customEvents.Find(delegate(CustomEvent cEvent)
+                {
+                    return cEvent.EventName == anEvent.EventName && cEvent.isTemporary;
+                });
+
+                if (matchingEvent == null)
+                {
+                    continue;
+                }
+
+                matchingEvent.RemoveActorInstanceId(InstanceId);
+
+                if (matchingEvent.HasLiveActors)
+                {
+                    continue;
+                }
+
                 MasterAudio.DeleteCustomEvent(anEvent.EventName);
             }
 
-			for (var i = 0; i < customEventCategories.Count; i++) {
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < customEventCategories.Count; i++) {
 				var aCat = customEventCategories[i];
 
-				MasterAudio.Instance.customEventCategories.RemoveAll(delegate (CustomEventCategory cat) {
-					return cat.CatName == aCat.CatName && cat.IsTemporary;
-				});
-			}
+                var matchingCat = MasterAudio.Instance.customEventCategories.Find(delegate(CustomEventCategory category)
+                {
+                    return category.CatName == aCat.CatName && category.IsTemporary;
+                });
+
+                if (matchingCat == null)
+                {
+                    continue;
+                }
+
+                matchingCat.RemoveActorInstanceId(InstanceId);
+
+                if (matchingCat.HasLiveActors)
+                {
+                    continue;
+                }
+
+                MasterAudio.Instance.customEventCategories.Remove(matchingCat);
+            }
 
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < musicPlaylists.Count; i++) {
                 var aPlaylist = musicPlaylists[i];
+
+                var playlist = MasterAudio.GrabPlaylist(aPlaylist.playlistName);
+                if (playlist == null)
+                {
+                    continue;
+                }
+
+                playlist.RemoveActorInstanceId(InstanceId);
+
+                if (playlist.HasLiveActors)
+                {
+                    continue;
+                }
+
                 MasterAudio.DeletePlaylist(aPlaylist.playlistName);
             }
 
@@ -187,11 +265,18 @@ namespace DarkTonic.MasterAudio {
                     continue; // already exists.
                 }
 
-                if (!MasterAudio.CreateBus(aBus.busName, errorOnDuplicates, true)) {
-                    continue;
+                var createdBus = MasterAudio.GrabBusByName(aBus.busName);
+
+                if (createdBus == null)
+                {
+                    if (MasterAudio.CreateBus(aBus.busName, InstanceId, errorOnDuplicates, true))
+                    {
+                        createdBus = MasterAudio.GrabBusByName(aBus.busName);
+                    }
+                } else {
+                    createdBus.AddActorInstanceId(InstanceId);
                 }
 
-                var createdBus = MasterAudio.GrabBusByName(aBus.busName);
                 if (createdBus == null) {
                     continue;
                 }
@@ -202,7 +287,7 @@ namespace DarkTonic.MasterAudio {
                     createdBus.OriginalVolume = createdBus.volume;
                 }
                 createdBus.voiceLimit = aBus.voiceLimit;
-                createdBus.stopOldest = aBus.stopOldest;
+                createdBus.busVoiceLimitExceededMode = aBus.busVoiceLimitExceededMode;
                 createdBus.forceTo2D = aBus.forceTo2D;
                 createdBus.mixerChannel = aBus.mixerChannel;
                 createdBus.busColor = aBus.busColor;
@@ -221,7 +306,15 @@ namespace DarkTonic.MasterAudio {
                 }
                 aGroup.busName = busName;
 
-                var groupTrans = MasterAudio.CreateSoundGroup(aGroup, _trans.name, errorOnDuplicates);
+                Transform groupTrans;
+                var existingGroup = MasterAudio.GrabGroup(aGroup.name, false);
+                if (existingGroup != null)
+                {
+                    existingGroup.AddActorInstanceId(InstanceId);
+                    groupTrans = existingGroup.transform;
+                } else {
+                    groupTrans = MasterAudio.CreateSoundGroup(aGroup, InstanceId, errorOnDuplicates);
+                }
 
                 // remove fx components
                 // ReSharper disable ForCanBeConvertedToForeach
@@ -265,22 +358,36 @@ namespace DarkTonic.MasterAudio {
                 MasterAudio.AddSoundGroupToDuckList(aDuck.soundType, aDuck.riseVolStart, aDuck.duckedVolumeCut, aDuck.unduckTime, true);
             }
 
-			for (var i = 0; i < customEventCategories.Count; i++) {
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < customEventCategories.Count; i++) {
 				var aCat = customEventCategories[i];
-				MasterAudio.CreateCustomEventCategoryIfNotThere(aCat.CatName, true);
+				MasterAudio.CreateCustomEventCategoryIfNotThere(aCat.CatName, InstanceId, errorOnDuplicates, true);
 			}
 
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < customEventsToCreate.Count; i++) {
                 var anEvent = customEventsToCreate[i];
-				MasterAudio.CreateCustomEvent(anEvent.EventName, anEvent.eventReceiveMode, anEvent.distanceThreshold, anEvent.eventRcvFilterMode, anEvent.filterModeQty, anEvent.categoryName, true, errorOnDuplicates);
+				MasterAudio.CreateCustomEvent(anEvent.EventName, anEvent.eventReceiveMode, anEvent.distanceThreshold, anEvent.eventRcvFilterMode, anEvent.filterModeQty, InstanceId, anEvent.categoryName, true, errorOnDuplicates);
             }
 
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < musicPlaylists.Count; i++) {
                 var aPlaylist = musicPlaylists[i];
 				aPlaylist.isTemporary = true;
+
+                var existingPlaylist = MasterAudio.Instance.musicPlaylists.Find(delegate(MasterAudio.Playlist playlist)
+                {
+                    return playlist.playlistName == aPlaylist.playlistName && aPlaylist.isTemporary;
+                });
+
+                if (existingPlaylist != null)
+                {
+                    existingPlaylist.AddActorInstanceId(InstanceId);
+                    continue;
+                }
+
 				MasterAudio.CreatePlaylist(aPlaylist, errorOnDuplicates);
+                aPlaylist.AddActorInstanceId(InstanceId);
             }
 
             MasterAudio.SilenceOrUnsilenceGroupsFromSoloChange(); // to make sure non-soloed things get muted
@@ -336,7 +443,18 @@ namespace DarkTonic.MasterAudio {
             get { return _groupsToCreate; }
         }
 
-        /*! \cond PRIVATE */
+		/*! \cond PRIVATE */
+		public int InstanceId {
+            get {
+                if (_instanceId < 0)
+                {
+                    _instanceId = GetInstanceID();
+                }
+
+                return _instanceId;
+            }
+        }
+
         public bool ShouldShowUnityAudioMixerGroupAssignments {
             get {
                 return showUnityMixerGroupAssignment;

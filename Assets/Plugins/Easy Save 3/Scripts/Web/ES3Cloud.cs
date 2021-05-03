@@ -218,7 +218,7 @@ public class ES3Cloud : ES3WebClass
 	/// <param name="es3File">An ES3File containing the data we want to upload.</param>
 	public IEnumerator UploadFile(ES3File es3File)
 	{
-		return UploadFile(es3File.LoadRawBytes(), es3File.settings, "", "");
+		return UploadFile(es3File.LoadRawBytes(), es3File.settings, "", "", DateTimeToUnixTimestamp(DateTime.Now));
 	}
 
 	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
@@ -226,7 +226,7 @@ public class ES3Cloud : ES3WebClass
 	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
 	public IEnumerator UploadFile(ES3File es3File, string user)
 	{
-		return UploadFile(es3File.LoadRawBytes(), es3File.settings, user, "");
+		return UploadFile(es3File.LoadRawBytes(), es3File.settings, user, "", DateTimeToUnixTimestamp(DateTime.Now));
 	}
 
 	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
@@ -249,7 +249,7 @@ public class ES3Cloud : ES3WebClass
 	
 	private IEnumerator UploadFile(byte[] bytes, ES3Settings settings, string user, string password)
 	{
-		return UploadFile(ES3.LoadRawBytes(settings), settings, user, password, DateTimeToUnixTimestamp(ES3.GetTimestamp(settings)));
+		return UploadFile(bytes, settings, user, password, DateTimeToUnixTimestamp(ES3.GetTimestamp(settings)));
 	}
 	
 	private IEnumerator UploadFile(byte[] bytes, ES3Settings settings, string user, string password, long fileTimestamp)
@@ -574,27 +574,14 @@ public class ES3Cloud : ES3WebClass
 		isDone = true;
 	}
 
-	#endregion
+    #endregion
 
-	#region DownloadFilenames
+    #region DownloadFilenames
 
-	/// <summary>Downloads the names of all of the files on the server. Downloaded filenames are stored in the 'filenames' variable of the ES3Cloud object.</summary>
-	public IEnumerator DownloadFilenames()
-	{
-		return DownloadFilenames("", "");
-	}
-
-	/// <summary>Downloads the names of all of the files on the server. Downloaded filenames are stored in the 'filenames' variable of the ES3Cloud object.</summary>
-	/// <param name="user">The unique name of the user we want to find the filenames of.</param>
-	public IEnumerator DownloadFilenames(string user)
-	{
-		return DownloadFilenames(user, "");
-	}
-
-	/// <summary>Downloads the names of all of the files on the server. Downloaded filenames are stored in the 'filenames' variable of the ES3Cloud object.</summary>
-	/// <param name="user">The unique name of the user we want to find the filenames of.</param>
-	/// <param name="password">The password of the user we want to find the filenames of.</param>
-	public IEnumerator DownloadFilenames(string user, string password)
+    /// <summary>Downloads the names of all of the files on the server. Downloaded filenames are stored in the 'filenames' variable of the ES3Cloud object.</summary>
+    /// <param name="user">The unique name of the user we want to find the filenames of.</param>
+    /// <param name="password">The password of the user we want to find the filenames of.</param>
+    public IEnumerator DownloadFilenames(string user="", string password="")
 	{
 		Reset();
 
@@ -613,12 +600,37 @@ public class ES3Cloud : ES3WebClass
 		isDone = true;
 	}
 
-	#endregion
+    /// <summary>Downloads the names of all of the files on the server. Downloaded filenames are stored in the 'filenames' variable of the ES3Cloud object.</summary>
+    /// <param name="user">The unique name of the user we want to find the filenames of.</param>
+    /// <param name="password">The password of the user we want to find the filenames of.</param>
+    /// <param name="searchPattern">A search pattern containing '%' or '_' wildcards where '%' represents zero, one, or multiple characters, and '_' represents a single character.</param>
+    public IEnumerator SearchFilenames(string searchPattern, string user="", string password="")
+    {
+        Reset();
 
-	#region DownloadTimestamp
+        var form = CreateWWWForm();
+        form.AddField("apiKey", apiKey);
+        form.AddField("getFilenames", "");
+        form.AddField("user", GetUser(user, password));
+        if (!string.IsNullOrEmpty(searchPattern))
+            form.AddField("pattern", searchPattern);
 
-	/// <summary>Downloads the timestamp representing when the server file was last updated. The downloaded timestamp is stored in the 'timestamp' variable of the ES3Cloud object.</summary>
-	public IEnumerator DownloadTimestamp()
+        using (var webRequest = UnityWebRequest.Post(url, form))
+        {
+            yield return SendWebRequest(webRequest);
+            if (!HandleError(webRequest, false))
+                _data = webRequest.downloadHandler.data;
+        }
+
+        isDone = true;
+    }
+
+    #endregion
+
+    #region DownloadTimestamp
+
+    /// <summary>Downloads the timestamp representing when the server file was last updated. The downloaded timestamp is stored in the 'timestamp' variable of the ES3Cloud object.</summary>
+    public IEnumerator DownloadTimestamp()
 	{
 		return DownloadTimestamp(new ES3Settings(), "", "");
 	}

@@ -134,7 +134,6 @@ public class TransformFollower : MonoBehaviour {
 
         _lastListenerPos = MasterAudio.ListenerTrans.position;
 
-#if UNITY_5_6_OR_NEWER
         var col3DCount = 0;
         var col2DCount = 0;
 
@@ -153,9 +152,7 @@ public class TransformFollower : MonoBehaviour {
                 RecalcClosestColliderPosition(true);
                 MasterAudio.QueueTransformFollowerForColliderPositionRecalc(this);
 			}
-		}
-		
-#endif
+		}		
     }
 
     private void StopFollowing() {
@@ -240,7 +237,6 @@ public class TransformFollower : MonoBehaviour {
         PlaySound();
     }
 
-#if UNITY_5_6_OR_NEWER
 	/// <summary>
 	/// Called in a queue from MasterAudio to limit the number of times this calculation occurs per frame.
 	/// </summary>
@@ -368,7 +364,6 @@ public class TransformFollower : MonoBehaviour {
 		
 		return true;
 	}
-#endif
 
 #if PHY3D_ENABLED
     // ReSharper disable once UnusedMember.Local

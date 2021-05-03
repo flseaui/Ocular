@@ -18,10 +18,10 @@ namespace DarkTonic.MasterAudio {
         public bool isSoloed = false;
         public bool isMuted = false;
         public int voiceLimit = -1;
-        public bool stopOldest = false;
         public bool isExisting = false; // for Dynamic Sound Group - referenced Buses
 		public bool isTemporary = false;
 		public bool isUsingOcclusion = false;
+        public MasterAudio.BusVoiceLimitExceededMode busVoiceLimitExceededMode = MasterAudio.BusVoiceLimitExceededMode.DoNotPlayNewSound;
         public Color busColor = Color.white;
 
         public AudioMixerGroup mixerChannel = null;
@@ -29,7 +29,22 @@ namespace DarkTonic.MasterAudio {
 
         // ReSharper restore InconsistentNaming
         private readonly List<int> _activeAudioSourcesIds = new List<int>(50);
+        private readonly List<int> _actorInstanceIds = new List<int>();
         private float _originalVolume = 1;
+
+        public void AddActorInstanceId(int instanceId)
+        {
+            if (_actorInstanceIds.Contains(instanceId)) {
+                return;
+            }
+
+            _actorInstanceIds.Add(instanceId);
+        }
+
+        public void RemoveActorInstanceId(int instanceId)
+        {
+            _actorInstanceIds.Remove(instanceId);
+        }
 
         public void AddActiveAudioSourceId(int id) {
             if (_activeAudioSourcesIds.Contains(id)) {
@@ -49,6 +64,15 @@ namespace DarkTonic.MasterAudio {
         /// </summary>
         public int ActiveVoices {
             get { return _activeAudioSourcesIds.Count; }
+        }
+
+        /// <summary>
+        /// This property returns the number of live actors (Dynamic Sound Group Creators) still in the Scene.
+        /// </summary>
+        public bool HasLiveActors {
+            get {
+                return _actorInstanceIds.Count > 0;
+            }
         }
 
         /// <summary>

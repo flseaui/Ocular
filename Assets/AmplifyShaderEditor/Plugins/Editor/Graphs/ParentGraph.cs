@@ -24,7 +24,8 @@ namespace AmplifyShaderEditor
 			LOD5
 		}
 
-		private static bool m_samplingThroughMacros = false;
+		[SerializeField]
+		private bool m_samplingThroughMacros = false;
 
 		private NodeLOD m_lodLevel = NodeLOD.LOD0;
 		private GUIStyle nodeStyleOff;
@@ -267,8 +268,6 @@ namespace AmplifyShaderEditor
 			{
 				m_bezierReferences.Add( new WireBezierReference() );
 			}
-
-			m_samplingThroughMacros = Preferences.GlobalUseMacros;
 		}
 
 		private void OnUndoRedoCallback()
@@ -1010,6 +1009,7 @@ namespace AmplifyShaderEditor
 				case WirePortDataType.SAMPLER2D:
 				case WirePortDataType.SAMPLER3D:
 				case WirePortDataType.SAMPLERCUBE:
+				case WirePortDataType.SAMPLER2DARRAY:
 				propertyNode = CreateInstance<SamplerNode>();
 				break;
 				default: return;
@@ -1302,7 +1302,12 @@ namespace AmplifyShaderEditor
 					//As first cache happens before that
 					if( m_parentWindow.ClipboardInstance.HasCachedMasterNodes )
 					{
-						m_parentWindow.ClipboardInstance.AddMultiPassNodesToClipboard( MultiPassMasterNodes.NodesList );
+						m_parentWindow.ClipboardInstance.AddMultiPassNodesToClipboard( MultiPassMasterNodes.NodesList,true,-1 );
+						for( int i = 0; i < m_lodMultiPassMasterNodes.Count; i++ )
+						{
+							if( m_lodMultiPassMasterNodes[ i ].Count > 0 )
+								m_parentWindow.ClipboardInstance.AddMultiPassNodesToClipboard( m_lodMultiPassMasterNodes[ i ].NodesList, false, i );
+						}
 					}
 					//RepositionTemplateNodes( CurrentMasterNode );
 				}
@@ -3000,14 +3005,45 @@ namespace AmplifyShaderEditor
 			return newNode;
 		}
 
+		public TemplateMultiPassMasterNode CreateMultipassMasterNode( int lodId, bool registerUndo, int nodeId = -1, bool addLast = true )
+		{
+			TemplateMultiPassMasterNode newNode = ScriptableObject.CreateInstance<TemplateMultiPassMasterNode>();
+			if( newNode )
+			{
+				newNode.LODIndex = lodId;
+				newNode.ContainerGraph = this;
+				if( newNode.IsStubNode )
+				{
+					TemplateMultiPassMasterNode stubNode = newNode.ExecuteStubCode() as TemplateMultiPassMasterNode;
+					ScriptableObject.DestroyImmediate( newNode, true );
+					newNode = stubNode;
+				}
+				else
+				{
+					newNode.UniqueId = nodeId;
+					AddNode( newNode, nodeId < 0, addLast, registerUndo );
+				}
+			}
+			return newNode;
+		}
+
 		public ParentNode CreateNode( System.Type type, bool registerUndo, int nodeId = -1, bool addLast = true )
 		{
 			ParentNode newNode = ScriptableObject.CreateInstance( type ) as ParentNode;
 			if( newNode )
 			{
 				newNode.ContainerGraph = this;
-				newNode.UniqueId = nodeId;
-				AddNode( newNode, nodeId < 0, addLast, registerUndo );
+				if( newNode.IsStubNode )
+				{
+					ParentNode stubNode = newNode.ExecuteStubCode();
+					ScriptableObject.DestroyImmediate( newNode, true );
+					newNode = stubNode;
+				}
+				else
+				{
+					newNode.UniqueId = nodeId;
+					AddNode( newNode, nodeId < 0, addLast, registerUndo );
+				}
 			}
 			return newNode;
 		}
@@ -3049,16 +3085,17 @@ namespace AmplifyShaderEditor
 		}
 
 
-		public void CrossCheckTemplateNodes( TemplateDataParent templateData )
+		public void CrossCheckTemplateNodes( TemplateDataParent templateData , List<TemplateMultiPassMasterNode> mpNodesList , int lodId )
 		{
 			/*Paulo*/
 			DeSelectAll();
 			TemplateMultiPassMasterNode newMasterNode = null;
 			Dictionary<string, TemplateReplaceHelper> nodesDict = new Dictionary<string, TemplateReplaceHelper>();
-			int mpNodeCount = m_multiPassMasterNodes.NodesList.Count;
+			int mpNodeCount = mpNodesList.Count;
 			for( int i = 0; i < mpNodeCount; i++ )
 			{
-				nodesDict.Add( m_multiPassMasterNodes.NodesList[ i ].OriginalPassName, new TemplateReplaceHelper( m_multiPassMasterNodes.NodesList[ i ] ) );
+				string masterNodeId = mpNodesList[ i ].InvalidNode ? mpNodesList[ i ].OriginalPassName + "ASEInvalidMasterNode" + i : mpNodesList[ i ].OriginalPassName;
+				nodesDict.Add( masterNodeId, new TemplateReplaceHelper( mpNodesList[ i ] ) );
 			}
 
 			TemplateMultiPassMasterNode currMasterNode = GetNode( m_masterNodeId ) as TemplateMultiPassMasterNode;
@@ -3092,7 +3129,7 @@ namespace AmplifyShaderEditor
 					else
 					{
 						sortTemplatesNodes = true;
-						TemplateMultiPassMasterNode masterNode = CreateNode( typeof( TemplateMultiPassMasterNode ), false ) as TemplateMultiPassMasterNode;
+						TemplateMultiPassMasterNode masterNode = CreateMultipassMasterNode( lodId, false );
 						if( multipassData.SubShaders[ subShaderIdx ].Passes[ passIdx ].IsMainPass )
 						{
 							newMasterNode = masterNode;
@@ -3114,7 +3151,10 @@ namespace AmplifyShaderEditor
 
 			if( newMasterNode != null )
 			{
-				m_masterNodeId = newMasterNode.UniqueId;
+				if( lodId == -1 )
+				{
+					m_masterNodeId = newMasterNode.UniqueId;
+				}
 				newMasterNode.OnMaterialUpdatedEvent += OnMaterialUpdatedEvent;
 				newMasterNode.OnShaderUpdatedEvent += OnShaderUpdatedEvent;
 				newMasterNode.IsMainOutputNode = true;
@@ -3122,7 +3162,7 @@ namespace AmplifyShaderEditor
 
 			if( sortTemplatesNodes )
 			{
-				m_multiPassMasterNodes.NodesList.Sort( ( x, y ) => ( x.PassIdx.CompareTo( y.PassIdx ) ) );
+				mpNodesList.Sort( ( x, y ) => ( x.PassIdx.CompareTo( y.PassIdx ) ) );
 			}
 		}
 
@@ -3360,10 +3400,11 @@ namespace AmplifyShaderEditor
 				nodesToDelete.Clear();
 			}
 
+			m_masterNodeId = newMasterNode.UniqueId;
+
 			if( refreshLinkedMasterNodes )
 				RefreshLinkedMasterNodes( true );
 
-			m_masterNodeId = newMasterNode.UniqueId;
 			newMasterNode.OnMaterialUpdatedEvent += OnMaterialUpdatedEvent;
 			newMasterNode.OnShaderUpdatedEvent += OnShaderUpdatedEvent;
 			newMasterNode.IsMainOutputNode = true;
@@ -3978,7 +4019,11 @@ namespace AmplifyShaderEditor
 		public bool IsHDRP { get { return m_currentSRPType == TemplateSRPType.HD; } }
 		public bool IsLWRP { get { return m_currentSRPType == TemplateSRPType.Lightweight; } }
 		public bool IsStandardSurface { get { return GetNode( m_masterNodeId ) is StandardSurfaceOutputNode; } }
-		public bool SamplingThroughMacros { get { return m_samplingThroughMacros && IsSRP; } set { m_samplingThroughMacros = value; } }
+		
+		public bool SamplingMacros { 
+			get { return m_samplingThroughMacros; }
+			set { m_samplingThroughMacros = value; } 
+		}
 		public bool HasLODs { get { return m_lodMultiPassMasterNodes[ 0 ].Count > 0; } }
 		//public bool HasLodMultiPassNodes
 		//{

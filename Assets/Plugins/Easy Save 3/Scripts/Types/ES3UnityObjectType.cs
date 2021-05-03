@@ -25,7 +25,7 @@ namespace ES3Types
 
 		public virtual void WriteObject(object obj, ES3Writer writer, ES3.ReferenceMode mode)
 		{
-			if(WriteUsingDerivedType(obj, writer))
+			if(WriteUsingDerivedType(obj, writer, mode))
 				return;
 
 			var instance = obj as UnityEngine.Object;
@@ -34,9 +34,11 @@ namespace ES3Types
 
 			// If this object is in the instance manager, store it's instance ID with it.
 			var refMgr = ES3ReferenceMgrBase.Current;
-			if(refMgr != null && mode != ES3.ReferenceMode.ByValue)
+			if(mode != ES3.ReferenceMode.ByValue)
 			{
-				writer.WriteRef(instance);
+                if(refMgr == null)
+                    throw new InvalidOperationException("An Easy Save 3 Manager is required to load references. To add one to your scene, exit playmode and go to Assets > Easy Save 3 > Add Manager to Scene");
+                writer.WriteRef(instance);
 				if(mode == ES3.ReferenceMode.ByRef)
 					return;
 			}
@@ -59,10 +61,12 @@ namespace ES3Types
 
 			foreach(string propertyName in reader.Properties)
 			{
-				if(propertyName == ES3ReferenceMgrBase.referencePropertyName && refMgr != null)
+				if(propertyName == ES3ReferenceMgrBase.referencePropertyName)
 				{
-					id = reader.Read<long>(ES3Type_long.Instance);
-					instance = refMgr.Get(id);
+                    if(refMgr == null)
+                        throw new InvalidOperationException("An Easy Save 3 Manager is required to load references. To add one to your scene, exit playmode and go to Assets > Easy Save 3 > Add Manager to Scene");
+                    id = reader.Read_ref();
+					instance = refMgr.Get(id, type);
 
 					if(instance != null)
 						break;
@@ -79,5 +83,24 @@ namespace ES3Types
 			ReadUnityObject<T>(reader, instance);
 			return instance;
 		}
-	}
+
+        protected bool WriteUsingDerivedType(object obj, ES3Writer writer, ES3.ReferenceMode mode)
+        {
+            var objType = obj.GetType();
+
+            if (objType != this.type)
+            {
+                writer.WriteType(objType);
+
+                var es3Type = ES3TypeMgr.GetOrCreateES3Type(objType);
+                if (es3Type is ES3UnityObjectType)
+                    ((ES3UnityObjectType)es3Type).WriteObject(obj, writer, mode);
+                else
+                    es3Type.Write(obj, writer);
+
+                return true;
+            }
+            return false;
+        }
+    }
 }

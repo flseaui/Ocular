@@ -1,6 +1,88 @@
-MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2019
+MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2021
 
 - Code by Brian Hunsaker
+
+-V 2020.3.7 - Fixed bug: Refactored log code in Master Audio that finds no voices to play returned only conditionally.
+			- Fixed bug: Allocation fixed for Addressable delayed cleanup. 
+			- Fixed bug: Jukebox display would not select Resource File from a list of Resource files in the Playlist when it was playing. It always appeared blank.
+			- Fixed bug: Long Playlist names would not get truncated and mess up the Inspector.
+			- Fixed bug: Not-loaded Resource file played by name would cause endless loop.
+			- Fixed bug: Hitting Play with a Playlist Controller selected would cause an error when trying to display the Jukebox.
+			- Fixed bug: Telling additional synced layers of music would sometimes be off by fractions of a second. We now schedule the audio change slightly ahead which minimizes this greatly. Usually eliminates it.
+			- Fixed bug: Auto-advanced crossfade wouldn't work on WebGL when in background and frame rate goes to 1.
+			- Added "Jukebox Filter" dropdown up top in the Master Audio Inspector. The choices are "Display All" (default) and "Diplay Active" which only shows Playlist Controllers that are playing songs.
+			- Added a new checkbox on Welcome Window to enable Video player feature. Now turned off by default. Enable it if you want the Video Players feature and have Video package installed from Package Manager. 
+			- Added a gear icon in each Jukebox to select the Playlist Controller in Project View for editing.
+			- Added "Sort Alpha" button for the Playlists section.
+			- Added "Playlist Text Filter" to filter out Playlists whose name doesn't match.
+			- Added "Pause Audio Listener" and "Unpause Audio Listener" to Global Control under Event Sounds.
+			- Added "Ignore Listener Pause" checkbox (defaults to unchecked) to Playlist Controllers and Sound Groups. They will play if checked even if the Audio Listener is paused. The rest will not.
+			- Added CurrentFadeStatus property to PlaylistController, to tell you the current fading status of a FadeToVolume, if one is running (FadingIn, FadingOut, NotFading).
+			- Change to Singleton Scriptable for obscure "load all resources" code in other plugins.
+
+-V 2020.3.6 - 2nd Fix for 2D spatialize bug, for Playlist Controller as well.
+			- Bug Fix: Adding more than 1 song at a time to a Playlist and immediately pressing play, they would vanish and not be saved.
+			- Fix: Having multiple of the same Dynamic Sound Group Creator would delete groups / playlists and other items and some of the DSGC's were still active, breaking sounds and causing errors.
+			- Relations Inspector now shows and finds Footstep Sounds - it was omitted by accident.
+			- Added Mixer Settings under Advanced Settings. There's a setting for Mixer Update Mode, and it's set to ignore time scale as default. You can change it to respect time scale. This setting is used when transitioning to snapshots through Master Audio.
+			- Added new checkbox "Disable 3D Sound" on Welcome Window which removes all Spatial Blend controls from the Inspectors. Everything will be 2D Audio Sources if you check this.
+
+-V 2020.3.5 - Fixed 2D spatialize bug.
+			- Fixed bug with Dynamic SGC non-random sound "randomizer".
+			- Fixed bug: When using an existing bus from DSGC but you specified "new bus", it no longer deletes the Bus when you disable the DSGC.
+			- Removed unnecessary code in Silence / UnsilenceGroup methods in MasterAudio.cs
+			- Fixed Unity 2017.1 compile error with Spatializer.
+			- Removed Unity 5 support.
+			- Added asmdef files for Core GameKit and a separate one if you have both Core GameKit and Master Audio in your project, should you need them. Install the package from the Assets/Plugins/DarkTonic/CoreGameKit/AssemblyDefinitions folder.
+			- Added an option to *not* delete the Audio Source on the Audio Listener Game Object if you have one there you need. Master Audio creates one there for previewing in edit mode.
+
+-V 2020.3.4 - Fixed bug: changing bus doesn't automatically fix order when using Group By Bus.
+			- Fixed bug: changing the bus in Bulk Edit mode didn't work for more than 1 Group.
+			- Fixed bug: unducking no longer stopped at previous volume for Playlist Controller after previous version related ducking fix.
+			- Fixed bug: Addressables package broke its usage so code has been modified to work with the latest version.
+			- Added 'Clip id' optional field for Variations. This allows you to now use Variations in Dialog Groups so you don't have to create so many Dialog Group. You can give multiple Variations the same Clip id and it will choose one at random when you specify that Clip id as the VariationName to play. Clip id is searched first, and then the name of the Variation Game Object after that. You can still use the Clip id in non-Dialog groups as well if you like, but it's not really necessary.
+
+-V 2020.3.3 - Changed the major version number to the year.
+			- Fixed bug: Max Pos. Recalcs Per Frame setting in Advanced Settings for Ambient Sound didn't respect your setting.
+			- Added display of Active Ambient Sound Scripts at runtime under Ambient Sound Settings in Advanced Settings.
+
+-V 4.3.2	- Breaking Change: Removed "Stop Oldest" checkbox for the Bus. Instead there is a "Voices Exceeded Behavior" dropdown there to choose "Do Not Play New Sound" or "Stop Oldest Sound". This dropdown appears when you set a voice limit for the Bus. If you had previously set "Stop Oldest" checkbox, you will need to select "Stop Oldest Sound" from the dropdown now to get it to work the same as before.
+			- Breaking change: FadeOutNow method on SoundGroupVariation is renamed to FadeOutNowAndStop, because it does stop at the end, always has. If your scripts call this, you will need to update your call to the new method name.
+			- Fixed bug: Single song playlist that loops with Preload Audio Data turned off would loop just the crossfade section endlessly.
+			- Fixed bug: Sound Groups limited by "Limit Polyphony" option can now find a Variation to play using Retrigger Percentage, if one exists that satisfies that.
+			- Fixed bug: Bus "stop oldest / farthest" sometimes stopped a voice and not end up playing a new one.
+			- Fixed bug: Bus "stop oldest / farthest" sometimes wouldn't play a new one when maxed out on voices.
+			- Fixed bug: Playing a voice with Retrigger Percentage would also stop the oldest voice when not necessary.
+			- Fixed bug: Bus voice limit requires an additional variation to exist for the group to play a new voice even when Bus Stop Voice Fade Time is 0 (i.e. you had to have 3 group voices with bus voice limit 2).
+			- Fixed bug: AudioScriptOrderManager was executing every time you press play. Now it only executes when you open Unity.
+			- Fixed bug: A a song that was fast-forwarded by code would then start that song next time in the fast-forwarded spot. Now goes back to zero.			
+			- Made music unducking start instantly if the Variation that triggered the music ducking gets paused or stopped.
+		    - Added help text to property drawers to let you know if Master Audio game object is not in the Scene.
+			- Added new option for Voices Exceeded Behavior for the Bus: Stop Farthest Sound. If you select that, the sound playing the furthest away from the Audio Listener will be stopped to play the new sound.
+			- Added new option for Voices Exceeded Behavior for the Bus: Stop Least Important Sound. If you select that, each Sound Group will have an Importance and Uninterruptible control. The Importance control you can see on the mixer if you turn it on with "Show Group Importance" and you can also see both on the Sound Group's Inspector. Importance and Uninterruptible work the same here as on Variations. If your bus is at max voices and you try to play a new sound, Master Audio will try and locate a sound that's not Uninterruptible and of lesser or equal Importance to stop. If it can't find one, the new sound won't play.
+			- Added "Group Play Rule" to Mixer section. Choices are "Always" (default), "When Actor In Audible Range", and "Allow Different Per Group". This is only visible if your Group Spatial Blend Rule is not "Force All to 2D" because the audible range part requires 3D Audio Sources to pull the Max Distance value from. If you choose "When Actor In Audible Range", the Sound Group will only play if the Actor is within audible range, based on the Max Distance of the Audio Source.
+		    - Added a red error box if you haven't made a prefab out of the Master Audio prefabs. To tell you what to do so you don't get your settings overridden (make your own prefab).
+			- Added an overload to AddSongToPlaylist that takes a MusicSetting object, so you can use that with all the properties you want.
+			- Added StartPlaylistOnClip method to load a playlist and start playing a certain song.
+			- Added optional callback arguments to the Fade methods on SoundGroupVariation.
+			- Added "ClipLength" variable to Playmaker Custom Action "Playlist Controller Get Props".
+			- Adding a song to a Playlist via code now populates the default song metadata into the song.
+			- Added an option under Gapless Music Switching for "Auto-Reschedule". It will fix gapless even if you skip around in the track. It only works perfectly with pitch of 1 and sample rate of 48,000 or above. You can override your sample rate to 48,000 for it to work, and that even works on compressed files.
+			- Added 2 new events to Event Sounds script: Code-Triggered Event 1 & 2. These can be called from code or used in events in the Animation Window by entering the method name (ActivateCodeTriggeredEvent1, ActivateCodeTriggeredEvent2).
+			- Renamed "Show Range Gizmo" in Event Sounds to "Adjust Audio Range". Now only shows if you have a Sound Group selected to play.
+			- Changed "Bus Stop Oldest Fade Time" in Advanced Settings to "Bus Stop Voice Fade Time".
+			- Added Min Distance to range adjustment for Event Sounds, shown by toggling on "Adjust Audio Range".
+			- Added new controls for Dialog Sound Groups: Importance slider (0-10), which you can set importance for Variations. Only Variations of equal or higher importance than the current playing Variation can interrupt it.
+			- Added new controls for Dialog Sound Groups: Is Uninterruptible. Check this to hide the Importance slider and this Variation can never be interrupted by another.
+			- Added Video Player support for Master Audio. Video Players have their own special Sound Group created when you drag them into the Video Players section in Master Audio. Requires Unity 2019.3+.
+
+-V 4.3.1    - Fixed link to docs website on Welcome window.
+
+-V 4.3.0    - Added support for experimental Fast Play Mode in Unity 2019.3 - it works by default it you turn on Fast Play Mode on the Unity menu as shown on this page: https://blogs.unity3d.com/2019/11/05/enter-play-mode-faster-in-unity-2019-3/
+			- Fixed bug where Persistent Playlist Volume wouldn't work properly with persistent Master Audio game objects.
+			- Moved Show Welcome Window preference to scriptable asset so it's only for current project, not all.
+			- Added Min Distance field to Ambient  Sound so you can adjust that, which also affects the low slider value of Max Distance.
+			- Added namespaces to all example and editor scripts so they don't show up in Intelli-sense.
 
 -V 4.2.9    - Bug fix for Ambient Sound in 4.2.6 broke other things. Now fixed in a better way that doesn't cause other issues.
 			- Fixed bug: Dragging more than 1 Variation only created 1 Variation.

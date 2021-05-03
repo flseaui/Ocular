@@ -36,7 +36,32 @@ namespace ES3Editor
 			window.SetCurrentWindow(typeof(AutoSaveWindow));
 		}
 
-		public void InitSubWindows()
+        public static void InitAndShowReferences()
+        {
+            // Get existing open window or if none, make a new one:
+            ES3Window window = (ES3Window)EditorWindow.GetWindow(typeof(ES3Window));
+            window.Show();
+            window.SetCurrentWindow(typeof(ReferencesWindow));
+        }
+
+        public static void InitAndShowTypes()
+        {
+            // Get existing open window or if none, make a new one:
+            ES3Window window = (ES3Window)EditorWindow.GetWindow(typeof(ES3Window));
+            window.Show();
+            window.SetCurrentWindow(typeof(TypesWindow));
+        }
+
+        public static void InitAndShowTypes(System.Type type)
+        {
+            // Get existing open window or if none, make a new one:
+            ES3Window window = (ES3Window)EditorWindow.GetWindow(typeof(ES3Window));
+            window.Show();
+            var typesWindow = (TypesWindow)window.SetCurrentWindow(typeof(TypesWindow));
+            typesWindow.SelectType(type);
+        }
+
+        public void InitSubWindows()
 		{
 			windows = new SubWindow[]{
 				new HomeWindow(this),
@@ -44,6 +69,7 @@ namespace ES3Editor
 				new ToolsWindow(this),
 				new TypesWindow(this),
 				new AutoSaveWindow(this)
+				//, new ReferencesWindow(this)
 			};
 		}
 
@@ -53,7 +79,13 @@ namespace ES3Editor
 				currentWindow.OnLostFocus();
 		}
 
-		void OnDestroy()
+        private void OnFocus()
+        {
+            if (currentWindow != null)
+                currentWindow.OnFocus();
+        }
+
+        void OnDestroy()
 		{
 			if(currentWindow != null)
 				currentWindow.OnDestroy();
@@ -64,7 +96,7 @@ namespace ES3Editor
 			if(windows == null)
 				InitSubWindows();
 			// Set the window name and icon.
-			var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(ES3EditorUtility.PathToEasySaveFolder()+"Editor/es3Logo16x16.png");
+			var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(ES3Settings.PathToEasySaveFolder()+"Editor/es3Logo16x16.png");
 			titleContent = new GUIContent("Easy Save", icon);
 
 			// Get the last opened window and open it.
@@ -82,7 +114,13 @@ namespace ES3Editor
 			}
 		}
 
-		void OnGUI()
+        private void OnHierarchyChange()
+        {
+            if (currentWindow != null)
+                currentWindow.OnHierarchyChange();
+        }
+
+        void OnGUI()
 		{
 			var style = EditorStyle.Get;
 
@@ -103,15 +141,19 @@ namespace ES3Editor
 
 		void SetCurrentWindow(SubWindow window)
 		{
-			currentWindow = window;
+            if (currentWindow != null)
+                currentWindow.OnLostFocus();
+            currentWindow = window;
+            currentWindow.OnFocus();
 			EditorPrefs.SetString("ES3Editor.Window.currentWindow", window.name);
 		}
 
-		void SetCurrentWindow(System.Type type)
+		SubWindow SetCurrentWindow(System.Type type)
 		{
 			currentWindow.OnLostFocus();
 			currentWindow = windows.First(w => w.GetType() == type);
 			EditorPrefs.SetString("ES3Editor.Window.currentWindow", currentWindow.name);
+            return currentWindow;
 		}
 			
 		// Shows the Easy Save Home window if it's not been disabled.
@@ -140,8 +182,16 @@ namespace ES3Editor
 		{
 		}
 
+        public virtual void OnFocus()
+        {
+        }
+
 		public virtual void OnDestroy()
 		{
 		}
+
+        public virtual void OnHierarchyChange()
+        {
+        }
 	}
 }

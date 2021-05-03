@@ -21,12 +21,8 @@ namespace DarkTonic.MasterAudio {
         [Tooltip("This option is useful if your caller ever moves, as it will make the Audio Source follow to the location of the caller every frame.")]
 		public bool FollowCaller;
 
-#if UNITY_5_6_OR_NEWER
         [Tooltip("Using this option, the Audio Source will be updated every frame to the closest position on the caller's collider, if any. This will override the Follow Caller option above and happen instead.")]
 		public bool UseClosestColliderPosition;
-#else
-		public bool UseClosestColliderPosition = false;
-#endif
 
         public bool UseTopCollider = true;
         public bool IncludeChildColliders = false;

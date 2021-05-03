@@ -87,6 +87,9 @@ namespace AmplifyShaderEditor
 		protected int m_masterNodeCategory = 0;// MasterNodeCategories.SurfaceShader;
 
 		[SerializeField]
+		protected bool m_samplingMacros = false;
+
+		[SerializeField]
 		protected string m_currentShaderData = string.Empty;
 
 		private Texture2D m_masterNodeOnTex;
@@ -266,7 +269,15 @@ namespace AmplifyShaderEditor
 #if UNITY_2018_3_OR_NEWER
 					if( ASEPackageManagerHelper.CurrentHDVersion > ASESRPVersions.ASE_SRP_6_9_1 )
 					{
-						AddMenuItem( menu, "UnityEditor.Rendering.HighDefinition.HDLitGUI" );
+						if( ASEPackageManagerHelper.CurrentHDVersion > ASESRPVersions.ASE_SRP_10_0_0 )
+						{
+							AddMenuItem( menu, "Rendering.HighDefinition.LightingShaderGraphGUI" );
+							AddMenuItem( menu, "Rendering.HighDefinition.HDUnlitGUI" );
+						}
+						else
+						{
+							AddMenuItem( menu, "UnityEditor.Rendering.HighDefinition.HDLitGUI" );
+						}
 						AddMenuItem( menu, "UnityEditor.ShaderGraph.PBRMasterGUI" );
 					}
 					else
@@ -294,6 +305,11 @@ namespace AmplifyShaderEditor
 
 		protected void DrawShaderName()
 		{
+#if UNITY_2019_1_OR_NEWER
+			// this is a hack to control the automatic selection of text fields when the window is selected after serialization
+			// by having a selectable label the focus happens on it instead and doesn't interupt the usual flow of the editor
+			EditorGUILayout.SelectableLabel( "", GUILayout.Height( 0 ) );
+#endif
 			EditorGUI.BeginChangeCheck();
 			string newShaderName = EditorGUILayoutTextField( m_shaderNameContent, m_shaderName );
 			if( EditorGUI.EndChangeCheck() )
@@ -310,6 +326,14 @@ namespace AmplifyShaderEditor
 				ContainerGraph.ParentWindow.UpdateTabTitle( ShaderName, true );
 			}
 			m_shaderNameContent.tooltip = m_shaderName;
+		}
+
+		protected void DrawSamplingMacros()
+		{
+			EditorGUI.BeginChangeCheck();
+			m_samplingMacros = EditorGUILayoutToggle( "Use Sampling Macros", m_samplingMacros );
+			if( EditorGUI.EndChangeCheck() )
+				ContainerGraph.SamplingMacros = SamplingMacros;
 		}
 
 		public void DrawShaderKeywords()
@@ -545,6 +569,12 @@ namespace AmplifyShaderEditor
 			return null;
 		}
 
+		public void CheckSamplingMacrosFlag()
+		{
+			if( ContainerGraph.SamplingMacros && m_currentDataCollector != null )
+				m_currentDataCollector.AddToDirectives( Constants.SamplingMacrosDirective );
+
+		}
 		protected void SortInputPorts( ref List<InputPort> vertexPorts, ref List<InputPort> fragmentPorts )
 		{
 			for( int i = 0; i < m_inputPorts.Count; i++ )
@@ -593,6 +623,7 @@ namespace AmplifyShaderEditor
 				AssetDatabase.Refresh( ImportAssetOptions.ForceUpdate );
 				CurrentShader = Shader.Find( ShaderName );
 			}
+
 			//else
 			//{
 			//	// need to always get asset datapath because a user can change and asset location from the project window 
@@ -958,9 +989,10 @@ namespace AmplifyShaderEditor
 				m_sizeIsDirty = true;
 			}
 		}
+		public string CurrentInspector { get { return m_customInspectorName; } }
 		public string CustomInspectorFormatted { get { return string.Format( CustomInspectorFormat, m_customInspectorName ); } }
 		public string CroppedShaderName { get { return m_croppedShaderName; } }
-		public AvailableShaderTypes CurrentMasterNodeCategory { get { return ( m_masterNodeCategory == 0 ) ? AvailableShaderTypes.SurfaceShader : AvailableShaderTypes.Template; } }
+		public virtual AvailableShaderTypes CurrentMasterNodeCategory { get { return ( m_masterNodeCategory == 0 ) ? AvailableShaderTypes.SurfaceShader : AvailableShaderTypes.Template; } }
 		public int CurrentMasterNodeCategoryIdx { get { return m_masterNodeCategory; } }
 		public MasterNodeDataCollector CurrentDataCollector { get { return m_currentDataCollector; } set { m_currentDataCollector = value; } }
 		public List<PropertyNode> PropertyNodesVisibleList { get { return m_propertyNodesVisibleList; } }
@@ -973,6 +1005,16 @@ namespace AmplifyShaderEditor
 			set
 			{
 				m_shaderLOD = Mathf.Max( 0, value );
+			}
+		}
+		public bool SamplingMacros 
+		{
+			get { return m_samplingMacros; }
+			set
+			{
+				m_samplingMacros = value;
+				if( IsLODMainMasterNode )
+					ContainerGraph.SamplingMacros = value;
 			}
 		}
 	}

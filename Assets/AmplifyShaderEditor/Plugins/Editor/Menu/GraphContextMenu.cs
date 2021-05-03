@@ -91,7 +91,25 @@ namespace AmplifyShaderEditor
 			try
 			{
 				//IEnumerable<System.Type> availableTypes = AppDomain.CurrentDomain.GetAssemblies().ToList().SelectMany( type => type.GetTypes() );
-				Type[] availableTypes = GetTypesInNamespace( Assembly.GetExecutingAssembly(), "AmplifyShaderEditor" );
+				var mainAssembly = Assembly.GetExecutingAssembly();
+				Type[] availableTypes = GetTypesInNamespace( mainAssembly, "AmplifyShaderEditor" );
+
+#if UNITY_2017_3_OR_NEWER
+				try
+				{
+					var editorAssembly = Assembly.Load( "Assembly-CSharp-Editor" );
+					if( mainAssembly != editorAssembly )
+					{
+						Type[] extraTypes = GetTypesInNamespace( editorAssembly, "AmplifyShaderEditor" );
+						availableTypes = availableTypes.Concat<Type>( extraTypes ).ToArray();
+					}
+				}
+				catch( Exception )
+				{
+					// quiet catch because we don't care if it fails to find the assembly, we'll just skip it
+				}
+#endif
+
 				foreach( System.Type type in availableTypes )
 				{
 					foreach( NodeAttributes attribute in Attribute.GetCustomAttributes( type ).OfType<NodeAttributes>() )

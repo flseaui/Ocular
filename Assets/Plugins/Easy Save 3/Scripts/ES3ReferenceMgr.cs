@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ES3Internal;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -9,93 +10,108 @@ using System.Reflection;
 using System;
 #endif
 
-public class ES3ReferenceMgr : ES3ReferenceMgrBase, ISerializationCallbackReceiver 
+public class ES3ReferenceMgr : ES3ReferenceMgrBase
 {
-	public void OnBeforeSerialize()
-	{
-		#if UNITY_EDITOR
-		// This is called before building or when things are being serialised before pressing play.
-		if(BuildPipeline.isBuildingPlayer || (EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying))
-		{
-			AddPrefabsToManager();
-			RemoveNullValues();
-		}
-		#endif
-	}
+#if UNITY_EDITOR
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public void RefreshDependencies(bool isEnteringPlayMode = false)
+    {
+        ES3ReferenceMgrBase.isEnteringPlayMode = isEnteringPlayMode;
 
-	public void OnAfterDeserialize(){}
+        // If we're not adding all prefabs to the manager, clear the prefabs array each time we refresh the dependencies.
+        if (!ES3Settings.defaultSettingsScriptableObject.addAllPrefabsToManager)
+            prefabs.Clear();
 
-	#if UNITY_EDITOR
-
-	public void RefreshDependencies()
-	{
-		var gos = EditorSceneManager.GetActiveScene().GetRootGameObjects();
-		// Remove Easy Save 3 Manager from dependency list
-		AddDependencies(gos);
-	}
-
-	public void AddDependencies(UnityEngine.Object[] objs, float timeoutSecs=2)
-	{
-		var startTime = Time.realtimeSinceStartup;
-        
-        foreach(var obj in objs)
-        {
-        	if(Time.realtimeSinceStartup - startTime > timeoutSecs)
-        		break;
-        	
-        	if(obj.name == "Easy Save 3 Manager")
-        		 continue;
-        	
-    	    var dependencies = EditorUtility.CollectDependencies(new UnityEngine.Object[]{obj});
-    
-    		foreach(var dependency in dependencies)
-    		{
-    			if(dependency == null || !CanBeSaved(dependency))
-    				continue;
-    
-    			Add(dependency);
-    		}
-        }
-        Undo.RecordObject(this, "Update Easy Save 3 Reference List");
-	}
-
-	public void GeneratePrefabReferences()
-	{
-		AddPrefabsToManager();
-		foreach(var es3Prefab in prefabs)
-			es3Prefab.GeneratePrefabReferences();
+        // This will get the dependencies for all GameObjects and Components from the active scene.
+        AddDependencies(this.gameObject.scene.GetRootGameObjects());
+        AddPrefabsToManager();
+        RemoveNullValues();
+        ES3ReferenceMgrBase.isEnteringPlayMode = false;
     }
-    
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public void Optimize()
+    {
+        var dependencies = CollectDependencies(this.gameObject.scene.GetRootGameObjects());
+        var notDependenciesOfScene = new HashSet<UnityEngine.Object>();
+
+        foreach (var kvp in idRef)
+            if (!dependencies.Contains(kvp.Value))
+                notDependenciesOfScene.Add(kvp.Value);
+
+        foreach (var obj in notDependenciesOfScene)
+        {
+            Remove(obj);
+        }
+    }
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public void AddDependencies(UnityEngine.Object[] objs)
+    {
+        for (int i = 0; i < objs.Length; i++)
+        {
+            var obj = objs[i];
+
+            if (obj.name == "Easy Save 3 Manager")
+                continue;
+
+            var dependencies = CollectDependencies(obj);
+
+            foreach (var dependency in dependencies)
+            {
+                if (dependency != null)
+                {
+                    Add(dependency);
+
+                    // Add the prefab if it's referenced by this scene.
+                    if (dependency.GetType() == typeof(ES3Prefab))
+                        AddPrefabToManager((ES3Prefab)dependency);
+                }
+            }
+        }
+
+        Undo.RecordObject(this, "Update Easy Save 3 Reference List");
+    }
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public void AddDependencies(UnityEngine.Object obj)
+    {
+        AddDependencies(new UnityEngine.Object[] { obj });
+    }
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    public void GeneratePrefabReferences()
+    {
+        AddPrefabsToManager();
+        foreach (var es3Prefab in prefabs)
+            es3Prefab.GeneratePrefabReferences();
+    }
+
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public void AddPrefabsToManager()
-	{
-		if(this.prefabs.RemoveAll(item => item == null) > 0)
-			Undo.RecordObject(this, "Update Easy Save 3 Reference List");
-			
-		foreach(var es3Prefab in Resources.FindObjectsOfTypeAll<ES3Prefab>())
-		{
-			if(GetPrefab(es3Prefab) == -1)
-			{
-				AddPrefab(es3Prefab);
-				Undo.RecordObject(this, "Update Easy Save 3 Reference List");
-			}
-		}
-	}
+    {
+        if (ES3Settings.defaultSettingsScriptableObject.addAllPrefabsToManager)
+        {
+            // Clear any null values. This isn't necessary if we're not adding all prefabs to manager as the list is cleared each time.
+            if (this.prefabs.RemoveAll(item => item == null) > 0)
+                Undo.RecordObject(this, "Update Easy Save 3 Reference List");
 
-    public static bool CanBeSaved(UnityEngine.Object obj)
-	{
-		// Check if any of the hide flags determine that it should not be saved.
-		if(	(((obj.hideFlags & HideFlags.DontSave) == HideFlags.DontSave) || 
-		     ((obj.hideFlags & HideFlags.DontSaveInBuild) == HideFlags.DontSaveInBuild) ||
-		     ((obj.hideFlags & HideFlags.DontSaveInEditor) == HideFlags.DontSaveInEditor) ||
-		     ((obj.hideFlags & HideFlags.HideAndDontSave) == HideFlags.HideAndDontSave)))
-		{
-			var type = obj.GetType();
-			// Meshes are marked with HideAndDontSave, but shouldn't be ignored.
-			if(type != typeof(Mesh) && type != typeof(Material))
-				return false;
-		}
-		return true;
-	}
+            foreach (var es3Prefab in Resources.FindObjectsOfTypeAll<ES3Prefab>())
+                AddPrefabToManager(es3Prefab);
+        }
+    }
 
-	#endif
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    private void AddPrefabToManager(ES3Prefab es3Prefab)
+    {
+            try
+            {
+                if (es3Prefab != null && EditorUtility.IsPersistent(es3Prefab))
+                    if(AddPrefab(es3Prefab))
+                        Undo.RecordObject(this, "Update Easy Save 3 Reference List");
+                es3Prefab.GeneratePrefabReferences();
+            }
+            catch { }
+    }
+#endif
 }

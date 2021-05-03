@@ -12,7 +12,11 @@ namespace DarkTonic.MasterAudio {
 		[Range(0f, 1f)]
 		public int probabilityToPlay = 100;
 
-		public bool useLocalization = false;
+        [Range(0f, 10f)]
+        public int importance = 5;
+        public bool isUninterruptible;
+
+        public bool useLocalization = false;
         public bool useRandomPitch = false;
         public SoundGroupVariation.RandomPitchMode randomPitchMode = SoundGroupVariation.RandomPitchMode.AddToClipPitch;
         public float randomPitchMin = 0f;
@@ -27,6 +31,7 @@ namespace DarkTonic.MasterAudio {
         public float randomVolumeMax = 0f;
 
         public int weight = 1;
+        public string clipAlias;
         public MasterAudio.AudioLocation audLocation = MasterAudio.AudioLocation.Clip;
         public string resourceFileName;
 #if ADDRESSABLES_ENABLED

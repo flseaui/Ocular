@@ -17,8 +17,7 @@ namespace ES3Types
 		protected override void WriteComponent(object obj, ES3Writer writer)
 		{
 			var instance = (UnityEngine.MeshFilter)obj;
-			
-			writer.WriteProperty("sharedMesh", instance.sharedMesh, ES3Type_Mesh.Instance);
+			writer.WritePropertyByRef("sharedMesh", instance.sharedMesh);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)

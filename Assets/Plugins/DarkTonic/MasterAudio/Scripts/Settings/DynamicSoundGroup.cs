@@ -35,8 +35,20 @@ namespace DarkTonic.MasterAudio {
 
         public int busIndex = -1;
 
+        public bool ignoreListenerPause = false;
+
+        [Range(0f, 10f)]
+        public int importance = 5;
+        public bool isUninterruptible;
+
+#if DISABLE_3D_SOUND
+        public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo2D;
+#else
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo3D;
-		public float spatialBlend = 1f;
+#endif
+        public float spatialBlend = 1f;
+
+        public MasterAudio.DefaultGroupPlayType groupPlayType = MasterAudio.DefaultGroupPlayType.Always;
 
         public string busName = string.Empty; // only used to remember the bus name during group creation.
 		public bool isExistingBus; // marked from DGSC's only

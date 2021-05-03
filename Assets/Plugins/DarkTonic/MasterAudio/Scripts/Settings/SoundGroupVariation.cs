@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+#if UNITY_2019_3_OR_NEWER
+using UnityEngine.Video;
+#endif
 #if ADDRESSABLES_ENABLED
 using UnityEngine.AddressableAssets;
 #endif
@@ -20,6 +23,10 @@ namespace DarkTonic.MasterAudio {
         [Range(0f, 1f)]
         public int probabilityToPlay = 100;
 
+        [Range(0f, 10f)]
+        public int importance = 5;
+        public bool isUninterruptible;
+
         public bool useLocalization = false;
 
         public bool useRandomPitch = false;
@@ -32,6 +39,7 @@ namespace DarkTonic.MasterAudio {
         public float randomVolumeMin = 0f;
         public float randomVolumeMax = 0f;
 
+        public string clipAlias;
         public MasterAudio.AudioLocation audLocation = MasterAudio.AudioLocation.Clip;
         public string resourceFileName;
 #if ADDRESSABLES_ENABLED
@@ -207,9 +215,39 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-            GameObj.layer = MasterAudio.Instance.gameObject.layer;
-
             var shouldDisableVariation = true;
+#if UNITY_2019_3_OR_NEWER && VIDEO_ENABLED
+            if (MasterAudio.IsVideoPlayersGroup(ParentGroup.name))
+            {
+                if (audLocation != MasterAudio.AudioLocation.Clip)
+                {
+                    Debug.LogError("The Variation '" + name + "' in Sound Group '" + MasterAudio.VideoPlayerSoundGroupName + "' has Audio Origin set to something other than 'Audio Clip'. This Sound Group is used for Video Players and cannot use other Audio Origins.");
+                } else if (weight != 1)
+                {
+                    Debug.LogError("The Variation '" + name + "' in Sound Group '" + MasterAudio.VideoPlayerSoundGroupName + "' has Weight set to " + weight + ". This Sound Group is used for Video Players and does not allow Weights other than 1.");
+                } else if (VarAudio.clip != null)
+                {
+                    Debug.LogError("The Variation '" + name + "' in Sound Group '" + MasterAudio.VideoPlayerSoundGroupName + "' has an Audio Clip assigned. This Sound Group is used for Video Players and does not allow Audio Clips.");
+                } else {
+                    var videoPlayers = MasterAudio.Instance.videoPlayers.FindAll(delegate (VideoPlayer vid)
+                    {
+                        return vid.name == name;
+                    });
+                    if (videoPlayers.Count > 1)
+                    {
+                        Debug.LogError("You have more than one Video Player with the same name of '" + name + "'. Please make sure the Game Objects for the Video Players are unique.");
+                    } else if (videoPlayers.Count == 1) {
+                        // set initial volume for video that is "Play on Awake"
+                        var busVolume = MasterAudio.GetBusVolume(ParentGroup);
+                        var calcVolume = VarAudio.volume * ParentGroup.groupMasterVolume * busVolume * MasterAudio.Instance._masterAudioVolume;
+                        VarAudio.volume = calcVolume;
+                        original_volume = calcVolume;
+                    }
+                }
+            }
+#endif
+
+            GameObj.layer = MasterAudio.Instance.gameObject.layer;
 
             switch (audLocation) {
 #if ADDRESSABLES_ENABLED
@@ -230,7 +268,15 @@ namespace DarkTonic.MasterAudio {
 
             SetOcclusion();
 
+            VarAudio.ignoreListenerPause = ParentGroup.ignoreListenerPause;
+
             SpatializerHelper.TurnOnSpatializerIfEnabled(VarAudio);
+
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (shouldDisableVariation && _isWarmingPlay)
+            {
+                shouldDisableVariation = false;
+            }
 
             if (shouldDisableVariation) {
                 DTMonoHelper.SetActive(GameObj, false); // should begin disabled
@@ -377,6 +423,7 @@ namespace DarkTonic.MasterAudio {
 
             // in case it was changed at runtime.
             SetSpatialBlend();
+            SpatializerHelper.TurnOnSpatializerIfEnabled(VarAudio);
 
             // set fade mode
             curFadeMode = FadeMode.None;
@@ -621,6 +668,24 @@ namespace DarkTonic.MasterAudio {
             curPitchMode = PitchMode.None;
         }
 
+        /*! \cond PRIVATE */
+        /// <summary>
+        /// Used by Master Audio to play a video player's audio.
+        /// </summary>
+        public void PlayVideo()
+        {
+            ParentGroup.AddActiveAudioSourceId(InstanceId);
+        }
+
+        /// <summary>
+        /// Used by Master Audio to stop playing a video player's audio.
+        /// </summary>
+        public void StopVideo()
+        {
+            ParentGroup.RemoveActiveAudioSourceId(InstanceId);
+        }
+        /*! \endcond */
+
         /// <summary>
         /// This method allows you to unpause the audio being played by this Variation.
         /// </summary>
@@ -694,6 +759,7 @@ namespace DarkTonic.MasterAudio {
         private void MaybeUnloadClip() {
             VarAudio.Stop();
             VarAudio.time = 0f;
+            MasterAudio.EndDucking(VariationUpdater);
 
             switch (audLocation) { 
                 case MasterAudio.AudioLocation.ResourceFile:
@@ -723,12 +789,20 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-        /// <summary>
-        /// This method allows you to stop the audio being played by this Variation. 
-        /// </summary>
-        /// <param name="stopEndDetection">Do not ever pass this in.</param>
-        /// <param name="skipLinked">Do not ever pass this in.</param>
+		/// <summary>
+		/// This method allows you to stop the audio being played by this Variation. 
+		/// This will stop the sound immediately without respecting any fades. 
+		/// For fading out before stopping the sound: use FadeOutNow method instead 
+		/// and check "Sound Groups" under Fading Settings in the Advanced Settings section of Master Audio.
+		/// </summary>
+		/// <param name="stopEndDetection">Do not ever pass this in.</param>
+		/// <param name="skipLinked">Do not ever pass this in.</param>
         public void Stop(bool stopEndDetection = false, bool skipLinked = false) {
+            if (MasterAudio.IsVideoPlayersGroup(ParentGroup.name))
+            {
+                return;
+            }
+            
             if (IsPlaying && !_isStopRequested) {
                 _isStopRequested = true;
             }
@@ -798,7 +872,8 @@ namespace DarkTonic.MasterAudio {
         /*! \cond PRIVATE */
         private void StopEndCleanup() {
             MaybeUnloadClip();
-            if (!_isWarmingPlay) {
+            if (!_isWarmingPlay)
+            {
                 DTMonoHelper.SetActive(GameObj, false);
             }
         }
@@ -806,7 +881,8 @@ namespace DarkTonic.MasterAudio {
         private IEnumerator WaitForLoadToUnloadClipAndDeactivate() {
             _isUnloadAddressableCoroutineRunning = true;
 
-            while (_loadStatus == MasterAudio.VariationLoadStatus.Loading) {
+            while (_loadStatus == MasterAudio.VariationLoadStatus.Loading)
+            {
                 yield return MasterAudio.EndOfFrameDelay;
             }
 
@@ -820,7 +896,8 @@ namespace DarkTonic.MasterAudio {
         /// </summary>
         /// <param name="newVolume">The target volume to fade to.</param>
         /// <param name="fadeTime">The time it will take to fully fade to the target volume.</param>
-        public void FadeToVolume(float newVolume, float fadeTime) {
+        /// <param name="completionCallback">(Optional) - a method to execute when the fade is complete.</param>
+        public void FadeToVolume(float newVolume, float fadeTime, System.Action completionCallback = null) {
             if (newVolume < 0f || newVolume > 1f) {
                 Debug.LogError("Illegal volume passed to FadeToVolume: '" + newVolume + "'. Legal volumes are between 0 and 1.");
                 return;
@@ -842,20 +919,21 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (VariationUpdater != null) {
-                VariationUpdater.FadeOverTimeToVolume(newVolume, fadeTime);
+                VariationUpdater.FadeOverTimeToVolume(newVolume, fadeTime, completionCallback);
             }
         }
 
         /// <summary>
-        /// This method will fully fade out the sound from this Variation to zero using its existing fadeOutTime.
+        /// This method will fully fade out the sound from this Variation to zero using its existing fadeOutTime, then stop the Audio Source.
         /// </summary>
-        public void FadeOutNow() {
+        /// <param name="completionCallback">(Optional) - a method to execute when the fade is complete.</param>
+        public void FadeOutNowAndStop(System.Action completionCallback = null) {
             if (MasterAudio.AppIsShuttingDown) {
                 return;
             }
 
             if (IsPlaying && useFades && VariationUpdater != null) {
-                VariationUpdater.FadeOutEarly(fadeOutTime);
+                VariationUpdater.FadeOutEarly(fadeOutTime, completionCallback);
             }
         }
 
@@ -863,13 +941,14 @@ namespace DarkTonic.MasterAudio {
         /// This method will fully fade out the sound from this Variation to zero using over X seconds.
         /// </summary>
         /// <param name="fadeTime">The time it will take to fully fade to the target volume.</param>
-        public void FadeOutNow(float fadeTime) {
+        /// <param name="completionCallback">(Optional) - a method to execute when the fade is complete.</param>
+        public void FadeOutNowAndStop(float fadeTime, System.Action completionCallback = null) {
             if (MasterAudio.AppIsShuttingDown) {
                 return;
             }
 
             if (IsPlaying && VariationUpdater != null) {
-                VariationUpdater.FadeOutEarly(fadeTime);
+                VariationUpdater.FadeOutEarly(fadeTime, completionCallback);
             }
         }
 
@@ -1129,6 +1208,9 @@ namespace DarkTonic.MasterAudio {
         /// </summary>
         public float LastTimePlayed { get; set; }
 
+        /// <summary>
+        /// This property lets you know whether the clip is ready to play or not.
+        /// </summary>
         public bool ClipIsLoaded {
             get {
                 return _loadStatus == MasterAudio.VariationLoadStatus.Loaded;
@@ -1282,6 +1364,11 @@ namespace DarkTonic.MasterAudio {
                 }
 
                 if (Is2D) {
+                    return false;
+                }
+
+                if (MasterAudio.IsVideoPlayersGroup(ParentGroup.name))
+                {
                     return false;
                 }
 

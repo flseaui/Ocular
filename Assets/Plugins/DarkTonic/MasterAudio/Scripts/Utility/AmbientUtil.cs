@@ -187,6 +187,14 @@ namespace DarkTonic.MasterAudio {
             get { return _listenerFollower != null; }
         }
 
+        public static int AmbientCount
+        {
+            get
+            {
+                return _transformFollowers.Count;
+            }
+        }
+
         public static bool HasListenerFolowerRigidBody {
             get {
 #if PHY3D_ENABLED

@@ -191,7 +191,9 @@ namespace AmplifyShaderEditor
 		private void DrawPicker( ref UndoParentNode owner, string content )
 		{
 			EditorGUILayout.BeginHorizontal();
-			m_nodeId = owner.EditorGUILayoutIntPopup( content, m_nodeId, UIUtils.FloatIntNodeArr(), UIUtils.FloatIntNodeIds() );
+			string[] intArraysNames = owner.ContainerGraph.ParentWindow.CurrentGraph.FloatIntNodes.NodesArr;
+			int[] intIds = owner.ContainerGraph.ParentWindow.CurrentGraph.FloatIntNodes.NodeIds;
+			m_nodeId = owner.EditorGUILayoutIntPopup( content, m_nodeId, intArraysNames, intIds );
 			if( GUILayout.Button( UIUtils.FloatIntIconOFF, UIUtils.FloatIntPickerONOFF, GUILayout.Width( 15 ), GUILayout.Height( 15 ) ) )
 				m_active = !m_active;
 			EditorGUILayout.EndHorizontal();
@@ -257,7 +259,7 @@ namespace AmplifyShaderEditor
 		public void ReadFromSingle( string singleLine )
 		{
 			string[] data = singleLine.Split( IOUtils.VECTOR_SEPARATOR );
-			m_value = Convert.ToSingle( data[ 0 ] );
+			m_value = Convert.ToSingle( data[ 0 ], System.Globalization.CultureInfo.InvariantCulture );
 			m_active = Convert.ToBoolean( data[ 1 ] );
 			m_nodeId = Convert.ToInt32( data[ 2 ] );
 		}
@@ -271,7 +273,7 @@ namespace AmplifyShaderEditor
 
 		public string WriteToSingle()
 		{
-			return m_value.ToString() + IOUtils.VECTOR_SEPARATOR + m_active + IOUtils.VECTOR_SEPARATOR + m_nodeId;
+			return m_value.ToString( System.Globalization.CultureInfo.InvariantCulture ) + IOUtils.VECTOR_SEPARATOR + m_active + IOUtils.VECTOR_SEPARATOR + m_nodeId;
 		}
 
 		public void SetInlineNodeValue()

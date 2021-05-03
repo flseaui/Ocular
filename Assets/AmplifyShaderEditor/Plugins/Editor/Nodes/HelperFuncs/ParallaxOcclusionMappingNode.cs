@@ -56,14 +56,6 @@ namespace AmplifyShaderEditor
 		[SerializeField]
 		private bool m_useCurvature = false;
 
-		//[SerializeField]
-		//private bool m_useTextureArray = false;
-		[SerializeField]
-		private POMTexTypes m_pomTexType = POMTexTypes.Texture2D;
-
-		//[SerializeField]
-		//private bool m_useCurvature = false;
-
 		[SerializeField]
 		private Vector2 m_CurvatureVector = new Vector2( 0, 0 );
 		
@@ -74,6 +66,7 @@ namespace AmplifyShaderEditor
 		
 		private InputPort m_uvPort;
 		private InputPort m_texPort;
+		private InputPort m_ssPort;
 		private InputPort m_scalePort;
 		private InputPort m_viewdirTanPort;
 		private InputPort m_refPlanePort;
@@ -87,23 +80,29 @@ namespace AmplifyShaderEditor
 		protected override void CommonInit( int uniqueId )
 		{
 			base.CommonInit( uniqueId );
-			AddInputPort( WirePortDataType.FLOAT2, false, "UV" );
-			AddInputPort( WirePortDataType.SAMPLER2D, false, "Tex" );
-			AddInputPort( WirePortDataType.FLOAT, false, "Scale" );
-			AddInputPort( WirePortDataType.FLOAT3, false, "ViewDir (tan)" );
-			AddInputPort( WirePortDataType.FLOAT, false, "Ref Plane" );
-			AddInputPort( WirePortDataType.FLOAT2, false, "Curvature" );
-			AddInputPort( WirePortDataType.FLOAT, false, ArrayIndexStr );
+			AddInputPort( WirePortDataType.FLOAT2, false, "UV",-1,MasterNodePortCategory.Fragment,0);
+			AddInputPort( WirePortDataType.SAMPLER2D, false, "Tex", -1, MasterNodePortCategory.Fragment, 1 );
+			AddInputPort( WirePortDataType.SAMPLERSTATE, false, "SS", -1, MasterNodePortCategory.Fragment, 7 );
+			AddInputPort( WirePortDataType.FLOAT, false, "Scale", -1, MasterNodePortCategory.Fragment, 2 );
+			AddInputPort( WirePortDataType.FLOAT3, false, "ViewDir (tan)", -1, MasterNodePortCategory.Fragment, 3 );
+			AddInputPort( WirePortDataType.FLOAT, false, "Ref Plane", -1, MasterNodePortCategory.Fragment, 4 );
+			AddInputPort( WirePortDataType.FLOAT2, false, "Curvature", -1, MasterNodePortCategory.Fragment, 5 );
+			AddInputPort( WirePortDataType.FLOAT, false, ArrayIndexStr, -1, MasterNodePortCategory.Fragment, 6 );
+
 			AddOutputPort( WirePortDataType.FLOAT2, "Out" );
 
-			m_uvPort = m_inputPorts[ 0 ];
-			m_texPort = m_inputPorts[ 1 ];
-			m_scalePort = m_inputPorts[ 2 ];
-			m_viewdirTanPort = m_inputPorts[ 3 ];
-			m_refPlanePort = m_inputPorts[ 4 ];
+			m_uvPort = GetInputPortByUniqueId( 0 );
+			m_texPort = GetInputPortByUniqueId( 1 );
+			m_texPort.CreatePortRestrictions( WirePortDataType.SAMPLER2D, WirePortDataType.SAMPLER3D, WirePortDataType.SAMPLER2DARRAY );
+			m_ssPort = GetInputPortByUniqueId( 7 );
+			m_ssPort.CreatePortRestrictions( WirePortDataType.SAMPLERSTATE );
+			m_scalePort = GetInputPortByUniqueId( 2 );
+			m_viewdirTanPort = GetInputPortByUniqueId( 3 );
+			m_refPlanePort = GetInputPortByUniqueId( 4 );
 			m_pomUVPort = m_outputPorts[ 0 ];
-			m_curvaturePort = m_inputPorts[ 5 ];
-			m_arrayIndexPort = m_inputPorts[ 6 ];
+			m_curvaturePort = GetInputPortByUniqueId( 5 );
+			m_arrayIndexPort = GetInputPortByUniqueId( 6 );
+
 			m_scalePort.FloatInternalData = 0.02f;
 			m_useInternalPortData = false;
 			m_textLabelWidth = 130;
@@ -111,6 +110,27 @@ namespace AmplifyShaderEditor
 			m_curvaturePort.Visible = false;
 			m_arrayIndexPort.Visible = false;
 			UpdateSampler();
+		}
+
+		public override void OnInputPortConnected( int portId, int otherNodeId, int otherPortId, bool activateNode = true )
+		{
+			base.OnInputPortConnected( portId, otherNodeId, otherPortId, activateNode );
+			m_texPort.MatchPortToConnection();
+			UpdateIndexPort();
+		}
+
+		public override void OnConnectedOutputNodeChanges( int outputPortId, int otherNodeId, int otherPortId, string name, WirePortDataType type )
+		{
+			base.OnConnectedOutputNodeChanges( outputPortId, otherNodeId, otherPortId, name, type );
+			if( !m_texPort.CheckValidType( type ) )
+			{
+				m_texPort.FullDeleteConnections();
+				UIUtils.ShowMessage( UniqueId, "Parallax Occlusion Mapping node only accepts SAMPLER2D, SAMPLER3D and SAMPLER2DARRAY input types.\nTexture Object connected changed to "+ type + ", connection was lost, please review and update accordingly.", MessageSeverity.Warning );
+			} else
+			{
+				m_texPort.MatchPortToConnection();
+			}
+			UpdateIndexPort();
 		}
 
 		public override void DrawProperties()
@@ -122,9 +142,8 @@ namespace AmplifyShaderEditor
 			if ( EditorGUI.EndChangeCheck() )
 			{
 				UpdateSampler();
-				GeneratePOMfunction();
 			}
-			EditorGUIUtility.labelWidth = 105;
+			//EditorGUIUtility.labelWidth = 105;
 
 			//m_minSamples = EditorGUILayoutIntSlider( "Min Samples", m_minSamples, 1, 128 );
 			UndoParentNode inst = this;
@@ -132,13 +151,7 @@ namespace AmplifyShaderEditor
 			//m_maxSamples = EditorGUILayoutIntSlider( "Max Samples", m_maxSamples, 1, 128 );
 			m_inlineMaxSamples.CustomDrawer( ref inst, ( x ) => { m_inlineMaxSamples.IntValue = EditorGUILayoutIntSlider( "Max Samples", m_inlineMaxSamples.IntValue, 1, 128 ); }, "Max Samples" );
 
-			EditorGUI.BeginChangeCheck();
 			m_sidewallSteps = EditorGUILayoutIntSlider( "Sidewall Steps", m_sidewallSteps, 0, 10 );
-			if ( EditorGUI.EndChangeCheck() )
-			{
-				GeneratePOMfunction();
-			}
-
 
 			EditorGUI.BeginDisabledGroup(m_scalePort.IsConnected );
 			m_defaultScale = EditorGUILayoutSlider( "Default Scale", m_defaultScale, 0, 1 );
@@ -147,17 +160,7 @@ namespace AmplifyShaderEditor
 			EditorGUI.BeginDisabledGroup( m_refPlanePort.IsConnected );
 			m_defaultRefPlane = EditorGUILayoutSlider( "Default Ref Plane", m_defaultRefPlane, 0, 1 );
 			EditorGUI.EndDisabledGroup();
-			EditorGUIUtility.labelWidth = m_textLabelWidth;
-			EditorGUI.BeginChangeCheck();
-			//m_useTextureArray = EditorGUILayoutToggle( "Use Texture Array", m_useTextureArray );
-			m_pomTexType = (POMTexTypes)EditorGUILayoutEnumPopup( "Texture Type", m_pomTexType );
-			if( EditorGUI.EndChangeCheck() )
-			{
-				UpdateIndexPort();
-				m_sizeIsDirty = true;
-				GeneratePOMfunction();
-				//UpdateCurvaturePort();
-			}
+			//EditorGUIUtility.labelWidth = m_textLabelWidth;
 
 			if( m_arrayIndexPort.Visible && !m_arrayIndexPort.IsConnected )
 			{
@@ -180,7 +183,6 @@ namespace AmplifyShaderEditor
 			m_useCurvature = EditorGUILayoutToggle( "Clip Silhouette", m_useCurvature );
 			if ( EditorGUI.EndChangeCheck() )
 			{
-				GeneratePOMfunction();
 				UpdateCurvaturePort();
 			}
 
@@ -196,11 +198,12 @@ namespace AmplifyShaderEditor
 
 		private void UpdateIndexPort()
 		{
-			m_arrayIndexPort.Visible = m_pomTexType != POMTexTypes.Texture2D;
+			m_arrayIndexPort.Visible = m_texPort.DataType != WirePortDataType.SAMPLER2D;
 			if( m_arrayIndexPort.Visible )
 			{
-				m_arrayIndexPort.Name = m_pomTexType == POMTexTypes.Texture3D ? Tex3DSliceStr : ArrayIndexStr;
+				m_arrayIndexPort.Name = m_texPort.DataType == WirePortDataType.SAMPLER3D ? Tex3DSliceStr : ArrayIndexStr;
 			}
+			SizeIsDirty = true;
 		}
 
 		private void UpdateSampler()
@@ -226,19 +229,19 @@ namespace AmplifyShaderEditor
 				return "0";
 			}
 			base.GenerateShaderForOutput( outputId, ref dataCollector, ignoreLocalvar );
-			WirePortDataType texType = ( m_pomTexType == POMTexTypes.Texture3D )?WirePortDataType.SAMPLER3D: WirePortDataType.SAMPLER2D;
+			ParentGraph outsideGraph = UIUtils.CurrentWindow.OutsideGraph;
 
-			GeneratePOMfunction();
 			string arrayIndex = m_arrayIndexPort.Visible?m_arrayIndexPort.GeneratePortInstructions( ref dataCollector ):"0";
 			string textcoords = m_uvPort.GeneratePortInstructions( ref dataCollector );
-			if( m_pomTexType == POMTexTypes.Texture3D )
+			if( m_texPort.DataType == WirePortDataType.SAMPLER3D )
 			{
 				string texName = "pomTexCoord" + OutputId;
 				dataCollector.AddLocalVariable( UniqueId, CurrentPrecisionType, WirePortDataType.FLOAT3, texName, string.Format( "float3({0},{1})", textcoords, arrayIndex ) );
 				textcoords = texName;
 			}
 
-			string texture = m_texPort.GenerateShaderForOutput( ref dataCollector, texType,false,true );
+			string texture = m_texPort.GeneratePortInstructions( ref dataCollector );
+			GeneratePOMfunction( ref dataCollector );
 			string scale = m_defaultScale.ToString();
 			if( m_scalePort.IsConnected )
 				scale = m_scalePort.GeneratePortInstructions( ref dataCollector );
@@ -279,26 +282,8 @@ namespace AmplifyShaderEditor
 				normalWorld = GeneratorUtils.GenerateWorldNormal( ref dataCollector, UniqueId );
 			}
 
-			//string normalWorld = "WorldNormalVector( " + Constants.InputVarStr + ", float3( 0, 0, 1 ) )";
-
-			//generate viewDir in world space
-
-			//string worldPos = string.Empty;
-			//if( dataCollector.IsTemplate )
-			//{
-			//	worldPos = dataCollector.TemplateDataCollectorInstance.GetWorldPos();
-			//}
-			//else
-			//{
-			//	dataCollector.AddToInput( UniqueId, SurfaceInputs.WORLD_POS );
-			//	worldPos = Constants.InputVarStr + ".worldPos";
-			//}
-
-			//if( !dataCollector.IsTemplate )
-			//	dataCollector.AddToInput( UniqueId, SurfaceInputs.WORLD_POS );
-
 			string worldViewDir = GeneratorUtils.GenerateViewDirection( ref dataCollector, UniqueId, ViewSpace.World );
-			//dataCollector.AddToLocalVariables( UniqueId, m_currentPrecisionType, WirePortDataType.FLOAT3, WorldDirVarStr, TemplateHelperFunctions.WorldSpaceViewDir( dataCollector, worldPos, true ) );
+			
 			string dx = "ddx("+ textcoords + ")";
 			string dy = "ddy(" + textcoords + ")";
 
@@ -332,7 +317,7 @@ namespace AmplifyShaderEditor
 				m_texCoordsHelper.AddGlobalToSRPBatcher = true;
 			}
 
-			if( UIUtils.CurrentWindow.OutsideGraph.IsInstancedShader )
+			if( outsideGraph.IsInstancedShader )
 			{
 				m_texCoordsHelper.CurrentParameterType = PropertyType.InstancedProperty;
 			}
@@ -345,32 +330,39 @@ namespace AmplifyShaderEditor
 			textCoordsST = m_texCoordsHelper.GenerateShaderForOutput( 0, ref dataCollector, false );
 			//////
 
-			if( m_pomTexType == POMTexTypes.TextureArray )
-				dataCollector.UsingArrayDerivatives = true;
 			string textureArgs = string.Empty;
-			if( m_pomTexType == POMTexTypes.TextureArray )
+#if UNITY_2018_1_OR_NEWER
+			if( outsideGraph.SamplingMacros || m_texPort.DataType == WirePortDataType.SAMPLER2DARRAY )
+#else
+			if( ( outsideGraph.SamplingMacros && !outsideGraph.IsStandardSurface ) || m_texPort.DataType == WirePortDataType.SAMPLER2DARRAY )
+#endif
 			{
-				if( UIUtils.CurrentWindow.OutsideGraph.IsSRP )
+				string sampler = string.Empty;
+				if( m_ssPort.IsConnected )
 				{
-					textureArgs = "TEXTURE2D_ARRAY_ARGS( " + texture + ", sampler" + texture + ")";
+					sampler = m_ssPort.GeneratePortInstructions( ref dataCollector );
 				}
 				else
 				{
-					textureArgs = "UNITY_PASS_TEX2DARRAY(" + texture + ")";
+					sampler = GeneratorUtils.GenerateSamplerState( ref dataCollector, UniqueId, texture );
+				}
+				if( outsideGraph.IsSRP )
+				{
+					textureArgs = texture + ", " + sampler;
+				}
+				else
+				{
+#if !UNITY_2018_1_OR_NEWER
+					if( outsideGraph.IsStandardSurface )
+						textureArgs = "UNITY_PASS_TEX2DARRAY(" + texture + ")";
+					else
+#endif
+						textureArgs = texture + ", " + sampler;
 				}
 			}
 			else
 			{
-				bool sampleThroughMacros = UIUtils.CurrentWindow.OutsideGraph.SamplingThroughMacros;
-				if( sampleThroughMacros )
-				{
-					dataCollector.AddToUniforms( UniqueId, string.Format( Constants.SamplerDeclarationSRPMacros[ TextureType.Texture2D ], texture ) );
-					textureArgs = string.Format( "{0},sampler{0}", texture );
-				}
-				else
-				{
-					textureArgs = texture;
-				}
+				textureArgs = texture;
 			}
 			//string functionResult = dataCollector.AddFunctions( m_functionHeader, m_functionBody, ( (m_pomTexType == POMTexTypes.TextureArray) ? "UNITY_PASS_TEX2DARRAY(" + texture + ")": texture), textcoords, dx, dy, normalWorld, worldViewDir, viewDirTan, m_minSamples, m_maxSamples, scale, refPlane, texture+"_ST.xy", curvature, arrayIndex );
 			string functionResult = dataCollector.AddFunctions( m_functionHeader, m_functionBody, textureArgs, textcoords, dx, dy, normalWorld, worldViewDir, viewDirTan, m_inlineMinSamples.GetValueOrProperty(false), m_inlineMinSamples.GetValueOrProperty(false), scale, refPlane, textCoordsST + ".xy", curvature, arrayIndex );
@@ -380,30 +372,37 @@ namespace AmplifyShaderEditor
 			return GetOutputVectorItem( 0, outputId, localVarName );
 		}
 
-		private void GeneratePOMfunction()
+		private void GeneratePOMfunction( ref MasterNodeDataCollector dataCollector )
 		{
-			bool sampleThroughMacros = UIUtils.CurrentWindow.OutsideGraph.SamplingThroughMacros;
+			ParentGraph outsideGraph = UIUtils.CurrentWindow.OutsideGraph;
 			m_functionBody = string.Empty;
-			switch( m_pomTexType )
+			switch( m_texPort.DataType )
 			{
 				default:
-				case POMTexTypes.Texture2D:
+				case WirePortDataType.SAMPLER2D:
 				{
-					string sampleParam = sampleThroughMacros ? "TEXTURE2D_PARAM(heightMap,samplerheightMap)" : "sampler2D heightMap";
-					IOUtils.AddFunctionHeader( ref m_functionBody, string.Format("inline float2 POM( {0}, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )", sampleParam ));
+					string sampleParam = string.Empty;
+					sampleParam = GeneratorUtils.GetPropertyDeclaraction( "heightMap", TextureType.Texture2D, ", " ) + GeneratorUtils.GetSamplerDeclaraction( "samplerheightMap", TextureType.Texture2D, ", " );
+					IOUtils.AddFunctionHeader( ref m_functionBody, string.Format("inline float2 POM( {0}float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )", sampleParam ));
 				}
 				break;
-				case POMTexTypes.Texture3D:
+				case WirePortDataType.SAMPLER3D:
 				{
-					string sampleParam = sampleThroughMacros ? "TEXTURE3D_PARAM( heightMap,samplerheightMap) " : "sampler3D heightMap";
-					IOUtils.AddFunctionHeader( ref m_functionBody, string.Format("inline float2 POM( {0}, float3 uvs, float3 dx, float3 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )", sampleParam ) );
+					string sampleParam = string.Empty;
+					sampleParam = GeneratorUtils.GetPropertyDeclaraction( "heightMap", TextureType.Texture3D, ", " ) + GeneratorUtils.GetSamplerDeclaraction( "samplerheightMap", TextureType.Texture3D, ", " );
+					IOUtils.AddFunctionHeader( ref m_functionBody, string.Format("inline float2 POM( {0}float3 uvs, float3 dx, float3 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )", sampleParam ) );
 				}
 				break;
-				case POMTexTypes.TextureArray:
-				if( UIUtils.CurrentWindow.OutsideGraph.IsSRP )
-					IOUtils.AddFunctionHeader( ref m_functionBody, "inline float2 POM( TEXTURE2D_ARRAY_PARAM(heightMap,samplerheightMap), float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )" );
+				case WirePortDataType.SAMPLER2DARRAY:
+				if( outsideGraph.IsSRP )
+					IOUtils.AddFunctionHeader( ref m_functionBody, "inline float2 POM( TEXTURE2D_ARRAY(heightMap), SAMPLER(samplerheightMap), float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )" );
 				else
-					IOUtils.AddFunctionHeader( ref m_functionBody, "inline float2 POM( UNITY_ARGS_TEX2DARRAY(heightMap), float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )" );
+#if !UNITY_2018_1_OR_NEWER
+					if( outsideGraph.IsStandardSurface )
+						IOUtils.AddFunctionHeader( ref m_functionBody, "inline float2 POM( UNITY_ARGS_TEX2DARRAY(heightMap), float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )" );
+					else
+#endif
+						IOUtils.AddFunctionHeader( ref m_functionBody, "inline float2 POM( UNITY_DECLARE_TEX2DARRAY_NOSAMPLER(heightMap), SamplerState samplerheightMap, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, float parallax, float refPlane, float2 tilling, float2 curv, int index )" );
 				break;
 			}
 			
@@ -414,21 +413,7 @@ namespace AmplifyShaderEditor
 			IOUtils.AddFunctionLine( ref m_functionBody, "int numSteps = ( int )lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) );" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "float layerHeight = 1.0 / numSteps;" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "float2 plane = parallax * ( viewDirTan.xy / viewDirTan.z );" );
-
-			switch( m_pomTexType )
-			{
-				default:
-				case POMTexTypes.Texture2D:
-				IOUtils.AddFunctionLine( ref m_functionBody, "uvs += refPlane * plane;" );
-				break;
-				case POMTexTypes.Texture3D:
-				IOUtils.AddFunctionLine( ref m_functionBody, "uvs.xy += refPlane * plane;" );
-				break;
-				case POMTexTypes.TextureArray:
-				IOUtils.AddFunctionLine( ref m_functionBody, "uvs += refPlane * plane;" );
-				break;
-			}
-			
+			IOUtils.AddFunctionLine( ref m_functionBody, "uvs.xy += refPlane * plane;" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "float2 deltaTex = -plane * layerHeight;" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "float2 prevTexOffset = 0;" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "float prevRayZ = 1.0f;" );
@@ -440,100 +425,42 @@ namespace AmplifyShaderEditor
 			IOUtils.AddFunctionLine( ref m_functionBody, "float2 finalTexOffset = 0;" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "while ( stepIndex < numSteps + 1 )" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "{" );
+
+			string textureProp = "heightMap";
+			string sampleState = "samplerheightMap";
+
+			string uvs = "uvs + currTexOffset";
+			if( m_texPort.DataType == WirePortDataType.SAMPLER3D )
+				uvs = "float3(uvs.xy + currTexOffset, uvs.z)";
+			else if( m_texPort.DataType == WirePortDataType.SAMPLER2DARRAY )
+				uvs = outsideGraph.IsSRP ? uvs + ", index" : "float3(" + uvs + ", index)";
+
+			string samplingCall = GeneratorUtils.GenerateSamplingCall( ref dataCollector, m_texPort.DataType, textureProp, sampleState, uvs, MipType.Derivative, "dx", "dy" );
 			if( m_useCurvature )
 			{
-				IOUtils.AddFunctionLine( ref m_functionBody, "	result.z = dot( curv, currTexOffset * currTexOffset );" );
-
-
-				switch( m_pomTexType )
-				{
-					default:
-					case POMTexTypes.Texture2D:
-					{
-						if( sampleThroughMacros )
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = SAMPLE_TEXTURE2D_GRAD( heightMap, samplerheightMap, uvs + currTexOffset, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
-						}
-						else
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = tex2Dgrad( heightMap, uvs + currTexOffset, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
-						}
-					}
-					break;
-					case POMTexTypes.Texture3D:
-					{
-						if( sampleThroughMacros )
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = SAMPLE_TEXTURE2D_GRAD( heightMap, samplerheightMap, uvs + float3(currTexOffset,0), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
-						}
-						else
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = tex3Dgrad( heightMap, uvs + float3(currTexOffset,0), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
-						}
-					}
-					break;
-					case POMTexTypes.TextureArray:
-					if( UIUtils.CurrentWindow.OutsideGraph.IsSRP )
-						IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = SAMPLE_TEXTURE2D_ARRAY_GRAD( heightMap,samplerheightMap, uvs + currTexOffset,index, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
-					else
-						IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = ASE_SAMPLE_TEX2DARRAY_GRAD( heightMap, float3(uvs + currTexOffset,index), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
-					break;
-				}
-				
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tresult.z = dot( curv, currTexOffset * currTexOffset );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tcurrHeight = " + samplingCall + "." + m_channelTypeVal[ m_selectedChannelInt ] + " * ( 1 - result.z );" );
 			}
 			else
 			{
-				switch( m_pomTexType )
-				{
-					default:
-					case POMTexTypes.Texture2D:
-					{
-						if( sampleThroughMacros )
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = SAMPLE_TEXTURE2D_GRAD( heightMap,samplerheightMap, uvs + currTexOffset, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-						else
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = tex2Dgrad( heightMap, uvs + currTexOffset, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-					}
-					break;
-					case POMTexTypes.Texture3D:
-					{
-						if( sampleThroughMacros )
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = SAMPLE_TEXTURE2D_GRAD( heightMap, samplerheightMap, uvs + float3(currTexOffset,0), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-						else
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = tex3Dgrad( heightMap, uvs + float3(currTexOffset,0), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-					}
-					break;
-					case POMTexTypes.TextureArray:
-					if( UIUtils.CurrentWindow.OutsideGraph.IsSRP )
-						IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = SAMPLE_TEXTURE2D_ARRAY_GRAD( heightMap, samplerheightMap, uvs + currTexOffset,index, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-					else
-						IOUtils.AddFunctionLine( ref m_functionBody, "	currHeight = ASE_SAMPLE_TEX2DARRAY_GRAD( heightMap,  float3(uvs + currTexOffset,index), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-					break;
-				}
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tcurrHeight = " + samplingCall + "." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
 			}
-			IOUtils.AddFunctionLine( ref m_functionBody, "	if ( currHeight > currRayZ )" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "	{" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "		stepIndex = numSteps + 1;" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "	}" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "	else" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "	{" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "		stepIndex++;" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "		prevTexOffset = currTexOffset;" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "		prevRayZ = currRayZ;" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "		prevHeight = currHeight;" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "		currTexOffset += deltaTex;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( currHeight > currRayZ )" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t{" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t \tstepIndex = numSteps + 1;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t}" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \telse" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t{" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t \tstepIndex++;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t \tprevTexOffset = currTexOffset;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t \tprevRayZ = currRayZ;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t \tprevHeight = currHeight;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t \tcurrTexOffset += deltaTex;" );
 			if ( m_useCurvature )
-				IOUtils.AddFunctionLine( ref m_functionBody, "		currRayZ -= layerHeight * ( 1 - result.z ) * (1+_CurvFix);" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tcurrRayZ -= layerHeight * ( 1 - result.z ) * (1+_CurvFix);" );
 			else
-				IOUtils.AddFunctionLine( ref m_functionBody, "		currRayZ -= layerHeight;" );
-			IOUtils.AddFunctionLine( ref m_functionBody, "	}" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tcurrRayZ -= layerHeight;" );
+			IOUtils.AddFunctionLine( ref m_functionBody, " \t}" );
 			IOUtils.AddFunctionLine( ref m_functionBody, "}" );
 
 			if ( m_sidewallSteps > 0 )
@@ -544,62 +471,36 @@ namespace AmplifyShaderEditor
 				IOUtils.AddFunctionLine( ref m_functionBody, "float newHeight = 0;" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "while ( sectionIndex < sectionSteps )" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "{" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	intersection = ( prevHeight - prevRayZ ) / ( prevHeight - currHeight + currRayZ - prevRayZ );" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	finalTexOffset = prevTexOffset + intersection * deltaTex;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	newZ = prevRayZ - intersection * layerHeight;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tintersection = ( prevHeight - prevRayZ ) / ( prevHeight - currHeight + currRayZ - prevRayZ );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tfinalTexOffset = prevTexOffset + intersection * deltaTex;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tnewZ = prevRayZ - intersection * layerHeight;" );
 
-				switch( m_pomTexType )
-				{
-					default:
-					case POMTexTypes.Texture2D:
-					{
-						if( sampleThroughMacros )
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	newHeight = SAMPLE_TEXTURE2D_GRAD( heightMap, samplerheightMap, uvs + finalTexOffset, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-						else
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	newHeight = tex2Dgrad( heightMap, uvs + finalTexOffset, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-					}
-					break;
-					case POMTexTypes.Texture3D:
-					{
-						if( sampleThroughMacros )
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	newHeight = SAMPLE_TEXTURE2D_GRAD( heightMap, samplerheightMap, uvs + float3(finalTexOffset,0), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-						else
-						{
-							IOUtils.AddFunctionLine( ref m_functionBody, "	newHeight = tex3Dgrad( heightMap, uvs + float3(finalTexOffset,0), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-						}
-					}
-					break;
-					case POMTexTypes.TextureArray:
-					if( UIUtils.CurrentWindow.OutsideGraph.IsSRP )
-						IOUtils.AddFunctionLine( ref m_functionBody, "	newHeight = SAMPLE_TEXTURE2D_ARRAY_GRAD( heightMap, samplerheightMap, uvs + finalTexOffset,index, dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-					else
-						IOUtils.AddFunctionLine( ref m_functionBody, "	newHeight = ASE_SAMPLE_TEX2DARRAY_GRAD( heightMap, float3(uvs + finalTexOffset,index), dx, dy )." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
-					break;
-				}
-				
-				IOUtils.AddFunctionLine( ref m_functionBody, "	if ( newHeight > newZ )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	{" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		currTexOffset = finalTexOffset;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		currHeight = newHeight;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		currRayZ = newZ;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		deltaTex = intersection * deltaTex;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		layerHeight = intersection * layerHeight;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	}" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	else" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	{" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		prevTexOffset = finalTexOffset;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		prevHeight = newHeight;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		prevRayZ = newZ;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		deltaTex = ( 1 - intersection ) * deltaTex;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		layerHeight = ( 1 - intersection ) * layerHeight;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	}" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	sectionIndex++;" );
+				string uvs2 = "uvs + finalTexOffset";
+				if( m_texPort.DataType == WirePortDataType.SAMPLER3D )
+					uvs2 = "float3(uvs.xy + finalTexOffset, uvs.z)";
+				else if( m_texPort.DataType == WirePortDataType.SAMPLER2DARRAY )
+					uvs2 = outsideGraph.IsSRP ? uvs2 + ", index" : "float3(" + uvs2 + ", index)";
+
+				string samplingCall2 = GeneratorUtils.GenerateSamplingCall( ref dataCollector, m_texPort.DataType, textureProp, sampleState, uvs2, MipType.Derivative, "dx", "dy" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tnewHeight = " + samplingCall2 + "." + m_channelTypeVal[ m_selectedChannelInt ] + ";" );
+
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( newHeight > newZ )" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t{" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tcurrTexOffset = finalTexOffset;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tcurrHeight = newHeight;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tcurrRayZ = newZ;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tdeltaTex = intersection * deltaTex;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tlayerHeight = intersection * layerHeight;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t}" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \telse" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t{" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tprevTexOffset = finalTexOffset;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tprevHeight = newHeight;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tprevRayZ = newZ;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tdeltaTex = ( 1 - intersection ) * deltaTex;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tlayerHeight = ( 1 - intersection ) * layerHeight;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t}" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tsectionIndex++;" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "}" );
 			}
 			else
@@ -613,8 +514,8 @@ namespace AmplifyShaderEditor
 				IOUtils.AddFunctionLine( ref m_functionBody, "if ( unity_LightShadowBias.z == 0.0 )" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "{" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	if ( result.z > 1 )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		clip( -1 );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.z > 1 )" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "}" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
@@ -622,19 +523,19 @@ namespace AmplifyShaderEditor
 
 			if ( m_clipEnds )
 			{
-				IOUtils.AddFunctionLine( ref m_functionBody, "result.xy = uvs + finalTexOffset;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, "result.xy = uvs.xy + finalTexOffset;" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "if ( unity_LightShadowBias.z == 0.0 )" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "{" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	if ( result.x < 0 )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		clip( -1 );" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	if ( result.x > tilling.x )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		clip( -1 );" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	if ( result.y < 0 )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		clip( -1 );" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "	if ( result.y > tilling.y )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "		clip( -1 );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.x < 0 )" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.x > tilling.x )" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.y < 0 )" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.y > tilling.y )" );
+				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "}" );
 				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
@@ -642,7 +543,7 @@ namespace AmplifyShaderEditor
 			}
 			else
 			{
-				IOUtils.AddFunctionLine( ref m_functionBody, "return uvs + finalTexOffset;" );
+				IOUtils.AddFunctionLine( ref m_functionBody, "return uvs.xy + finalTexOffset;" );
 			}
 			IOUtils.CloseFunctionBody( ref m_functionBody );
 		}
@@ -685,22 +586,27 @@ namespace AmplifyShaderEditor
 
 			if( UIUtils.CurrentShaderVersion() > 13103 )
 			{
-				if( UIUtils.CurrentShaderVersion() < 15307 )
+				//if( UIUtils.CurrentShaderVersion() < 15307 )
+				//{
+				//	GetCurrentParam( ref nodeParams );
+				//	//bool arrayIndexVisible = false;
+				//	//arrayIndexVisible = Convert.ToBoolean( GetCurrentParam( ref nodeParams ) );
+				//	//m_pomTexType = arrayIndexVisible ? POMTexTypes.TextureArray : POMTexTypes.Texture2D;
+				//}
+				//else
+				//{
+				//	GetCurrentParam( ref nodeParams );
+				//	//m_pomTexType = (POMTexTypes)Enum.Parse( typeof(POMTexTypes), GetCurrentParam( ref nodeParams ) );
+				//}
+				if( UIUtils.CurrentShaderVersion() <= 18201 )
 				{
-					bool arrayIndexVisible = false;
-					arrayIndexVisible = Convert.ToBoolean( GetCurrentParam( ref nodeParams ) );
-					m_pomTexType = arrayIndexVisible ? POMTexTypes.TextureArray : POMTexTypes.Texture2D;
+					GetCurrentParam( ref nodeParams );
 				}
-				else
-				{
-					m_pomTexType = (POMTexTypes)Enum.Parse( typeof(POMTexTypes), GetCurrentParam( ref nodeParams ) );
-				}
-
 				UpdateIndexPort();
 			}
 
 			UpdateSampler();
-			GeneratePOMfunction();
+			//GeneratePOMfunction( string.Empty );
 			UpdateCurvaturePort();
 		}
 
@@ -720,7 +626,7 @@ namespace AmplifyShaderEditor
 			IOUtils.AddFieldValueToString( ref nodeInfo, m_useCurvature );
 			IOUtils.AddFieldValueToString( ref nodeInfo, IOUtils.Vector2ToString( m_CurvatureVector ) );
 			//IOUtils.AddFieldValueToString( ref nodeInfo, m_useTextureArray );
-			IOUtils.AddFieldValueToString( ref nodeInfo, m_pomTexType);
+			//IOUtils.AddFieldValueToString( ref nodeInfo, true );
 		}
 
 		public override void Destroy()

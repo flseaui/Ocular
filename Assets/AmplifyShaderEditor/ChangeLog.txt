@@ -1,4 +1,563 @@
 Release Notes:
+v1.8.9 rev 00:
+* Improvements:
+    * Added Safe Normalize option into 'Normalize' node to prevent division by zero warnings
+    * Added Safe option when Normalize is toggled on 'Transform Direction' node to prevent division by zero warnings
+
+* Fixes:
+    * Fixed issues with HDRP Decal template on v10.3.2
+    * Fixed issue on 'Get Local Var' node syncing with its 'Register Local Var' node counterparts type change too late leading to port type issues over nested shader functions
+
+v1.8.8 rev 14:
+* Improvements:
+    * Added new Receive SSR Transparent into HDRP Lit v10.x.x
+
+* Fixes:
+    * Removed unnecessary DX11 debug symbols from all URP PBR templates
+        * They were causing compilation errors over users on Windows 7
+
+v1.8.8 rev 13:
+* New Shader Function:
+    * Stereo Screen Pos
+        * Transforms a Screen Position value from non Stereo to VR Stereo
+
+* Fixes:
+    * Fixed View to World transform over 'Transform Position' node
+    * Fixed issue on concurrent late opening over materials, shaders and shader functions
+
+* Improvements:
+    * ASE shaders can now be opened while in Play Mode over Unity 2018.4 if no SRP template is required to be imported
+    * Renamed legacy HDRP and URP 7xx packages to explicitly show version range
+        * 'HDSRPTemplates 7xx (Legacy)' to 'HDSRPTemplates 7xx - 9xx (Legacy)'
+        * 'USRPTemplates 7xx (Legacy)' to 'USRPTemplates 7xx - 9xx (Legacy)'
+        * To avoid GUID conflicts renamed files have new GUID
+            * Due to how Unity importer works old files are maintained in project
+                * These can be safely deleted from project
+
+v1.8.8 rev 12:
+* Improvements:
+    * Added directive ASE_USING_SAMPLING_MACROS when Use Sampling Macros is active
+        * To be used inside 'Custom Expressions' for multiple sampling behaviors
+    * Added Sampler State port into Bidirectional Parallax Mapping SF
+        * Only visible when new Unity 2018 or Higher toggle is active
+    * Added option "Update on Scene save" into ASE Preferences to lock SceneSaveCallback usage (Ctrl+S)
+
+* Fixes:
+    * Fixed incorrect sampler declaration on 'Custom expression' node over Standard surface when Use Sampling Macros is active
+    * Fixed Bidirectional Parallax Mapping SF issues when Use Sampling Macros is active
+    * Fixed issue with incorrect loading of Depth Vffset values on Standard Surface node
+    * Fixed potential issue with trying to set custom data types into 'Texture Sample node's Tex port
+
+v1.8.8 rev 11:
+* Fixes:
+    * Fixed issue with Reconstruct World Position From Depth SF on both URP and HDRP v7.5.3
+
+* Improvements:
+    * Ported Omni Decal sample to URP
+
+v1.8.8 rev 10:
+* Fixes:
+    * Fixed incorrect templates package import over new SRP v7.5.3
+    * Fixed visual issue with both Remap Sliders and Remap Sliders Full custom material drawers
+
+v1.8.8 rev 09:
+* Improvements:
+    * Added new Write Depth option over URP PBR templates
+        * If Early Z option is selected SV_DepthLessEqual semantic is used instead of SV_Depth
+    * Added new Sample interpolator attribute on 'Vertex To Fragment' node
+        * Interpolates at sample location rather than at the pixel center
+
+v1.8.8 rev 08:
+* Fixes:
+    * Fixed retro-compatibility issue on 'Texture Sample' node input port data
+    * Fixed code redefinition issue on 'Triplanar Sampler' node
+
+v1.8.0 rev 07:
+* Improvements:
+    * Internaly deprecating custom NoKeywordToggle attribute in favor of Unity's native ToggleUI when on Unity 2018.1 or higher
+    * 'Toggle Switch' node now has option to deactivate keyword creation by its drawer
+
+* Fixes:
+    * Fixed missing end pass tag over Double Pass Unlit template used on Multipass Distortion sample
+
+v1.8.8 rev 06:
+* Fixes:
+    * Fixed issue on custom values set on template modules (Blend,Cull,Depth,etc) being overwritten when reloading shader
+    * Fixed issue on duplicating local variables when registered with different precisions across multiple nodes
+
+v1.8.8 rev 05:
+* Fixes:
+    * Fixed compilation error on 'Linear Depth' node both on URP and HDRP
+    * Fixed issue with canvas screenshot while window is maximized over Unity 2020.2
+    * Fixed issue with sampling macros usage on 'Outline' node leading to compilation errors
+
+* Improvements:
+    * Added info message for Unity 2019.4 or higher when async shader compilation is active
+        * Can be turned off via Preferences > Amplify Shader Editor > Show Shader Async. Compilation Message
+    * 'Diffusion Profile' node now makes use of new Material Property Drawer introduced on HDRP 10
+        * Only on Unity 2020.2 or higher
+
+v1.8.8 rev 04:
+* Fixes:
+    * Fixed Decals not showing correctly on HDRP 10 Lit template
+
+v1.8.8 rev 03:
+* Fixes:
+    * Fixed issue with Distortion feature over HD Unlit templates
+        * After compiling, the user may need to switch Surface Type from Transparent to Opaque and then back to Transparent over the Material Inspector
+            * This is due to some internal properties which need to be set by Unity's internal HD Unlit material inspector
+    * Fixed compilation issue with Tessellation when creating a URP/HDRP shader with multiple shader lods
+    * Fixed issue when updating shaders with multiple lods using deprecated templates
+
+v1.8.8 rev 02:
+* Fixes:
+    * Fixed Update button message not refreshing correctly
+    * Fixed multiple editor visual issues when using ASE under the iOS platform
+    * Fixed Fetch Lightmap Value SF setting incorrect instructions for its Decode function over URP on Gamma color space
+    * Fixed issue with new Shadowmask feature over URP PBR 10
+
+* Improvements:
+    * Added better fallback to shaders created with deprecated (and already inexistent) templates
+    * Refactored shown message by Update button tooltip
+    * Added new Exposure option and LOD port for 'Grab Screen Color' node (Only active on HDRP)
+
+v1.8.8 rev 01:
+* Fixes:
+    * Fixed issue on 'Billboard' node with Ignore Rotation toggled over HDRP
+    * 'Custom Expression' node non void return test now takes internal expression mode into account
+    * Fixed issue with Final Color x Alpha option deactivation on Universal PBR
+
+* Improvements:
+    * Refactored how custom ASEBegin and ASEEnd decorators are placed over shader properties
+        * Responsible for adding the Open In Shader Editor button over Unity native inspectors and refreshing material property values over ASE canvas respectively
+
+v1.8.8 rev 00:
+* Fixes:
+    * Fixed SSAO issue over Universal 10 PBR template
+    * Fixed issue with GPU instancing and Stereo VR on multiple Builtin Legacy templates
+
+v1.8.7 rev 18:
+* Fixes:
+    * Fixed missing ASE Pragma tag over HDRP 10 Decal template
+
+* Improvements:
+    * Added new DepthNormals and GBuffer passes over Universal 10 PBR template
+
+v1.8.7 rev 17:
+* Fixes:
+    * Fixed issue with debug display across multiple HDRP 10 templates
+    * Fixed 'Compile and show code' button not working over ASE custom shader inspector on Unity 2020.2
+
+* Improvements:
+    * Added new strip #line directives over ASE custom shader inspector on Unity 2020.2
+
+v1.8.7 rev 16:
+* Fixes:
+    * Fixed multiple _BlendMode issues across all HDRP templates
+    * Fixed issue with using custom meshes on standard surface custom material inspector over 2020.1 and above
+
+v1.8.7 rev 15:
+* Fixes:
+    * Automatically converting obsolete custom inspectors from HDRP v.7/8/9 when reading shaders into HDRP 10
+    * Bumped internal HDRP version control to force new HDRP 10 templates to be unpacked
+
+v1.8.7 rev 14:
+* New Node:
+    * Sticky Note
+        * Allows user to add notes directly on the ASE canvas
+
+* Improvements:
+    * Updated HDRP templates to be compatible with SRP 10
+
+* Fixes:
+    * Fixed issue with inverted depth dir on Reconstruct World Position From Depth SF over HDRP 8 and above
+    * Fixed minor issue over Tags foldout on templates node properties
+    * Added missing SRP versions into ASE Package Manager
+        * SRP v.8.3.1
+        * SRP v.7.5.1
+        * SRP v.7.5.2
+        * SRP v.9.0.0 Preview 71
+
+v1.8.7 rev 13:
+* Fixes:
+    * Fixed issue with capturing canvas screen shot while maximized
+    * Removed multiple incorrect port restrictions over 'Triplanar Sample' node
+    * Fixed issue on incorrect template behavior if on a template inline option its internal property is selected via the the inline dropdown
+    * Fixed issue on template options type set to inline but with no inline property selected
+    * Fixed issue on losing inline properties between canvas
+
+* Improvements:
+    * 'Dither' node now has new SS input port to be able to use custom sampler states
+
+v1.8.7 rev 12:
+* Fixes:
+    * Fixed issue with removing Header attributes
+
+v1.8.7 rev 11:
+* New Sample:
+    * Transparent Cutout for both URP and HDRP
+
+v1.8.7 rev 10:
+* Fixes:
+    * Fixed issue on user not being able to use the dot/period character on Header attributes
+    * Fixed issue on Header attributes not being correctly shown on 'Color' node
+
+v1.8.7 rev 09:
+* Improvements:
+    * User can now specify multiple headers for each property
+
+v1.8.7 rev 08:
+* Improvements:
+    * Added new No Interpolation option into 'Vertex To Fragment' node
+    * Added new Header attribute for property type nodes
+    * Added new No Keyword Toggle attribute for 'Float' node
+    * Added new Remap Slider custom drawer for 'Vector4' node
+        * User must specify min limit and max limit on Z and W coordinate respectively
+
+v1.8.7 rev 07:
+* Fixes:
+    * Fixed issue on 'Texture Sampler' node incorrectly generating sampler states when its R,G,B,A ports were being used
+
+v1.8.7 rev 06:
+* Fixes:
+    * Fixed compilation error on Built-in RP with 'Grab Screen Color' node when Auto-Register is turned on over Unity 5.6 and above
+
+v1.8.7 rev 05:
+* Fixes:
+    * Fixed issue on 'Indirect Diffuse Light' node not showing correct results over Builtin templates on Unity 2019
+    * Fixed issue on SubShader body not being correctly filled if main master node's pass is disabled
+    * Fixed issue on incorrect clip over holes usage on URP Terrain sample
+
+v1.8.7 rev 04:
+* New Shader Function:
+    * Normal From Texture
+
+Fixes:
+    * Fixed issues on Normal From Height shader function
+    * Fixed issue on ASE window attempting to import templates when entering in Play mode
+    * Fixed issue on 'Function Switch' node not updating correctly when on Reference mode
+
+* Improvements:
+    * Empty textfield value on 'Function Subtitle' node now removes the sub-title over its shader function node
+    * Added new Clear Log on Update option into ASE preferences (on by default)
+        * Clears an ASE log window each time the user hits the Update button
+
+v1.8.7 rev 03:
+* Shader Functions:
+    * Removed High Quality option from Normal From Height shader function
+        * This will be later added on a separate shader function
+
+* Fixes:
+    * Inline code from set by 'Custom Expression' node now placed under their own scope { (...) } to prevent duplication errors
+    * Fixed issue on Procedural Texture type not having a texture to wire correspondence over 'Texture Sampler' node
+
+v1.8.7 rev 02:
+* IMPORTANT - Node renamed:
+    * 'Break To Components' node renamed to 'Split' to decrease its canvas size
+
+* New Shader Functions:
+    * Bicubic Precompute
+    * Bicubic Sample
+
+* Fixes:
+    * Fixed issue on 'Break To Components' node disabling connections on loading it from disk
+    * Fixed issue on duplicate error thrown when multiple Normal From Height shader functions are used
+
+v1.8.7 rev 01:
+* Shader Function Removed:
+    * Procedural Sample 2D Array was removed
+        * Procedural Sample 2D now renamed to Procedural Sample and has internal options that allow usage with 2D Array and more
+
+* Improvements:
+    * Added Fast and High Quality options to Normal From Height shader function
+    * Improved error messages thrown by 'Custom Expression' node
+    * Renamed Procedural Sample 2D to Procedural Sample and added Sample Mode option
+        * Planar 2D
+        * Planar 2D Array
+        * Triplanar 2D
+        * Triplanar 2D Array
+
+* Fixes:
+    * Fixed issue on only converting CRLF to LF and not CR to LF when reading templates or using pasted code on 'Custom Expression' nodes
+        * This lead to inconsistent line ending warnings being thrown
+    * Fixed issue on some warnings from 'Custom Expression' node no being clickable on log to select which node they were thrown from
+
+v1.8.7 rev 00:
+* New Shader Function:
+    * Procedural Sample 2D Array
+
+* Improvements:
+    * Improved Procedural Sample 2D shader function
+
+v1.8.6 rev 02:
+* Fixes:
+    * Fixed division by zero warning on 'Gradient Sample' node
+    * Fixed issue on 'Static Switch ' node incorrectly adding suffixes into fetched custom keywords
+    * Fixed issue with attempting to register duplicate property names when reading 'Static Switch' node meta from old ASE versions
+
+v1.8.6 rev 01:
+* New Shader Function:
+    * Procedural Sample 2D
+
+* Fixes:
+    * Fixed issue with duplicate generated code over 'World Reflection' node
+
+v1.8.6 rev 00:
+* Improvements:
+    * Improved Plane Clip sample
+
+v1.8.5 rev 06:
+* Fixes:
+    * Locking 'Decode Depth Normals' usage to Builtin pipeline and informing of that when used on SRP
+        * Was currently generating compilation errors over SRP
+    * Fixed issue on Auto-Register flag over property nodes not being correctly registered in certain cases
+    * Fixed issue where graph sampling macro flag was incorrectly being set by non main master nodes
+
+* Improvements:
+    * Auto-register check on texture property type node also register sampler if 'Use Sampling Macros' flag is enabled on master node
+    * Adding support for mask maps over 'Four Splats First Pass Terrain' shader function
+        * Only available on SRP and output node must have 'Use Sampling Macros' flag turned on
+
+v1.8.5 rev 05:
+* Fixes:
+    * Fixed issue with incorrect values returned from nodes using internal 'Texture Object' instances
+    * Fixed duplicate uv declarations issue when being requested different sizes by 'Texture Sampler' nodes
+    * Fixed duplicate directives issue caused by adding directives on both 'Outline' node generated surface and main one
+
+v1.8.5 rev 04:
+* Fixes:
+    * Fixed issue on texture node types auto-sampler generator
+
+v1.8.5 rev 03:
+* New Sample:
+    * Plane Clip
+
+* Fixes:
+    * Fixed issue on 'Blend Normals' node preview not taking SRP options into account
+    * Fixed visual issue on node properties menu over nodes:
+        * Template Parameter 
+        * Template Local Var
+        * Template Vertex Data
+        * Template Fragment Data
+
+* Improvements:
+    * Simplified 'Template Parameter' usage
+        * User no longer need to choose scope to parameters to be available
+        * New Advanced View toggle added to switch to old view
+    * Added widget on 'Texture Coordinates' node to change output size directly from the node
+
+v1.8.5 rev 02:
+* New Community Shader Function
+    * Depth Masked Refraction by @saismirk
+
+Fixes:
+    * Fixed incorrect uv variable name being used when set is greater that 3
+    * Fixed incorrect swizzling when using texture sets on vertex data over surface shaders
+    * Fixed issue over texture array tool on not being able to use compressed formats
+
+v1.8.5 rev 01:
+* Fixes:
+    * Fixed issue regarding uv coordinates usage with tessellation on URP PBR template
+
+* Improvements:
+    * Replaced fmod instruction usage on 'Remainder' node by faster true remainder calculation
+
+v1.8.5 rev 00:
+* Fixes:
+    * Fixed desync issue between graph and master node sampling macro flag
+    * Fixed unknown INSTANCEID_SEMANTICS enum  value being thrown on legacy HDRP
+
+v1.8.4 rev 04:
+* Fixes:
+    * Fixed issue on 'Substance Sampler' node
+        * Fixed incorrectly drawn preview on Unity 2018 and above
+        * Prevented incorrect ports types being set when texture order is internally changed on Substance
+    * Fixed variable redefinition on 'Gradient' node when used on shader functions
+    * Fixed duplicate issue when declaring cbuffers on both outline and main surface shaders
+    * Fixed URP Terrain sample layer composition
+
+* Improvements:
+    * 'FWidth' node now throws an ASE console error when connected to non-fragment ports
+        * Also generates dummy value to prevent compilation error
+    * Added terrain holes support on Four Splats First Pass Terrain shader function
+        * Activate Holes option
+    * Added new Final Color x Alpha option on URP PBR template
+        * Required to correctly blend terrain layers
+
+v1.8.4 rev 03:
+* Fixes:
+    * Fixed Color Mask MRT Id not being written on inline properties
+        * Caused HDRP Lit shaders to become invisible when compiled in some versions
+
+v1.8.4 rev 02:
+* New Template:
+    * Legacy/Lit
+        * Mimics behavior of standard surface but without some of its limitations
+            * Can override Baked GI
+            * Removes limitation of using nodes like 'Indirect Specular Light' only on Custom Lighting
+
+* Fixes:
+    * Added missing support for per-pixel normals in terrain shaders for URP (still requires adding the keyword separately)
+    * Fixed issue with alpha clip threshold not working properly in all cases when using the HDRP Lit template
+    * Fixed issue with template loading that was not catching global variable in certain situations (API)
+    * Fixed rare issue where changing shader templates could cause the options to fail to load properly due to not finding the new master node
+    * Fixed issue on Depth Texture macro declaration being incorrectly duplicated when already present on template
+        * Now depth related nodes can be correctly used on Particle Alpha Blended template
+    * Fixed issue on uncaught exception when attempting to load an in-existent Assembly-CSharp-Editor assembly
+        * Could happen when attempting to load invalid nodes
+    * Fixed issue on not being able to connect 'Texture Object' nodes to 'Register Local Var' node
+    * Fixed issue on vertex instructions generated by outline fragment ports to be correctly written on its vertex code
+        * Fixes 'Camera Depth Fade' usage on 'Outline' node
+
+* Improvements:
+    * Updated the Four Splats First Pass Terrain shader function to include a new option for SRP terrain to allow per pixel normals
+    * 'Static Switch' node
+        * Now allows editing of certain parameters while in Fetch mode 
+        * Now allow the explicit naming of the keyword created besides the automatic one with a lock button
+    * Forcing vertex position w component to 1 when setting a new offset or position over Standard Surface type shaders
+        * Prevent real-time shadow issues on vertex manipulation
+
+v1.8.4 rev 01:
+* Improvements:
+    * Added "Open in Shader Editor" button into SRP materials (needs shader save)
+    * Now SRP materials update ASE editor property values while the editor is open (needs shader save)
+    * Remove dependencies for custom shader inspector (now, allows deleting the file)
+
+* Fixes:
+    * Fixed Dots instancing option in URP unlit
+    * Fixed UV generation in Mesh Decals template
+    * Fixed Normals and Emission Bias in Mesh Decals template
+
+v1.8.4 rev 00:
+* New HDRP Samples:
+    * Added new 'Decal Muddy Ground' and 'Decal Scifi Panel' HDRP samples using various types of decals
+
+* Improvements:
+    * Added automatic 'Open and Save All' button in shader function files that tries to compiled all dependency shaders and shader functions
+    * Texture Array tool now allows to create an asset file representing all options in order to save work for later
+    * Texture Array no longer locks width and height at power of two for more recent versions of unity
+    * Added clip shadow threshold and alpha to coverage options to URP PBR and URP Unlit shaders
+
+* Fixes:
+    * Fixed leak in the automatic template importer
+    * Template importer now properly skips non-shaders files when checking for changes
+    * Fixed issue with properties in fetch mode not loading correctly and making some property names hostage
+    * Fixed issue with UVs generation in specific situations where it would create variables with the same name
+
+v1.8.3 rev 03:
+* Improvements:
+    * Global macros sampling option has been removed in favor of another that is set by the shader (older shader load with this option OFF while new ones start with it ON)
+    * Made property panel option labels flexible to the width of the panel
+    * Some help text added to 'Sampler State' node
+
+* Fixes:
+    * Fixed issue with assembly definition files where nodes outside of the assembly would fail to load
+    * Fixed issue of emission channel not working in HDRP decal template
+
+v1.8.3 rev 02:
+* New 'Sampler State' Node:
+    * Allows using the default sampler state of a texture or the creation of a new one with specific options (versions prior to Unity 2018.1 have limited support)
+
+* Improvements:
+    * You can now use custom sampler states when sampling, however, in order for this to work you need to activate the option at Preferences > Amplify Shader Editor > Sampling Macros
+        * Activating this may cause some issues in specific situations, namely, custom expressions that do sampling must be converted to use macros as well so for now this option is OFF by default
+    * There are two new connection types, one for texture arrays and another for sampler states which are supported in function nodes and custom expression nodes
+    * Texture Array node as been deprecated in favor of the regular 'Sampler' node which now supports texture arrays and works inside shader functions
+    * 'Parallax Occlusion Mapping' node and 'Triplanar Sample' node now automatically detect if the input is a texture array and no longer use a toggle to turn ON the support
+
+* Fixes:
+    * Fixed issue with URP 2D templates accessing the wrong uv set
+    * Fixed Bitangent calculation in SRP which wasn't taking tangent sign into account
+    * Fixed issue with 'show and compile' button in shader inspector in unity 2020.1
+
+v1.8.3 rev 01:
+* Fixes:
+    * Fixed issues over 'Substance Sample' node
+        * Fixed compilation error on Unity 2018 and above
+        * Fixed normal texture port detection on Unity 2018 and above
+
+v1.8.3 rev 00:
+* New HDRP Sample:
+    * Added new 'TV' HDRP sample using Vector Displacement Maps (VDMs)
+
+* New Shader Option:
+    * URP PBR template now has a 'Fragment Normal Space' option that allows selecting between Object, World and Tangent space outputs for the master node
+
+* Improvements:
+    * Added normal space output option for 'Triplanar' node
+    * Added help text for the PPS helper tool
+
+* Fixes:
+    * Fixed issue with world view dir calculation in URP PBR template
+    * Fixed issue with normal unpacking and scaling in SRP
+    * Removed HDRP dependency in ASE asmdef file
+    * Fixed the mosaic PPS sample that was conflicting with assembly definition files
+    * Fixed issues with focusing the editor window would sometimes select text fields or prevent nodes from being interactive
+    * Fixed 'Diffusion Profile' for HDRP 6.X.X
+
+v1.8.2 rev 01:
+* Fixes:
+    * Fixed Fixed issue with auto generated UVs sometimes generate the UVs twice and failing to compile
+
+v1.8.2 rev 00:
+* Fixes:
+    * Fixed 'Rejection' node to support multiple length input types just like 'Projection' node does
+
+v1.8.1 rev 04:
+* New HDRP Template
+    * Decal
+
+* Improvements:
+    * Added new port to 'Voronoi' node that outputs the UVs of the current voronoi cells
+    * Added support for MRT for ColorMask, Blend and BlendOp in templates and template Options
+    * AlphaToMask is now it's own separate module that can be activated independently  and supports inline properties
+    * Changed UV creation to support pre-calculated UVs in templates (ie: decals)
+
+* Fixes:
+    * Fixed Texture Array Creator tool in order to properly allow signed and higher bit texture formats
+    * Voronoi now properly creates UVs in all situations and preview was updated accordingly
+    * Fixed issue with instancing macro not being detected properly and being included in the wrong place occasionally  generating errors in URP
+
+v1.8.1 rev 03:
+* Improvements:
+    * Improved URP and HDRP templates in order to minimize their CBUFFER contents
+    * Updated libraries for SRP 7.3.1 and 7.4.1
+
+* Fixes:
+    * Fixed issue with instance ID node not working correctly in URP due to templates not properly detecting the existing ones
+    * Fixed issue with unused tessellation properties showing up in the shader inspector
+    * Fixed issue with 'Reconstruct World Position From Depth' node that was preventing from compiling when used with 'Depth Fade' node
+    * Fixed issue with 'Reconstruct World Position From Depth' node that wasn't working correctly in SRP 7.4.X and up
+
+v1.8.1 rev 02:
+* New Shader Functions:
+    * And
+    * Or
+    * Projection
+    * Rejection
+
+* Improvements:
+    * Added more description text to custom expression node
+    * Live update doesn't kick in when editing a field
+    * Shader Functions options label size resize according to the panel width
+
+* Fixes:
+    * Fixed 'Texture Sample' node and 'Texel Size' node previews so that they update when it's referenced texture changes
+    * Fixed issue with certain namespaces not being available when Assembly Definitions files are present
+    * Fixed samples by adding new Assembly Definition files for samples that contain their own scripts
+    * Fixed issue with sampler states option not working if reference node was not compiled
+
+v1.8.1 rev 01:
+* Improvements:
+    * Added AssemblyDefinition file and made it so nodes can be found in the main editor assembly besides ASE assembly
+        * If you which to extend ASE with your own node and you already use your own assembly file you need to add ASE as a dependency
+
+* Fixes:
+    * Fixed issue with function nodes not saving their GUID correctly to the metadata
+    * Fixed issue with function switch nodes not saving correctly when inputs were left unconnected
+    * Fixed issue with reading options due to system cultural differences
+    * Fixed issue where clipboard copy/pasting was not respecting system cultural differences
+
 v1.8.1 rev 00:
 * New Shader Options:
     * Added new option called 'DOTS Instancing' that provides initial support for hybrid renderer for URP and HDRP

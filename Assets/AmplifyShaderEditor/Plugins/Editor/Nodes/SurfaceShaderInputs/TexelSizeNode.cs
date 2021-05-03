@@ -18,10 +18,13 @@ namespace AmplifyShaderEditor
 
 		[SerializeField]
 		private TexturePropertyNode m_inputReferenceNode = null;
-		
+
 		private TexturePropertyNode m_referenceNode = null;
 
 		private UpperLeftWidgetHelper m_upperLeftWidget = new UpperLeftWidgetHelper();
+
+		[SerializeField]
+		private string m_previousTexture = string.Empty;
 
 		private int m_cachedSamplerId = -1;
 		private int m_cachedSamplerIdArray = -1;
@@ -32,7 +35,7 @@ namespace AmplifyShaderEditor
 		{
 			base.CommonInit( uniqueId );
 			AddInputPort( WirePortDataType.SAMPLER2D, false, "Tex" );
-			m_inputPorts[ 0 ].CreatePortRestrictions( WirePortDataType.SAMPLER1D, WirePortDataType.SAMPLER2D, WirePortDataType.SAMPLER3D, WirePortDataType.SAMPLERCUBE, WirePortDataType.OBJECT );
+			m_inputPorts[ 0 ].CreatePortRestrictions( WirePortDataType.SAMPLER1D, WirePortDataType.SAMPLER2D, WirePortDataType.SAMPLER3D, WirePortDataType.SAMPLERCUBE, WirePortDataType.SAMPLER2DARRAY, WirePortDataType.OBJECT );
 			AddOutputVectorPorts( WirePortDataType.FLOAT4, Constants.EmptyPortValue );
 			ChangeOutputName( 1, "1/Width" );
 			ChangeOutputName( 2, "1/Height" );
@@ -59,6 +62,7 @@ namespace AmplifyShaderEditor
 		public override void OnInputPortConnected( int portId, int otherNodeId, int otherPortId, bool activateNode = true )
 		{
 			base.OnInputPortConnected( portId, otherNodeId, otherPortId, activateNode );
+			m_inputPorts[ 0 ].MatchPortToConnection();
 			m_inputReferenceNode = m_inputPorts[ 0 ].GetOutputNodeWhichIsNotRelay() as TexturePropertyNode;
 			UpdateTitle();
 		}
@@ -70,14 +74,20 @@ namespace AmplifyShaderEditor
 			UpdateTitle();
 		}
 
+		public override void OnConnectedOutputNodeChanges( int outputPortId, int otherNodeId, int otherPortId, string name, WirePortDataType type )
+		{
+			base.OnConnectedOutputNodeChanges( outputPortId, otherNodeId, otherPortId, name, type );
+			m_inputPorts[ 0 ].MatchPortToConnection();
+			UpdateTitle();
+		}
 
 		void UpdateTitle()
 		{
-			if ( m_inputReferenceNode != null )
+			if( m_inputReferenceNode != null )
 			{
 				m_additionalContent.text = string.Format( Constants.PropertyValueLabel, m_inputReferenceNode.PropertyInspectorName );
 			}
-			else if ( m_referenceSamplerId > -1 && m_referenceNode != null )
+			else if( m_referenceSamplerId > -1 && m_referenceNode != null )
 			{
 				m_additionalContent.text = string.Format( Constants.PropertyValueLabel, m_referenceNode.PropertyInspectorName );
 			}
@@ -130,11 +140,11 @@ namespace AmplifyShaderEditor
 			base.GenerateShaderForOutput( outputId, ref dataCollector, ignoreLocalvar );
 			string texelName = string.Empty;
 
-			if ( m_inputPorts[ 0 ].IsConnected )
+			if( m_inputPorts[ 0 ].IsConnected )
 			{
 				texelName = m_inputPorts[ 0 ].GeneratePortInstructions( ref dataCollector ) + "_TexelSize";
 			}
-			else if ( m_referenceNode != null )
+			else if( m_referenceNode != null )
 			{
 				m_referenceNode.BaseGenerateShaderForOutput( outputId, ref dataCollector, ignoreLocalvar );
 				texelName = m_referenceNode.PropertyName + "_TexelSize";
@@ -147,7 +157,7 @@ namespace AmplifyShaderEditor
 
 			dataCollector.AddToUniforms( UniqueId, "float4 " + texelName + ";", dataCollector.IsSRP );
 
-			switch ( outputId )
+			switch( outputId )
 			{
 				case 0: return texelName;
 				case 1: return ( texelName + ".x" );
@@ -199,7 +209,7 @@ namespace AmplifyShaderEditor
 		public override void SetPreviewInputs()
 		{
 			base.SetPreviewInputs();
-			if( m_inputPorts[0].IsConnected )
+			if( m_inputPorts[ 0 ].IsConnected )
 			{
 				SetPreviewTexture( m_inputPorts[ 0 ].InputPreviewTexture( ContainerGraph ) );
 			}
@@ -213,6 +223,17 @@ namespace AmplifyShaderEditor
 				{
 					SetPreviewTexture( m_referenceNode.PreviewTexture );
 				}
+			}
+		}
+
+		public override void OnNodeLogicUpdate( DrawInfo drawInfo )
+		{
+			base.OnNodeLogicUpdate( drawInfo );
+
+			if( m_referenceNode != null && m_previousTexture != m_referenceNode.AdditonalTitleContent.text )
+			{
+				m_previousTexture = m_referenceNode.AdditonalTitleContent.text;
+				PreviewIsDirty = true;
 			}
 		}
 
@@ -258,7 +279,7 @@ namespace AmplifyShaderEditor
 		public override void RefreshExternalReferences()
 		{
 			base.RefreshExternalReferences();
-			if ( UIUtils.CurrentShaderVersion() > 2404 )
+			if( UIUtils.CurrentShaderVersion() > 2404 )
 			{
 				m_referenceNode = UIUtils.GetNode( m_referenceNodeId ) as TexturePropertyNode;
 				m_referenceSamplerId = UIUtils.GetTexturePropertyNodeRegisterId( m_referenceNodeId );
@@ -266,7 +287,7 @@ namespace AmplifyShaderEditor
 			else
 			{
 				m_referenceNode = UIUtils.GetTexturePropertyNode( m_referenceSamplerId );
-				if ( m_referenceNode != null )
+				if( m_referenceNode != null )
 				{
 					m_referenceNodeId = m_referenceNode.UniqueId;
 				}
@@ -277,7 +298,7 @@ namespace AmplifyShaderEditor
 		public override void ReadFromString( ref string[] nodeParams )
 		{
 			base.ReadFromString( ref nodeParams );
-			if ( UIUtils.CurrentShaderVersion() > 2404 )
+			if( UIUtils.CurrentShaderVersion() > 2404 )
 			{
 				m_referenceNodeId = Convert.ToInt32( GetCurrentParam( ref nodeParams ) );
 			}

@@ -5,35 +5,85 @@ using UnityEditor;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using HutongGames.PlayMakerEditor;
+using System.Text.RegularExpressions;
 
 namespace ES3PlayMaker
 {
-	#region Base Actions
+    #region Base Actions
 
-	public abstract class BaseEditor : CustomActionEditor
-	{
-		bool showErrorHandling = false;
+    public abstract class BaseEditor : CustomActionEditor
+    {
+        bool showErrorHandling = false;
 
-		public abstract void DrawGUI();
+        public abstract void DrawGUI();
 
-		public override bool OnGUI()
-		{
-			DrawGUI();
+        public override bool OnGUI()
+        {
+            DrawGUI();
 
-			EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
 
-			showErrorHandling = EditorGUILayout.Foldout(showErrorHandling, "Error Handling");
-			if(showErrorHandling)
-			{
-				EditorGUI.indentLevel++;
-				EditField("errorEvent");
-				EditField("errorMessage");
-				EditorGUI.indentLevel--;
-			}
+            showErrorHandling = EditorGUILayout.Foldout(showErrorHandling, "Error Handling");
+            if (showErrorHandling)
+            {
+                EditorGUI.indentLevel++;
+                EditField("errorEvent");
+                EditField("errorMessage");
+                EditorGUI.indentLevel--;
+            }
 
-			return GUI.changed;
-		}
-	}
+            return GUI.changed;
+        }
+
+        // Displays the FsmVar field without the unnecessary Type field.
+        protected void FsmVarField(string fieldName)
+        {
+            if (target == null || target.State == null)
+                return;
+
+            var fsmVar = (FsmVar)ES3Internal.ES3Reflection.GetField(target.GetType(), fieldName).GetValue(target);
+
+            if (fsmVar == null)
+            {
+                fsmVar = new FsmVar();
+                ES3Internal.ES3Reflection.GetField(target.GetType(), fieldName).SetValue(target, fsmVar);
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            var label = Regex.Replace(fieldName, @"\p{Lu}", m => " " + m.Value.ToLowerInvariant());
+            EditorGUILayout.PrefixLabel(char.ToUpperInvariant(label[0]) + label.Substring(1));
+
+            var localVariables = target.Fsm.Variables.GetAllNamedVariablesSorted();
+            var globalVariables = FsmVariables.GlobalVariables.GetAllNamedVariablesSorted();
+
+            var variableNames = new string[localVariables.Length + globalVariables.Length];
+            int selected = -1;
+
+            for(int i=0; i<variableNames.Length; i++)
+            {
+                var variable = i >= localVariables.Length ? globalVariables[i - localVariables.Length] : localVariables[i];
+                variableNames[i] = i >= localVariables.Length ? "Globals/"+variable.Name : variable.Name;
+                if (fsmVar.NamedVar == variable)
+                    selected = i;
+            }
+
+            var newSelected = EditorGUILayout.Popup(selected, variableNames);
+
+
+            EditorGUILayout.EndHorizontal();
+
+            if (newSelected == -1)
+                return;
+
+            if (selected != newSelected)
+            {
+                if (newSelected >= localVariables.Length)
+                    fsmVar.NamedVar = globalVariables[newSelected - localVariables.Length];
+                else
+                    fsmVar.NamedVar = localVariables[newSelected];
+            }
+        }
+    }
 
 	public abstract class SettingsEditor : BaseEditor
 	{
@@ -50,10 +100,11 @@ namespace ES3PlayMaker
 			{
 				EditorGUI.indentLevel++;
 
-				EditField("path");
-				EditField("location");
+                EditField("path");
+                EditField("location");
 				EditField("encryptionType");
 				EditField("encryptionPassword");
+                EditField("compressionType");
 				EditField("directory");
 				EditField("format");
 				EditField("bufferSize");
@@ -70,7 +121,7 @@ namespace ES3PlayMaker
 		public override bool OnGUI()
 		{
 			EditField("key");
-			EditField("value");
+			FsmVarField("value");
 
 			base.OnGUI();
 
@@ -80,14 +131,40 @@ namespace ES3PlayMaker
 		public override void DrawGUI(){}
 	}
 
-	#endregion
+    public abstract class ES3FileActionEditor : BaseEditor
+    {
+        public override bool OnGUI()
+        {
+            EditField("fsmES3File");
 
-	#region Save Actions
+            base.OnGUI();
 
-	[CustomActionEditor(typeof(ES3PlayMaker.Save))]
+            var action = target as ES3PlayMaker.ES3FileAction;
+            if (action == null)
+                return false;
+
+            return GUI.changed;
+        }
+    }
+#endregion
+
+#region Save Actions
+
+    [CustomActionEditor(typeof(ES3PlayMaker.Save))]
 	public class SaveEditor : KeyValueSettingsEditor{}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.SaveRaw))]
+    [CustomActionEditor(typeof(ES3PlayMaker.SaveAll))]
+    public class SaveAllEditor : SettingsEditor
+    {
+        public override void DrawGUI()
+        {
+            EditField("key");
+            EditField("saveFsmVariables");
+            EditField("saveGlobalVariables");
+        }
+    }
+
+    [CustomActionEditor(typeof(ES3PlayMaker.SaveRaw))]
 	public class SaveRawEditor : SettingsEditor
 	{
 		public override void DrawGUI()
@@ -119,9 +196,9 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region Load Actions
+#region Load Actions
 
 	[CustomActionEditor(typeof(ES3PlayMaker.Load))]
 	public class LoadEditor : KeyValueSettingsEditor
@@ -129,20 +206,34 @@ namespace ES3PlayMaker
 		public override void DrawGUI()
 		{
 			EditorGUILayout.Space();
-			EditField("defaultValue");
+			FsmVarField("defaultValue");
 		}
 	}
 
 	[CustomActionEditor(typeof(ES3PlayMaker.LoadInto))]
 	public class LoadIntoEditor : KeyValueSettingsEditor{}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.LoadAudio))]
+    [CustomActionEditor(typeof(ES3PlayMaker.LoadAll))]
+    public class LoadAllEditor : SettingsEditor
+    {
+        public override void DrawGUI()
+        {
+            EditField("key");
+            EditField("loadFsmVariables");
+            EditField("loadGlobalVariables");
+        }
+    }
+
+    [CustomActionEditor(typeof(ES3PlayMaker.LoadAudio))]
 	public class LoadAudioEditor : SettingsEditor
 	{
 		public override void DrawGUI()
 		{
 			EditField("audioFilePath");
 			EditField("audioClip");
+#if UNITY_2018_3_OR_NEWER
+            EditField("audioType");
+#endif
 		}
 	}
 
@@ -166,9 +257,9 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region Exists Actions
+#region Exists Actions
 
 	[CustomActionEditor(typeof(ES3PlayMaker.KeyExists))]
 	public class KeyExistsEditor : SettingsEditor
@@ -209,9 +300,9 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region Delete Actions
+#region Delete Actions
 
 	[CustomActionEditor(typeof(ES3PlayMaker.DeleteKey))]
 	public class DeleteKeyEditor : SettingsEditor
@@ -240,9 +331,9 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region Backup Actions
+#region Backup Actions
 
 	[CustomActionEditor(typeof(ES3PlayMaker.CreateBackup))]
 	public class CreateBackupEditor : SettingsEditor
@@ -263,9 +354,9 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region Key, File and Directory methods
+#region Key, File and Directory methods
 
 	[CustomActionEditor(typeof(ES3PlayMaker.RenameFile))]
 	public class RenameFileEditor : SettingsEditor
@@ -307,7 +398,17 @@ namespace ES3PlayMaker
 		}
 	}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.GetFiles))]
+    [CustomActionEditor(typeof(ES3PlayMaker.GetKeyCount))]
+    public class GetKeyCountEditor : SettingsEditor
+    {
+        public override void DrawGUI()
+        {
+            EditField("filePath");
+            EditField("keyCount");
+        }
+    }
+
+    [CustomActionEditor(typeof(ES3PlayMaker.GetFiles))]
 	public class GetFilesEditor : SettingsEditor
 	{
 		public override void DrawGUI()
@@ -327,9 +428,9 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region ES3File Actions
+#region ES3File Actions
 
 	[CustomActionEditor(typeof(ES3PlayMaker.ES3FileCreate))]
 	public class ES3FileCreateEditor : SettingsEditor
@@ -402,12 +503,11 @@ namespace ES3PlayMaker
 	}
 
 	[CustomActionEditor(typeof(ES3PlayMaker.ES3FileGetKeys))]
-	public class ES3FileGetKeysEditor : GetKeysEditor
+	public class ES3FileGetKeysEditor : ES3FileActionEditor
 	{
 		public override void DrawGUI()
 		{
-			base.DrawGUI();
-			EditField("fsmES3File");
+			EditField("keys");
 		}
 	}
 
@@ -430,10 +530,11 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endregion
 
-	#region ES3Cloud Actions
-	#if !DISABLE_WEB
+#endregion
+
+#region ES3Cloud Actions
+#if !DISABLE_WEB
 	
 	public abstract class ES3CloudEditor : SettingsEditor
 	{
@@ -486,7 +587,28 @@ namespace ES3PlayMaker
 		}
 	}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudUploadFile))]
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDownloadES3File))]
+    public class ES3CloudDownloadES3FileEditor : BaseEditor
+    {
+        public bool showUser = false;
+        public override void DrawGUI()
+        {
+            EditField("fsmES3File");
+            EditField("url");
+            EditField("apiKey");
+            EditField("errorCode");
+            if ((showUser = EditorGUILayout.Foldout(showUser, "User (optional)")))
+            {
+                EditorGUI.indentLevel++;
+                EditField("user");
+                EditField("password");
+                EditorGUI.indentLevel--;
+            }
+        }
+    }
+
+
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudUploadFile))]
 	public class ES3CloudUploadFileEditor : ES3CloudUserEditor
 	{
 		protected override void DrawChildGUI()
@@ -496,7 +618,29 @@ namespace ES3PlayMaker
 		}
 	}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDeleteFile))]
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudUploadES3File))]
+    public class ES3CloudUploadES3FileEditor : BaseEditor
+    {
+        public bool showUser = false;
+        public override void DrawGUI()
+        {
+            EditField("fsmES3File");
+            EditField("url");
+            EditField("apiKey");
+            EditField("errorCode");
+            if((showUser = EditorGUILayout.Foldout(showUser, "User (optional)")))
+			{
+				EditorGUI.indentLevel++;
+				EditField("user");
+				EditField("password");
+				EditorGUI.indentLevel--;
+			}
+        }
+    }
+
+
+
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDeleteFile))]
 	public class ES3CloudDeleteFileEditor : ES3CloudUserEditor
 	{
 		protected override void DrawChildGUI()
@@ -506,7 +650,7 @@ namespace ES3PlayMaker
 		}
 	}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDeleteFile))]
+	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudRenameFile))]
 	public class ES3CloudRenameFileEditor : ES3CloudUserEditor
 	{
 		protected override void DrawChildGUI()
@@ -517,17 +661,29 @@ namespace ES3PlayMaker
 		}
 	}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDownloadFilenames))]
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDownloadFilenames))]
 	public class ES3CloudDownloadFilenamesEditor : ES3CloudUserEditor
 	{
 		protected override void DrawChildGUI()
 		{
 			EditField("filenames");
-			base.DrawChildGUI();
+            EditField("searchPattern");
+            base.DrawChildGUI();
 		}
 	}
 
-	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDownloadTimestamp))]
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudSearchFilenames))]
+    public class ES3CloudSearchFilenamesEditor : ES3CloudUserEditor
+    {
+        protected override void DrawChildGUI()
+        {
+            EditField("filenames");
+            EditField("searchPattern");
+            base.DrawChildGUI();
+        }
+    }
+
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDownloadTimestamp))]
 	public class ES3CloudDownloadTimestampEditor : ES3CloudUserEditor
 	{
 		protected override void DrawChildGUI()
@@ -537,7 +693,89 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endif
-	#endregion
+#endif
+
+#endregion
+
+#region ES3SpreadsheetActions
+
+
+	[CustomActionEditor(typeof(ES3PlayMaker.ES3SpreadsheetCreate))]
+	public class ES3SpreadsheetCreateEditor : BaseEditor
+	{
+		public override void DrawGUI()
+		{
+			EditField("fsmES3Spreadsheet");
+		}
+	}
+
+	[CustomActionEditor(typeof(ES3PlayMaker.ES3SpreadsheetSetCell))]
+	public class ES3SpreadsheetSetCellEditor : BaseEditor
+	{
+		public override void DrawGUI()
+		{
+			EditField("fsmES3Spreadsheet");
+			EditField("col");
+			EditField("row");
+            FsmVarField("value");
+        }
+	}
+
+	[CustomActionEditor(typeof(ES3PlayMaker.ES3SpreadsheetGetCell))]
+	public class ES3SpreadsheetGetCellEditor : BaseEditor
+	{
+		public override void DrawGUI()
+		{
+			EditField("fsmES3Spreadsheet");
+			EditField("col");
+			EditField("row");
+			FsmVarField("value");
+		}
+	}
+
+	[CustomActionEditor(typeof(ES3PlayMaker.ES3SpreadsheetLoad))]
+	public class ES3SpreadsheetLoadEditor : SettingsEditor
+	{
+		public override void DrawGUI()
+		{
+            EditField("fsmES3Spreadsheet");
+            EditField("filePath");
+		}
+	}
+
+    [CustomActionEditor(typeof(ES3PlayMaker.ES3SpreadsheetSave))]
+    public class ES3SpreadsheetSaveEditor : SettingsEditor
+    {
+        public override void DrawGUI()
+        {
+            EditField("fsmES3Spreadsheet");
+            EditField("filePath");
+            EditField("append");
+        }
+    }
+
+    #endregion
+
+    #region Caching
+
+    [CustomActionEditor(typeof(ES3PlayMaker.CacheFile))]
+    public class CacheFileEditor : SettingsEditor
+    {
+        public override void DrawGUI()
+        {
+            EditField("filePath");
+        }
+    }
+
+    [CustomActionEditor(typeof(ES3PlayMaker.StoreCachedFile))]
+    public class StoreCachedFileEditor : SettingsEditor
+    {
+        public override void DrawGUI()
+        {
+            EditField("filePath");
+        }
+    }
+
+    #endregion
 }
 #endif

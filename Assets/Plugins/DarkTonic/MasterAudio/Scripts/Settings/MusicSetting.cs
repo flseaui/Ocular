@@ -1,4 +1,3 @@
-/*! \cond PRIVATE */
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,45 +8,150 @@ using UnityEngine.AddressableAssets;
 
 // ReSharper disable once CheckNamespace
 namespace DarkTonic.MasterAudio {
+    /// <summary>
+    /// This class is used to populate a song for a PlaylistController through code if necessary.
+    /// </summary>
     [Serializable]
     // ReSharper disable once CheckNamespace
     public class MusicSetting {
         // ReSharper disable InconsistentNaming
+        
+        /// <summary>
+        /// The alias for the song
+        /// </summary>
         public string alias = string.Empty;
+        
+        /// <summary>
+        /// This setting allows you to choose Audio Clip, Resource File or Addressable
+        /// </summary>
         public MasterAudio.AudioLocation audLocation = MasterAudio.AudioLocation.Clip;
+        
+        /// <summary>
+        /// The Audio Clip for the song, if you're using AudioLocation of Clip
+        /// </summary>
         public AudioClip clip;
+
+        /// <summary>
+        /// Do not set this. It is calculated from the clip's name or alias if it has one.
+        /// </summary>
         public string songName = string.Empty;
+
+        /// <summary>
+        /// This is the path to the Resource File if you're using AudioLocation of Resource File
+        /// </summary>
         public string resourceFileName = string.Empty;
+
 #if ADDRESSABLES_ENABLED
+        /// <summary>
+        /// This is the AssetReference to the clip if you're using AudioLocation of Addressable
+        /// </summary>
         public AssetReference audioClipAddressable;
 #endif
+        /// <summary>
+        /// The volume to use when playing the song.
+        /// </summary>
         public float volume = 1f;
+
+        /// <summary>
+        /// The pitch to play the song at.
+        /// </summary>
         public float pitch = 1f;
+
+        /// <summary>
+        /// Do not set this. It is for Inspector only.
+        /// </summary>
         public bool isExpanded = true;
+
+        /// <summary>
+        /// Whether to loop the song or not.
+        /// </summary>
         public bool isLoop;
+
+        /// <summary>
+        /// Do not set this, it is for Inspector only
+        /// </summary>
         public bool isChecked = true;
+
+        /// <summary>
+        /// Do not set this, it is for Inspector only
+        /// </summary>
         public List<SongMetadataStringValue> metadataStringValues = new List<SongMetadataStringValue>();
+
+        /// <summary>
+        /// Do not set this, it is for Inspector only
+        /// </summary>
         public List<SongMetadataBoolValue> metadataBoolValues = new List<SongMetadataBoolValue>();
+
+        /// <summary>
+        /// Do not set this, it is for Inspector only
+        /// </summary>
         public List<SongMetadataIntValue> metadataIntValues = new List<SongMetadataIntValue>();
+
+        /// <summary>
+        /// Do not set this, it is for Inspector only
+        /// </summary>
         public List<SongMetadataFloatValue> metadataFloatValues = new List<SongMetadataFloatValue>();
 
-        public bool metadataExpanded = true; 
+        /// <summary>
+        /// Do not set this, it is for Inspector only
+        /// </summary>
+        public bool metadataExpanded = true;
 
+        /// <summary>
+        /// This controls where the song starts from.
+        /// </summary>
         public MasterAudio.CustomSongStartTimeMode songStartTimeMode = MasterAudio.CustomSongStartTimeMode.Beginning;
+        
+        /// <summary>
+        /// If you choose Random Time for Song Start Time Node, it will start between customStartTime (min) and customStartTimeMax, randomly.
+        /// </summary>
         public float customStartTime;
+
+        /// <summary>
+        /// If you choose Random Time for Song Start Time Node, it will start between customStartTime (min) and customStartTimeMax, randomly.
+        /// </summary>
         public float customStartTimeMax;
+
+        /// <summary>
+        /// Do not set this value, used by "New Clip From Last Known Position" mode of Song Transition Mode and set automatically.
+        /// </summary>
         public int lastKnownTimePoint = 0;
+
+        /// <summary>
+        /// Do not set this value, used by "New Clip From Last Known Position" mode of Song Transition Mode and set automatically.
+        /// </summary>
 		public bool wasLastKnownTimePointSet = false;
+
+        /// <summary>
+        /// Set this uniquely for each song as consecutive integers, used to keep track of which songs haven't played yet.
+        /// </summary>
 		public int songIndex = 0; 
+
+        /// <summary>
+        /// Set this to true if you are going to use songStartedCustomEvent 
+        /// </summary>
         public bool songStartedEventExpanded;
+
+        /// <summary>
+        /// This is the name of a Custom Event to fire when the song is started.
+        /// </summary>
         public string songStartedCustomEvent = string.Empty;
+        
+        /// <summary>
+        /// Set this to true if you are going to use songChangedCustomEvent
+        /// </summary>
         public bool songChangedEventExpanded;
+
+        /// <summary>
+        /// This is the name of a Custom Event to fire when the song is changed to another.
+        /// </summary>
         public string songChangedCustomEvent = string.Empty;
 
         public MusicSetting() {
             songChangedEventExpanded = false;
         }
 
+        /*! \cond PRIVATE */
         public bool HasMetadataProperties {
             get {
                 return MetadataPropertyCount > 0;
@@ -73,6 +177,7 @@ namespace DarkTonic.MasterAudio {
                 }
             }
         }
+        /*! \endcond */
 
         public static MusicSetting Clone(MusicSetting mus, MasterAudio.Playlist aList) {
             var clone = new MusicSetting {
@@ -141,4 +246,3 @@ namespace DarkTonic.MasterAudio {
         }
     }
 }
-/*! \endcond */

@@ -1,15 +1,15 @@
 <?php
 /* 
 ------------------------------------------------------------------------------------
-			IT IS NOT NECESSARY TO MODIFY THIS SCRIPT TO USE EASY SAVE 3 CLOUD
+	IT IS NOT NECESSARY TO MODIFY THIS SCRIPT TO USE EASY SAVE 3 CLOUD
 ------------------------------------------------------------------------------------
 */
 	
 	
-$tableName 			= 	"es3cloud";		// The name of the table used to store file names.
+$tableName 		= 	"es3cloud";		// The name of the table used to store file names.
 $filenameField 		= 	"filename";		// The name of the field where we save our file name.
 $fileDataField 		= 	"data";			// The name of the field containing the data relating to.
-$userField	  		=	"user";			// The name of the field containing the name of the user this file relates to, if any.
+$userField	  	=	"user";			// The name of the field containing the name of the user this file relates to, if any.
 $lastUpdatedField 	= 	"lastUpdated"; 	// The name of the field containing the last updated timestamp.
 	
 // Handles installation of the database tables and variables script.
@@ -24,9 +24,6 @@ if(!file_exists("ES3Variables.php"))
 
 include_once "ES3Variables.php";
 
-if($_POST["apiKey"] != $api_key)
-	Error("Incorrect API Key", "Incorrect API Key", 403);
-
 // Check connection to database.
 try
 {
@@ -36,6 +33,15 @@ catch(PDOException $e)
 {
 	Error("Could not connect to database.", $e->getMessage(), 501);
 }
+
+if(!isset($_POST["apiKey"]))
+{
+	echo "ES3Cloud is functioning correctly.";
+	exit();
+}
+
+if($_POST["apiKey"] != $api_key)
+	Error("Incorrect API Key", "Incorrect API Key", 403);
 
 // ----- GET FILE -----
 if(isset($_POST["getFile"]))
@@ -105,11 +111,26 @@ else if(isset($_POST["deleteFile"]))
 	$stmt->execute();
 }
 
+// ----- GET FILENAMES WITH PATTERN -----
+else if(isset($_POST["getFilenames"]) && isset($_POST["pattern"]))
+{
+	echo "Here";
+	$stmt = $db->prepare("SELECT $filenameField FROM $tableName WHERE $userField = :user AND $filenameField LIKE :pattern");
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
+	$stmt->bindParam(":pattern", $_POST["pattern"]);
+	$stmt->execute();
+	$rows = $stmt->fetchAll();
+	foreach($rows as $row)
+		echo $row[$filenameField] . ";";
+}
+
 // ----- GET FILENAMES -----
 else if(isset($_POST["getFilenames"]))
 {
 	$stmt = $db->prepare("SELECT $filenameField FROM $tableName WHERE $userField = :user");
-	$stmt->bindParam(":user", GetPOSTUser());
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
 	foreach($rows as $row)
@@ -207,7 +228,7 @@ function Install($dbHost, $dbUser, $dbPassword, $dbName, $tableName, $filenameFi
 `$userField` varchar(64) NOT NULL,
 `$lastUpdatedField` int(11) unsigned NOT NULL DEFAULT '0',
 PRIMARY KEY (`$filenameField`,`$userField`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+) ENGINE=InnoDB COLLATE=utf8_unicode_ci CHARSET=utf8;";
 	        		$db->query($createTableQuery);
 	    	} 
 	    	catch (PDOException $e) 
@@ -223,18 +244,17 @@ PRIMARY KEY (`$filenameField`,`$userField`)
     	try
     	{
 	    	$apiKey = substr(md5(microtime()),rand(0,26),12);
-	    	$phpScript =
+	    	$phpScript = 
 "<?php
 \$api_key		=	'$apiKey';		// The API key you need to specify to use when accessing this API.
-
-\$db_host		= 	'$dbHost';		// MySQL Host Name.
-\$db_user		= 	'$dbUser';		// MySQL User Name.
-\$db_password		= 	'$dbPassword';	// MySQL Password.
-\$db_name		= 	'$dbName';		// MySQL Database Name.
+\$db_host		= 	'$dbHost';			// MySQL Host Name.
+\$db_user		= 	'$dbUser';			// MySQL User Name.
+\$db_password		= 	'$dbPassword';			// MySQL Password.
+\$db_name		= 	'$dbName';			// MySQL Database Name.
 ?>";
 	    	
 	    	// Check that path is writable or file_put_contents is supported.
-	    	if(!is_writable("ES3Variables.php") || !function_exists("file_put_contents"))
+	    	if(!function_exists("file_put_contents"))
 	    	{
 		    	ManuallyInstall($phpScript);
 		    	exit();

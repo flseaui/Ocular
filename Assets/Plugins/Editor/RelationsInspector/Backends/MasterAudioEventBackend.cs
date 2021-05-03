@@ -28,6 +28,16 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         }
     }
 
+    public class FootstepSoundsNode
+    {
+        public string _groupName;
+
+        public FootstepSoundsNode(string groupName)
+        {
+            _groupName = groupName;
+        }
+    }
+
     public class LinkedGroupNode {
         public List<string> parentLinkedGroups { get; set; }
         public string groupName;
@@ -164,6 +174,15 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         var asAmbientSound = entity as DarkTonic.MasterAudio.AmbientSound;
         if (asAmbientSound != null) {
             yield return new Relation<object, string>(asAmbientSound, new AmbientSoundNode(asAmbientSound.AmbientSoundGroup), "Ambient Sound");
+        }
+
+        var asFootstepSound = entity as DarkTonic.MasterAudio.FootstepSounds;
+        if (asFootstepSound != null)
+        {
+            foreach (var stepGroup in asFootstepSound.footstepGroups)
+            {
+                yield return new Relation<object, string>(asFootstepSound, new FootstepSoundsNode(stepGroup.soundType), "Footstep Sound");
+            }
         }
 
         var asEndLinkedGroupNode = entity as EndLinkedGroupNode;
@@ -457,6 +476,13 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         newTargets = newTargets.Concat(ambientSoundsComponents);
         // put all components in an object array
 
+        var footstepSoundsComponents = UnityEngine.Object
+            .FindObjectsOfType<DarkTonic.MasterAudio.FootstepSounds>()
+            .Where(f => IncludeFootstepSounds(f))
+            .ToArray();
+
+        newTargets = newTargets.Concat(footstepSoundsComponents);
+
         var newTargetList = newTargets.ToArray();
 
         api.ResetTargets(newTargetList);
@@ -466,6 +492,18 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         var asEventSounds = entity as EventSounds;
         if (asEventSounds != null) {
             return base.GetContent(asEventSounds.gameObject);
+        }
+
+        var asFootstepSounds = entity as FootstepSounds;
+        if (asFootstepSounds != null)
+        {
+            return base.GetContent(asFootstepSounds.gameObject);
+        }
+
+        var asFootstepNode = entity as FootstepSoundsNode;
+        if (asFootstepNode != null)
+        {
+            return new GUIContent(GetFoostepSoundNodeLabel(asFootstepNode));
         }
 
         var asGroupNode = entity as AudioEventGroupNode;
@@ -557,6 +595,17 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
             if (asAmbientSoundNode != null) {
                 var groupTransform = MasterAudio.FindGroupTransform(asAmbientSoundNode._groupName);
                 if (groupTransform != null) {
+                    Selection.activeObject = groupTransform.gameObject;
+                }
+                return;
+            }
+
+            var asFootstepSoundNode = single as FootstepSoundsNode;
+            if (asFootstepSoundNode != null)
+            {
+                var groupTransform = MasterAudio.FindGroupTransform(asFootstepSoundNode._groupName);
+                if (groupTransform != null)
+                {
                     Selection.activeObject = groupTransform.gameObject;
                 }
                 return;
@@ -680,6 +729,25 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         }
 
         return true;
+    }
+
+    static bool IncludeFootstepSounds(DarkTonic.MasterAudio.FootstepSounds footstepSounds)
+    {
+        if (footstepSounds.footstepGroups.Count == 0)
+        {
+            return false;
+        }
+
+        foreach (var footstep in footstepSounds.footstepGroups)
+        {
+            if (!FilterSoundGroup(footstep.soundType))
+            {
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
     static bool IncludeAudioEvent(AudioEvent ev) {
@@ -836,6 +904,13 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
             return null;
 
         return MasterAudio.GroupBuses[index];
+    }
+
+    static string GetFoostepSoundNodeLabel(FootstepSoundsNode node)
+    {
+        var sb = new StringBuilder("Footstep Sound");
+        sb.Append("\nGroup: " + node._groupName);
+        return sb.ToString();
     }
 
     static string GetAmbientSoundNodeLabel(AmbientSoundNode node) {
